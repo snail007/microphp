@@ -9,26 +9,117 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
             li{margin:10px;}
+            p{line-height:22px;}
         </style>
     </head>
-    <body style="font-size: 13px;">
+    <body style="font-size: 13px;padding:20px;">
         <h2>目录</h2>
         <ol>
             <li><a href="#system">系统配置说明</a></li>
+            <li><a href="#name">命名规则</a></li>
             <li><a href="#controller">控制器</a></li>
+            <li><a href="#model">模型</a></li>
+            <li><a href="#model">视图</a></li>
         </ol>
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">
             <h2><legend style="color: #990000;"><a name="system">系统配置说明</a></legend></h2>
-            
-            <p>本文默认框架文件名为index.php,系统配置是指index.php里面system config部分,你会看到一个名为$system的配置数组.</p>
-        
+
+            <p>本文默认框架文件名为index.php,系统配置是指index.php里面system config部分,你会看到一个名为$system的配置数组，下面对每项进行说明.</p>
+            <p> $system['application_folder']  程序文件夹路径名称，也就是所有的程序文件比如控制器，模型，视图等所在的文件夹名称。<br> 
+                $system['controller_folder']   存放控制器文件的文件夹路径名称<br>
+                $system['model_folder']        存放模型文件的文件夹路径名称<br>
+                $system['view_folder']         存放视图文件的文件夹路径名称<br>
+                $system['library_folder']      存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载<br>
+                $system['helper_folder']       存放函数文件的文件夹路径名称<br>
+                $system['error_page_404']      404错误文件的路径,该文件会在系统找不到相关内容时显示,文件里面可以使用$msg变量获取出错提示内容<br>
+                $system['error_page_db']       数据库错误文件的路径,该文件会在发生数据库错误时显示,文件里面可以使用$msg变量获取出错提示内容<br>
+                $system['default_controller']  默认控制器文件名称,不包含后缀,支持子文件夹,比如home.welcome,就是控制器文件夹下面的home文件夹里面welcome.php(假定后缀是.php)<br>
+                $system['default_controller_method']默认控制器方法名称,不要带前缀<br>
+                $system['controller_method_prefix'] 控制器方法名称前缀<br>
+                $system['controller_file_subfix']   控制器文件名称后缀,比如.php或者.controller.php<br>
+                $system['model_file_subfix']        模型文件名称后缀,比如.model.php<br>
+                $system['view_file_subfix']         视图文件名称后缀,比如.view.php';<br>
+                $system['library_file_subfix']      类库文件名称后缀,比如.class.php';<br>
+                $system['helper_file_subfix']       函数文件名称后缀,比如.php';<br>
+                $system['controller_method_ucfirst']控制器方法名称是否首字母大写,默认true<br>
+                $system['autoload_db']              是否自动连接数据库,默认true<br>
+                $system['debug']                    是否开启调试模式,默认true显示错误信息,如果为false那么程序所有错误将不显示<br>
+                $system['default_timezone']         默认时区,PRC是中国</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="name">命名规则</a></legend></h2>
+
+            <p>
+                下面分别对,控制器文件命名规则、模型文件命名规则、视图命名规则、类库命名规则、函数文件命名规则进行逐一说明。<font color="#663300" style="font-weight:bold;"> 下面说到的<font color="red">文件名</font>都均不包含文件后缀，也就是上面系统配置里面的配置后缀。（比如模型文件名是User，上面配置了模型后缀.model.php，那么完整的文件名是User.model.php,但是下面的文件名是指不含配置的后缀，即指User部分）</font></p>
+            <h3>控制器文件命名规则</h3>
+            <p>
+                控制器文件名称均为小写，而且与类名相同，但是类名要首字母大写。
+            </p>
+            <h3>模型文件命名规则</h3>
+            <p>
+                模型文件名称与模型类名相同，而且字母大小写必须一样。
+            </p>
+            <h3>视图命名规则</h3>
+            <p>
+                视图文件名称没有强制要求，只有在控制器里面加载视图的时候传递的文件名称和视图文件一样即可。
+            </p>
+            <h3>类库命名规则</h3>
+            <p>
+                类库文件名称与类库类名相同，而且字母大小写必须一样。
+            </p>
+            <h3>函数文件命名规则</h3>
+            <p>
+                函数文件名称没有强制要求，只有在控制器里面加载helper的时候传递的文件名称和函数文件名一样即可。
+            </p>
         </fieldset>
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">
             <h2><legend style="color: #990000;"><a name="controller">控制器</a></legend></h2>
-            
-            <p>控制器位于:app/controllers/home/welcome.php</p>
-        
+
+            <p>控制器访问支持queryStrng和pathInfo两种模式。下面是个例子：</p>
+            <p>
+                queryStrng模式：http://127.0.0.1/index.php?home.welcome.index/1/2<br>
+                说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
+                同时向doIndex方法传递了两个参数，第一个是1和第二个是2
+            </p>
+            <p>
+                pathInfo模式：http://127.0.0.1/index.php/home.welcome.index/1/2<br>
+                说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
+                同时向doIndex方法传递了两个参数，第一个是1和第二个是2
+            </p>
+            <p>可以看出两个模式的区别就是index.php后面一个是?一个是/</p>
+            <p>控制器类必须继承Controller类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+            <p>class Welcome extends Controller{<br>
+                public function __construct() {<br>
+                parent::__construct();<br>
+                }</p>
+            <p> public function doIndex($name=''){<br>
+                $this-&gt;view(&quot;welcome&quot;,array('msg'=&gt;$name));<br>
+                }<br>
+                public function do__output($html){<br>
+                echo '__output'.$html;<br>
+                }<br>
+                }</p>
         </fieldset>
-        
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="model">模型</a></legend></h2>
+
+            <p>在控制器和模型里面都可以通过$this->model($model_name,$alias_name)，加载一个模型，其中$model_name是模型文件名（不含配置后缀）也就是类名，$alias_name是别名这个参数是可选的。
+                加载完毕后，就可以通过$this->model->$model_name进行访问了（$model_name这个时候都是小写的）。如果指定了$alias_name那么就要通过$this->model->$alias_name进行访问。比如加载User模型，$this->model('User','vip');
+                那么就可以通过$this->model->vip访问这个模型了。另外，模型加载支持子文件夹，比如模型目录下有个home文件夹里面有个News.model.php模型类文件，那么就可以通过
+                $this->model('home\News')加载这个模型类，然后就可以通过$this->model->news访问这个模型类了;
+            </p> 
+            <p>需要注意的就是：没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，xxx一定是小写的，比如上面的news</p>
+            <p>模型类必须继承Model类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+            <p>class User extends Model {</p>
+            <p> public function __construct() {<br>
+                parent::__construct();<br>
+                }</p>
+            <p> public function sayHello($name) {<br>
+                $this-&gt;model('User2');<br>
+                $this-&gt;model-&gt;user2-&gt;sayHello('fuck');</p>
+            <p> echo 'hello:' . $name;<br>
+                }<br>
+                }</p>
+        </fieldset>   
     </body>
 </html>

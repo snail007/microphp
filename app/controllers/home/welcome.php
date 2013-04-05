@@ -5,6 +5,10 @@
  * @author Administrator
  */
 class Welcome extends Controller{
+    public function __construct() {
+        parent::__construct();
+    }
+
     public function doIndex($name=''){
            $this->view("welcome",array('msg'=>$name));
     }
