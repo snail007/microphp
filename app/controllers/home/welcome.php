@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of index
  *
@@ -17,7 +11,7 @@ class Welcome extends Controller{
 //        $t=new TestLibrary();
 //        $t->testController();
 //        var_dump($this,'-----------------------------');
-        $data1=$this->view('welcome',array('name'=>'fuck youyou'),true);
+        $data1=$this->view('welcome',array('name'=>'fuck 油油'),true);
 //        var_dump($this,'-----------------------------');
 //        $data2=$this->view('common/footer',null,true);
 //        var_dump($this,'-----------------------------');

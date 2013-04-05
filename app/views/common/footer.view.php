@@ -2,5 +2,5 @@
     exit('No direct script access allowed');
 }?>
 <hr/>
-<?php echo $name;?>
+<?php echo $msg;?>
 </html>
