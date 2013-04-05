@@ -11,7 +11,7 @@ class Welcome extends Controller{
 //        $t=new TestLibrary();
 //        $t->testController();
 //        var_dump($this,'-----------------------------');
-        $data1=$this->view('welcome',array('name'=>'fuck 油油'),true);
+        $data1=$this->view('welcome',array('msg'=>'fuck 油油'),true);
 //        var_dump($this,'-----------------------------');
 //        $data2=$this->view('common/footer',null,true);
 //        var_dump($this,'-----------------------------');
