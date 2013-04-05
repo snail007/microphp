@@ -4,14 +4,14 @@
 
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']='modules/app';
+$system['application_folder']='app';
 $system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
 $system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
 $system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
 $system['library_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'library';
 $system['helper_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'helper';
-$system['error_page_404']='modules/app/error/error_404.php';
-$system['error_page_db']='modules/app/error/error_db.php';
+$system['error_page_404']='app/error/error_404.php';
+$system['error_page_db']='app/error/error_db.php';
 $system['default_controller']='home.welcome';
 $system['default_controller_method']='index';
 $system['controller_method_prefix']='do';
