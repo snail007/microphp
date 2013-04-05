@@ -19,7 +19,7 @@ and open the template in the editor.
             <li><a href="#name">命名规则</a></li>
             <li><a href="#controller">控制器</a></li>
             <li><a href="#model">模型</a></li>
-            <li><a href="#model">视图</a></li>
+            <li><a href="#view">视图</a></li>
         </ol>
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">
             <h2><legend style="color: #990000;"><a name="system">系统配置说明</a></legend></h2>
@@ -99,6 +99,8 @@ and open the template in the editor.
                 echo '__output'.$html;<br>
                 }<br>
                 }</p>
+            <p>如果控制器里面有个public __output($html)方法，那么所有的输出都会重定向到这个方法上，这个方法会被调用，传进的是页面的输出内容。
+                在这个方法里面可以进一步处理。</p>
         </fieldset>
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">
             <h2><legend style="color: #990000;"><a name="model">模型</a></legend></h2>
@@ -120,6 +122,15 @@ and open the template in the editor.
             <p> echo 'hello:' . $name;<br>
                 }<br>
                 }</p>
+        </fieldset> 
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="view">视图</a></legend></h2>
+
+            <p>在控制器和模型里面都可以通过$this->view($view_name,$data,$is_return)，加载一个视图，其中$view_name是视图文件名（不含配置后缀），$data是要传递到视图中的数据（关联数组）
+                比如$data=array('title'=>'首页'),在视图里面就可以通过变量$title获取"首页",$is_return为true时,视图内容不会输出到浏览器而是返回,$data和$is_return都是可选的参数。
+                可以在视图中包含其他视图文件,视图路径可以通过$this->view_path($view_name)获取,比如在视图里面include($this->view_path('common/header')),这里假定视图文件名配置后缀是.php
+                那么这个就是包含视图目录下面的common文件夹里面的header.php视图文件。
+            </p> 
         </fieldset>   
     </body>
 </html>
