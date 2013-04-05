@@ -2,6 +2,19 @@
 
 //####################modules/index.php####################{
 
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
 $system['application_folder']='app';
@@ -58,9 +71,23 @@ if (!$system['debug']) {
 
 
 Router::loadClass();
+
+/* End of file index.php */
 //####################modules/Router.php####################{
 
-
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 class Router {
 
     public static function loadClass() {
@@ -129,17 +156,21 @@ class Router {
     }
 
 }
+/* End of file Router.php */
 //####################modules/Loader.php####################{
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of loader
+ * MicroPHP
  *
- * @author Administrator
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
  */
 class Loader {
 
@@ -185,7 +216,16 @@ class Loader {
         }
         if (file_exists($filename)) {
             $this->helper_files[] = $filename;
+            //包含文件，并把文件里面的变量变为全局变量
+            $before_vars=  array_keys(get_defined_vars());
             include $filename;
+            $vars=get_defined_vars();
+            $all_vars=  array_keys($vars);
+            foreach ($all_vars as $key) {
+                if(!in_array($key, $before_vars)&&isset($vars[$key])){
+                    $GLOBALS[$key]=$vars[$key];
+                }
+            }
         } else {
             trigger404($filename . ' not found.');
         }
@@ -270,11 +310,22 @@ class ModelLoader {
     }
 
 }
+/* End of file Loader.php */
 //####################modules/Controller.php####################{
 
-
-
-
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 class Controller extends Loader {
 
     private static $woniu;
@@ -293,27 +344,41 @@ class Controller extends Loader {
         return $view_path;
     }
 }
-
+/* End of file Controller.php */
 //####################modules/Model.php####################{
 
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Model
+ * MicroPHP
  *
- * @author Administrator
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
  */
 class Model extends Loader{
     //put your code here
 }
-
+/* End of file Model.php */
 //####################modules/DB_driver.php####################{
 
-
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 class MySQL {
 
     private static $CIAR;
@@ -4523,7 +4588,19 @@ function log_message($level, $msg) {/* just suppress logging */
 }
 //####################modules/Helper.php####################{
 
-
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
     header('HTTP/1.1 404 NotFound');
@@ -4563,4 +4640,5 @@ function stripslashes2($var) {
     }
     return $var;
 }
+/* End of file Helper.php */
  
