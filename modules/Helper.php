@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.0
+ * @filesource
+ */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
     header('HTTP/1.1 404 NotFound');
@@ -39,4 +51,5 @@ function stripslashes2($var) {
     }
     return $var;
 }
+/* End of file Helper.php */
  
