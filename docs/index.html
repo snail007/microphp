@@ -184,7 +184,8 @@
 
             <p>
                 在控制器和模型里面都可以直接通过$this->config($config_var_name,$key),获取系统配置，你也许已经注意到index.php里面有个$system数据存储了系统配置，
-                ，$system是一个全局变量，那么就可以通过$this->config('system','application_folder');获取到$system['application_folder']的值。如果你使用了$this->helper()加载了一个配置文件
+                ，$system是一个全局变量，那么就可以通过$this->config('system','application_folder');获取到$system['application_folder']的值。如果你使用了$this->helper()
+                加载了一个配置文件那么就可以通过$this->config($config_var_name,$key)获取文件里面的配置信息，$config_var_name就是配置文件里面的全局变量名称。
             </p> 
         </fieldset>
     </body>
