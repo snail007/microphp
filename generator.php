@@ -8,5 +8,7 @@ foreach ($files as $file) {
 foreach ($files as $file) {
     $content=str_replace("include('" . basename($file) . "');", '', $content);
 }
+$content=str_replace("../app", 'app', $content);
+
 file_put_contents('index.php', "<?php\n" . $content);
 echo 'done';
