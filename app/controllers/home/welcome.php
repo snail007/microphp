@@ -21,7 +21,7 @@ class Welcome extends Controller{
 //        var_dump($this,'-----------------------------');
 //        $data2=$this->view('common/footer',null,true);
 //        var_dump($this,'-----------------------------');
-        var_dump($data1);
+        echo $data1;
     }
     public function do__output($html){
         echo '__output'.$html;
