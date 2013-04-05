@@ -7,8 +7,28 @@ and open the template in the editor.
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            li{margin:10px;}
+        </style>
     </head>
-    <body>
-        <div>TODO write content</div>
+    <body style="font-size: 13px;">
+        <h2>目录</h2>
+        <ol>
+            <li><a href="#system">系统配置说明</a></li>
+            <li><a href="#controller">控制器</a></li>
+        </ol>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="system">系统配置说明</a></legend></h2>
+            
+            <p>本文默认框架文件名为index.php,系统配置是指index.php里面system config部分,你会看到一个名为$system的配置数组.</p>
+        
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="controller">控制器</a></legend></h2>
+            
+            <p>控制器位于:app/controllers/home/welcome.php</p>
+        
+        </fieldset>
+        
     </body>
 </html>
