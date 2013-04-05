@@ -18,7 +18,7 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=TRUE;
+$system['autoload_db']=FALSE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
