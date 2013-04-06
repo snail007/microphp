@@ -17,8 +17,7 @@
             <li><a href="#model">使用模型</a></li>
             <li><a href="#view">使用视图</a></li>
             <li><a href="#database">使用数据库</a></li>
-            <li><a href="#database-config">数据库配置</a></li>
-            <li><a href="#library">类库</a></li>
+            <li><a href="#library">使用类库</a></li>
             <li><a href="#helper">helper文件</a></li>
             <li><a href="#config">获取配置</a></li>
         </ol>
@@ -130,8 +129,40 @@ class Home extends Controller {
 
 }
             </pre>
-            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了My name is:Jhon,
-                现在我们学会了怎么在控制器里面调用视图，并向视图传递数据。</p>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了表ecm_article里面的一条记录。
+                现在我们学会了怎么在控制器里面访问数据库，在模型里面访问数据库和控制器里面一样。</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="library">使用类库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>
+                首先我们在在hello里面新建一个library文件夹，它是用来存放我们的自己的类库的，然后在library里面新建一个Woniu.class.php文件，内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Woniu {
+    function say(){
+        $Woniu=&Controller::getInstance();
+        echo 'application folder is:'.$Woniu->config('system','application_folder').'<br/>';
+        echo 'Hello,MicroPHP!';
+    }
+}
+            </pre>
+            <p>
+                然后我们可以在home控制器里面使用它，home.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+
+    public function doHello() {
+        $woniu=new Woniu();
+        $woniu->say();
+    }
+
+}
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了:<br/>
+                application folder is:hello<br/>
+Hello,MicroPHP!<br/>。
+                现在我们学会了怎么在控制器里面使用自己的类库，在模型里面访问类库和控制器里面一样。</p>
         </fieldset>
     </body>
 

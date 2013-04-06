@@ -18,13 +18,12 @@
  * @since		Version 1.0
  * @filesource
  */
-class Home extends Controller {
-
-    public function doHello() {
-        $woniu=new Woniu();
-        $woniu->say();
+class Woniu {
+    function say(){
+        $Woniu=&Controller::getInstance();
+        echo 'application folder is:'.$Woniu->config('system','application_folder').'<br/>';
+        echo 'Hello,MicroPHP!';
     }
-
 }
 
-/* End of file home.php */
+/* End of file Woniu.php */
