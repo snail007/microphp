@@ -169,12 +169,10 @@ class Home extends Controller {
                 首先我们在在hello里面新建一个helper文件夹，它是用来存放我们的自己的helper文件的，然后在helper里面新建一个functions.php文件，内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Woniu {
-    function say(){
-        $Woniu=&Controller::getInstance();
-        echo 'application folder is:'.$Woniu->config('system','application_folder').'<br/>';
-        echo 'Hello,MicroPHP!';
-    }
+$app_name='MicroPHP';
+$config['ver']='1.0';
+function woniu(){
+    echo 'Hello,MicroPHP!';
 }
             </pre>
             <p>
@@ -184,16 +182,17 @@ class Woniu {
 class Home extends Controller {
 
     public function doHello() {
-        $woniu=new Woniu();
-        $woniu->say();
+        $this->helper('functions');
+        echo $this->config('app_name').' '.$this->config('config','ver').'<br/>';
+        woniu();
     }
 
 }
             </pre>
             <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了:<br/>
-                application folder is:hello<br/>
+                MicroPHP 1.0<br/>
                 Hello,MicroPHP!<br/>。
-                现在我们学会了怎么在控制器里面使用自己的类库，在模型里面访问类库和控制器里面一样。</p>
+                现在我们学会了怎么在控制器里面加载和使用helper文件，在模型里面使用helper文件和控制器里面一样。</p>
         </fieldset>
     </body>
 
