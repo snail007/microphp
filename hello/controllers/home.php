@@ -21,8 +21,9 @@
 class Home extends Controller {
 
     public function doHello() {
-        $woniu=new Woniu();
-        $woniu->say();
+        $this->helper('functions');
+        echo $this->config('app_name').' '.$this->config('config','ver').'<br/>';
+        woniu();
     }
 
 }
