@@ -17,7 +17,7 @@
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']='app';
+$system['application_folder']='hello';
 $system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
 $system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
 $system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';

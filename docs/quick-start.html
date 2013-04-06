@@ -9,6 +9,100 @@
         </style>
     </head>
     <body  style="font-size: 13px;padding:20px;">
-        <h1 style="text-align:center;color: #990000;"> MicroPHP V1.0 入门教程</h1>
+        <h1 style="text-align:center;color: #990000;"> MicroPHP V1.0 入门教程</h1> 
+        <h2 style="margin:0  0 0 auto;width: 220px ;">目录</h2>
+        <ol style="margin:0  0 0 auto;width: 200px ;">
+            <li><a href="#hello">Hello,world!</a></li>
+            <li><a href="#para">传递参数</a></li>
+            <li><a href="#model">使用模型</a></li>
+            <li><a href="#view">使用视图</a></li>
+            <li><a href="#database">数据库</a></li>
+            <li><a href="#database-config">数据库配置</a></li>
+            <li><a href="#library">类库</a></li>
+            <li><a href="#helper">helper文件</a></li>
+            <li><a href="#config">获取配置</a></li>
+        </ol>
+        <p>开始之前,我们打开index.php，修改程序文件夹$system['application_folder']='hello';其它系统设置我们使用默认。</p>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="hello">Hello,world!</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>首先我们在index.php所在的文件夹新建一个名为hello的文件夹，然后在hello里面新建一个controllers文件夹，它是用来存放我们的控制器的。
+                然后在controllers里面新建一个home.php,里面输入以下内容：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+      public function doHello(){
+          echo 'Hello,world!';
+      }
+ }
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了Hello,world!,现在我们学会了怎么通过url访问控制器了.</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="para">传递参数</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>我们现在想让doHello方法接受一个$name参数,为了避免没有传递参数报notice,我们给$name一个默认值'',home.php内容修改后如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+      public function doHello($name=''){
+          echo 'Hello,'.$name.'!';
+      }
+ }
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello/Jhon ,如果没有差错的话,应该可以看到输出了Hello,Jhon!,现在我们学会了怎么通过url传递参数到
+                控制器的方法里面,如果我们想传递多个参数可以用/分割即可</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="model">使用模型</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>
+                我们在hello文件夹里面新建一个models文件夹,它用来存放我们的模型,然后在models里面新建一个User.model.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class User extends Model{
+   public function getNameById($id){
+       return $id.':Jhon';
+   }
+}
+            </pre>
+            <p>
+                我们在home控制器里面加载User模型,home.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+
+    public function doHello($id='') {
+        $this->model('User');
+        echo $this->model->user->getNameById($id) . '!';
+    }
+
+}
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello/1 ,如果没有差错的话,应该可以看到输出了1:Jhon!,
+                现在我们学会了怎么在控制器里面调用模型，在模型里面调用其它模型和在控制器里面一样。</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="view">使用视图</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>
+                我们在hello文件夹里面新建一个views文件夹,它用来存放我们的视图文件,然后在views里面新建一个welcome.view.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+My name is:&lt;?php echo $name;?&gt;
+            </pre>
+            <p>
+                我们在home控制器里面加载welcome视图,并传递一个$name进去,home.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+
+    public function doHello() {
+        $data=array('name'=>'Jhon');
+        $this->view('welcome',$data);
+    }
+
+}
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了My name is:Jhon,
+                现在我们学会了怎么在控制器里面调用视图，并向视图传递数据。</p>
+        </fieldset>
     </body>
+
 </html>
