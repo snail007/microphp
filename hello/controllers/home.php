@@ -21,7 +21,7 @@
 class Home extends Controller {
 
     public function doHello() {
-        $data=$this->db->get('article')->result_array();
+        $data=$this->db->limit(1)->get('article')->result_array();
         var_dump($data);
     }
 
