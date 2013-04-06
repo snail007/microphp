@@ -1,5 +1,6 @@
 <?php include($this->view_path('common/header'));?>
 <body>
+    <div><?php echo $ver;?></div>
 <h2>欢迎使用MicroPHP框架。</h2>
 <hr style="border-bottom-color:black;border-width: 0 0 2px 0;"/>
 <p>控制器位于:app/controllers/home/welcome.php</p>

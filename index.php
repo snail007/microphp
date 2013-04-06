@@ -189,10 +189,14 @@ class Loader {
         stripslashes_all();
     }
 
-    public function config($config_group, $key) {
+    public function config($config_group, $key=null) {
         global $$config_group;
         $config_group = $$config_group;
-        return isset($config_group[$key]) ? $config_group[$key] : null;
+        if($key){
+            return isset($config_group[$key]) ? $config_group[$key] : null;
+        }else{
+            return isset($config_group) ? $config_group : null;
+        }
     }
 
     public function database($config = NULL) {
