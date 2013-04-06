@@ -29,7 +29,7 @@ class Loader {
         stripslashes_all();
     }
 
-    public function config($config_group, $key) {
+    public function config($config_group, $key='') {
         global $$config_group;
         $config_group = $$config_group;
         return isset($config_group[$key]) ? $config_group[$key] : null;
