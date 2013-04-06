@@ -21,8 +21,8 @@
 class Home extends Controller {
 
     public function doHello() {
-        $data=array('name'=>'Jhon');
-        $this->view('welcome',$data);
+        $data=$this->db->get('article')->result_array();
+        var_dump($data);
     }
 
 }

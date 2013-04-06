@@ -17,7 +17,7 @@
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']='hello';
+$system['application_folder']='app';
 $system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
 $system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
 $system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
@@ -64,13 +64,12 @@ if (!$system['debug']) {
     error_reporting(E_ALL);
 }
 
+
  
  
 
  
 
-
-Router::loadClass();
 
 /* End of file index.php */
 //####################modules/Router.php####################{
@@ -189,14 +188,10 @@ class Loader {
         stripslashes_all();
     }
 
-    public function config($config_group, $key=null) {
+    public function config($config_group, $key) {
         global $$config_group;
         $config_group = $$config_group;
-        if($key){
-            return isset($config_group[$key]) ? $config_group[$key] : null;
-        }else{
-            return isset($config_group) ? $config_group : null;
-        }
+        return isset($config_group[$key]) ? $config_group[$key] : null;
     }
 
     public function database($config = NULL) {
@@ -4646,3 +4641,4 @@ function stripslashes2($var) {
 }
 /* End of file Helper.php */
  
+Router::loadClass();

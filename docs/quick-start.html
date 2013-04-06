@@ -16,7 +16,7 @@
             <li><a href="#para">传递参数</a></li>
             <li><a href="#model">使用模型</a></li>
             <li><a href="#view">使用视图</a></li>
-            <li><a href="#database">数据库</a></li>
+            <li><a href="#database">使用数据库</a></li>
             <li><a href="#database-config">数据库配置</a></li>
             <li><a href="#library">类库</a></li>
             <li><a href="#helper">helper文件</a></li>
@@ -96,6 +96,36 @@ class Home extends Controller {
     public function doHello() {
         $data=array('name'=>'Jhon');
         $this->view('welcome',$data);
+    }
+
+}
+            </pre>
+            <p>然后我们在浏览器里面访问http://127.0.0.1/index.php?home.hello ,如果没有差错的话,应该可以看到输出了My name is:Jhon,
+                现在我们学会了怎么在控制器里面调用视图，并向视图传递数据。</p>
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="database">使用数据库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+            <p>
+                首先我们在index.php里面配置mysql数据库的连接信息,同时把数据库设置为自动连接$system['autoload_db']=TRUE;我本机的mysql连接信息如下,主机是localhost,
+                端口是3306,用户名是root,密码是admin,数据库是ectest,表前缀是ecm_;
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+$db['default']['hostname'] = 'localhost';
+$db['default']['port'] = 3306;
+$db['default']['username'] = 'root';
+$db['default']['password'] = 'admin';
+$db['default']['database'] = 'ectest';
+$db['default']['dbprefix'] = 'ecm_';
+            </pre>
+            <p>
+                通过上面的配置,程序已经可以自动连接数据库里,现在我们在home控制器里面输出数据库ecm_article表里面的信息,home.php内容如下：
+            </p>
+            <pre style="font-size: 13px;line-height: 22px;">
+class Home extends Controller {
+
+    public function doHello() {
+        $data=$this->db->get('article')->result_array();
+        var_dump($data);
     }
 
 }

@@ -60,13 +60,12 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
-
+include('Helper.php');
+include('DB_driver.php');
 include('Router.php'); 
 include('Loader.php'); 
 include('Controller.php');
 include('Model.php'); 
-include('DB_driver.php');
-include('Helper.php');
 Router::loadClass();
 
 /* End of file index.php */
