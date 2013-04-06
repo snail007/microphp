@@ -140,7 +140,7 @@ class Home extends Controller {
 class Woniu {
     function say(){
         $Woniu=&Controller::getInstance();
-        echo 'application folder is:'.$Woniu->config('system','application_folder').'<br/>';
+        echo 'application folder is:'.$Woniu->config('system','application_folder').'&lt;br/&gt;';
         echo 'Hello,MicroPHP!';
     }
 }
@@ -183,7 +183,7 @@ class Home extends Controller {
 
     public function doHello() {
         $this->helper('functions');
-        echo $this->config('app_name').' '.$this->config('config','ver').'<br/>';
+        echo $this->config('app_name').' '.$this->config('config','ver').'&lt;br/&gt;';
         woniu();
     }
 
