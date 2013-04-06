@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -29,10 +30,14 @@ class Loader {
         stripslashes_all();
     }
 
-    public function config($config_group, $key='') {
+    public function config($config_group, $key = '') {
         global $$config_group;
-        $config_group = $$config_group;
-        return isset($config_group[$key]) ? $config_group[$key] : null;
+        if ($key) {
+            $config_group = $$config_group;
+            return isset($config_group[$key]) ? $config_group[$key] : null;
+        }  else {
+            return isset($$config_group) ? $$config_group : null;
+        }
     }
 
     public function database($config = NULL) {
@@ -57,13 +62,13 @@ class Loader {
         if (file_exists($filename)) {
             $this->helper_files[] = $filename;
             //包含文件，并把文件里面的变量变为全局变量
-            $before_vars=  array_keys(get_defined_vars());
+            $before_vars = array_keys(get_defined_vars());
             include $filename;
-            $vars=get_defined_vars();
-            $all_vars=  array_keys($vars);
+            $vars = get_defined_vars();
+            $all_vars = array_keys($vars);
             foreach ($all_vars as $key) {
-                if(!in_array($key, $before_vars)&&isset($vars[$key])){
-                    $GLOBALS[$key]=$vars[$key];
+                if (!in_array($key, $before_vars) && isset($vars[$key])) {
+                    $GLOBALS[$key] = $vars[$key];
                 }
             }
         } else {
@@ -150,4 +155,5 @@ class ModelLoader {
     }
 
 }
+
 /* End of file Loader.php */
