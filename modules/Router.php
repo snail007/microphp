@@ -33,7 +33,7 @@ class Router {
                     call_user_func_array(array($class, $methodInfo['method']), $methodInfo['parameters']);
                 }
             } else {
-                trigger404($class . '->' . $methodInfo['method'] . ' not found.');
+                trigger404($methodInfo['class'] . ':' . $methodInfo['method'] . ' not found.');
             }
         } else {
             trigger404();
