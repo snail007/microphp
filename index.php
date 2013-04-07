@@ -294,11 +294,9 @@ class Loader {
         if (file_exists($library)) {
             include($library);
         } else {
-            #有大于1个的autoload吗？这里判断一下，避免干扰其它autoload
-            if (count(spl_autoload_functions()) > 1&&$system['allow_other_class_autoloader']) {
-                return; #有大于一个的autoload直接返回，让其它的autoload继续查找。
-            } else {
-                #只有一个autoload即本MrPmvc的appAutoload，那么就做404提示处理
+           $auto_functions=spl_autoload_functions();
+            $last_func=$auto_functions[count($auto_functions)-1];
+            if (is_array($last_func)&&$last_func[0]=='Loader'&&$last_func[1]=='classAutoloader') {
                 echo trigger404('Class : ' . $clazzName . ' not found.');
             }
         }
