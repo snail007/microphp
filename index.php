@@ -17,7 +17,7 @@
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']='hello';
+$system['application_folder']='app';
 $system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
 $system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
 $system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
@@ -34,7 +34,7 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=TRUE;
+$system['autoload_db']=FALSE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
