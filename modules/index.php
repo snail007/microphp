@@ -33,7 +33,6 @@ $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;
-$system['allow_other_class_autoloader']=FALSE;//是否允许其他的类自动加载器
 $system['default_timezone']='PRC';
 
 //-----------------------end system config--------------------------
