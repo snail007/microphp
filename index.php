@@ -36,6 +36,7 @@ $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;
+$system['allow_other_class_autoloader']=FALSE;//是否允许其他的类自动加载器
 $system['default_timezone']='PRC';
 
 //-----------------------end system config--------------------------
@@ -108,7 +109,7 @@ class Router {
                     call_user_func_array(array($class, $methodInfo['method']), $methodInfo['parameters']);
                 }
             } else {
-                trigger404($class . '->' . $methodInfo['method'] + ' not found.');
+                trigger404($class . '->' . $methodInfo['method'] . ' not found.');
             }
         } else {
             trigger404();
@@ -294,7 +295,7 @@ class Loader {
             include($library);
         } else {
             #有大于1个的autoload吗？这里判断一下，避免干扰其它autoload
-            if (count(spl_autoload_functions()) > 1) {
+            if (count(spl_autoload_functions()) > 1&&$system['allow_other_class_autoloader']) {
                 return; #有大于一个的autoload直接返回，让其它的autoload继续查找。
             } else {
                 #只有一个autoload即本MrPmvc的appAutoload，那么就做404提示处理
