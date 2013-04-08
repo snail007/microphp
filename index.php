@@ -69,4 +69,4 @@ if (!$system['debug']) {
 
 
 /* End of file index.php */
-include('core.php');
+include('MicroPHP.php');
