@@ -8,9 +8,9 @@ foreach ($files as $file) {
 file_put_contents('core.php', "<?php\n" . $core."\nRouter::loadClass();");
 $index=file_get_contents('modules/index.php');
 foreach ($files as $file) {
-    $content=str_replace("include('" . basename($file) . "');", '', $content);
+    $index=str_replace("include('" . basename($file) . "');", '', $index);
 }
 $index=str_replace("../app", 'app', $index);
-$index=str_replace("Router::loadClass();", '', $content);
+$index=str_replace("Router::loadClass();", '', $index);
 file_put_contents('index.php', $index."\ninclude('core.php');");
 echo 'done';
