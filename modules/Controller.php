@@ -36,7 +36,15 @@ class Controller extends Loader {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
         header('Content-type:application/json;charset=urf-8');
         echo $str;
-        if($is_exit){
+        if ($is_exit) {
+            exit();
+        }
+    }
+
+    public function xml_echo($xml, $is_exit = true) {
+        header('Content-type:text/xml;charset=utf-8');
+        echo $xml;
+        if ($is_exit) {
             exit();
         }
     }
