@@ -33,9 +33,10 @@ class Controller extends Loader {
     }
 
     public function ajax_echo($code, $tip = '', $data = '', $is_return = false) {
-        $str = json_encode(array('code' => $code, 'tip' => $tip?$tip:'', 'data' => empty($data)?$data:''));
-        return $is_return?$str:(print($str));
+        $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
+        return $is_return ? $str : (print($str));
     }
+
 }
 
 /* End of file Controller.php */
