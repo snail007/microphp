@@ -18,7 +18,7 @@ common_replace($index);
 file_put_contents('index.php', $index."\ninclude('MicroPHP.php');");
 
 #ver modify
-file_put_contents('index.php', "<?php\n\$myconfig['app']='".$ver."'");
+file_put_contents('app/helper/config.php', "<?php\n\$myconfig['app']='".$ver."';");
 
 echo 'done';
 function common_replace(&$str){
