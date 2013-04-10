@@ -20,6 +20,7 @@ function trigger404($msg = '<h1>Not Found</h1>') {
     } else {
         echo $msg;
     }
+    exit();
 }
 
 function stripslashes_all() {
