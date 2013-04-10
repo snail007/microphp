@@ -1,5 +1,5 @@
 <?php
-
+$ver="Version 1.1"; 
 $files = array( 'modules/Router.php', 'modules/Loader.php', 'modules/Controller.php', 'modules/Model.php', 'modules/DB_driver.php', 'modules/Helper.php');
 $core = '';
 foreach ($files as $file) {
@@ -16,9 +16,13 @@ $index=str_replace("../app", 'app', $index);
 $index=str_replace("Router::loadClass();", '', $index);
 common_replace($index);
 file_put_contents('index.php', $index."\ninclude('MicroPHP.php');");
+
+#ver modify
+file_put_contents('index.php', "<?php\n\$myconfig['app']='".$ver."'");
+
 echo 'done';
 function common_replace(&$str){
-    $ver="Version 1.1"; 
+    global $ver;
     $str=str_replace("Version 1.0", $ver, $str);
     $str=str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str=str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - '.date('Y').',', $str);
