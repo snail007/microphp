@@ -12,8 +12,8 @@
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime       {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 class Router {
 
@@ -97,8 +97,8 @@ class Router {
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 class Loader {
 
@@ -255,8 +255,8 @@ class ModelLoader {
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 class Controller extends Loader {
 
@@ -309,8 +309,8 @@ class Controller extends Loader {
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 class Model extends Loader{
     //put your code here
@@ -328,8 +328,8 @@ class Model extends Loader{
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 class MySQL {
 
@@ -4550,8 +4550,8 @@ function log_message($level, $msg) {/* just suppress logging */
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.0
- * @createdtime {createdtime}
+ * @since		Version 1.1
+ * @createdtime       2013-04-10 08:25:46
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
