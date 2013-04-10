@@ -32,9 +32,12 @@ class Controller extends Loader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '', $is_return = false) {
+    public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        return $is_return ? $str : (print($str));
+        echo $str;
+        if($is_exit){
+            exit();
+        }
     }
 
 }
