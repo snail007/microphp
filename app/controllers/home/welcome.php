@@ -16,5 +16,8 @@ class Welcome extends Controller{
     public function do__output($html){
         echo '__output'.$html;
     }
+    public function doAjax(){
+        $this->ajax_echo(200,'tip',array('a','b'));
+    }
 }
 
