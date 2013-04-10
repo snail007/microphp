@@ -8,4 +8,4 @@ if (!defined('IN_WONIU_APP')) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
     </head>
-</body>
+<body>
