@@ -20,5 +20,6 @@ echo 'done';
 function common_replace(&$str){
     $ver="Version 1.1"; 
     str_replace("Version 1.0;", $ver, $str);
+    str_replace("{createdtime};", date('Y-m-d H:i:s'), $str);
     str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - '.date('Y').',', $str);
 }
