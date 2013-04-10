@@ -10,7 +10,7 @@
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
@@ -95,7 +95,7 @@ class Router {
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
@@ -253,7 +253,7 @@ class ModelLoader {
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
@@ -307,7 +307,7 @@ class Controller extends Loader {
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
@@ -326,7 +326,7 @@ class Model extends Loader{
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
@@ -4548,7 +4548,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource

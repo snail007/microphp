@@ -7,7 +7,7 @@
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2008 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @filesource
