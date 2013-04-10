@@ -9,7 +9,7 @@
         </style>
     </head>
     <body style="font-size: 13px;padding:20px;">
-        <h1 style="text-align:center;color: #990000;"> MicroPHP手册V1.0 </h1>
+        <h1 style="text-align:center;color: #990000;"> MicroPHP手册V1.1 </h1>
         <h2>目录</h2>
         <ol>
             <li><a href="#system">系统配置说明</a></li>
@@ -22,6 +22,8 @@
             <li><a href="#library">类库</a></li>
             <li><a href="#helper">helper文件</a></li>
             <li><a href="#config">获取配置</a></li>
+            <li><a href="#ajax">Ajax输出</a></li>
+            <li><a href="#ajax">XML输出</a></li>
         </ol>
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">
             <h2><legend style="color: #990000;"><a name="system">系统配置说明</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
@@ -187,6 +189,23 @@
                 ，$system是一个全局变量，那么就可以通过$this->config('system','application_folder');获取到$system['application_folder']的值。如果你使用了$this->helper()
                 加载了一个配置文件那么就可以通过$this->config($config_var_name,$key)获取文件里面的配置信息，$config_var_name就是配置文件里面的全局变量名称。
                 $key是可选的参数，如果没有指定$key,那么就会返回名为$config_var_name的全局变量,如果不存在返回null。
+            </p> 
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="ajax">Ajax输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+            <p>
+                在控制器和模型里面都可以直接通过$this->ajax_echo($code, $tip = '', $data = '', $is_exit = true),进行ajax输出，
+                输出类型:{"code":200,"tip":"tip","data":["a","b"]},有三个标准属性code状态码,tip提示信息,data数据,$is_exit在输出完后是否
+                停止执行。
+            </p> 
+        </fieldset>
+        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+            <h2><legend style="color: #990000;"><a name="xml">XML输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+            <p>
+                在控制器和模型里面都可以直接通过$this->xml_echo($xml, $is_exit = true),进行ajax输出，
+                $xml是标准xml字符串,$is_exit在输出完后是否停止执行。
             </p> 
         </fieldset>
         <p style="text-align: center;border-top:solid #000000 thin;padding:20px;  ">Edited by:狂奔的蜗牛 Email:672308444@163.com</p>
