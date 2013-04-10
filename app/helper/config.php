@@ -1,2 +1,2 @@
 <?php
-$myconfig['app']='MicroPHP V1.0';
+$myconfig['app']='MicroPHP V1.1';

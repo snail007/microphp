@@ -277,9 +277,21 @@ class Controller extends Loader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '', $is_return = false) {
+    public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        return $is_return ? $str : (print($str));
+        header('Content-type:application/json;charset=urf-8');
+        echo $str;
+        if ($is_exit) {
+            exit();
+        }
+    }
+
+    public function xml_echo($xml, $is_exit = true) {
+        header('Content-type:text/xml;charset=utf-8');
+        echo $xml;
+        if ($is_exit) {
+            exit();
+        }
     }
 
 }
