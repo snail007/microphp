@@ -99,6 +99,11 @@ class FormValidator {
         return (preg_match($reg, $this->current_val)) ? true : false;
     }
 
+    //验证是否为空 
+    function req() {
+        return mb_strlen($this->current_val) > 0;
+    }
+
 }
 
 /* End of file FormValidator.php */
