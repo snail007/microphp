@@ -17,7 +17,7 @@
  */
 class FormValidator {
 
-    private $current_val;
+    private $current_val, $data;
     public $error;
 
     public function getMappedData(Array $map, Array $source = null) {
@@ -37,21 +37,32 @@ class FormValidator {
      * @return boolean
      */
     public function check(Array $rules, $data = null) {
-        if(empty($data)){
-            $data=$_POST;
+        if (empty($data)) {
+            $data = $_POST;
         }
         foreach ($rules as $key => $value) {
             $this->current_val = empty($data[$key]) ? '' : $data[$key];
             //正则验证 
-            if (isset($value['reg'])) { 
-                if (!eval('return $this->reg("' . str_replace('"', '\"', $value['reg']).'");')) {
-                    $this->error=  empty($value['tip'])?'no tip of '.$key:$value['tip'];
+            if (isset($value['reg'])) {
+                if (!eval('return $this->reg("' . str_replace('"', '\"', $value['reg']) . '");')) {
+                    $this->error = empty($value['tip']) ? 'no tip of ' . $key : $value['tip'];
                     return false;
                 }
                 //自定义函数或者方法验证
             } elseif (isset($value['func'])) {
-                if (!eval('return ' . $value['reg'].'(\''.$this->current_val.'\',\''.$this->current_val.'\');')) {
+                if (!eval('return ' . $value['func'] . '(' . var_export($data, true) . ');')) {
+                    $this->error = empty($value['tip']) ? 'no tip of ' . $key : $value['tip'];
                     return false;
+                }
+                //内置验证
+            } elseif (isset($value['rule'])) {
+                $rules_a = explode('|', $value['rule']);
+                foreach ($rules_a as $func) {
+                    echo 'return $this->' . $func . ';';
+                    if (!eval('return $this->' . $func . ';')) {
+                        $this->error = empty($value['tip']) ? 'no tip of ' . $key : $value['tip'];
+                        return false;
+                    }
                 }
             }
         }
@@ -60,7 +71,7 @@ class FormValidator {
 
     //验证是否为指定长度
     private function len($min, $max) {
-        return (preg_match("/^.*{" . $min . "," . $max . "}$/", $this->current_val)) ? true : false;
+        return (preg_match("/^.{" . $min . "," . $max . "}$/", $this->current_val)) ? true : false;
     }
 
     //验证邮件地址

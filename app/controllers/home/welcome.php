@@ -14,11 +14,12 @@ class Welcome extends Controller {
     public function doForm() {
         $validator = new FormValidator();
         $data = array('user' => 'aaa', 'pass' => 'bbbb');
-        $rules = array('user' =>array('func'=>"Welcome::"));
+        $rules = array('user' =>array('func'=>"Welcome::check"));
         var_dump($validator->check($rules, $data),$validator->error);
     }
     static function check($val){
-        return '123';
+        var_dump($val);
+        return false;
     }
     public function doIndex($name = '') {
         $this->helper('config');
