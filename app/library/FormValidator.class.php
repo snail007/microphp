@@ -20,7 +20,7 @@ class FormValidator {
     private $current_val;
     public $error;
 
-    function getMappedData(Array $map, Array $source = null) {
+    public function getMappedData(Array $map, Array $source = null) {
         if (empty($source)) {
             $source = $_POST;
         }
@@ -42,18 +42,20 @@ class FormValidator {
         }
         foreach ($rules as $key => $value) {
             $this->current_val = empty($data[$key]) ? '' : $data[$key];
-            //正则验证
-            if (!empty($value['reg'])) {
-                if (!eval('return $this->' . $value['reg'])) {
+            //正则验证 
+            if (isset($value['reg'])) { 
+                if (!eval('return $this->reg("' . str_replace('"', '\"', $value['reg']).'");')) {
+                    $this->error=  empty($value['tip'])?'no tip of '.$key:$value['tip'];
                     return false;
                 }
                 //自定义函数或者方法验证
-            } elseif (!empty($value['func'])) {
-                if (!eval('return ' . $value['reg'])) {
+            } elseif (isset($value['func'])) {
+                if (!eval('return ' . $value['reg'].'(\''.$this->current_val.'\',\''.$this->current_val.'\');')) {
                     return false;
                 }
             }
         }
+        return true;
     }
 
     //验证是否为指定长度
