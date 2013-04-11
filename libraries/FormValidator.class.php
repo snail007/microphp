@@ -36,15 +36,20 @@ class FormValidator {
      * @param array $data
      * @return boolean
      */
-    public function check(Array $data) {
-        foreach ($data as $key => $value) {
+    public function check(Array $rules, $data = null) {
+        if(empty($data)){
+            $data=$_POST;
+        }
+        foreach ($rules as $key => $value) {
+            $this->current_val = empty($data[$key]) ? '' : $data[$key];
             //正则验证
-            if(!empty($value['reg'])){
-                if(!eval('return $this->'.$value['reg'])){
+            if (!empty($value['reg'])) {
+                if (!eval('return $this->' . $value['reg'])) {
                     return false;
                 }
-            }elseif(!empty($value['func'])){
-                if(!eval('return '.$value['reg'])){
+                //自定义函数或者方法验证
+            } elseif (!empty($value['func'])) {
+                if (!eval('return ' . $value['reg'])) {
                     return false;
                 }
             }
