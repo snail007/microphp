@@ -14,7 +14,7 @@ class Welcome extends Controller {
     public function doForm() {
         $validator = new FormValidator();
         $data = array('user' => 'aaa', 'pass' => 'bbbb');
-        $rules = array('user' =>array('func'=>"Welcome::check"));
+        $rules = array('user' =>array('rule'=>"req()"));
         var_dump($validator->check($rules, $data),$validator->error);
     }
     static function check($val){
