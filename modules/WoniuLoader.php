@@ -144,7 +144,7 @@ class WoniuLoader {
 
 }
 
-class ModelLoader {
+class WoniuModelLoader {
 
     public static $model_files = array();
 
