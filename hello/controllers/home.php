@@ -18,7 +18,7 @@
  * @since		Version 1.0
  * @createdtime {createdtime}
  */
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello() {
         $this->helper('functions');

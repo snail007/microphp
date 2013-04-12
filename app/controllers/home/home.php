@@ -5,7 +5,7 @@
  *
  * @author Administrator
  */
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function __construct() {
         parent::__construct();

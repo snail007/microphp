@@ -13,7 +13,7 @@
 class TestLibrary {
     public static $txt='fuck';
     public function testController(){
-        var_dump(Controller::getInstance());
+        var_dump(WoniuController::getInstance());
     }
 }
  

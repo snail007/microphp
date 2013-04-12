@@ -27,7 +27,7 @@
                 然后在controllers里面新建一个home.php,里面输入以下内容：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
       public function doHello(){
           echo 'Hello,world!';
       }
@@ -40,7 +40,7 @@ class Home extends Controller {
             <p>我们现在想让doHello方法接受一个$name参数,为了避免没有传递参数报notice,我们给$name一个默认值'',home.php内容修改后如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
       public function doHello($name=''){
           echo 'Hello,'.$name.'!';
       }
@@ -55,7 +55,7 @@ class Home extends Controller {
                 我们在hello文件夹里面新建一个models文件夹,它用来存放我们的模型,然后在models里面新建一个User.model.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class User extends Model{
+class User extends WoniuModel{
    public function getNameById($id){
        return $id.':Jhon';
    }
@@ -65,7 +65,7 @@ class User extends Model{
                 我们在home控制器里面加载User模型,home.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello($id='') {
         $this->model('User');
@@ -89,7 +89,7 @@ My name is:&lt;?php echo $name;?&gt;
                 我们在home控制器里面加载welcome视图,并传递一个$name进去,home.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello() {
         $data=array('name'=>'Jhon');
@@ -119,7 +119,7 @@ $db['default']['dbprefix'] = 'ecm_';
                 通过上面的配置,程序已经可以自动连接数据库里,现在我们在home控制器里面输出数据库ecm_article表里面的信息,home.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello() {
         $data=$this->db->limit(1)->get('article')->result_array();
@@ -139,7 +139,7 @@ class Home extends Controller {
             <pre style="font-size: 13px;line-height: 22px;">
 class Woniu {
     function say(){
-        $Woniu=&Controller::getInstance();
+        $Woniu=&WoniuController::getInstance();
         echo 'application folder is:'.$Woniu->config('system','application_folder').'&lt;br/&gt;';
         echo 'Hello,MicroPHP!';
     }
@@ -149,7 +149,7 @@ class Woniu {
                 然后我们可以在home控制器里面使用它，home.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello() {
         $woniu=new Woniu();
@@ -179,7 +179,7 @@ function woniu(){
                 然后我们可以在home控制器里面使用它，home.php内容如下：
             </p>
             <pre style="font-size: 13px;line-height: 22px;">
-class Home extends Controller {
+class Home extends WoniuController {
 
     public function doHello() {
         $this->helper('functions');

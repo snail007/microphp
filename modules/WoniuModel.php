@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class Model extends WoniuLoader {
+class WoniuModel extends WoniuLoader {
 
     public static function instance($classname_path) {
         global $system;

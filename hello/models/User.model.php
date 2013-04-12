@@ -12,7 +12,7 @@
  * @since		Version 1.0
  * @createdtime {createdtime}
  */
-class User extends Model{
+class User extends WoniuModel{
    public function getNameById($id){
        return $id.':Jhon';
    }

@@ -10,7 +10,7 @@
  *
  * @author Administrator
  */
-class User2 extends Model {
+class User2 extends WoniuModel {
 
     public function sayHello($name) {
         echo 'hello2:' . $name;

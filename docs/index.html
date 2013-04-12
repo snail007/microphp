@@ -91,8 +91,8 @@
                 同时向doIndex方法传递了两个参数，第一个是1和第二个是2
             </p>
             <p>可以看出两个模式的区别就是index.php后面一个是?一个是/</p>
-            <p>控制器类必须继承Controller类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
-            <p>class Welcome extends Controller{<br>
+            <p>控制器类必须继承WoniuController类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+            <p>class Welcome extends WoniuController{<br>
                 public function __construct() {<br>
                 parent::__construct();<br>
                 }</p>
@@ -115,8 +115,8 @@
                 $this->model('home\News')加载这个模型类，然后就可以通过$this->model->news访问这个模型类了;
             </p> 
             <p>需要注意的就是：没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，xxx一定是小写的，比如上面的news</p>
-            <p>模型类必须继承Model类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
-            <p>class User extends Model {</p>
+            <p>模型类必须继承WoniuModel类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+            <p>class User extends WoniuModel {</p>
             <p> public function __construct() {<br>
                 parent::__construct();<br>
                 }</p>
@@ -170,7 +170,7 @@
 
             <p>
                 在控制器和模型里面都可以直接通过new $class_name()直接使用系统类库配置文件夹中的类库，这里的$class_name就是类库的文件名（不包含配置后缀）也是类名。
-                另外在类库里可以直接通过$controller=&Controller::getInstance()访问控制器实例;
+                另外在类库里可以直接通过$controller=&WoniuController::getInstance()访问控制器实例;
             </p> 
         </fieldset> 
         <fieldset style="border-color:gray;border-style:solid;border-width:0;">

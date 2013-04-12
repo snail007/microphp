@@ -20,7 +20,7 @@
  */
 class Woniu {
     function say(){
-        $Woniu=&Controller::getInstance();
+        $Woniu=&WoniuController::getInstance();
         echo 'application folder is:'.$Woniu->config('system','application_folder').'<br/>';
         echo 'Hello,MicroPHP!';
     }

@@ -5,7 +5,7 @@
  *
  * @author Administrator
  */
-class Welcome extends Controller {
+class Welcome extends WoniuController {
 
     public function __construct() {
         parent::__construct();
