@@ -60,12 +60,12 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
-include('Helper.php');
+include('WoniuHelper.php');
 include('DB_driver.php');
-include('Router.php'); 
-include('Loader.php'); 
-include('Controller.php');
-include('Model.php'); 
+include('WoniuRouter.php'); 
+include('WoniuLoader.php'); 
+include('WoniuController.php');
+include('WoniuModel.php'); 
 WoniuRouter::loadClass();
 
 /* End of file index.php */
