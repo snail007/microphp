@@ -36,8 +36,11 @@ class Router {
                 trigger404($methodInfo['class'] . ':' . $methodInfo['method'] . ' not found.');
             }
         } else {
-            trigger404();
-//            trigger404('file:' . $methodInfo['file'] . ' not found.');
+            if($system['debug']){
+                trigger404('file:' . $methodInfo['file'] . ' not found.');
+            }  else {
+                trigger404();
+            }
         }
     }
 
@@ -45,7 +48,11 @@ class Router {
         global $system;
         $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
         if(empty($pathinfo)){
-            trigger404();
+            if($system['debug']){
+                trigger404('request parse error:'.$_SERVER['REQUEST_URI']);
+            }else{
+                trigger404();
+            }
         }
         //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
         $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
