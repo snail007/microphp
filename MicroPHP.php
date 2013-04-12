@@ -46,7 +46,10 @@ class Router {
 
     private static function parseURI() {
         global $system;
-        $pathinfo = parse_url($_SERVER['REQUEST_URI']);
+        $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
+        if(empty($pathinfo)){
+            trigger404('<h1>Not Found</h1>');
+        }
         //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
         $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
