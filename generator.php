@@ -1,6 +1,6 @@
 <?php
 $ver="Version 1.1"; 
-$files = array( 'modules/WoniuRouter.php', 'modules/WoniuLoader.php', 'modules/WoniuController.php', 'modules/WoniuModel.php', 'modules/WoniuDB_driver.php', 'modules/WoniuHelper.php');
+$files = array( 'modules/WoniuRouter.php', 'modules/WoniuLoader.php', 'modules/WoniuController.php', 'modules/WoniuModel.php', 'modules/DB_driver.php', 'modules/WoniuHelper.php');
 $core = '';
 foreach ($files as $file) {
     $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));

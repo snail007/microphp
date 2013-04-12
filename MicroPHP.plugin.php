@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -60,17 +60,17 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
+include('Helper.php');
 
-
- 
- 
-
- 
+include('Router.php'); 
+include('Loader.php'); 
+include('Controller.php');
+include('Model.php'); 
 
 
 /* End of file index.php */
 
-//####################modules/Router.php####################{
+//####################modules/WoniuRouter.php####################{
 
 
 /**
@@ -84,9 +84,9 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
-class Router {
+class WoniuRouter {
 
     public static function loadClass() {
         global $system;
@@ -170,7 +170,7 @@ class Router {
 }
 
 /* End of file Router.php */
-//####################modules/Loader.php####################{
+//####################modules/WoniuLoader.php####################{
 
 
 /**
@@ -184,9 +184,9 @@ class Router {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
-class Loader {
+class WoniuLoader {
 
     protected $db;
     private $helper_files = array();
@@ -198,7 +198,7 @@ class Loader {
         self::classAutoloadRegister();
         $this->model = new ModelLoader();
         if ($this->config('system', "autoload_db")) {
-            $this->db = MySQL::getInstance();
+            $this->db = WoniuMySQL::getInstance();
         }
         stripslashes_all();
     }
@@ -217,11 +217,11 @@ class Loader {
         //没有传递配置，使用默认配置
         if (!is_array($config)) {
             if (!is_object($this->db)) {
-                $this->db = MySQL::getInstance($config);
+                $this->db = WoniuMySQL::getInstance($config);
             }
             return $this->db;
         } else {
-            $db = MySQL::getInstance($config);
+            $db = WoniuMySQL::getInstance($config);
             return $db;
         }
     }
@@ -259,13 +259,13 @@ class Loader {
             $alias_name = strtolower($classname);
         }
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
             }
@@ -328,7 +328,7 @@ class ModelLoader {
 }
 
 /* End of file Loader.php */
-//####################modules/Controller.php####################{
+//####################modules/WoniuController.php####################{
 
 
 /**
@@ -342,9 +342,9 @@ class ModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
-class Controller extends Loader {
+class WoniuController extends WoniuLoader {
 
     private static $woniu;
 
@@ -386,13 +386,13 @@ class Controller extends Loader {
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path).$system['controller_file_subfix'];
         $alias_name = strtolower($filepath);
         
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         } 
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');
             }
@@ -403,7 +403,7 @@ class Controller extends Loader {
 }
 
 /* End of file Controller.php */
-//####################modules/Model.php####################{
+//####################modules/WoniuModel.php####################{
 
 
 /**
@@ -417,9 +417,9 @@ class Controller extends Loader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
-class Model extends Loader {
+class WoniuModel extends WoniuLoader {
 
     public static function instance($classname_path) {
         global $system;
@@ -427,13 +427,13 @@ class Model extends Loader {
         $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
         $alias_name = strtolower($filepath);
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
             }
@@ -458,9 +458,9 @@ class Model extends Loader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
-class MySQL {
+class WoniuMySQL {
 
     private static $CIAR;
 
@@ -4667,7 +4667,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
 function log_message($level, $msg) {/* just suppress logging */
 }
-//####################modules/Helper.php####################{
+//####################modules/WoniuHelper.php####################{
 
 /**
  * MicroPHP
@@ -4680,7 +4680,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 12:51:57
+ * @createdtime       2013-04-12 15:14:37
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
