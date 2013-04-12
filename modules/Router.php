@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -36,9 +37,9 @@ class Router {
                 trigger404($methodInfo['class'] . ':' . $methodInfo['method'] . ' not found.');
             }
         } else {
-            if($system['debug']){
+            if ($system['debug']) {
                 trigger404('file:' . $methodInfo['file'] . ' not found.');
-            }  else {
+            } else {
                 trigger404();
             }
         }
@@ -47,10 +48,10 @@ class Router {
     private static function parseURI() {
         global $system;
         $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
-        if(empty($pathinfo)){
-            if($system['debug']){
-                trigger404('request parse error:'.$_SERVER['REQUEST_URI']);
-            }else{
+        if (empty($pathinfo)) {
+            if ($system['debug']) {
+                trigger404('request parse error:' . $_SERVER['REQUEST_URI']);
+            } else {
                 trigger404();
             }
         }
@@ -63,7 +64,11 @@ class Router {
             $pathinfo_query{0} === '/' ? $pathinfo_query = substr($pathinfo_query, 1) : null;
             $requests = explode("/", $pathinfo_query);
             //看看是否指定了类和方法名
-            preg_match('/\w+(?:\.\w+)+/', $requests[0]) ? $class_method = $requests[0] : null;
+            preg_match('/[^&]+(?:\.[^&]+)+/', $requests[0]) ? $class_method = $requests[0] : null;
+            if(strstr($class_method, '&')!==false){
+                $cm=  explode('&', $class_method);
+                $class_method=$cm[0];
+            }
         }
         //去掉查询字符串中的类方法部分，只留下参数
         $pathinfo_query = str_replace($class_method, '', $pathinfo_query);
@@ -90,4 +95,5 @@ class Router {
     }
 
 }
+
 /* End of file Router.php */
