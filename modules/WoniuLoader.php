@@ -125,7 +125,7 @@ class WoniuLoader {
     }
 
     public static function classAutoloadRegister() {
-        spl_autoload_register(array('Loader', 'classAutoloader'));
+        spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
     }
 
     public static function classAutoloader($clazzName) {

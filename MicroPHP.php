@@ -14,7 +14,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 class WoniuRouter {
 
@@ -114,7 +114,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 class WoniuLoader {
 
@@ -228,7 +228,7 @@ class WoniuLoader {
     }
 
     public static function classAutoloadRegister() {
-        spl_autoload_register(array('Loader', 'classAutoloader'));
+        spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
     }
 
     public static function classAutoloader($clazzName) {
@@ -272,7 +272,7 @@ class ModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 class WoniuController extends WoniuLoader {
 
@@ -347,7 +347,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 class WoniuModel extends WoniuLoader {
 
@@ -388,7 +388,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 class WoniuMySQL {
 
@@ -4610,7 +4610,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:16:38
+ * @createdtime       2013-04-12 15:18:39
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
