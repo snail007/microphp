@@ -43,7 +43,7 @@ class Router {
 
     private static function parseURI() {
         global $system;
-        $pathinfo = parse_url($_SERVER['REQUEST_URI']);
+        $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
         if(empty($pathinfo)){
             trigger404();
         }
