@@ -22,6 +22,8 @@ class Welcome extends Controller {
         return false;
     }
     public function doIndex($name = '') {
+        $model=Model::instance('test.User');
+        $model->sayHello('snail');
         $this->helper('config');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
