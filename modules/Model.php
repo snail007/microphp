@@ -25,7 +25,9 @@ class Model extends Loader {
             return ModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
-            include $filepath;
+            if(!class_exists($classname)){
+                include $filepath;
+            }
             if (class_exists($classname)) {
                 return ModelLoader::$model_files[$alias_name] = new $classname();
             } else {

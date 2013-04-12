@@ -52,13 +52,15 @@ class Controller extends Loader {
         global $system;
         $classname_path=  str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname= basename($classname_path); 
-        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path.$system['controller_file_subfix'];
+        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path).$system['controller_file_subfix'];
         $alias_name = strtolower($filepath);
         if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
             return ModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
-            include $filepath;
+            if(!class_exists($classname)){
+                include $filepath;
+            }
             if (class_exists($classname)) {
                 return ModelLoader::$model_files[$alias_name] = new $classname();
             } else {
