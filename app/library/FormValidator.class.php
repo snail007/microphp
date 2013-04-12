@@ -103,6 +103,10 @@ class FormValidator {
     function req() {
         return mb_strlen($this->current_val) > 0;
     }
+    //验证数是否在指定范围 
+    function range($min,$max) {
+        return $this->current_val>=$min&&$this->current_val<=$max;
+    }
 
 }
 

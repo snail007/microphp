@@ -13,8 +13,8 @@ class Welcome extends Controller {
 
     public function doForm() {
         $validator = new FormValidator();
-        $data = array('user' => 'aaa', 'pass' => 'bbbb');
-        $rules = array('user' =>array('rule'=>"req()"));
+        $data = array('user' => '111', 'pass' => 'bbbb');
+        $rules = array('user' =>array('rule'=>"range(1,1000)"));
         var_dump($validator->check($rules, $data),$validator->error);
     }
     static function check($val){
