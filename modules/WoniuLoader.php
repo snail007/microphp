@@ -23,7 +23,7 @@ class WoniuLoader {
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         self::classAutoloadRegister();
-        $this->model = new ModelLoader();
+        $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->db = WoniuMySQL::getInstance();
         }

@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -84,7 +84,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 class WoniuRouter {
 
@@ -184,7 +184,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 class WoniuLoader {
 
@@ -196,7 +196,7 @@ class WoniuLoader {
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         self::classAutoloadRegister();
-        $this->model = new ModelLoader();
+        $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->db = WoniuMySQL::getInstance();
         }
@@ -342,7 +342,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 class WoniuController extends WoniuLoader {
 
@@ -417,7 +417,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 class WoniuModel extends WoniuLoader {
 
@@ -458,7 +458,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 class WoniuMySQL {
 
@@ -4680,7 +4680,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:22:42
+ * @createdtime       2013-04-12 15:24:28
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
