@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 15:14:37
+ * @createdtime       2013-04-12 15:16:38
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -60,12 +60,12 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
-include('Helper.php');
 
-include('Router.php'); 
-include('Loader.php'); 
-include('Controller.php');
-include('Model.php'); 
+
+ 
+ 
+
+ 
 
 
 /* End of file index.php */
