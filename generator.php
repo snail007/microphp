@@ -1,19 +1,19 @@
 <?php
 $ver="Version 1.1"; 
-$files = array( 'modules/Router.php', 'modules/Loader.php', 'modules/Controller.php', 'modules/Model.php', 'modules/DB_driver.php', 'modules/Helper.php');
+$files = array( 'modules/WoniuRouter.php', 'modules/WoniuLoader.php', 'modules/WoniuController.php', 'modules/WoniuModel.php', 'modules/WoniuDB_driver.php', 'modules/WoniuHelper.php');
 $core = '';
 foreach ($files as $file) {
     $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
 }
 common_replace($core);
-file_put_contents('MicroPHP.php', "<?php\n" . $core."\nRouter::loadClass();");
+file_put_contents('MicroPHP.php', "<?php\n" . $core."\nWoniuRouter::loadClass();");
 
 $index=file_get_contents('modules/index.php');
 foreach ($files as $file) {
     $index=str_replace("include('" . basename($file) . "');", '', $index);
 }
 $index=str_replace("../app", 'app', $index);
-$index=str_replace("Router::loadClass();", '', $index);
+$index=str_replace("WoniuRouter::loadClass();", '', $index);
 common_replace($index);
 file_put_contents('index.php', $index."\ninclude('MicroPHP.php');");
 

@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class Router {
+class WoniuRouter {
 
     public static function loadClass() {
         global $system;

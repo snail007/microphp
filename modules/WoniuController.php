@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class Controller extends Loader {
+class WoniuController extends WoniuLoader {
 
     private static $woniu;
 
@@ -55,13 +55,13 @@ class Controller extends Loader {
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path).$system['controller_file_subfix'];
         $alias_name = strtolower($filepath);
         
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         } 
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');
             }

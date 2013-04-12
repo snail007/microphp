@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class Model extends Loader {
+class Model extends WoniuLoader {
 
     public static function instance($classname_path) {
         global $system;
@@ -21,13 +21,13 @@ class Model extends Loader {
         $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
         $alias_name = strtolower($filepath);
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
             }

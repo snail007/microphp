@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class Loader {
+class WoniuLoader {
 
     protected $db;
     private $helper_files = array();
@@ -25,7 +25,7 @@ class Loader {
         self::classAutoloadRegister();
         $this->model = new ModelLoader();
         if ($this->config('system', "autoload_db")) {
-            $this->db = MySQL::getInstance();
+            $this->db = WoniuMySQL::getInstance();
         }
         stripslashes_all();
     }
@@ -44,11 +44,11 @@ class Loader {
         //没有传递配置，使用默认配置
         if (!is_array($config)) {
             if (!is_object($this->db)) {
-                $this->db = MySQL::getInstance($config);
+                $this->db = WoniuMySQL::getInstance($config);
             }
             return $this->db;
         } else {
-            $db = MySQL::getInstance($config);
+            $db = WoniuMySQL::getInstance($config);
             return $db;
         }
     }
@@ -86,13 +86,13 @@ class Loader {
             $alias_name = strtolower($classname);
         }
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-        if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
-            return ModelLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
-                return ModelLoader::$model_files[$alias_name] = new $classname();
+                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
             }

@@ -66,6 +66,6 @@ include('Router.php');
 include('Loader.php'); 
 include('Controller.php');
 include('Model.php'); 
-Router::loadClass();
+WoniuRouter::loadClass();
 
 /* End of file index.php */
