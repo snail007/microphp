@@ -13,7 +13,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 class Router {
 
@@ -47,6 +47,9 @@ class Router {
     private static function parseURI() {
         global $system;
         $pathinfo = parse_url($_SERVER['REQUEST_URI']);
+        if(empty($pathinfo)){
+            trigger404();
+        }
         //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
         $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
@@ -98,7 +101,7 @@ class Router {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 class Loader {
 
@@ -256,7 +259,7 @@ class ModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 class Controller extends Loader {
 
@@ -310,7 +313,7 @@ class Controller extends Loader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 class Model extends Loader{
     //put your code here
@@ -329,7 +332,7 @@ class Model extends Loader{
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 class MySQL {
 
@@ -4551,7 +4554,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-12 06:29:27
+ * @createdtime       2013-04-12 06:30:26
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
