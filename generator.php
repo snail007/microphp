@@ -20,6 +20,10 @@ file_put_contents('index.php', $index."\ninclude('MicroPHP.php');");
 #ver modify
 file_put_contents('app/helper/config.php', "<?php\n\$myconfig['app']='".$ver."';");
 
+
+
+file_put_contents('MicroPHP.plugin.php', $index."\n".$core);
+
 echo 'done';
 function common_replace(&$str){
     global $ver;
@@ -27,3 +31,4 @@ function common_replace(&$str){
     $str=str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str=str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - '.date('Y').',', $str);
 }
+

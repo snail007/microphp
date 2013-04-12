@@ -26,7 +26,8 @@ class Home extends Controller {
     public function doIndex($name = '') {
         Controller::instance('home.Welcome')->doAjax('snail');
         Controller::instance('home.Welcome')->doAjax('snail');
-//        Model::instance('User2')->sayHello('snail');
+        Model::instance('User2')->sayHello('snail');
+        Model::instance('User2')->sayHello('snail');
     }
 
     public function do__output($html) {

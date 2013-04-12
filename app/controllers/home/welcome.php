@@ -32,7 +32,7 @@ class Welcome extends Controller {
     }
 
     public function doAjax() {
-        $this->ajax_echo(200, 'tip', array('a', 'b'));
+        $this->ajax_echo(200, 'tip', array('a', 'b'),false);
     }
 
 }
