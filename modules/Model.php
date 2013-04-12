@@ -18,16 +18,14 @@ class Model extends Loader {
     public static function instance($classname_path) {
         global $system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
-        $classname = basename($classname_path); 
+        $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
         $alias_name = strtolower($filepath);
         if (in_array($alias_name, array_keys(ModelLoader::$model_files))) {
             return ModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
-            if(!class_exists($classname)){
-                include $filepath;
-            }
+            include $filepath;
             if (class_exists($classname)) {
                 return ModelLoader::$model_files[$alias_name] = new $classname();
             } else {

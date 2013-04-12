@@ -22,7 +22,7 @@ class Welcome extends Controller {
         return false;
     }
     public function doIndex($name = '') {
-        $model=  Controller::instance('home.Welcome')->doAjax('snail');
+        
         $this->helper('config');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }

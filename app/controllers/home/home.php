@@ -5,7 +5,7 @@
  *
  * @author Administrator
  */
-class Welcome extends Controller {
+class Home extends Controller {
 
     public function __construct() {
         parent::__construct();
@@ -14,17 +14,19 @@ class Welcome extends Controller {
     public function doForm() {
         $validator = new FormValidator();
         $data = array('user' => '111', 'pass' => 'bbbb');
-        $rules = array('user' =>array('rule'=>"range(1,1000)"));
-        var_dump($validator->check($rules, $data),$validator->error);
+        $rules = array('user' => array('rule' => "range(1,1000)"));
+        var_dump($validator->check($rules, $data), $validator->error);
     }
-    static function check($val){
+
+    static function check($val) {
         var_dump($val);
         return false;
     }
+
     public function doIndex($name = '') {
-        $model=  Controller::instance('home.Welcome')->doAjax('snail');
-        $this->helper('config');
-        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
+        Controller::instance('home.Welcome')->doAjax('snail');
+        Controller::instance('home.Welcome')->doAjax('snail');
+//        Model::instance('User2')->sayHello('snail');
     }
 
     public function do__output($html) {
