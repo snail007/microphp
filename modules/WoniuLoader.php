@@ -19,7 +19,7 @@ class WoniuLoader {
     private $helper_files = array();
     protected $model;
     private $view_vars = array();
-    private static $loader_instance;
+    private static $instance;
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         self::classAutoloadRegister();
@@ -142,7 +142,7 @@ class WoniuLoader {
         }
     }
     public static function instance(){
-        return empty(self::$loader_instance)?self::$loader_instance=new WoniuLoader():self::$loader_instance;
+        return empty(self::$instance)?self::$instance=new self():self::$instance;
     }
 }
 

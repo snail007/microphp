@@ -16,6 +16,7 @@
 class WoniuController extends WoniuLoader {
 
     private static $woniu;
+    private static $instance;
 
     public function __construct() {
         parent::__construct();
@@ -48,16 +49,20 @@ class WoniuController extends WoniuLoader {
             exit();
         }
     }
+
     public static function instance($classname_path) {
+        if (empty($classname_path)) {
+            return empty(self::$instance) ? self::$instance = new self() : self::$instance;
+        }
         global $system;
-        $classname_path=  str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
-        $classname= basename($classname_path); 
-        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path).$system['controller_file_subfix'];
+        $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
+        $classname = basename($classname_path);
+        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path) . $system['controller_file_subfix'];
         $alias_name = strtolower($filepath);
-        
+
         if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
             return WoniuModelLoader::$model_files[$alias_name];
-        } 
+        }
         if (file_exists($filepath)) {
             include $filepath;
             if (class_exists($classname)) {
@@ -69,6 +74,7 @@ class WoniuController extends WoniuLoader {
             trigger404($filepath . ' not found.');
         }
     }
+
 }
 
 /* End of file Controller.php */

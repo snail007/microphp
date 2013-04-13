@@ -15,7 +15,12 @@
  */
 class WoniuModel extends WoniuLoader {
 
+    private static $instance;
+
     public static function instance($classname_path) {
+        if (empty($classname_path)) {
+            return empty(self::$instance) ? self::$instance = new self() : self::$instance;
+        }
         global $system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
