@@ -131,6 +131,7 @@ class WoniuLoader {
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         $found = false;
+        $__autoload_found = false;
         $auto_functions = spl_autoload_functions();
         if (is_array($auto_functions)) {
             foreach ($auto_functions as $func) {
@@ -139,12 +140,18 @@ class WoniuLoader {
                     break;
                 }
             }
+            foreach ($auto_functions as $func) {
+                if (!is_array($func) && $func == '__autoload') {
+                    $__autoload_found = TRUE;
+                    break;
+                }
+            }
+        }
+        if (function_exists('__autoload') && !$__autoload_found) {
+            //如果存在__autoload而且没有被注册过,就显示的注册它，不然它会因为spl_autoload_register的调用而失效
+            spl_autoload_register('__autoload');
         }
         if (!$found) {
-            if(function_exists('__autoload')){
-                //如果存在__autoload就显示的注册它，不然它会因为spl_autoload_register的调用而失效
-                spl_autoload_register('__autoload');
-            }
             //最后注册我们的自动加载器
             spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
         }
