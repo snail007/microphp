@@ -14,14 +14,14 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 class WoniuRouter {
 
     public static function loadClass() {
         global $system;
         $methodInfo = self::parseURI();
-        //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器hook功能，达到拓展控制器的功能
+        //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
         //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在Loader里面再尝试加载一次即可，
         //如此一来就能满足两种模式
         WoniuLoader::classAutoloadRegister();
@@ -118,7 +118,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 class WoniuLoader {
 
@@ -238,6 +238,7 @@ class WoniuLoader {
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         $found = false;
+        $__autoload_found = false;
         $auto_functions = spl_autoload_functions();
         if (is_array($auto_functions)) {
             foreach ($auto_functions as $func) {
@@ -246,12 +247,18 @@ class WoniuLoader {
                     break;
                 }
             }
+            foreach ($auto_functions as $func) {
+                if (!is_array($func) && $func == '__autoload') {
+                    $__autoload_found = TRUE;
+                    break;
+                }
+            }
+        }
+        if (function_exists('__autoload') && !$__autoload_found) {
+            //如果存在__autoload而且没有被注册过,就显示的注册它，不然它会因为spl_autoload_register的调用而失效
+            spl_autoload_register('__autoload');
         }
         if (!$found) {
-            if(function_exists('__autoload')){
-                //如果存在__autoload就显示的注册它，不然它会因为spl_autoload_register的调用而失效
-                spl_autoload_register('__autoload');
-            }
             //最后注册我们的自动加载器
             spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
         }
@@ -302,7 +309,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 class WoniuController extends WoniuLoader {
 
@@ -383,7 +390,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 class WoniuModel extends WoniuLoader {
 
@@ -429,7 +436,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 class WoniuMySQL {
 
@@ -4651,7 +4658,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 03:38:15
+ * @createdtime       2013-04-14 04:07:53
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;

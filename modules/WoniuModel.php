@@ -30,6 +30,9 @@ class WoniuModel extends WoniuLoader {
             return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
+            //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+            //如此一来就能满足两种模式
+            WoniuLoader::classAutoloadRegister();
             include $filepath;
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();

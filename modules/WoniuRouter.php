@@ -19,7 +19,7 @@ class WoniuRouter {
         global $system;
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
-        //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在Loader里面再尝试加载一次即可，
+        //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
         //如此一来就能满足两种模式
         WoniuLoader::classAutoloadRegister();
 //        var_dump($methodInfo);

@@ -23,9 +23,6 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
-        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-        //如此一来就能满足两种模式
-        self::classAutoloadRegister();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->db = WoniuMySQL::getInstance();
@@ -172,6 +169,9 @@ class WoniuLoader {
     }
 
     public static function instance() {
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
+        self::classAutoloadRegister();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
 

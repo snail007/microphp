@@ -64,6 +64,7 @@ class WoniuController extends WoniuLoader {
             return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
+            WoniuLoader::classAutoloadRegister();
             include $filepath;
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
