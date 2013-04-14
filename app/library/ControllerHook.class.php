@@ -21,6 +21,7 @@
 class ControllerHook extends WoniuController{
     protected $hook_id='879887';
     public function printHook() {
+        print_r($this->view_path('common/footer')."\n");
         print_r($this->hook_id);
     }
 }
