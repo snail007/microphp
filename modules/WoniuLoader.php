@@ -159,12 +159,6 @@ class WoniuLoader {
         $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
         if (file_exists($library)) {
             include($library);
-        } else {
-            $auto_functions = spl_autoload_functions();
-            $last_func = $auto_functions[count($auto_functions) - 1];
-            if (is_array($last_func) && $last_func[0] == 'WoniuLoader' && $last_func[1] == 'classAutoloader') {
-                echo trigger404('Class : ' . $clazzName . ' not found.');
-            }
         }
     }
 
