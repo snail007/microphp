@@ -10,16 +10,13 @@
  *
  * @author Administrator
  */
-class User extends Model {
+class User extends WoniuModel {
 
     public function __construct() {
         parent::__construct();
     }
 
     public function sayHello($name) {
-        $this->model('User2');
-        $this->model->user2->sayHello('fuck');
-
         echo 'hello:' . $name;
     }
 }

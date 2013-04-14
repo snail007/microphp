@@ -10,9 +10,10 @@
  *
  * @author Administrator
  */
-class User2 extends WoniuModel {
+class User2 extends ModelHook {
 
     public function sayHello($name) {
+        $this->printHook();
         echo 'hello2:' . $name;
     }
 

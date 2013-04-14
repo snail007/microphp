@@ -18,12 +18,12 @@
  * @since		Version 1.0
  * @filesource
  */
-class ControllerHook extends WoniuController{
-    protected $hook_id='879887';
+class ModelHook extends WoniuModel{
+    protected $hook_id='97294753';
     public function printHook() {
-        print_r("\n".$this->view_path('common/footer')."\n");
-        print_r($this->hook_id)."\n";
+        $this->helper('config');
+        print_r("\n".$this->hook_id."\n");
     }
 }
 
-/* End of file ControllerHook.php */
+/* End of file ModelHook.php */

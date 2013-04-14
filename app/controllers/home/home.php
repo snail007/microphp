@@ -24,10 +24,11 @@ class Home extends WoniuController {
     }
 
     public function doIndex($name = '') {
-        Controller::instance('home.Welcome')->doAjax('snail');
-        Controller::instance('home.Welcome')->doAjax('snail');
-        Model::instance('User2')->sayHello('snail');
-        Model::instance('User2')->sayHello('snail');
+        WoniuController::instance('home.TestHook')->doTest();
+        echo '<br/>';
+        WoniuModel::instance('User2')->printHook();
+        echo '<br/>';
+        WoniuModel::instance('test.User')->sayHello('snail'); 
     }
 
     public function do__output($html) {

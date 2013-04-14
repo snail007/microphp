@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -84,7 +84,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 class WoniuRouter {
 
@@ -92,7 +92,7 @@ class WoniuRouter {
         global $system;
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
-        //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在Loader里面再尝试加载一次即可，
+        //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
         //如此一来就能满足两种模式
         WoniuLoader::classAutoloadRegister();
 //        var_dump($methodInfo);
@@ -188,7 +188,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 class WoniuLoader {
 
@@ -200,9 +200,6 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
-        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-        //如此一来就能满足两种模式
-        self::classAutoloadRegister();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->db = WoniuMySQL::getInstance();
@@ -349,6 +346,9 @@ class WoniuLoader {
     }
 
     public static function instance() {
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
+        self::classAutoloadRegister();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
 
@@ -379,7 +379,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 class WoniuController extends WoniuLoader {
 
@@ -432,6 +432,7 @@ class WoniuController extends WoniuLoader {
             return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
+            WoniuLoader::classAutoloadRegister();
             include $filepath;
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
@@ -460,7 +461,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 class WoniuModel extends WoniuLoader {
 
@@ -479,6 +480,9 @@ class WoniuModel extends WoniuLoader {
             return WoniuModelLoader::$model_files[$alias_name];
         }
         if (file_exists($filepath)) {
+            //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+            //如此一来就能满足两种模式
+            WoniuLoader::classAutoloadRegister();
             include $filepath;
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
@@ -506,7 +510,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 class WoniuMySQL {
 
@@ -4728,7 +4732,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 04:07:53
+ * @createdtime       2013-04-14 04:50:52
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
