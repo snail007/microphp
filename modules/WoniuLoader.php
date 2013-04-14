@@ -20,8 +20,11 @@ class WoniuLoader {
     protected $model;
     private $view_vars = array();
     private static $instance;
+
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
         self::classAutoloadRegister();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
@@ -35,7 +38,7 @@ class WoniuLoader {
         if ($key) {
             $config_group = $$config_group;
             return isset($config_group[$key]) ? $config_group[$key] : null;
-        }  else {
+        } else {
             return isset($$config_group) ? $$config_group : null;
         }
     }
@@ -125,7 +128,26 @@ class WoniuLoader {
     }
 
     public static function classAutoloadRegister() {
-        spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
+        $found = false;
+        $auto_functions = spl_autoload_functions();
+        if (is_array($auto_functions)) {
+            foreach ($auto_functions as $func) {
+                if (is_array($func) && $func[0] == 'WoniuLoader' && $func[1] == 'classAutoloader') {
+                    $found = TRUE;
+                    break;
+                }
+            }
+        }
+        if (!$found) {
+            if(function_exists('__autoload')){
+                //如果存在__autoload就显示的注册它，不然它会因为spl_autoload_register的调用而失效
+                spl_autoload_register('__autoload');
+            }
+            //最后注册我们的自动加载器
+            spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
+        }
     }
 
     public static function classAutoloader($clazzName) {
@@ -134,16 +156,18 @@ class WoniuLoader {
         if (file_exists($library)) {
             include($library);
         } else {
-           $auto_functions=spl_autoload_functions();
-            $last_func=$auto_functions[count($auto_functions)-1];
-            if (is_array($last_func)&&$last_func[0]=='WoniuLoader'&&$last_func[1]=='classAutoloader') {
+            $auto_functions = spl_autoload_functions();
+            $last_func = $auto_functions[count($auto_functions) - 1];
+            if (is_array($last_func) && $last_func[0] == 'WoniuLoader' && $last_func[1] == 'classAutoloader') {
                 echo trigger404('Class : ' . $clazzName . ' not found.');
             }
         }
     }
-    public static function instance(){
-        return empty(self::$instance)?self::$instance=new self():self::$instance;
+
+    public static function instance() {
+        return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
+
 }
 
 class WoniuModelLoader {

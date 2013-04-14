@@ -14,13 +14,17 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 class WoniuRouter {
 
     public static function loadClass() {
         global $system;
         $methodInfo = self::parseURI();
+        //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器hook功能，达到拓展控制器的功能
+        //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在Loader里面再尝试加载一次即可，
+        //如此一来就能满足两种模式
+        WoniuLoader::classAutoloadRegister();
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
@@ -114,7 +118,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 class WoniuLoader {
 
@@ -123,8 +127,11 @@ class WoniuLoader {
     protected $model;
     private $view_vars = array();
     private static $instance;
+
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
         self::classAutoloadRegister();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
@@ -138,7 +145,7 @@ class WoniuLoader {
         if ($key) {
             $config_group = $$config_group;
             return isset($config_group[$key]) ? $config_group[$key] : null;
-        }  else {
+        } else {
             return isset($$config_group) ? $$config_group : null;
         }
     }
@@ -228,7 +235,26 @@ class WoniuLoader {
     }
 
     public static function classAutoloadRegister() {
-        spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
+        $found = false;
+        $auto_functions = spl_autoload_functions();
+        if (is_array($auto_functions)) {
+            foreach ($auto_functions as $func) {
+                if (is_array($func) && $func[0] == 'WoniuLoader' && $func[1] == 'classAutoloader') {
+                    $found = TRUE;
+                    break;
+                }
+            }
+        }
+        if (!$found) {
+            if(function_exists('__autoload')){
+                //如果存在__autoload就显示的注册它，不然它会因为spl_autoload_register的调用而失效
+                spl_autoload_register('__autoload');
+            }
+            //最后注册我们的自动加载器
+            spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
+        }
     }
 
     public static function classAutoloader($clazzName) {
@@ -237,16 +263,18 @@ class WoniuLoader {
         if (file_exists($library)) {
             include($library);
         } else {
-           $auto_functions=spl_autoload_functions();
-            $last_func=$auto_functions[count($auto_functions)-1];
-            if (is_array($last_func)&&$last_func[0]=='WoniuLoader'&&$last_func[1]=='classAutoloader') {
+            $auto_functions = spl_autoload_functions();
+            $last_func = $auto_functions[count($auto_functions) - 1];
+            if (is_array($last_func) && $last_func[0] == 'WoniuLoader' && $last_func[1] == 'classAutoloader') {
                 echo trigger404('Class : ' . $clazzName . ' not found.');
             }
         }
     }
-    public static function instance(){
-        return empty(self::$instance)?self::$instance=new self():self::$instance;
+
+    public static function instance() {
+        return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
+
 }
 
 class WoniuModelLoader {
@@ -274,7 +302,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 class WoniuController extends WoniuLoader {
 
@@ -355,7 +383,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 class WoniuModel extends WoniuLoader {
 
@@ -401,7 +429,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 class WoniuMySQL {
 
@@ -4623,7 +4651,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 03:38:15
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
