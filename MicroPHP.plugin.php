@@ -10,14 +10,14 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']=dirname(__FILE__).DIRECTORY_SEPARATOR.'../../app';
-$system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controller';
-$system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'model';
-$system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'view';
+$system['application_folder']='app';
+$system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
+$system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
+$system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
 $system['library_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'library';
 $system['helper_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'helper';
 $system['error_page_404']='app/error/error_404.php';
@@ -31,7 +31,7 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=TRUE;
+$system['autoload_db']=FALSE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
@@ -44,8 +44,8 @@ $db['default']['hostname'] = 'localhost';
 $db['default']['port'] = 3306;
 $db['default']['username'] = 'root';
 $db['default']['password'] = 'admin';
-$db['default']['database'] = 'wenda';
-$db['default']['dbprefix'] = '';
+$db['default']['database'] = 'ectest';
+$db['default']['dbprefix'] = 'ecm_';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['char_set'] = 'utf8';
@@ -84,7 +84,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 class WoniuRouter {
 
@@ -184,7 +184,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 class WoniuLoader {
 
@@ -344,7 +344,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 class WoniuController extends WoniuLoader {
 
@@ -425,7 +425,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 class WoniuModel extends WoniuLoader {
 
@@ -471,7 +471,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 class WoniuMySQL {
 
@@ -4693,7 +4693,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-14 02:40:09
+ * @createdtime       2013-04-14 02:44:03
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
