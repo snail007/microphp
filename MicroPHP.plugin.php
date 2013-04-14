@@ -14,10 +14,10 @@
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
-$system['application_folder']='app';
-$system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
-$system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
-$system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
+$system['application_folder']=dirname(__FILE__).DIRECTORY_SEPARATOR.'../../app';
+$system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controller';
+$system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'model';
+$system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'view';
 $system['library_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'library';
 $system['helper_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'helper';
 $system['error_page_404']='app/error/error_404.php';
@@ -31,7 +31,7 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=FALSE;
+$system['autoload_db']=TRUE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
@@ -44,8 +44,8 @@ $db['default']['hostname'] = 'localhost';
 $db['default']['port'] = 3306;
 $db['default']['username'] = 'root';
 $db['default']['password'] = 'admin';
-$db['default']['database'] = 'ectest';
-$db['default']['dbprefix'] = 'ecm_';
+$db['default']['database'] = 'wenda';
+$db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['char_set'] = 'utf8';
