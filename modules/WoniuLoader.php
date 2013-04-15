@@ -15,7 +15,7 @@
  */
 class WoniuLoader {
 
-    protected $db;
+    public $db;
     private $helper_files = array();
     protected $model;
     private $view_vars = array();
