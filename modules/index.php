@@ -31,7 +31,7 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=TRUE;
+$system['autoload_db']=FALSE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
@@ -40,12 +40,12 @@ $system['default_timezone']='PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "sqlite3";
-$woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
-$woniu_db['default']['port'] = '';
+$woniu_db['default']['dbdriver'] = "mysql";#可用的有mysql,pdo,sqlite3
+$woniu_db['default']['hostname'] = 'localhost';
+$woniu_db['default']['port'] = '3306';
 $woniu_db['default']['username'] = 'root';
 $woniu_db['default']['password'] = 'admin';
-$woniu_db['default']['database'] = '';
+$woniu_db['default']['database'] = 'test';
 $woniu_db['default']['dbprefix'] = '';
 $woniu_db['default']['pconnect'] = TRUE;
 $woniu_db['default']['db_debug'] = TRUE;

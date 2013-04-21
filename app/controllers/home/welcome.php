@@ -21,9 +21,7 @@ class Welcome extends WoniuController {
         var_dump($val);
         return false;
     }
-    public function doIndex($name = '') {   
-        var_dump($this->db->get('qvodb')->row_array());
-        
+    public function doIndex($name = '') {
         $this->helper('config');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
