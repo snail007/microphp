@@ -31,29 +31,40 @@ $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['controller_method_ucfirst']=TRUE;
-$system['autoload_db']=FALSE;
+$system['autoload_db']=TRUE;
 $system['debug']=TRUE;
 $system['default_timezone']='PRC';
 
 //-----------------------end system config--------------------------
  
 //------------------------database config----------------------------
-$db['active_group'] = 'default';
+$woniu_db['active_group'] = 'default';
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['port'] = 3306;
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'admin';
-$db['default']['database'] = 'ectest';
-$db['default']['dbprefix'] = 'ecm_';
-$db['default']['pconnect'] = TRUE;
-$db['default']['db_debug'] = TRUE;
-$db['default']['char_set'] = 'utf8';
-$db['default']['dbcollat'] = 'utf8_general_ci';
-$db['default']['swap_pre'] = '';
-$db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;
+$woniu_db['default']['dbdriver'] = "sqlite3";
+$woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
+$woniu_db['default']['port'] = '';
+$woniu_db['default']['username'] = 'root';
+$woniu_db['default']['password'] = 'admin';
+$woniu_db['default']['database'] = '';
+$woniu_db['default']['dbprefix'] = '';
+$woniu_db['default']['pconnect'] = TRUE;
+$woniu_db['default']['db_debug'] = TRUE;
+$woniu_db['default']['char_set'] = 'utf8';
+$woniu_db['default']['dbcollat'] = 'utf8_general_ci';
+$woniu_db['default']['swap_pre'] = '';
+$woniu_db['default']['autoinit'] = TRUE;
+$woniu_db['default']['stricton'] = FALSE;
 
+/*
+ * demo
+ * sqlite3:
+ * 1.pdo sqlite3
+ * $woniu_db['default']['dbdriver'] = "pdo";
+   $woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
+ * 2.sqlite3
+ * $woniu_db['default']['dbdriver'] = "sqlite3";
+   $woniu_db['default']['database'] = 'sqlite:d:/wwwroot/sdb.db';
+ */
 //-------------------------end database config--------------------------
 if (!$system['debug']) {
     error_reporting(0);

@@ -25,7 +25,7 @@ class WoniuLoader {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
-            $this->db = WoniuMySQL::getInstance();
+            $this->database();
         }
         stripslashes_all();
     }
@@ -41,6 +41,7 @@ class WoniuLoader {
     }
 
     public function database($config = NULL) {
+        
         //没有传递配置，使用默认配置
         if (!is_array($config)) {
             if (!is_object($this->db)) {

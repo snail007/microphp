@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-15 03:08:19
+ * @createdtime       2013-04-21 12:50:02
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -38,21 +38,23 @@ $system['default_timezone']='PRC';
 //-----------------------end system config--------------------------
  
 //------------------------database config----------------------------
-$db['active_group'] = 'default';
+$woniu_db['active_group'] = 'default';
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['port'] = 3306;
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'admin';
-$db['default']['database'] = 'ectest';
-$db['default']['dbprefix'] = 'ecm_';
-$db['default']['pconnect'] = TRUE;
-$db['default']['db_debug'] = TRUE;
-$db['default']['char_set'] = 'utf8';
-$db['default']['dbcollat'] = 'utf8_general_ci';
-$db['default']['swap_pre'] = '';
-$db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;
+$woniu_db['default']['dbdriver'] = "mysql";
+$woniu_db['default']['hostname'] = 'localhost';
+$woniu_db['default']['port'] = 3306;
+$woniu_db['default']['username'] = 'root';
+$woniu_db['default']['password'] = 'admin';
+$woniu_db['default']['database'] = 'ectest';
+$woniu_db['default']['dbprefix'] = 'ecm_';
+$woniu_db['default']['pconnect'] = TRUE;
+$woniu_db['default']['db_debug'] = TRUE;
+$woniu_db['default']['char_set'] = 'utf8';
+$woniu_db['default']['dbcollat'] = 'utf8_general_ci';
+$woniu_db['default']['swap_pre'] = '';
+$woniu_db['default']['autoinit'] = TRUE;
+$woniu_db['default']['stricton'] = FALSE;
+
 
 //-------------------------end database config--------------------------
 if (!$system['debug']) {
