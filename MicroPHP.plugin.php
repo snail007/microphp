@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -95,7 +95,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 class WoniuRouter {
 
@@ -199,7 +199,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 class WoniuLoader {
 
@@ -233,11 +233,11 @@ class WoniuLoader {
         //没有传递配置，使用默认配置
         if (!is_array($config)) {
             if (!is_object($this->db)) {
-                $this->db = WoniuMySQL::getInstance($config);
+                $this->db =WoniuDB::getInstance($config);
             }
             return $this->db;
         } else {
-            $db = WoniuMySQL::getInstance($config);
+            $db = WoniuDB::getInstance($config);
             return $db;
         }
     }
@@ -385,7 +385,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 class WoniuController extends WoniuLoader {
 
@@ -467,7 +467,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 class WoniuModel extends WoniuLoader {
 
@@ -517,9 +517,9 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
-class WoniuMySQL {
+class WoniuDB {
 
     private static $CIAR;
 
@@ -6496,7 +6496,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-21 15:40:24
+ * @createdtime       2013-04-21 15:56:08
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;

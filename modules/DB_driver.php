@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime       {createdtime}
  */
-class WoniuMySQL {
+class WoniuDB {
 
     private static $CIAR;
 

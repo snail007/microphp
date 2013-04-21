@@ -45,11 +45,11 @@ class WoniuLoader {
         //没有传递配置，使用默认配置
         if (!is_array($config)) {
             if (!is_object($this->db)) {
-                $this->db = WoniuMySQL::getInstance($config);
+                $this->db =WoniuDB::getInstance($config);
             }
             return $this->db;
         } else {
-            $db = WoniuMySQL::getInstance($config);
+            $db = WoniuDB::getInstance($config);
             return $db;
         }
     }
