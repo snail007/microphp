@@ -14,7 +14,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuRouter {
 
@@ -118,7 +118,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuLoader {
 
@@ -314,7 +314,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuController extends WoniuLoader {
 
@@ -396,7 +396,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuModel extends WoniuLoader {
 
@@ -446,7 +446,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuDB {
 
@@ -6288,6 +6288,7 @@ function log_message($level, $msg) {/* just suppress logging */
 
 //####################modules/WoniuHelper.php####################{
 
+
 /**
  * MicroPHP
  *
@@ -6299,7 +6300,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6341,6 +6342,18 @@ function stripslashes2($var) {
     }
     return $var;
 }
+
+function is_php($version = '5.0.0') {
+    static $_is_php;
+    $version = (string) $version;
+
+    if (!isset($_is_php[$version])) {
+        $_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
+    }
+
+    return $_is_php[$version];
+}
+
 /* End of file Helper.php */
  
 //####################modules/WoniuInput.class.php####################{
@@ -6362,7 +6375,7 @@ function stripslashes2($var) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 15:41:42
+ * @createdtime       2013-04-22 15:55:33
  */
 class WoniuInput {
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -52,5 +53,17 @@ function stripslashes2($var) {
     }
     return $var;
 }
+
+function is_php($version = '5.0.0') {
+    static $_is_php;
+    $version = (string) $version;
+
+    if (!isset($_is_php[$version])) {
+        $_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
+    }
+
+    return $_is_php[$version];
+}
+
 /* End of file Helper.php */
  
