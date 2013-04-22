@@ -20,7 +20,7 @@ class WoniuDB {
     public static function getInstance($config) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        return self::$conns[$hash] ? self::$conns[$hash] : self::$conns[$hash] = new $class($config);
+        return isset(self::$conns[$hash]) ? self::$conns[$hash] : self::$conns[$hash] = new $class($config);
     }
 
 }
