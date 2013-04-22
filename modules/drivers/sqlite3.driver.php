@@ -13,7 +13,7 @@
  * @author		Dready
  * @link		http://dready.jexiste.fr/dotclear/
  */
-class CI_DB_sqlite3_driver  {
+class CI_DB_sqlite3_driver  extends CI_DB{
 
 // Added by Xi
     var $dbdriver = 'pdo';
@@ -778,3 +778,4 @@ class CI_DB_sqlite3_result extends CI_DB_result {
 	}
 
 }
+/* End of file sqlite3.driver.php */

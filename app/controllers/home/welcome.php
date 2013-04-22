@@ -22,6 +22,8 @@ class Welcome extends WoniuController {
         return false;
     }
     public function doIndex($name = '') {
+        $this->database();
+        var_dump($this->db->get('test')->row_array());
         $this->helper('config');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }

@@ -40,17 +40,27 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL) {
-        
-        //没有传递配置，使用默认配置
-        if (!is_array($config)) {
-            if (!is_object($this->db)) {
-                $this->db =WoniuDB::getInstance($config);
+    public function database($config = NULL, $is_return = false) {
+        if ($is_return) {
+            $db = null;
+            //没有传递配置，使用默认配置
+            if (!is_array($config)) {
+                global $woniu_db;
+                $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
+            } else {
+                $db = WoniuDB::getInstance($config);
             }
-            return $this->db;
-        } else {
-            $db = WoniuDB::getInstance($config);
             return $db;
+        } else {
+            //没有传递配置，使用默认配置
+            if (!is_array($config)) {
+                if (!is_object($this->db)) {
+                    global $woniu_db;
+                    $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
+                }
+            } else {
+                $this->db = WoniuDB::getInstance($config);
+            }
         }
     }
 

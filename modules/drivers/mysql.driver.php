@@ -13,7 +13,7 @@
  * @author		ExpressionEngine Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_mysql_driver {
+class CI_DB_mysql_driver extends CI_DB{
 
     var $dbdriver = 'mysql';
 // The character used for escaping
