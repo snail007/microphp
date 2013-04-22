@@ -69,9 +69,9 @@ $woniu_db['default']['stricton'] = FALSE;
  * $woniu_db['default']['dbdriver'] = "pdo";
  * $woniu_db['default']['hostname'] = 'mysql:host=localhost;port=3306';
  * $woniu_db['default']['port'] = '';
- * $woniu_db['default']['username'] = 'hostcom_auth';
- * $woniu_db['default']['password'] = 'hostcom_auth';
- * $woniu_db['default']['database'] = 'hostcom_forum';
+ * $woniu_db['default']['username'] = 'root';
+ * $woniu_db['default']['password'] = 'admin';
+ * $woniu_db['default']['database'] = 'test';
  * $woniu_db['default']['char_set'] = 'utf8';
  * $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
  */
