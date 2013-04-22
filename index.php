@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:45:09
+ * @createdtime       2013-04-22 16:46:27
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -55,15 +55,25 @@ $woniu_db['default']['swap_pre'] = '';
 $woniu_db['default']['autoinit'] = TRUE;
 $woniu_db['default']['stricton'] = FALSE;
 
+
 /*
- * demo
- * sqlite3:
+ * PDO database config demo
  * 1.pdo sqlite3
  * $woniu_db['default']['dbdriver'] = "pdo";
-   $woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
- * 2.sqlite3
- * $woniu_db['default']['dbdriver'] = "sqlite3";
-   $woniu_db['default']['database'] = 'sqlite:d:/wwwroot/sdb.db';
+ * $woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
+ * $woniu_db['default']['port'] = '';
+ * $woniu_db['default']['username'] = '';
+ * $woniu_db['default']['password'] = '';
+ * $woniu_db['default']['database'] = '';
+ * 2.pdo mysql:
+ * $woniu_db['default']['dbdriver'] = "pdo";
+ * $woniu_db['default']['hostname'] = 'mysql:host=localhost;port=3306';
+ * $woniu_db['default']['port'] = '';
+ * $woniu_db['default']['username'] = 'hostcom_auth';
+ * $woniu_db['default']['password'] = 'hostcom_auth';
+ * $woniu_db['default']['database'] = 'hostcom_forum';
+ * $woniu_db['default']['char_set'] = 'utf8';
+ * $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
  */
 //-------------------------end database config--------------------------
 if (!$system['debug']) {
