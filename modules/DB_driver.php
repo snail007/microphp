@@ -20,7 +20,14 @@ class WoniuDB {
     public static function getInstance($config) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        return isset(self::$conns[$hash]) ? self::$conns[$hash] : self::$conns[$hash] = new $class($config);
+        if(!isset(self::$conns[$hash])){
+            self::$conns[$hash] = new $class($config);
+        }
+        if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {
+            //pdo下面dns设置mysql字符会失效，这里hack一下
+            self::$conns[$hash]->simple_query('set names ' . $config['char_set']);
+        }
+        return self::$conns[$hash];
     }
 
 }
