@@ -164,7 +164,7 @@ class WoniuLoader {
             //最后注册我们的自动加载器
             spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
         }
-    }
+    } 
 
     public static function classAutoloader($clazzName) {
         global $system;
