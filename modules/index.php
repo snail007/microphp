@@ -71,9 +71,10 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
+include('WoniuInput.class.php'); 
 include('WoniuHelper.php');
 include('DB_driver.php');
-include('WoniuRouter.php'); 
+include('WoniuRouter.php');
 include('WoniuLoader.php'); 
 include('WoniuController.php');
 include('WoniuModel.php'); 

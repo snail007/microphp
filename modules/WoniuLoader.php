@@ -15,7 +15,7 @@
  */
 class WoniuLoader {
 
-    public $db;
+    public $db,$input;
     private $helper_files = array();
     protected $model;
     private $view_vars = array();
@@ -23,6 +23,7 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
+        $this->input=new WoniuInput();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->database();
@@ -179,32 +180,6 @@ class WoniuLoader {
         self::classAutoloadRegister();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
-
-    public static function get($key = null, $default = null) {
-        return self::gpcs('_GET', $key, $default);
-    }
-
-    public static function post($key = null, $default = null) {
-        return self::gpcs('_POST', $key, $default);
-    }
-
-    public static function cookie($key = null, $default = null) {
-        return self::gpcs('_COOKIE', $key, $default);
-    }
-
-    public static function session($key = null, $default = null) {
-        return self::gpcs('_SESSION', $key, $default);
-    }
-
-    private static function gpcs($range, $key, $default) {
-        if ($key === null) {
-            return $$range;
-        } else {
-            $range = $$range;
-            return isset($range[$key]) ? $range[$key] : $default !== null ? $default : null;
-        }
-    }
-
 }
 
 class WoniuModelLoader {

@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -71,9 +71,10 @@ if (!$system['debug']) {
 } else {
     error_reporting(E_ALL);
 }
-
-
  
+
+
+
  
 
  
@@ -95,7 +96,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 class WoniuRouter {
 
@@ -199,11 +200,11 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 class WoniuLoader {
 
-    public $db;
+    public $db,$input;
     private $helper_files = array();
     protected $model;
     private $view_vars = array();
@@ -211,6 +212,7 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
+        $this->input=new WoniuInput();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->database();
@@ -367,7 +369,6 @@ class WoniuLoader {
         self::classAutoloadRegister();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
-
 }
 
 class WoniuModelLoader {
@@ -395,7 +396,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 class WoniuController extends WoniuLoader {
 
@@ -477,7 +478,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 class WoniuModel extends WoniuLoader {
 
@@ -527,7 +528,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 class WoniuDB {
 
@@ -6380,7 +6381,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 07:48:22
+ * @createdtime       2013-04-22 15:15:00
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6424,3 +6425,60 @@ function stripslashes2($var) {
 }
 /* End of file Helper.php */
  
+//####################modules/WoniuInput.class.php####################{
+
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 1.1
+ * @createdtime       2013-04-22 15:15:00
+ */
+class WoniuInput {
+
+    public  function get($key = null, $default = null) {
+        return self::gpcs('_GET', $key, $default);
+    }
+
+    public  function post($key = null, $default = null) {
+        return self::gpcs('_POST', $key, $default);
+    }
+
+    public  function cookie($key = null, $default = null) {
+        return self::gpcs('_COOKIE', $key, $default);
+    }
+
+    public  function session($key = null, $default = null) {
+        return self::gpcs('_SESSION', $key, $default);
+    }
+
+    public  function server($key = null, $default = null) {
+        $key = strtoupper($key);
+        return self::gpcs('_SERVER', $key, $default);
+    }
+
+    private  function gpcs($range, $key, $default) {
+        global $$range;
+        if ($key === null) {
+            return $$range;
+        } else {
+            $range = $$range;
+            return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
+        }
+    }
+
+}
+
+/* End of file WoniuInput.php */
