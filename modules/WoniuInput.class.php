@@ -20,28 +20,28 @@
  */
 class WoniuInput {
 
-    public  function get($key = null, $default = null) {
+    public static  function get($key = null, $default = null) {
         return self::gpcs('_GET', $key, $default);
     }
 
-    public  function post($key = null, $default = null) {
+    public static  function post($key = null, $default = null) {
         return self::gpcs('_POST', $key, $default);
     }
 
-    public  function cookie($key = null, $default = null) {
+    public static  function cookie($key = null, $default = null) {
         return self::gpcs('_COOKIE', $key, $default);
     }
 
-    public  function session($key = null, $default = null) {
+    public static function session($key = null, $default = null) {
         return self::gpcs('_SESSION', $key, $default);
     }
 
-    public  function server($key = null, $default = null) {
+    public static  function server($key = null, $default = null) {
         $key = strtoupper($key);
         return self::gpcs('_SERVER', $key, $default);
     }
 
-    private  function gpcs($range, $key, $default) {
+    private static function gpcs($range, $key, $default) {
         global $$range;
         if ($key === null) {
             return $$range;
