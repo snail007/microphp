@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -40,7 +40,7 @@ $system['default_timezone']='PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "pdo";#可用的有mysql,pdo,sqlite3
+$woniu_db['default']['dbdriver'] = "pdo";#可用的有mysql,pdo
 $woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
 $woniu_db['default']['port'] = '';
 $woniu_db['default']['username'] = '';
@@ -69,9 +69,9 @@ $woniu_db['default']['stricton'] = FALSE;
  * $woniu_db['default']['dbdriver'] = "pdo";
  * $woniu_db['default']['hostname'] = 'mysql:host=localhost;port=3306';
  * $woniu_db['default']['port'] = '';
- * $woniu_db['default']['username'] = 'hostcom_auth';
- * $woniu_db['default']['password'] = 'hostcom_auth';
- * $woniu_db['default']['database'] = 'hostcom_forum';
+ * $woniu_db['default']['username'] = 'root';
+ * $woniu_db['default']['password'] = 'admin';
+ * $woniu_db['default']['database'] = 'test';
  * $woniu_db['default']['char_set'] = 'utf8';
  * $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
  */

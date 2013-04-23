@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -40,7 +40,7 @@ $system['default_timezone']='PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "pdo";#可用的有mysql,pdo,sqlite3
+$woniu_db['default']['dbdriver'] = "pdo";#可用的有mysql,pdo
 $woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
 $woniu_db['default']['port'] = '';
 $woniu_db['default']['username'] = '';
@@ -69,9 +69,9 @@ $woniu_db['default']['stricton'] = FALSE;
  * $woniu_db['default']['dbdriver'] = "pdo";
  * $woniu_db['default']['hostname'] = 'mysql:host=localhost;port=3306';
  * $woniu_db['default']['port'] = '';
- * $woniu_db['default']['username'] = 'hostcom_auth';
- * $woniu_db['default']['password'] = 'hostcom_auth';
- * $woniu_db['default']['database'] = 'hostcom_forum';
+ * $woniu_db['default']['username'] = 'root';
+ * $woniu_db['default']['password'] = 'admin';
+ * $woniu_db['default']['database'] = 'test';
  * $woniu_db['default']['char_set'] = 'utf8';
  * $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
  */
@@ -106,7 +106,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuRouter {
 
@@ -210,7 +210,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuLoader {
 
@@ -406,7 +406,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuController extends WoniuLoader {
 
@@ -488,7 +488,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuModel extends WoniuLoader {
 
@@ -538,7 +538,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuDB {
 
@@ -5621,7 +5621,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5696,32 +5696,32 @@ function is_php($version = '5.0.0') {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-04-22 16:46:27
+ * @createdtime       2013-04-23 04:12:02
  */
 class WoniuInput {
 
-    public  function get($key = null, $default = null) {
+    public static  function get($key = null, $default = null) {
         return self::gpcs('_GET', $key, $default);
     }
 
-    public  function post($key = null, $default = null) {
+    public static  function post($key = null, $default = null) {
         return self::gpcs('_POST', $key, $default);
     }
 
-    public  function cookie($key = null, $default = null) {
+    public static  function cookie($key = null, $default = null) {
         return self::gpcs('_COOKIE', $key, $default);
     }
 
-    public  function session($key = null, $default = null) {
+    public static function session($key = null, $default = null) {
         return self::gpcs('_SESSION', $key, $default);
     }
 
-    public  function server($key = null, $default = null) {
+    public static  function server($key = null, $default = null) {
         $key = strtoupper($key);
         return self::gpcs('_SERVER', $key, $default);
     }
 
-    private  function gpcs($range, $key, $default) {
+    private static function gpcs($range, $key, $default) {
         global $$range;
         if ($key === null) {
             return $$range;
