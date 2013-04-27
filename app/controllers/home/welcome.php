@@ -9,6 +9,7 @@ class Welcome extends WoniuController {
 
     public function __construct() {
         parent::__construct();
+        $this->helper('html.helper');
     }
 
     public function doForm() {
