@@ -4,14 +4,14 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
-            li{margin:10px;}
+            .nav li{margin:10px;}
             p{line-height:22px;}
         </style>
     </head>
     <body style="font-size: 13px;padding:20px;">
-        <h1 style="text-align:center;color: #990000;"> MicroPHP手册V1.1 </h1>
+        <h1 style="text-align:center;color: #990000;"> MicroPHP手册2.0 </h1>
         <h2>目录</h2>
-        <ol>
+        <ol class="nav">
             <li><a href="#system">系统配置说明</a></li>
             <li><a href="#name">命名规则</a></li>
             <li><a href="#controller">控制器</a></li>
@@ -24,190 +24,302 @@
             <li><a href="#config">获取配置</a></li>
             <li><a href="#ajax">Ajax输出</a></li>
             <li><a href="#ajax">XML输出</a></li>
+            <li><a href="#redirect">重定向</a></li>
+            <li><a href="#message">输出提示信息</a></li>
+            <li><a href="#core-ext">拓展核心</a></li>
         </ol>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="system">系统配置说明</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+        <ol>
+            <li><fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="system">系统配置说明</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>本文默认框架文件名为index.php,系统配置是指index.php里面system config部分,你会看到一个名为$system的配置数组，下面对每项进行说明.</p>
-            <p> $system['application_folder']  程序文件夹路径名称，也就是所有的程序文件比如控制器，模型，视图等所在的文件夹名称。<br> 
-                $system['controller_folder']   存放控制器文件的文件夹路径名称<br>
-                $system['model_folder']        存放模型文件的文件夹路径名称<br>
-                $system['view_folder']         存放视图文件的文件夹路径名称<br>
-                $system['library_folder']      存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载<br>
-                $system['helper_folder']       存放函数文件的文件夹路径名称<br>
-                $system['error_page_404']      404错误文件的路径,该文件会在系统找不到相关内容时显示,文件里面可以使用$msg变量获取出错提示内容<br>
-                $system['error_page_db']       数据库错误文件的路径,该文件会在发生数据库错误时显示,文件里面可以使用$msg变量获取出错提示内容<br>
-                $system['default_controller']  默认控制器文件名称,不包含后缀,支持子文件夹,比如home.welcome,就是控制器文件夹下面的home文件夹里面welcome.php(假定后缀是.php)<br>
-                $system['default_controller_method']默认控制器方法名称,不要带前缀<br>
-                $system['controller_method_prefix'] 控制器方法名称前缀<br>
-                $system['controller_file_subfix']   控制器文件名称后缀,比如.php或者.controller.php<br>
-                $system['model_file_subfix']        模型文件名称后缀,比如.model.php<br>
-                $system['view_file_subfix']         视图文件名称后缀,比如.view.php';<br>
-                $system['library_file_subfix']      类库文件名称后缀,比如.class.php';<br>
-                $system['helper_file_subfix']       函数文件名称后缀,比如.php';<br>
-                $system['controller_method_ucfirst']控制器方法名称是否首字母大写,默认true<br>
-                $system['autoload_db']              是否自动连接数据库,默认true<br>
-                $system['debug']                    是否开启调试模式,默认true显示错误信息,如果为false那么程序所有错误将不显示<br>
-                $system['default_timezone']         默认时区,PRC是中国</p>
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="name">命名规则</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>本文默认框架文件名为index.php,系统配置是指index.php里面system config部分,你会看到一个名为$system的配置数组，下面对每项进行说明.</p>
+                    <p> $system['application_folder']  程序文件夹路径名称，也就是所有的程序文件比如控制器，模型，视图等所在的文件夹名称。<br> 
+                        $system['controller_folder']   存放控制器文件的文件夹路径名称<br>
+                        $system['model_folder']        存放模型文件的文件夹路径名称<br>
+                        $system['view_folder']         存放视图文件的文件夹路径名称<br>
+                        $system['library_folder']      存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载<br>
+                        $system['helper_folder']       存放函数文件的文件夹路径名称<br>
+                        $system['error_page_404']      404错误文件的路径,该文件会在系统找不到相关内容时显示,文件里面可以使用$msg变量获取出错提示内容<br>
+                        $system['error_page_db']       数据库错误文件的路径,该文件会在发生数据库错误时显示,文件里面可以使用$msg变量获取出错提示内容<br>
+                        $system['default_controller']  默认控制器文件名称,不包含后缀,支持子文件夹,比如home.welcome,就是控制器文件夹下面的home文件夹里面welcome.php(假定后缀是.php)<br>
+                        $system['default_controller_method']默认控制器方法名称,不要带前缀<br>
+                        $system['controller_method_prefix'] 控制器方法名称前缀<br>
+                        $system['controller_file_subfix']   控制器文件名称后缀,比如.php或者.controller.php<br>
+                        $system['model_file_subfix']        模型文件名称后缀,比如.model.php<br>
+                        $system['view_file_subfix']         视图文件名称后缀,比如.view.php';<br>
+                        $system['library_file_subfix']      类库文件名称后缀,比如.class.php';<br>
+                        $system['helper_file_subfix']       函数文件名称后缀,比如.php';<br>
+                        $system['controller_method_ucfirst']控制器方法名称是否首字母大写,默认true<br>
+                        $system['autoload_db']              是否自动连接数据库,默认true<br>
+                        $system['debug']                    是否开启调试模式,默认true显示错误信息,如果为false那么程序所有错误将不显示<br>
+                        $system['default_timezone']         默认时区,PRC是中国</p>
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="name">命名规则</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                下面分别对,控制器文件命名规则、模型文件命名规则、视图命名规则、类库命名规则、函数文件命名规则进行逐一说明。<font color="#663300" style="font-weight:bold;"> 下面说到的<font color="red">文件名</font>都均不包含文件后缀，也就是上面系统配置里面的配置后缀。（比如模型文件名是User，上面配置了模型后缀.model.php，那么完整的文件名是User.model.php,但是下面的文件名是指不含配置的后缀，即指User部分）</font></p>
-            <h3>控制器文件命名规则</h3>
-            <p>
-                控制器文件名称均为小写，而且与类名相同，但是类名要首字母大写。
-            </p>
-            <h3>模型文件命名规则</h3>
-            <p>
-                模型文件名称与模型类名相同，而且字母大小写必须一样。
-            </p>
-            <h3>视图命名规则</h3>
-            <p>
-                视图文件名称没有强制要求，只有在控制器里面加载视图的时候传递的文件名称和视图文件一样即可。
-            </p>
-            <h3>类库命名规则</h3>
-            <p>
-                类库文件名称与类库类名相同，而且字母大小写必须一样。
-            </p>
-            <h3>函数文件命名规则</h3>
-            <p>
-                函数文件名称没有强制要求，只有在控制器里面加载helper的时候传递的文件名称和函数文件名一样即可。
-            </p>
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="controller">控制器</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        下面分别对,控制器文件命名规则、模型文件命名规则、视图命名规则、类库命名规则、函数文件命名规则进行逐一说明。<font color="#663300" style="font-weight:bold;"> 下面说到的<font color="red">文件名</font>都均不包含文件后缀，也就是上面系统配置里面的配置后缀。（比如模型文件名是User，上面配置了模型后缀.model.php，那么完整的文件名是User.model.php,但是下面的文件名是指不含配置的后缀，即指User部分）</font></p>
+                    <h3>控制器文件命名规则</h3>
+                    <p>
+                        控制器文件名称均为小写，而且与类名相同，但是类名要首字母大写。
+                    </p>
+                    <h3>模型文件命名规则</h3>
+                    <p>
+                        模型文件名称与模型类名相同，而且字母大小写必须一样。
+                    </p>
+                    <h3>视图命名规则</h3>
+                    <p>
+                        视图文件名称没有强制要求，只有在控制器里面加载视图的时候传递的文件名称和视图文件一样即可。
+                    </p>
+                    <h3>类库命名规则</h3>
+                    <p>
+                        类库文件名称与类库类名相同，而且字母大小写必须一样。
+                    </p>
+                    <h3>函数文件命名规则</h3>
+                    <p>
+                        函数文件名称没有强制要求，只有在控制器里面加载helper的时候传递的文件名称和函数文件名一样即可。
+                    </p>
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="controller">控制器</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>控制器访问支持queryStrng和pathInfo两种模式。下面是个例子：</p>
-            <p>
-                queryStrng模式：http://127.0.0.1/index.php?home.welcome.index/1/2<br>
-                说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
-                同时向doIndex方法传递了两个参数，第一个是1和第二个是2
-            </p>
-            <p>
-                pathInfo模式：http://127.0.0.1/index.php/home.welcome.index/1/2<br>
-                说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
-                同时向doIndex方法传递了两个参数，第一个是1和第二个是2
-            </p>
-            <p>可以看出两个模式的区别就是index.php后面一个是?一个是/</p>
-            <p>控制器类必须继承WoniuController类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
-            <p>class Welcome extends WoniuController{<br>
-                public function __construct() {<br>
-                parent::__construct();<br>
-                }</p>
-            <p> public function doIndex($name=''){<br>
-                $this-&gt;view(&quot;welcome&quot;,array('msg'=&gt;$name));<br>
-                }<br>
-                public function do__output($html){<br>
-                echo '__output'.$html;<br>
-                }<br>
-                }</p>
-            <p>如果控制器里面有个public __output($html)方法，那么所有的输出都会重定向到这个方法上，这个方法会被调用，传进的是页面的输出内容。
-                在这个方法里面可以进一步处理。</p>
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="model">模型</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>控制器访问支持queryStrng和pathInfo两种模式。下面是个例子：</p>
+                    <p>
+                        queryStrng模式：http://127.0.0.1/index.php?home.welcome.index/1/2<br>
+                        说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
+                        同时向doIndex方法传递了两个参数，第一个是1和第二个是2
+                    </p>
+                    <p>
+                        pathInfo模式：http://127.0.0.1/index.php/home.welcome.index/1/2<br>
+                        说明：这个地址是访问控制器目录下面的home文件夹里面的welcome.php里面的doIndex（这里假定控制器文件配置后缀是.php，方法前缀是do，方法名首字母大写不包含前缀）
+                        同时向doIndex方法传递了两个参数，第一个是1和第二个是2
+                    </p>
+                    <p>可以看出两个模式的区别就是index.php后面一个是?一个是/</p>
+                    <p>控制器类必须继承WoniuController类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+                    <p>class Welcome extends WoniuController{<br>
+                        public function __construct() {<br>
+                        parent::__construct();<br>
+                        }</p>
+                    <p> public function doIndex($name=''){<br>
+                        $this-&gt;view(&quot;welcome&quot;,array('msg'=&gt;$name));<br>
+                        }<br>
+                        public function __output($html){<br>
+                        echo '__output'.$html;<br>
+                        }<br>
+                        }</p>
+                    <p>如果控制器里面有个public __output($html)方法，那么所有的输出都会重定向到这个方法上，这个方法会被调用，传进的是页面的输出内容。
+                        在这个方法里面可以进一步处理。</p>
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="model">模型</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>在控制器和模型里面都可以通过$this->model($model_name,$alias_name)，加载一个模型，其中$model_name是模型文件名（不含配置后缀）也就是类名，$alias_name是别名这个参数是可选的。
-                加载完毕后，就可以通过$this->model->$model_name进行访问了（$model_name这个时候都是小写的）。如果指定了$alias_name那么就要通过$this->model->$alias_name进行访问。比如加载User模型，$this->model('User','vip');
-                那么就可以通过$this->model->vip访问这个模型了。另外，模型加载支持子文件夹，比如模型目录下有个home文件夹里面有个News.model.php模型类文件，那么就可以通过
-                $this->model('home\News')加载这个模型类，然后就可以通过$this->model->news访问这个模型类了;
-            </p> 
-            <p>需要注意的就是：没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，xxx一定是小写的，比如上面的news</p>
-            <p>模型类必须继承WoniuModel类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
-            <p>class User extends WoniuModel {</p>
-            <p> public function __construct() {<br>
-                parent::__construct();<br>
-                }</p>
-            <p> public function sayHello($name) {<br>
-                $this-&gt;model('User2');<br>
-                $this-&gt;model-&gt;user2-&gt;sayHello('fuck');</p>
-            <p> echo 'hello:' . $name;<br>
-                }<br>
-                }</p>
-        </fieldset> 
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="view">视图</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>在控制器和模型里面都可以通过$this->model($model_name,$alias_name)，加载一个模型，其中$model_name是模型文件名（不含配置后缀）也就是类名，$alias_name是别名这个参数是可选的。
+                        加载完毕后，就可以通过$this->model->$model_name进行访问了（$model_name这个时候都是小写的）。如果指定了$alias_name那么就要通过$this->model->$alias_name进行访问。比如加载User模型，$this->model('User','vip');
+                        那么就可以通过$this->model->vip访问这个模型了。另外，模型加载支持子文件夹，比如模型目录下有个home文件夹里面有个News.model.php模型类文件，那么就可以通过
+                        $this->model('home\News')加载这个模型类，然后就可以通过$this->model->news访问这个模型类了;
+                    </p> 
+                    <p>需要注意的就是：没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，xxx一定是小写的，比如上面的news</p>
+                    <p>模型类必须继承WoniuModel类，而且构造方法里面必须先调用分类的构造方法。示例如下：</p>
+                    <p>class User extends WoniuModel {</p>
+                    <p> public function __construct() {<br>
+                        parent::__construct();<br>
+                        }</p>
+                    <p> public function sayHello($name) {<br>
+                        $this-&gt;model('User2');<br>
+                        $this-&gt;model-&gt;user2-&gt;sayHello('fuck');</p>
+                    <p> echo 'hello:' . $name;<br>
+                        }<br>
+                        }</p>
+                </fieldset> 
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="view">视图</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>在控制器和模型里面都可以通过$this->view($view_name,$data,$is_return)，加载一个视图，其中$view_name是视图文件名（不含配置后缀），$data是要传递到视图中的数据（关联数组）
-                比如$data=array('title'=>'首页'),在视图里面就可以通过变量$title获取"首页",$is_return为true时,视图内容不会输出到浏览器而是返回,$data和$is_return都是可选的参数。
-                可以在视图中包含其他视图文件,视图路径可以通过$this->view_path($view_name)获取,比如在视图里面include($this->view_path('common/header')),这里假定视图文件名配置后缀是.php
-                那么这个就是包含视图目录下面的common文件夹里面的header.php视图文件。
-            </p> 
-        </fieldset> 
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="database">数据库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>在控制器和模型里面都可以通过$this->view($view_name,$data,$is_return)，加载一个视图，其中$view_name是视图文件名（不含配置后缀），$data是要传递到视图中的数据（关联数组）
+                        比如$data=array('title'=>'首页'),在视图里面就可以通过变量$title获取"首页",$is_return为true时,视图内容不会输出到浏览器而是返回,$data和$is_return都是可选的参数。
+                        可以在视图中包含其他视图文件,视图路径可以通过$this->view_path($view_name)获取,比如在视图里面include($this->view_path('common/header')),这里假定视图文件名配置后缀是.php
+                        那么这个就是包含视图目录下面的common文件夹里面的header.php视图文件。
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="database">数据库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                数据库类是提取CI的ActiveRecord类库，ActiveRecord手册请看<a target="_blank" href="http://codeigniter.org.cn/user_guide/database/active_record.html">这里</a>,但是其中的“Active Record 缓存”这个功能比较弱就没有支持;<br/>
-                在控制器和模型中可以通过$this->db访问数据库，当然可以用$this->database()加载数据库（使用系统配置中的默认组配置），如果想使用动态配置加载数据库，可以传入一个配置数组$db=$this->database($config),$config可以如下：</p>
-            <p>$config=array(<br>
-                'hostname'=&gt;'localhost'<br>
-                ,'port'=&gt;3306<br>
-                ,'username'=&gt;'root'<br>
-                ,'password'=&gt;'admin'<br>
-                ,'database'=&gt;'ectest'<br>
-                ,'dbprefix'=&gt;'ecm_'<br>
-                ,'pconnect'=&gt;TRUE<br>
-                ,'db_debug'=&gt; TRUE;<br>
-                ,'char_set'=&gt;utf8<br>
-                ,'dbcollat'=&gt;utf8_general_ci<br>
-                ,'swap_pre'=&gt;<br>
-                ,'autoinit'=&gt;TRUE<br>
-                ,'stricton'=&gt;FALSE<br>
-                ); </p>
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="database-config">数据库配置</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
-            <p>数据库配置和CI的一样，数据库配置手册请看<a target="_blank" href="http://codeigniter.org.cn/user_guide/database/configuration.html">这里</a>,
-                但是其中的$db['default']['dbdriver'] = "mysql";$db['default']['cache_on'] = FALSE;$db['default']['cachedir'] = "";这三个配置在本框架中没有支持
-                数据库目前只支持mysql。;
-            </p>
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="library">类库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        数据库类是提取CI的ActiveRecord类库，ActiveRecord手册请看<a target="_blank" href="http://codeigniter.org.cn/user_guide/database/active_record.html">这里</a>,但是其中的“Active Record 缓存”这个功能比较弱就没有支持;<br/>
+                        在控制器和模型中可以通过$this->db访问数据库，当然可以用$this->database()加载数据库（使用系统配置中的默认组配置），如果想使用动态配置加载数据库，可以传入一个配置数组$db=$this->database($config),$config可以如下：</p>
+                    <p>$config=array(<br>
+                        'hostname'=&gt;'localhost'<br>
+                        ,'port'=&gt;3306<br>
+                        ,'username'=&gt;'root'<br>
+                        ,'password'=&gt;'admin'<br>
+                        ,'database'=&gt;'ectest'<br>
+                        ,'dbprefix'=&gt;'ecm_'<br>
+                        ,'pconnect'=&gt;TRUE<br>
+                        ,'db_debug'=&gt; TRUE;<br>
+                        ,'char_set'=&gt;utf8<br>
+                        ,'dbcollat'=&gt;utf8_general_ci<br>
+                        ,'swap_pre'=&gt;<br>
+                        ,'autoinit'=&gt;TRUE<br>
+                        ,'stricton'=&gt;FALSE<br>
+                        ); </p>
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="database-config">数据库配置</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>数据库配置和CI的一样，数据库配置手册请看<a target="_blank" href="http://codeigniter.org.cn/user_guide/database/configuration.html">这里</a>,
+                        但是其中的$db['default']['dbdriver'] = "mysql";$db['default']['cache_on'] = FALSE;$db['default']['cachedir'] = "";这三个配置在本框架中没有支持
+                        数据库目前只支持mysql。;
+                    </p>
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="library">类库</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                在控制器和模型里面都可以直接通过new $class_name()直接使用系统类库配置文件夹中的类库，这里的$class_name就是类库的文件名（不包含配置后缀）也是类名。
-                另外在类库里可以直接通过$controller=&WoniuController::getInstance()访问控制器实例;
-            </p> 
-        </fieldset> 
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="helper">helper文件</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        在控制器和模型里面都可以直接通过new $class_name()直接使用系统类库配置文件夹中的类库，这里的$class_name就是类库的文件名（不包含配置后缀）也是类名。
+                        另外在类库里可以直接通过$controller=&WoniuController::getInstance()访问控制器实例;
+                    </p> 
+                </fieldset> 
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="helper">helper文件</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                helper文件是指一些包涵函数的文件或者包含配置的文件，这些文件往往需要在程序运行的时候包含，那么在控制器和模型中可以通过$this->helper($helper_name)进行包含系统helper文件目录中的helper文件，$helper_name是文件名（不包含配置后缀），
-                比如function,假定helper配置后缀是.php，那么完整的文件名就是function.php，但是这里文件名指的是function。可以放心的多次加载同一个helper文件，不用担心会造成重复包含。
-            </p> 
-        </fieldset> 
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="config">获取配置</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        helper文件是指一些包涵函数的文件或者包含配置的文件，这些文件往往需要在程序运行的时候包含，那么在控制器和模型中可以通过$this->helper($helper_name)进行包含系统helper文件目录中的helper文件，$helper_name是文件名（不包含配置后缀），
+                        比如function,假定helper配置后缀是.php，那么完整的文件名就是function.php，但是这里文件名指的是function。可以放心的多次加载同一个helper文件，不用担心会造成重复包含。
+                    </p> 
+                </fieldset> 
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="config">获取配置</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                在控制器和模型里面都可以直接通过$this->config($config_var_name,$key),获取系统配置，你也许已经注意到index.php里面有个$system数据存储了系统配置，
-                ，$system是一个全局变量，那么就可以通过$this->config('system','application_folder');获取到$system['application_folder']的值。如果你使用了$this->helper()
-                加载了一个配置文件那么就可以通过$this->config($config_var_name,$key)获取文件里面的配置信息，$config_var_name就是配置文件里面的全局变量名称。
-                $key是可选的参数，如果没有指定$key,那么就会返回名为$config_var_name的全局变量,如果不存在返回null。
-            </p> 
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="ajax">Ajax输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        在控制器和模型里面都可以直接通过$this->config($config_var_name,$key),获取系统配置，你也许已经注意到index.php里面有个$system数据存储了系统配置，
+                        ，$system是一个全局变量，那么就可以通过$this->config('system','application_folder');获取到$system['application_folder']的值。如果你使用了$this->helper()
+                        加载了一个配置文件那么就可以通过$this->config($config_var_name,$key)获取文件里面的配置信息，$config_var_name就是配置文件里面的全局变量名称。
+                        $key是可选的参数，如果没有指定$key,那么就会返回名为$config_var_name的全局变量,如果不存在返回null。
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="ajax">Ajax输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                在控制器和模型里面都可以直接通过$this->ajax_echo($code, $tip = '', $data = '', $is_exit = true),进行ajax输出，
-                输出类型:{"code":200,"tip":"tip","data":["a","b"]},有三个标准属性code状态码,tip提示信息,data数据,$is_exit在输出完后是否
-                停止执行。
-            </p> 
-        </fieldset>
-        <fieldset style="border-color:gray;border-style:solid;border-width:0;">
-            <h2><legend style="color: #990000;"><a name="xml">XML输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+                    <p>
+                        在控制器和模型里面都可以直接通过$this->ajax_echo($code, $tip = '', $data = '', $is_exit = true),进行ajax输出，
+                        输出类型:{"code":200,"tip":"tip","data":["a","b"]},有三个标准属性code状态码,tip提示信息,data数据,$is_exit在输出完后是否
+                        停止执行。
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="xml">XML输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
-            <p>
-                在控制器和模型里面都可以直接通过$this->xml_echo($xml, $is_exit = true),进行ajax输出，
-                $xml是标准xml字符串,$is_exit在输出完后是否停止执行。
-            </p> 
-        </fieldset>
+                    <p>
+                        在控制器和模型里面都可以直接通过$this->xml_echo($xml, $is_exit = true),进行ajax输出，
+                        $xml是标准xml字符串,$is_exit在输出完后是否停止执行。
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="redirect">重定向</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p>
+                        在控制器可以直接通过$this->redirect($url, $msg = null, $view = null, $time = 3),进行重定向。<br/>
+                        $url是跳转到的地址<br/>
+                        $msg是跳转的时候的提示信息（可选）<br/>
+                        $view是视图的名称不含后缀，使用视图显示提示信息，视图里面可以直接使用$url,$msg,$time三个变量。（可选）<br/>
+                        $time是提示信息显示多久后跳转，单位秒（可选）<br/>
+                        例子：<br/>
+                        1.直接跳转到百度：$this->redirect("http://www.baidu.com/");<br/>
+                        2.跳转到百度,并显示提示信息：$this->redirect("http://www.baidu.com/",'正在跳转...');<br/>
+                        3.跳转到百度,并使用视图(view/message.view.php)显示提示信息：$this->redirect("http://www.baidu.com/",'正在跳转...','message');<br/>
+                        view/message.view.php:内容如下：
+                    <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;?php
+        echo $msg.'&lt;br/&gt;'.$time.&quot;秒后跳转到&quot;.$url;
+        ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </pre>
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="message">输出提示信息</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p>
+                        在控制器里面都可以直接通过$this->message($msg, $view = null, $url = null, $time = 3),输出操作后的提示信息，
+                        $msg是提示信息<br/>
+                        $view是视图的名称不含后缀，使用视图显示提示信息，视图里面可以直接使用$url,$msg,$time三个变量。（可选）<br/>
+                        $url是跳转到的地址（可选）<br/>
+                        $time是提示信息显示多久后跳转，单位秒（可选）<br/>
+                        例子：<br/>
+                        1.提示添加成功：$this->message("添加成功");<br/>
+                        2.提示添加成功,并使用视图(view/message.view.php)显示提示信息，5秒后跳转到列表页：<br/>
+                        $this->message("添加成功",'message','http://127.0.0.1/list.php',5);<br/>
+                        view/message.view.php:内容如下：
+                    <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;?php
+        echo $msg.'&lt;br/&gt;'.$time.&quot;秒后跳转到&quot;.$url;
+        ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </pre>
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="core-ext">拓展核心</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p>
+                        有时候，我们需要有自己的祖先控制器或者祖先模型，在祖先控制器或祖先模型里面定制一些自己的逻辑。
+                        <br/>那么我们只需要两步即可实现这个：<br/>
+                        1.编写自己的祖先控制器或者祖先模型，比如祖先控制器：MyController.class.php，然后把MyController.class.php放到library里面。<br/>
+                        MyController.class.php内容如下：<br/>
+                    <pre>
+class MyController extends WoniuController{
+    protected $someVar;
+    public function __construct() {
+        parent::__construct();
+        //do your something here...
+    }
+    public function someMethod() {
+         
+    }
+}
+                    </pre>
+                    2.在我们写控制器的时候，可以直接继承自己的祖先控制器，比如控制器：home.php。<br/>
+                    <br/>home.php内容如下：<br/>
+                    <pre>
+class Home extends MyController{
+    public function doTest() {
+        $this->someMethod();
+    }
+}
+                    </pre>
+                    使用自己的祖先模型和控制器步骤一样，只是祖先模型继承的是WoniuModel，模型继承的是祖先模型。<br/>
+                    <b>提醒</b>：可以有多个不同祖先控制器或祖先模型，比如我们后台使用AdminController，前台使用FrontController<br/>
+                　　　这样前台的控制器都继承FrontController，后台的控制器都继承AdminController即可。
+                    </p> 
+                </fieldset>
+            </li></ol>
         <p style="text-align: center;border-top:solid #000000 thin;padding:20px;  ">Edited by:狂奔的蜗牛 Email:672308444@163.com</p>
     </body>
 </html>
