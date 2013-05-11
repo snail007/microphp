@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 1.1
- * @createdtime       2013-05-11 00:32:45
+ * @since		Version 2.0
+ * @createdtime       2013-05-11 01:03:53
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
