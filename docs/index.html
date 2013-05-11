@@ -27,6 +27,7 @@
             <li><a href="#redirect">重定向</a></li>
             <li><a href="#message">输出提示信息</a></li>
             <li><a href="#core-ext">拓展核心</a></li>
+            <li><a href="#plugin">和其它框架共存</a></li>
         </ol>
         <ol>
             <li><fieldset style="border-color:gray;border-style:solid;border-width:0;">
@@ -320,7 +321,26 @@ class Home extends MyController{
                 　　　这样前台的控制器都继承FrontController，后台的控制器都继承AdminController即可。
                     </p> 
                 </fieldset>
-            </li></ol>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="plugin">和其它框架共存</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p>
+                        很多情况下，你维护的项目已经使用了其它的框架，但是用着不顺手，很想用MicroPHP的方式去写代码。那么插件模式就能做到这点。
+                        MicroPHP.plugin.php是参加模式下的MicroPHP。使用的时候只要在入口文件里面包含MicroPHP.plugin.php即可。插件模式下，
+                        除了路由不再起作用，其它控制器，模型，视图，helper等各种特性都可以像MicroPHP一样使用。使用示例如下：
+                    <pre>
+include('MicroPHP.plugin.php');//包含插件模式的MicroPHP
+//下面的代码可以在任何地方使用，当然包含在你的现有框架里面使用了
+WoniuController::instance('home.TestHook')->doTest();
+WoniuModel::instance('User2')->printHook();
+WoniuModel::instance('test.User')->sayHello('snail');
+WoniuLoader::instance()->view('snail');
+                    </pre>
+                    </p> 
+                </fieldset>
+            </li>
+        </ol>
         <p style="text-align: center;border-top:solid #000000 thin;padding:20px;  ">Edited by:狂奔的蜗牛 Email:672308444@163.com</p>
     </body>
 </html>
