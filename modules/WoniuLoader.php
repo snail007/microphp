@@ -218,6 +218,18 @@ class WoniuLoader {
         }
     }
 
+    public function message($msg, $view = null, $url = null, $time = 3) {
+        if(!empty($url)){
+            header("refresh:{$time};url={$url}"); //单位秒
+        }
+        header("Content-type: text/html; charset=utf-8");
+        if (!empty($view)) {
+            $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
+        } else {
+            echo $msg;
+        }
+    }
+
 }
 
 class WoniuModelLoader {

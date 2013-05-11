@@ -24,9 +24,10 @@ class Welcome extends WoniuController {
     }
     public function doIndex($name = '') {
 //        $this->redirect("http://www.163.com","测试",'message',5);
+//        $this->message("提示信息",'message',"http://www.163.com",5);
 //        var_dump($this->input->server('http_host',2222));
-        $this->helper('config');
-        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
+//        $this->helper('config');
+//        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
     public function do__output($html) {

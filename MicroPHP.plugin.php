@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -106,7 +106,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuRouter {
 
@@ -210,7 +210,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuLoader {
 
@@ -417,6 +417,18 @@ class WoniuLoader {
         }
     }
 
+    public function message($msg, $view = null, $url = null, $time = 3) {
+        if(!empty($url)){
+            header("refresh:{$time};url={$url}"); //单位秒
+        }
+        header("Content-type: text/html; charset=utf-8");
+        if (!empty($view)) {
+            $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
+        } else {
+            echo $msg;
+        }
+    }
+
 }
 
 class WoniuModelLoader {
@@ -444,7 +456,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuController extends WoniuLoader {
 
@@ -502,7 +514,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuModel extends WoniuLoader {
 
@@ -552,7 +564,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuDB {
 
@@ -5635,7 +5647,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5710,7 +5722,7 @@ function is_php($version = '5.0.0') {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.1
- * @createdtime       2013-05-11 00:17:32
+ * @createdtime       2013-05-11 00:32:45
  */
 class WoniuInput {
 
