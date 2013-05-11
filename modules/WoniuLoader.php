@@ -15,7 +15,7 @@
  */
 class WoniuLoader {
 
-    public $db,$input;
+    public $db, $input;
     private $helper_files = array();
     protected $model;
     private $view_vars = array();
@@ -23,7 +23,7 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
-        $this->input=new WoniuInput();
+        $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         if ($this->config('system', "autoload_db")) {
             $this->database();
@@ -164,7 +164,7 @@ class WoniuLoader {
             //最后注册我们的自动加载器
             spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
         }
-    } 
+    }
 
     public static function classAutoloader($clazzName) {
         global $system;
@@ -180,6 +180,44 @@ class WoniuLoader {
         self::classAutoloadRegister();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
+
+    public function view_path($view_name) {
+        global $system;
+        $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+        return $view_path;
+    }
+
+    public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
+        $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
+        header('Content-type:application/json;charset=urf-8');
+        echo $str;
+        if ($is_exit) {
+            exit();
+        }
+    }
+
+    public function xml_echo($xml, $is_exit = true) {
+        header('Content-type:text/xml;charset=utf-8');
+        echo $xml;
+        if ($is_exit) {
+            exit();
+        }
+    }
+
+    public function redirect($url, $msg = null, $view = null, $time = 3) {
+        if (empty($msg)) {
+            header('Location:' . $url);
+        } else {
+            header("refresh:{$time};url={$url}"); //单位秒
+            header("Content-type: text/html; charset=utf-8");
+            if (empty($view)) {
+                echo $msg;
+            } else {
+                $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
+            }
+        }
+    }
+
 }
 
 class WoniuModelLoader {
