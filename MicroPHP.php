@@ -30,7 +30,7 @@ class WoniuRouter {
             include $methodInfo['file'];
             $class = new $methodInfo['class']();
             if (method_exists($class, $methodInfo['method'])) {
-                $parameters = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
+                $methodInfo['parameters'] = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
                 if (method_exists($class, '__output')) {
                     ob_start();
                     call_user_func_array(array($class, $methodInfo['method']), $methodInfo['parameters']);
