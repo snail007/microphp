@@ -14,7 +14,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuRouter {
 
@@ -118,7 +118,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuLoader {
 
@@ -364,7 +364,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuController extends WoniuLoader {
 
@@ -422,7 +422,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuModel extends WoniuLoader {
 
@@ -472,7 +472,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuDB {
 
@@ -5555,7 +5555,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5630,19 +5630,24 @@ function is_php($version = '5.0.0') {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-11 02:21:26
+ * @createdtime       2013-05-12 04:29:36
  */
 class WoniuInput {
 
-    public static  function get($key = null, $default = null) {
+    public static function get_post($key = null, $default = null) {
+        $get=self::gpcs('_GET', $key, $default);
+        return $get===null?self::gpcs('_POST', $key, $default):$get;
+    }
+
+    public static function get($key = null, $default = null) {
         return self::gpcs('_GET', $key, $default);
     }
 
-    public static  function post($key = null, $default = null) {
+    public static function post($key = null, $default = null) {
         return self::gpcs('_POST', $key, $default);
     }
 
-    public static  function cookie($key = null, $default = null) {
+    public static function cookie($key = null, $default = null) {
         return self::gpcs('_COOKIE', $key, $default);
     }
 
@@ -5650,7 +5655,7 @@ class WoniuInput {
         return self::gpcs('_SESSION', $key, $default);
     }
 
-    public static  function server($key = null, $default = null) {
+    public static function server($key = null, $default = null) {
         $key = strtoupper($key);
         return self::gpcs('_SERVER', $key, $default);
     }
