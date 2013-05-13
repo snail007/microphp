@@ -219,7 +219,7 @@ class WoniuLoader {
     }
 
     public function message($msg, $view = null, $url = null, $time = 3) {
-        if(!empty($url)){
+        if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
         header("Content-type: text/html; charset=utf-8");
@@ -228,6 +228,12 @@ class WoniuLoader {
         } else {
             echo $msg;
         }
+    }
+
+    public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
+        header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        $_COOKIE[$key] = $value;
     }
 
 }
