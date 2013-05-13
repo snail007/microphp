@@ -9,7 +9,7 @@ class Welcome extends WoniuController {
 
     public function __construct() {
         parent::__construct();
-        $this->helper('html.helper');
+//        $this->helper('html.helper');
     }
 
     public function doForm() {
@@ -23,8 +23,9 @@ class Welcome extends WoniuController {
         return false;
     }
     public function doIndex($name = '') {
-         
-        var_dump($this->input->server('http_host',2222));
+//        $this->redirect("http://www.163.com","测试",'message',5);
+//        $this->message("提示信息",'message',"http://www.163.com",5);
+//        var_dump($this->input->server('http_host',2222));
         $this->helper('config');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }

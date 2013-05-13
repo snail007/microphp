@@ -1,2 +1,2 @@
 <?php
-$myconfig['app']='Version 1.1';
+$myconfig['app']='Version 2.0';

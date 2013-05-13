@@ -1,6 +1,6 @@
 <?php
 
-$ver = "Version 1.1";
+$ver = "Version 2.0";
 $files = array('modules/WoniuRouter.php', 'modules/WoniuLoader.php',
     'modules/WoniuController.php', 'modules/WoniuModel.php',
     'modules/DB_driver.php', 'modules/WoniuHelper.php',
