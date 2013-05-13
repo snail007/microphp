@@ -14,7 +14,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuRouter {
 
@@ -118,7 +118,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuLoader {
 
@@ -326,7 +326,7 @@ class WoniuLoader {
     }
 
     public function message($msg, $view = null, $url = null, $time = 3) {
-        if(!empty($url)){
+        if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
         header("Content-type: text/html; charset=utf-8");
@@ -335,6 +335,12 @@ class WoniuLoader {
         } else {
             echo $msg;
         }
+    }
+
+    public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
+        header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.'.$this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        $_COOKIE[$key] = $value;
     }
 
 }
@@ -364,7 +370,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuController extends WoniuLoader {
 
@@ -422,7 +428,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuModel extends WoniuLoader {
 
@@ -472,7 +478,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuDB {
 
@@ -5555,7 +5561,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5574,7 +5580,8 @@ function stripslashes_all() {
     }
     $strip_list = array('_GET', '_POST', '_COOKIE');
     foreach ($strip_list as $val) {
-        $$val = stripslashes2($val);
+        global $$val;
+        $$val = stripslashes2($$val);
     }
 }
 
@@ -5630,7 +5637,7 @@ function is_php($version = '5.0.0') {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-13 06:51:40
+ * @createdtime       2013-05-13 11:41:18
  */
 class WoniuInput {
 

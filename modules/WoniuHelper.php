@@ -30,7 +30,8 @@ function stripslashes_all() {
     }
     $strip_list = array('_GET', '_POST', '_COOKIE');
     foreach ($strip_list as $val) {
-        $$val = stripslashes2($val);
+        global $$val;
+        $$val = stripslashes2($$val);
     }
 }
 
