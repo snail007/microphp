@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -106,7 +106,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuRouter {
 
@@ -210,13 +210,13 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuLoader {
 
     public $db, $input;
     private $helper_files = array();
-    protected $model;
+    public $model;
     private $view_vars = array();
     private static $instance;
 
@@ -456,7 +456,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuController extends WoniuLoader {
 
@@ -514,7 +514,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuModel extends WoniuLoader {
 
@@ -564,7 +564,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuDB {
 
@@ -5647,7 +5647,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5722,7 +5722,7 @@ function is_php($version = '5.0.0') {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-12 04:29:36
+ * @createdtime       2013-05-13 06:51:40
  */
 class WoniuInput {
 
