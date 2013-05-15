@@ -36,7 +36,7 @@ KindEditor.ready(function(K){
                 cssPath :'&{RESOURCE_LINK}&js/kd/plugins/code/prettify.css',
                 emoticonsPath:'&{RESOURCE_LINK}&image/emoticons/images/',
                 allowFileManager : true
-                })
+                }) 
             );
       });
       prettyPrint();//执行代码高亮
