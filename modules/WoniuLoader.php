@@ -232,8 +232,55 @@ class WoniuLoader {
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.'.$this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.' . $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
         $_COOKIE[$key] = $value;
+    }
+
+    /**
+     * 分页函数
+     * @param int $total    总页数
+     * @param int $pagesize 每页几条
+     * @param string $pkey  url中页面变量名称
+     * @param string $url   完整的搜索url，其中的{page}会被替换为页码
+     * 依赖函数 request_uri httpInt
+     */
+    public function page($total, $page, $pagesize, $url) {
+        $a_num = 10;
+        $first = ' 首页 ';
+        $last = ' 尾页 ';
+        $pre = ' 上页 ';
+        $next = ' 下页 ';
+        $a_num = $a_num % 2 == 0 ? $a_num + 1 : $a_num;
+        $pages = ceil($total / $pagesize);
+        $curpage = intval($page) ? intval($page) : 1;
+        $curpage = $curpage > $pages || $curpage <= 0 ? 1 : $curpage; #当前页超范围置为1
+        $body = '';
+        $prefix = '';
+        $subfix = '';
+        $start = $curpage - ($a_num - 1) / 2; #开始页
+        $end = $curpage + ($a_num - 1) / 2;  #结束页
+        $start = $start <= 0 ? 1 : $start;   #开始页超范围修正
+        $end = $end > $pages ? $pages : $end; #结束页超范围修正
+        if ($pages >= $a_num) {#总页数大于显示页数
+            if ($curpage <= ($a_num - 1) / 2) {
+                $end = $a_num;
+            }//当前页在左半边补右边
+            if ($end - $curpage <= ($a_num - 1) / 2) {
+                $start-=5 - ($end - $curpage);
+            }//当前页在右半边补左边
+        }
+        for ($i = $start; $i <= $end; $i++) {
+            if ($i == $curpage) {
+                $body.='<b>' . $i . '</b>';
+            } else {
+                $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
+            }
+        }
+        $prefix = ($curpage == 1 ? '' : '<a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a>');
+        $subfix = ($curpage == $pages ? '' : '<a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a>');
+        $info = " 第{$curpage}/{$pages}页 ";
+        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){if(!/\d+/.test(document.getElementById(\'gsd09fhas9d\').value)){alert(\'请输入页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
+        return $prefix . $body . $subfix . $info . $go;
     }
 
 }
