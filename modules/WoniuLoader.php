@@ -238,11 +238,11 @@ class WoniuLoader {
 
     /**
      * 分页函数
-     * @param int $total    总页数
-     * @param int $pagesize 每页几条
-     * @param string $pkey  url中页面变量名称
-     * @param string $url   完整的搜索url，其中的{page}会被替换为页码
-     * 依赖函数 request_uri httpInt
+     * @param type $total 一共多少记录
+     * @param type $page  当前是第几页
+     * @param type $pagesize 每页多少
+     * @param type $url    url是什么，url里面的{page}会被替换成页码
+     * @return type  String
      */
     public function page($total, $page, $pagesize, $url) {
         $a_num = 10;
