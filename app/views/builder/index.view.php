@@ -189,7 +189,7 @@ function dosubmit(){
 <table cellpadding="0" cellspacing="0">
 <tr><td>表名：</td><td><input type="text" id="table" name="table" value="<?php echo $this->input->post('table');;?>"/></td><td>&nbsp;</td></tr>
 <tr><td>表主键名：</td><td><input type="text" id="pk" name="pk" value="<?php echo $this->input->post('pk');;?>"/></td><td>&nbsp;</td></tr>
-<tr><td>模型类名:</td><td><input type="text" id="model" name="model" value="<?php echo $this->input->post('model');;?>"/></td><td>Model.php</td></tr>
+<tr><td>模型类名:</td><td><input type="text" id="model" name="model" value="<?php echo $this->input->post('model');;?>"/></td><td>.Model.php</td></tr>
 <tr><td colspan="3" align="center"><input type="button" onclick="$('#form').submit();" value=" 读取信息 "/></td></tr>
 </table>
 </form>

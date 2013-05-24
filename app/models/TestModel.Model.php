@@ -111,7 +111,7 @@ class TestModel extends WoniuModel {
      * 根据条件删除记录
      */
     public function deleteByWhereIn($key, Array $where) {
-        return $this->db->where_in($where)->delete($this->table, $where);
+        return $this->db->where_in($key,$where)->delete($this->table, $where);
     }
 
     public function getPage($page, $pagesize, $url, $fields, Array $where, Array $like = null, $orderby = null) {
