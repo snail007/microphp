@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>MrPmvc模型生成工具</title>
+<title>MicroPHP模型生成工具</title>
 
 <script>
     /*!
