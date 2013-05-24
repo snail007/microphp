@@ -23,6 +23,11 @@ class Welcome extends WoniuController {
         return false;
     }
     public function doIndex($name = '') {
+        $_POST['user']='就不告诉你';
+        $this->model('TestModel','test');
+        $page=$this->input->get('p')?$this->input->get('p'):1;
+        var_dump($this->model->test->getPage($page,1,'?home.welcome.index&p={page}','id,name',array('id <'=>10),null,'id asc'));
+        exit();
 //        $this->redirect("http://www.163.com","测试",'message',5);
 //        $this->message("提示信息",'message',"http://www.163.com",5);
 //        var_dump($this->input->server('http_host',2222));

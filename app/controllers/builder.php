@@ -81,18 +81,18 @@ class Builder extends WoniuController {
         $map = var_export($map, true);
         $map = str_replace("\n", "\n" . str_repeat(' ', 26), $map);
 
-        $tpl = file_get_contents(APP_ROOT . 'views/builder/TplModel.php');
-
+        $tpl = file_get_contents(APP_ROOT . 'views/builder/TplModel.view.php');
         $data = str_replace("'#keys#'", $keys, $tpl);
         $data = str_replace("ttt", $this->input->post('table'), $data);
-        $data = str_replace("mmm'", $this->input->post('model'), $data);
-        $data = str_replace("'#pk#'", $this->input->post('pk'), $data);
-        $data = str_replace("pk2'", ucfirst($this->input->post('pk')), $data);
+        $data = str_replace("mmm", $this->input->post('model'), $data);
+        $data = str_replace("ppk", $this->input->post('pk'), $data);
+        $data = str_replace("pk2", ucfirst($this->input->post('pk')), $data);
         $data = str_replace("'#rule#'", $rule, $data);
         $data = str_replace("'#rule2#'", $rule2, $data);
         $data = str_replace("'#map#'", $map, $data);
-        //echo ($data);
-        force_download($this->input->post('model') . '.Model.class.php', $data);
+//        echo ($data);
+//        exit();
+        force_download($this->input->post('model') . '.Model.php', $data);
     }
 
     public function doCreateAction() {

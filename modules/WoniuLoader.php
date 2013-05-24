@@ -283,6 +283,44 @@ class WoniuLoader {
         return $prefix . $body . $subfix . $info . $go;
     }
 
+    /**
+     * $source_data和$map的key一致，$map的value是返回数据的key
+     * 根据$map的key读取$source_data中的数据，结果是以map的value为key的数数组
+     * 
+     * @param Array $map 字段映射数组
+     */
+    public function readData(Array $map, $source_data = null) {
+        $data = array();
+        $formdata = is_null($source_data) ? $this->input->post() : $source_data;
+        foreach ($formdata as $form_key => $val) {
+            if (isset($map[$form_key])) {
+                $data[$map[$form_key]] = $val;
+            }
+        }
+        return $data;
+    }
+
+    public function checkData(Array $rule, Array $data) {
+        foreach ($rule as $col => $val) {
+            if ($val['rule']) {
+                #有规则但是没有数据，就补上空数据，然后进行验证
+                if (!isset($data[$col])) {
+                    $data[$col] = '';
+                }
+                #函数验证
+                if (strpos($val['rule'], '/') === FALSE) {
+                    return $this->{$val['rule']}($data[$col], $data);
+                } else {
+                    #正则表达式验证
+                    if (!preg_match($val['rule'], $data[$col])) {
+                        return $val['msg'];
+                    }
+                }
+            }
+        }
+        return NULL;
+    }
+
 }
 
 class WoniuModelLoader {
