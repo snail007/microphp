@@ -1,10 +1,11 @@
 <?php
+
 class Builder extends WoniuController {
 
     public function __construct() {
         parent::__construct();
         $this->database();
-        define('APP_ROOT', $this->config('system','application_folder').'/');
+        define('APP_ROOT', $this->config('system', 'application_folder') . '/');
     }
 
     public function doIndex() {
@@ -13,7 +14,7 @@ class Builder extends WoniuController {
 
     public function doReadInfo() {
 
-        if ($this->db->simple_query('select count(*) from '.$this->input->post('table'))===FALSE) {
+        if ($this->db->simple_query('select count(*) from ' . $this->input->post('table')) === FALSE) {
             exit('表  ' . $this->input->post('table') . ' 不存在.');
         } else {
             if ($row = $this->db->limit(1)->get($this->input->post('table'))->row_array()) {
@@ -92,7 +93,7 @@ class Builder extends WoniuController {
         $data = str_replace("'#map#'", $map, $data);
 //        echo ($data);
 //        exit();
-        force_download($this->input->post('model') . '.Model.php', $data);
+        force_download($this->input->post('model') . '.model.php', $data);
     }
 
     public function doCreateAction() {
@@ -106,11 +107,12 @@ class Builder extends WoniuController {
             }
         }
         $map = $this->formatArray(var_export($map, true));
-        $tpl = file_get_contents(APP_ROOT . 'views/builder/TplAction.php');
+        $tpl = file_get_contents(APP_ROOT . 'views/builder/TplAction.view.php');
         $data = str_replace("ccc", $this->input->post('action_name'), $tpl);
         $data = str_replace("'#map#'", $map, $data);
+        $data = str_replace("mmm", $this->input->post('model'), $data);
         $data = str_replace("ttt", $this->input->post('table'), $data);
-        $data = str_replace("'#pk#'", $this->input->post('pk'), $data);
+        $data = str_replace("ppk", $this->input->post('pk'), $data);
         $data = str_replace("pageCols", implode(',', $col), $data);
         force_download($this->input->post('action_name') . '.php', $data);
     }
@@ -168,10 +170,8 @@ class Builder extends WoniuController {
             }
         }
         $tpl = $this->view('builder/TplList', $data, true);
-        $tpl = str_replace("#{", '<!--<', $tpl);
-        $tpl = str_replace("}#", '>-->', $tpl);
-        $tpl = str_replace("[&{", '[{', $tpl);
-        $tpl = str_replace("}&]", '}]', $tpl);
+        $tpl = str_replace("&{", '<?php ', $tpl);
+        $tpl = str_replace("}&", ';?>', $tpl);
         force_download($this->input->post('table') . '_list.view.php', $tpl);
     }
 

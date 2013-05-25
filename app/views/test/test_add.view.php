@@ -1,8 +1,4 @@
-<?php
-if (!defined('IN_WONIU_APP')) {
-    exit();
-}
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
@@ -16,6 +12,10 @@ if (!defined('IN_WONIU_APP')) {
                 border-collapse:collapse;
             }
             td{padding:5px;}
+            input[type=button],input[type=submit]{
+                cursor:pointer;
+                padding:2xp 5px;
+            }
         </style>
         <script src="res/js/jq/j.js"></script>
         <script src="res/js/kd/kindeditor-min.js"></script>
@@ -24,9 +24,8 @@ if (!defined('IN_WONIU_APP')) {
         <link rel="stylesheet" type="text/css" href="res/js/kd/plugins/code/prettify.css" />
         <script src="res/js/kd/plugins/code/prettify.js"></script>
         <script>
-            var found = false;
             var _editor = [];
-            var actionName = '<?php echo $_POST['action_name']; ?>';
+            var actionName = 'Test';
             KindEditor.ready(function(K) {
                 $('textarea.textareahtml').each(function() {
                     var id = $(this).attr('id');
@@ -54,18 +53,19 @@ if (!defined('IN_WONIU_APP')) {
                     $(this).ajaxSubmit({
                         dataType: 'json'
                                 , success: function(data, status_t, xhr) {
-                            if (typeof data == 'object' && data.tip) {
-
-                                showInfoWindow(data.tip);
+                            showInfoWindow(data.tip);
+                            if (data.code == 200) {
+                                $('#cform').clearForm();
+                                for (i = 0; i < _editor.length; i++) {
+                                    _editor[i].html('');
+                                }
                             }
                         }
                         , error: function(xhr) {
                             showInfoWindow('通信出错,代码[' + xhr.status + ']');
                         }
                         , beforeSubmit: function() {
-                            if (found) {
-                                showInfoWindow('正在处理...');
-                            }
+                            showInfoWindow('正在处理...');
                         }
                     });
                     return false;
@@ -79,7 +79,7 @@ if (!defined('IN_WONIU_APP')) {
                     }
                 });
             });
-            //###########自动保存相关函数#######################
+        //###########自动保存相关函数#######################
             function saveRomoteImgs(KE, scriptUrl) {
                 var CheckboxId = "cboxSaveRomote";
                 var content = KE.html();//得到html代码
@@ -163,10 +163,6 @@ if (!defined('IN_WONIU_APP')) {
             }
             var dialog;
             function showInfoWindow(msg) {
-                if (!found) {
-                    alert(msg);
-                }
-                return;
                 try {
                     dialog.remove();
                 } catch (e) {
@@ -184,38 +180,15 @@ if (!defined('IN_WONIU_APP')) {
                     }
                 });
             }
-            //###########自动保存相关函数结束#######################
+        //###########自动保存相关函数结束#######################
         </script>
     </head>
-    <body><form method="post" action="?<?php echo $_POST['action_name']; ?>.update" id="cform">
-            <fieldset><legend><h3>修改界面</h3></legend>
+    <body><form method="post" action="?Test.create" id="cform">
+            <fieldset><legend><h3>添加界面</h3></legend>
                 <hr class="hr1"/>
                 <table>
-                    <?php
-                    $found = FALSE;
-                    foreach ($rows as $row) {
-                        if (!$found) {
-                            if ($row['type'] == 'textareahtml') {
-                                $found = TRUE;
-                            }
-                        }
-                        ?>
-                        <?php if ($row['type'] == 'text') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><input type="text" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
-                        <?php } elseif ($row['type'] == 'textarea') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:400px;height:120px;" type="text" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
-                        <?php } elseif ($row['type'] == 'textareahtml') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="<?php echo $row['col']; ?>" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
-                        <?php } elseif ($row['type'] == 'hidden') { ?>
-                            <tr><td>&nbsp;</td><td><input type="hidden" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
-                        <?php } else { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td>自定义</td></tr>
-                        <?php } ?>
-                    <?php }//endforeach  ?>
-                    <?php if ($found) { ?>
-                        <script>found = true;</script>
-                        <tr><td>&nbsp;</td><td><label><input type="checkbox" id="cboxSaveRomote"/>保存远程图片</label></td></tr>
-                    <?php } ?>
+                    <tr><td>用户名</td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="name" name="user"></textarea></td></tr>
+                    <tr><td>&nbsp;</td><td><label><input type="checkbox" id="cboxSaveRomote"/>保存远程图片</label></td></tr>
                     <tr><td>&nbsp;</td><td><input type="submit" value="提交"/></td></tr>
                 </table>
             </fieldset>

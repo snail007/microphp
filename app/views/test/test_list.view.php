@@ -1,4 +1,4 @@
-<?php if(!defined('IN_WONIU_APP')){exit();}?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -28,7 +28,7 @@ label,input[type=checkbox]{
 }
 </style>
 <script>
-var actionName='<?php echo $_POST['action_name'];?>';
+var actionName='test';
 $.ajaxSetup({
     error:function(x){alert('通信出错,代码['+x.status+']');}
 });
@@ -64,18 +64,17 @@ function getChoose(){
 </script></head>
 <body>
 <fieldset>
-    <legend>列表页&nbsp;&nbsp;[<a href="?<?php echo $_POST['action_name'];?>.add">添加</a>]</legend>
+    <legend>列表页&nbsp;&nbsp;[<a href="?test.add">添加</a>]</legend>
 <hr class="hr1"/>
 <table cellpadding="0" cellspacing="0" width="90%">
-    <tr><?php foreach($rows as $row){?><th><?php echo $row['th'];?></th><?php }?><th>操作</th></tr>
-&{foreach($items as $row){}&
-    <tr><?php foreach($rows as $key=>$row){?><?php if($key==0){?><td><label><input type="checkbox" value="&{ echo $row['<?php echo $row['col'];?>']}&" class="pk"/>&{ echo $row['<?php echo $row['col'];?>']}&</label></td><?php }else{?><td>&{ echo $row['<?php echo $row['col'];?>']}&</td><?php }?><?php }?>
-    <td>[<a href="?<?php echo $_POST['action_name'];?>.modify&<?php echo $_POST['pk'];?>=&{ echo $row[$pk]}&">修改</a>]</td>
+    <tr><th>id</th><th>name</th><th>操作</th></tr>
+<?php foreach($items as $row){;?>
+    <tr><td><label><input type="checkbox" value="<?php  echo $row['id'];?>" class="pk"/><?php  echo $row['id'];?></label></td><td><?php  echo $row['name'];?></td>    <td>[<a href="?test.modify&id=<?php  echo $row[$pk];?>">修改</a>]</td>
     </tr>
-&{}//end foreach}&
+<?php }//end foreach;?>
 </table>
     <p><label><input type="checkbox" id="choose"/>全选/全不选</label><input type="button" id="del_choose" value="删除所选"></p>
-    <p>&{ echo $page;}&</p>
+    <p><?php  echo $page;;?></p>
 </fieldset>
 </body>
 </html>

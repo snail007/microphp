@@ -1,8 +1,4 @@
-<?php
-if (!defined('IN_WONIU_APP')) {
-    exit();
-}
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
@@ -26,7 +22,7 @@ if (!defined('IN_WONIU_APP')) {
         <script>
             var found = false;
             var _editor = [];
-            var actionName = '<?php echo $_POST['action_name']; ?>';
+            var actionName = 'hiTask';
             KindEditor.ready(function(K) {
                 $('textarea.textareahtml').each(function() {
                     var id = $(this).attr('id');
@@ -187,36 +183,18 @@ if (!defined('IN_WONIU_APP')) {
             //###########自动保存相关函数结束#######################
         </script>
     </head>
-    <body><form method="post" action="?<?php echo $_POST['action_name']; ?>.update" id="cform">
+    <body><form method="post" action="?hiTask.update" id="cform">
             <fieldset><legend><h3>修改界面</h3></legend>
                 <hr class="hr1"/>
                 <table>
-                    <?php
-                    $found = FALSE;
-                    foreach ($rows as $row) {
-                        if (!$found) {
-                            if ($row['type'] == 'textareahtml') {
-                                $found = TRUE;
-                            }
-                        }
-                        ?>
-                        <?php if ($row['type'] == 'text') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><input type="text" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
-                        <?php } elseif ($row['type'] == 'textarea') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:400px;height:120px;" type="text" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
-                        <?php } elseif ($row['type'] == 'textareahtml') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="<?php echo $row['col']; ?>" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
-                        <?php } elseif ($row['type'] == 'hidden') { ?>
-                            <tr><td>&nbsp;</td><td><input type="hidden" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
-                        <?php } else { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td>自定义</td></tr>
-                        <?php } ?>
-                    <?php }//endforeach  ?>
-                    <?php if ($found) { ?>
-                        <script>found = true;</script>
-                        <tr><td>&nbsp;</td><td><label><input type="checkbox" id="cboxSaveRomote"/>保存远程图片</label></td></tr>
-                    <?php } ?>
-                    <tr><td>&nbsp;</td><td><input type="submit" value="提交"/></td></tr>
+                                                                        <tr><td>&nbsp;</td><td><input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']);?>"/></td></tr>
+                                                                                                <tr><td>文章标题</td><td><input type="text" name="title" value="<?php echo htmlspecialchars($row['title']);?>"/></td></tr>
+                                                                                                <tr><td>文章内容</td><td><textarea style="width:400px;height:120px;" type="text" name="content"><?php echo htmlspecialchars($row['content']);?></textarea></td></tr>
+                                                                                                <tr><td>添加时间</td><td><input type="text" name="time" value="<?php echo htmlspecialchars($row['time']);?>"/></td></tr>
+                                                                                                <tr><td>状态</td><td><input type="text" name="status" value="<?php echo htmlspecialchars($row['status']);?>"/></td></tr>
+                                                                                                <tr><td>添加者</td><td><input type="text" name="user" value="<?php echo htmlspecialchars($row['user']);?>"/></td></tr>
+                                                                                                <tr><td>类型</td><td><input type="text" name="type" value="<?php echo htmlspecialchars($row['type']);?>"/></td></tr>
+                                                                                    <tr><td>&nbsp;</td><td><input type="submit" value="提交"/></td></tr>
                 </table>
             </fieldset>
         </form>

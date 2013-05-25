@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -40,12 +40,12 @@ $system['default_timezone']='PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "pdo";#可用的有mysql,pdo
-$woniu_db['default']['hostname'] = 'sqlite:d:/wwwroot/sdb.db';
-$woniu_db['default']['port'] = '';
-$woniu_db['default']['username'] = '';
-$woniu_db['default']['password'] = '';
-$woniu_db['default']['database'] = '';
+$woniu_db['default']['dbdriver'] = "mysql";#可用的有mysql,pdo
+$woniu_db['default']['hostname'] = 'localhost';
+$woniu_db['default']['port'] = '3306';
+$woniu_db['default']['username'] = 'root';
+$woniu_db['default']['password'] = 'admin';
+$woniu_db['default']['database'] = 'test';
 $woniu_db['default']['dbprefix'] = '';
 $woniu_db['default']['pconnect'] = TRUE;
 $woniu_db['default']['db_debug'] = TRUE;
@@ -106,7 +106,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuRouter {
 
@@ -210,7 +210,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuLoader {
 
@@ -478,8 +478,46 @@ class WoniuLoader {
         $prefix = ($curpage == 1 ? '' : '<a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a>');
         $subfix = ($curpage == $pages ? '' : '<a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a>');
         $info = " 第{$curpage}/{$pages}页 ";
-        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){if(!/\d+/.test(document.getElementById(\'gsd09fhas9d\').value)){alert(\'请输入页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
+        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         return $prefix . $body . $subfix . $info . $go;
+    }
+
+    /**
+     * $source_data和$map的key一致，$map的value是返回数据的key
+     * 根据$map的key读取$source_data中的数据，结果是以map的value为key的数数组
+     * 
+     * @param Array $map 字段映射数组
+     */
+    public function readData(Array $map, $source_data = null) {
+        $data = array();
+        $formdata = is_null($source_data) ? $this->input->post() : $source_data;
+        foreach ($formdata as $form_key => $val) {
+            if (isset($map[$form_key])) {
+                $data[$map[$form_key]] = $val;
+            }
+        }
+        return $data;
+    }
+
+    public function checkData(Array $rule, Array $data) {
+        foreach ($rule as $col => $val) {
+            if ($val['rule']) {
+                #有规则但是没有数据，就补上空数据，然后进行验证
+                if (!isset($data[$col])) {
+                    $data[$col] = '';
+                }
+                #函数验证
+                if (strpos($val['rule'], '/') === FALSE) {
+                    return $this->{$val['rule']}($data[$col], $data);
+                } else {
+                    #正则表达式验证
+                    if (!preg_match($val['rule'], $data[$col])) {
+                        return $val['msg'];
+                    }
+                }
+            }
+        }
+        return NULL;
     }
 
 }
@@ -509,7 +547,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuController extends WoniuLoader {
 
@@ -567,7 +605,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuModel extends WoniuLoader {
 
@@ -617,7 +655,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuDB {
 
@@ -5700,7 +5738,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5823,7 +5861,7 @@ function force_download($filename = '', $data = ''){
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-23 09:16:07
+ * @createdtime       2013-05-25 01:00:11
  */
 class WoniuInput {
 

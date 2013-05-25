@@ -205,7 +205,7 @@ td{text-align:center;}
 <table cellpadding="0" cellspacing="0" >
      <tr>
       <td>控制器类名</td>
-     <td><input type="text" name="action_name" value="<?php echo $attach['model'];?>"/>.class.php</td>
+     <td><input type="text" name="action_name" value="<?php echo $attach['table'];?>"/>.php</td>
      </tr>
 </table>
 </fieldset>

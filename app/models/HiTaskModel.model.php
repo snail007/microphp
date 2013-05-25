@@ -1,12 +1,12 @@
 <?php
 
 /**
- * MicroPHP模型类,表ttt模型
+ * MicroPHP模型类,表hi_task模型
  * @author 狂奔的蜗牛
  * @email  672308444@163.com
  * @version alpha
  */
-class mmm extends WoniuModel {
+class HiTaskModel extends WoniuModel {
 
     public $pk;
     public $keys;
@@ -16,11 +16,19 @@ class mmm extends WoniuModel {
 
     public function __construct() {
         parent::__construct();
-        $this->table = "ttt";
-        $this->pk = "ppk";
-        $this->keys = '#keys#';
+        $this->table = "hi_task";
+        $this->pk = "id";
+        $this->keys = array('title','content','time','status','user','type',);
         #字段映射，$key是表单name名称，$val是字段名
-        $this->map = '#map#';
+        $this->map = array (
+                            'id' => 'id',
+                            'title' => 'title',
+                            'content' => 'content',
+                            'time' => 'time',
+                            'status' => 'status',
+                            'user' => 'user',
+                            'type' => 'type',
+                          );
         $this->database();
     }
 
@@ -28,7 +36,38 @@ class mmm extends WoniuModel {
      * 添加数据
      */
     public function insert() {
-        $rule = '#rule#';
+        $rule = array (
+                            'title' => 
+                            array (
+                              'rule' => '/^.+$/',
+                              'msg' => '文章标题不能为空',
+                            ),
+                            'content' => 
+                            array (
+                              'rule' => '/^.+$/',
+                              'msg' => '文章内容不能为空',
+                            ),
+                            'time' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'status' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'user' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'type' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                          );
         $data = $this->readData($this->map);
         #数据预处理，比如加入附加数据，$data['time']=time(); time是表里面的字段
         #表单验证
@@ -44,7 +83,43 @@ class mmm extends WoniuModel {
      * 更新数据
      */
     public function update() {
-        $rule = '#rule2#';
+        $rule = array (
+                            'id' => 
+                            array (
+                              'rule' => '/^\\d+$/',
+                              'msg' => 'id必须为数字',
+                            ),
+                            'title' => 
+                            array (
+                              'rule' => '/^.+$/',
+                              'msg' => '文章标题不能为空',
+                            ),
+                            'content' => 
+                            array (
+                              'rule' => '/.+/',
+                              'msg' => '文章内容不能为空',
+                            ),
+                            'time' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'status' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'user' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                            'type' => 
+                            array (
+                              'rule' => '',
+                              'msg' => '',
+                            ),
+                          );
         $data = $this->readData($this->map);
         #数据预处理，比如加入附加数据，$data['time']=time(); time是表里面的字段
         #表单验证.

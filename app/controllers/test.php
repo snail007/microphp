@@ -1,12 +1,12 @@
 <?php
 
-class ccc extends WoniuController {
+class Test extends WoniuController {
 
     private  //保存图片和文件的根目录绝对路径，可以指定绝对路径，比如 /var/www/attached/
             $save_path
             //保存图片和文件的根目录URL，可以指定绝对路径，比如 http://www.yoursite.com/attached/
             , $save_url
-            , $view_folder_name = 'ttt'
+            , $view_folder_name = 'test'
 
     ;
 
@@ -14,24 +14,24 @@ class ccc extends WoniuController {
         parent::__construct(); #一定不能忘记调用父类构造方法
         $this->save_path = 'res/attached/';
         $this->save_url = 'res/attached/';
-        $this->model('mmm');
+        $this->model('TestModel');
     }
 
     #显示添加数据界面
 
     public function doAdd() {
-        $this->view('ttt/ttt_add');
+        $this->view('test/test_add');
     }
 
     #显示修改数据界面
 
     public function doModify() {
-        $pk = 'ppk';
+        $pk = 'id';
         $pid = $this->input->get_post($pk);
-        $row = $this->model->mmm->selectRowByWhere(array($pk => $pid));
+        $row = $this->model->TestModel->selectRowByWhere(array($pk => $pid));
         if (is_numeric($pid) && !empty($row)) {
             $data['row'] = $row;
-            $this->view('ttt/ttt_modify', $data);
+            $this->view('test/test_modify', $data);
         } else {
             trigger404();
         }
@@ -41,9 +41,9 @@ class ccc extends WoniuController {
 
     public function doPage() {
         $page = intval($this->input->get('p')) ? $this->input->get('p') : 1;
-        $data = $this->model->mmm->getPage($page, 10, '?ccc.page&p={page}', '*');
-        $data['pk'] = 'ppk';
-        $this->view('ttt/ttt_list', $data);
+        $data = $this->model->TestModel->getPage($page, 10, '?test.page&p={page}', '*');
+        $data['pk'] = 'id';
+        $this->view('test/test_list', $data);
     }
 
     #显示列表
@@ -55,7 +55,7 @@ class ccc extends WoniuController {
     #执行添加数据
 
     public function doCreate() {
-        $msg = $this->model->mmm->insert();
+        $msg = $this->model->TestModel->insert();
         if ($msg === TRUE) {
             $this->ajax_echo(200, '添加成功');
         } elseif ($msg === FALSE) {
@@ -68,7 +68,7 @@ class ccc extends WoniuController {
     #执行更新数据
 
     public function doUpdate() {
-        $msg = $this->model->mmm->update();
+        $msg = $this->model->TestModel->update();
         if ($msg === TRUE) {
             $this->ajax_echo(200, '修改成功');
         } elseif ($msg === FALSE) {
@@ -83,7 +83,7 @@ class ccc extends WoniuController {
     public function doDels() {
         $pks = $this->input->post('pks');
         if (is_array($pks)) {
-            echo $this->model->TestModel->deleteByWhereIn($this->model->mmm->pk, $pks) ? $this->ajax_echo(200, '删除成功') : $this->ajax_echo(400, '删除失败');
+            echo $this->model->TestModel->deleteByWhereIn($this->model->TestModel->pk, $pks) ? $this->ajax_echo(200, '删除成功') : $this->ajax_echo(400, '删除失败');
         } else {
             ajaxEcho(400, 'error data.');
         }

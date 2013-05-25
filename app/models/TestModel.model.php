@@ -1,12 +1,12 @@
 <?php
 
 /**
- * MicroPHP模型类,表ttt模型
+ * MicroPHP模型类,表test模型
  * @author 狂奔的蜗牛
  * @email  672308444@163.com
  * @version alpha
  */
-class mmm extends WoniuModel {
+class TestModel extends WoniuModel {
 
     public $pk;
     public $keys;
@@ -16,11 +16,14 @@ class mmm extends WoniuModel {
 
     public function __construct() {
         parent::__construct();
-        $this->table = "ttt";
-        $this->pk = "ppk";
-        $this->keys = '#keys#';
+        $this->table = "test";
+        $this->pk = "id";
+        $this->keys = array('name',);
         #字段映射，$key是表单name名称，$val是字段名
-        $this->map = '#map#';
+        $this->map = array (
+                            'id' => 'id',
+                            'name' => 'name',
+                          );
         $this->database();
     }
 
@@ -28,7 +31,13 @@ class mmm extends WoniuModel {
      * 添加数据
      */
     public function insert() {
-        $rule = '#rule#';
+        $rule = array (
+                            'name' => 
+                            array (
+                              'rule' => '/^.+$/',
+                              'msg' => '名称不能为空',
+                            ),
+                          );
         $data = $this->readData($this->map);
         #数据预处理，比如加入附加数据，$data['time']=time(); time是表里面的字段
         #表单验证
@@ -44,7 +53,18 @@ class mmm extends WoniuModel {
      * 更新数据
      */
     public function update() {
-        $rule = '#rule2#';
+        $rule = array (
+                            'id' => 
+                            array (
+                              'rule' => '/^\\d+$/',
+                              'msg' => 'id必须为数字',
+                            ),
+                            'name' => 
+                            array (
+                              'rule' => '/^.+$/',
+                              'msg' => '用户名不能为空',
+                            ),
+                          );
         $data = $this->readData($this->map);
         #数据预处理，比如加入附加数据，$data['time']=time(); time是表里面的字段
         #表单验证.
