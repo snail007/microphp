@@ -189,12 +189,14 @@
                 <table>
                                                                         <tr><td>&nbsp;</td><td><input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']);?>"/></td></tr>
                                                                                                 <tr><td>文章标题</td><td><input type="text" name="title" value="<?php echo htmlspecialchars($row['title']);?>"/></td></tr>
-                                                                                                <tr><td>文章内容</td><td><textarea style="width:400px;height:120px;" type="text" name="content"><?php echo htmlspecialchars($row['content']);?></textarea></td></tr>
+                                                                                                <tr><td>文章内容</td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="content" name="content"><?php echo htmlspecialchars($row['content']);?></textarea></td></tr>
                                                                                                 <tr><td>添加时间</td><td><input type="text" name="time" value="<?php echo htmlspecialchars($row['time']);?>"/></td></tr>
                                                                                                 <tr><td>状态</td><td><input type="text" name="status" value="<?php echo htmlspecialchars($row['status']);?>"/></td></tr>
                                                                                                 <tr><td>添加者</td><td><input type="text" name="user" value="<?php echo htmlspecialchars($row['user']);?>"/></td></tr>
                                                                                                 <tr><td>类型</td><td><input type="text" name="type" value="<?php echo htmlspecialchars($row['type']);?>"/></td></tr>
-                                                                                    <tr><td>&nbsp;</td><td><input type="submit" value="提交"/></td></tr>
+                                                                                        <script>found = true;</script>
+                        <tr><td>&nbsp;</td><td><label><input type="checkbox" id="cboxSaveRomote"/>保存远程图片</label></td></tr>
+                                        <tr><td>&nbsp;</td><td><input type="submit" value="提交"/></td></tr>
                 </table>
             </fieldset>
         </form>

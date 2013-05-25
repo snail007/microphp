@@ -172,8 +172,8 @@ if (!defined('IN_WONIU_APP')) {
             function showInfoWindow(msg) {
                 if (!found) {
                     alert(msg);
+                    return;
                 }
-                return;
                 try {
                     dialog.remove();
                 } catch (e) {
