@@ -151,7 +151,7 @@ class Builder extends WoniuController {
             }
         }
         $tpl = $this->view('builder/TplModify', $data, true);
-        $data = str_replace("&{", '<?php echo ', $tpl);
+        $data = str_replace("&{", '<?php ', $tpl);
         $data = str_replace("}&", ';?>', $data);
         force_download($this->input->post('table') . '_modify.view.php', $data);
     }
