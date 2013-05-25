@@ -83,7 +83,7 @@ class ccc extends WoniuController {
     public function doDels() {
         $pks = $this->input->post('pks');
         if (is_array($pks)) {
-            echo $this->model->TestModel->deleteByWhereIn($this->model->mmm->pk, $pks) ? $this->ajax_echo(200, '删除成功') : $this->ajax_echo(400, '删除失败');
+            echo $this->model->mmm->deleteByWhereIn($this->model->mmm->pk, $pks) ? $this->ajax_echo(200, '删除成功') : $this->ajax_echo(400, '删除失败');
         } else {
             ajaxEcho(400, 'error data.');
         }
