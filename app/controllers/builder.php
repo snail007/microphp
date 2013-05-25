@@ -93,7 +93,7 @@ class Builder extends WoniuController {
         $data = str_replace("'#map#'", $map, $data);
 //        echo ($data);
 //        exit();
-//        force_download($this->input->post('model') . '.model.php', $data);
+        force_download($this->input->post('model') . '.model.php', $data);
     }
 
     public function doCreateAction() {
