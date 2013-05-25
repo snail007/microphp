@@ -6,12 +6,12 @@
  * @email  672308444@163.com
  * @version alpha
  */
-class mmmModel extends WoniuModel {
+class mmm extends WoniuModel {
 
-    protected $pk;
-    protected $keys;
-    protected $table;
-    protected $map;
+    public $pk;
+    public $keys;
+    public $table;
+    public $map;
     public $msg;
 
     public function __construct() {
@@ -36,7 +36,7 @@ class mmmModel extends WoniuModel {
         if (is_null($msg)) {
             return $this->db->insert($this->table, $data);
         } else {
-            return FALSE;
+            return $msg;
         }
     }
 
@@ -48,11 +48,13 @@ class mmmModel extends WoniuModel {
         $data = $this->readData($this->map);
         #数据预处理，比如加入附加数据，$data['time']=time(); time是表里面的字段
         #表单验证.
-        $isOk = $this->checkData($rule, $data);
-        if ($isOk) {
-            return $this->db->update($this->table, $data);
+        $msg = $this->checkData($rule, $data);
+        if (is_null($msg)) {
+            $where = array($this->pk => @$data[$this->pk]);
+            unset($data[$this->pk]);
+            return $this->db->where($where)->update($this->table, $data);
         } else {
-            return FALSE;
+            return $msg;
         }
     }
 
@@ -81,14 +83,14 @@ class mmmModel extends WoniuModel {
      * 根据条件删除记录
      */
     public function deleteByWhere(Array $where) {
-        return $this->db->where($where)->delete($this->table, $where);
+        return $this->db->where($where)->delete($this->table);
     }
 
     /**
      * 根据条件删除记录
      */
-    public function deleteByWhereIn($key, Array $where) {
-        return $this->db->where_in($where)->delete($this->table, $where);
+    public function deleteByWhereIn($key, Array $in) {
+        return $this->db->where_in($key,$in)->delete($this->table);
     }
 
     public function getPage($page, $pagesize, $url, $fields, Array $where, Array $like = null, $orderby = null) {
@@ -97,7 +99,7 @@ class mmmModel extends WoniuModel {
         if (is_array($like)) {
             $this->db->like($like);
         }
-        if(!is_null($orderby)){
+        if (!is_null($orderby)) {
             $this->db->order_by($orderby);
         }
         $data['items'] = $this->db->select($fields)->where($where)->limit($pagesize, ($page - 1) * $pagesize)->get($this->table)->result_array();
