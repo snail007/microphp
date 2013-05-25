@@ -23,8 +23,6 @@ class Welcome extends WoniuController {
         return false;
     }
     public function doIndex($name = '') { 
-        var_dump(preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', '2013-05-25 15:39:00'));
-        exit();
 //        $this->redirect("http://www.163.com","测试",'message',5);
 //        $this->message("提示信息",'message',"http://www.163.com",5);
 //        var_dump($this->input->server('http_host',2222));
