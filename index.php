@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 01:00:11
+ * @createdtime       2013-05-25 10:15:38
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------

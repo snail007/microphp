@@ -33,7 +33,7 @@ class WoniuController extends WoniuLoader {
         global $system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
-        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . strtolower($classname_path) . $system['controller_file_subfix'];
+        $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
         $alias_name = strtolower($filepath);
 
         if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
