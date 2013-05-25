@@ -204,7 +204,7 @@ td{text-align:center;}
 <legend>控制器信息</legend>
 <table cellpadding="0" cellspacing="0" >
      <tr>
-      <td>控制器类名</td>
+      <td>控制器文件名</td>
      <td><input type="text" name="action_name" value="<?php echo $attach['table'];?>"/>.php</td>
      </tr>
 </table>
@@ -243,7 +243,7 @@ td{text-align:center;}
      <input type="button" id="createAction" value="1.生成控制器"/>
      <input type="button" id="createAddView" value="2.生成添加视图"/>
      <input type="button" id="createMdifyView" value="3.生成修改视图"/>
-     <input type="button" id="createListView" value="4.生成列表视图"/>
+     <input type="button" id="createListView" value="4.生成列表视图（字段要设置为非不显示）"/>
     <!--input type="button" id="next" value="下一步"/-->
     </td>
      </tr>

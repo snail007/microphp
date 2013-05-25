@@ -155,7 +155,7 @@ class ccc extends WoniuController {
                     mkdir($save_path);
                 }
             }
-            $ymd = date("Ymd");
+            $ymd = date('Y') . '/' . date('m') . '/' . date('d');
             $save_path .= $ymd . "/";
             $save_url .= $ymd . "/";
             if (!file_exists($save_path)) {
@@ -368,7 +368,7 @@ class ccc extends WoniuController {
 #外部函数，浏览图片依赖函数
 
 function cmp_func($a, $b, $order = 'type') {
-    $order = strtolower(P('order'));
+    $order = strtolower($_POST['order']);
     if ($a['is_dir'] && !$b['is_dir']) {
         return -1;
     } else if (!$a['is_dir'] && $b['is_dir']) {

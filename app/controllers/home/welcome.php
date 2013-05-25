@@ -22,11 +22,8 @@ class Welcome extends WoniuController {
         var_dump($val);
         return false;
     }
-    public function doIndex($name = '') {
-//        $_POST['user']='就不告诉你';
-        $this->model('TestModel','test');
-        $page=$this->input->get('p')?$this->input->get('p'):1;
-        var_dump($this->model->test->deleteByWhere(array('id'=>11)));
+    public function doIndex($name = '') { 
+        var_dump(preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', '2013-05-25 15:39:00'));
         exit();
 //        $this->redirect("http://www.163.com","测试",'message',5);
 //        $this->message("提示信息",'message',"http://www.163.com",5);

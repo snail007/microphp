@@ -71,15 +71,15 @@ class Builder extends WoniuController {
             $keys[] = $col;
             $rule[$col] = array('rule' => $this->input->post($col . '_add_reg'), 'msg' => $this->input->post($col . '_add_hint'));
         }
-        $keys = $this->formatArray(var_export($keys, true));
-
-        $rule = var_export($rule, true);
+        $keys = $this->formatArray(stripslashes(var_export($keys, true)));
+ 
+        $rule = stripslashes(var_export($rule, true));
         $rule = str_replace("\n", "\n" . str_repeat(' ', 26), $rule);
 
-        $rule2 = var_export($rule2, true);
+        $rule2 = stripslashes(var_export($rule2, true));
         $rule2 = str_replace("\n", "\n" . str_repeat(' ', 26), $rule2);
 
-        $map = var_export($map, true);
+        $map = stripslashes(var_export($map, true));
         $map = str_replace("\n", "\n" . str_repeat(' ', 26), $map);
 
         $tpl = file_get_contents(APP_ROOT . 'views/builder/TplModel.view.php');
@@ -93,7 +93,7 @@ class Builder extends WoniuController {
         $data = str_replace("'#map#'", $map, $data);
 //        echo ($data);
 //        exit();
-        force_download($this->input->post('model') . '.model.php', $data);
+//        force_download($this->input->post('model') . '.model.php', $data);
     }
 
     public function doCreateAction() {
@@ -106,7 +106,7 @@ class Builder extends WoniuController {
                 $map[] = array('col' => $val, 'name' => ($name[$key] ? $name[$key] : $val), 'type' => $type[$key]);
             }
         }
-        $map = $this->formatArray(var_export($map, true));
+        $map = $this->formatArray(stripslashes(var_export($map, true)));
         $tpl = file_get_contents(APP_ROOT . 'views/builder/TplAction.view.php');
         $data = str_replace("ccc", $this->input->post('action_name'), $tpl);
         $data = str_replace("'#map#'", $map, $data);

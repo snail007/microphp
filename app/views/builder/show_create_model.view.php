@@ -171,6 +171,11 @@ $(function(){
          $form.attr({'target':'_self','action':'?builder.showCreateAction'});
          $form.submit();
       });
+      $('.reghelper').change(function(){
+          if($(this).val()){
+              $(this).prev().val($(this).val());
+          }
+      });
 });
 </script>
 <style type="text/css">
@@ -193,8 +198,41 @@ td{text-align:center;}
 <?php foreach($rule_add  as $col){?>
 <tr>
     <td><?php echo $col;?></td>
-    <td><input type="text" id="<?php echo $col;?>_add_reg" name="<?php echo $col;?>_add_reg"/></td></td>
-    <td><input type="text" id="<?php echo $col;?>_add_hint" name="<?php echo $col;?>_add_hint"/></td></td>
+    <td><input style="width:200px;padding:2px;" type="text" id="<?php echo $col;?>_add_reg" name="<?php echo $col;?>_add_reg"/>
+    <select class="reghelper">
+        <option value="">预置规则</option>
+        <option value="/^.+$/">单行不为空</option>
+        <option value="/.+/">多行不为空</option>
+        <option value="/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email</option>
+        <option value="/^$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email或空</option>
+        <option value="/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址</option>
+        <option value="/^$|^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址或空</option>
+        <option value="/^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5</option>
+        <option value="/^$|^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5或空</option>
+        <option value="/^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话</option>
+        <option value="/^$|^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话或空</option>
+        <option value="/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/">手机</option>
+        <option value="/^$|^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/">手机或空</option>
+        <option value="/^[1-9][0-9]{4,}$/">QQ</option>
+        <option value="/^$|^[1-9][0-9]{4,}$/">QQ或空</option>
+        <option value="/^[1-9]\d{5}(?!\d)$/">邮编</option>
+        <option value="/^$|^[1-9]\d{5}(?!\d)$/">邮编或空</option>
+        <option value="/^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证</option>
+        <option value="/^$|^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证或空</option>
+        <option value="/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP</option>
+        <option value="/^$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP或空</option>
+        <option value="/^\w{6,16}$/">数字、字母、下划线组成6-16</option>
+        <option value="/^$|^\w{6,16}$/">数字、字母、下划线组成6-16或空</option>
+        <option value="/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/">日期</option>
+        <option value="/^$|^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/">日期或空</option>
+        <option value="/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))$/">时间</option>
+        <option value="/^$|^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))$/">时间或空</option>
+        <option value="/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/">日期时间</option>
+        <option value="/^$|^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/">日期时间或空</option>
+        
+    </select>
+    </td>
+    <td><input type="text" id="<?php echo $col;?>_add_hint" name="<?php echo $col;?>_add_hint"/></td>
 </tr>
 <?php }//end foreach?>
 </table>
@@ -206,8 +244,41 @@ td{text-align:center;}
 <?php foreach($rule_modify  as $col){?>
 <tr>
     <td><?php echo $col;?></td>
-    <td><input type="text" id="<?php echo $col;?>_modify_reg" name="<?php echo $col;?>_modify_reg"/></td></td>
-    <td><input type="text" id="<?php echo $col;?>_modify_hint" name="<?php echo $col;?>_modify_hint"/></td></td>
+    <td><input  style="width:200px;padding:2px;" type="text" id="<?php echo $col;?>_modify_reg" name="<?php echo $col;?>_modify_reg"/>
+    <select class="reghelper">
+        <option value="">预置规则</option>
+        <option value="/^.+$/">单行不为空</option>
+        <option value="/.+/">多行不为空</option>
+        <option value="/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email</option>
+        <option value="/^$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email或空</option>
+        <option value="/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址</option>
+        <option value="/^$|^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址或空</option>
+        <option value="/^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5</option>
+        <option value="/^$|^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5或空</option>
+        <option value="/^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话</option>
+        <option value="/^$|^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话或空</option>
+        <option value="/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/">手机</option>
+        <option value="/^$|^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/">手机或空</option>
+        <option value="/^[1-9][0-9]{4,}$/">QQ</option>
+        <option value="/^$|^[1-9][0-9]{4,}$/">QQ或空</option>
+        <option value="/^[1-9]\d{5}(?!\d)$/">邮编</option>
+        <option value="/^$|^[1-9]\d{5}(?!\d)$/">邮编或空</option>
+        <option value="/^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证</option>
+        <option value="/^$|^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证或空</option>
+        <option value="/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP</option>
+        <option value="/^$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP或空</option>
+        <option value="/^\w{6,16}$/">数字、字母、下划线组成6-16</option>
+        <option value="/^$|^\w{6,16}$/">数字、字母、下划线组成6-16或空</option>
+        <option value="/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/">日期</option>
+        <option value="/^$|^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/">日期或空</option>
+        <option value="/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))$/">时间</option>
+        <option value="/^$|^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))$/">时间或空</option>
+        <option value="/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/">日期时间</option>
+        <option value="/^$|^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/">日期时间或空</option>
+        
+    </select>
+    </td>
+    <td><input type="text" id="<?php echo $col;?>_modify_hint" name="<?php echo $col;?>_modify_hint"/></td>
 </tr>
 <?php }//end foreach?>
 </table>
