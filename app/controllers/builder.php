@@ -131,8 +131,8 @@ class Builder extends WoniuController {
             }
         }
         $ret = $this->view('builder/TplAdd', $data, true);
-        $ret = str_replace("&{", '[{', $ret);
-        $ret = str_replace("}&", '}]', $ret);
+        $ret = str_replace("&{", '<?php ', $ret);
+        $ret = str_replace("}&", '?>', $ret);
         //echo $ret;
         force_download($this->input->post('table') . '_add.view.php', $ret);
     }

@@ -66,7 +66,7 @@ function getChoose(){
 <fieldset>
     <legend>列表页&nbsp;&nbsp;[<a href="?<?php echo $_POST['action_name'];?>.add">添加</a>]</legend>
 <hr class="hr1"/>
-<table cellpadding="0" cellspacing="0" width="90%">
+<table cellpadding="0" cellspacing="0" width="100%">
     <tr><?php foreach($rows as $row){?><th><?php echo $row['th'];?></th><?php }?><th>操作</th></tr>
 &{foreach($items as $row){}&
     <tr><?php foreach($rows as $key=>$row){?><?php if($key==0){?><td><label><input type="checkbox" value="&{ echo $row['<?php echo $row['col'];?>']}&" class="pk"/>&{ echo $row['<?php echo $row['col'];?>']}&</label></td><?php }else{?><td>&{ echo $row['<?php echo $row['col'];?>']}&</td><?php }?><?php }?>

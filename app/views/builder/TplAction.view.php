@@ -2,10 +2,11 @@
 
 class ccc extends WoniuController {
 
-    private  //保存图片和文件的根目录绝对路径，可以指定绝对路径，比如 /var/www/attached/
+    public  //保存图片和文件的根目录绝对路径，可以指定绝对路径，比如 /var/www/attached/
             $save_path
             //保存图片和文件的根目录URL，可以指定绝对路径，比如 http://www.yoursite.com/attached/
             , $save_url
+            , $res_folder = 'res'
             , $view_folder_name = 'ttt'
 
     ;

@@ -17,12 +17,12 @@ if (!defined('IN_WONIU_APP')) {
             }
             td{padding:5px;}
         </style>
-        <script src="res/js/jq/j.js"></script>
-        <script src="res/js/kd/kindeditor-min.js"></script>
-        <script src="res/js/jq/form.js"></script>
-        <script src="res/js/jq/ajaxqueue.js"></script>
-        <link rel="stylesheet" type="text/css" href="res/js/kd/plugins/code/prettify.css" />
-        <script src="res/js/kd/plugins/code/prettify.js"></script>
+        <script src="&{ echo $this->res_folder ;}&/js/jq/j.js"></script>
+        <script src="&{ echo $this->res_folder ;}&/js/kd/kindeditor-min.js"></script>
+        <script src="&{ echo $this->res_folder ;}&/js/jq/form.js"></script>
+        <script src="&{ echo $this->res_folder ;}&/js/jq/ajaxqueue.js"></script>
+        <link rel="stylesheet" type="text/css" href="&{ echo $this->res_folder ;}&/js/kd/plugins/code/prettify.css" />
+        <script src="&{ echo $this->res_folder ;}&/js/kd/plugins/code/prettify.js"></script>
         <script>
             var found = false;
             var _editor = [];
@@ -34,8 +34,8 @@ if (!defined('IN_WONIU_APP')) {
                             K.create('#' + id, {//指定textarea
                         uploadJson: '?' + actionName + '.uploadJson',
                         fileManagerJson: '?' + actionName + '.fileManagerJson',
-                        cssPath: 'res/js/kd/plugins/code/prettify.css',
-                        emoticonsPath: 'resimage/emoticons/images/',
+                        cssPath: '&{ echo $this->res_folder ;}&/js/kd/plugins/code/prettify.css',
+                        emoticonsPath: '&{ echo $this->res_folder ;}&/image/emoticons/images/',
                         allowFileManager: true
                     })
                             );
