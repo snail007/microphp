@@ -221,6 +221,8 @@ td{text-align:center;}
         <option value="/^$|^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证或空</option>
         <option value="/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP</option>
         <option value="/^$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP或空</option>
+        <option value="/^[1-9][0-9]{1,5}$/">正整数1-6位</option>
+        <option value="/^$|^[1-9][0-9]{1,5}$/">正整数1-6位或空</option>
         <option value="/^[A-Za-z]{6,16}$/">字母6-16</option>
         <option value="/^$|^[A-Za-z]{6,16}$/">字母6-16或空</option>
         <option value="/^[A-Za-z0-9]{6,16}$/">数字和字母6-16</option>
