@@ -169,6 +169,12 @@ class Builder extends WoniuController {
         $name = $this->input->post('name');
         $type = $this->input->post('type');
         $col = $this->input->post('col');
+        $data['search']=array();
+        foreach ($this->input->post('search') as $key=>$c) {
+            if(trim($c)){
+                $data['search'][$c]=($name[$key] ? $name[$key] : $c);
+            }
+        }
         foreach ($col as $key => $val) {
             if ($type[$key]) {
                 $data["rows"][] = array('col' => $val, 'th' => ($name[$key] ? $name[$key] : $val), 'type' => $type[$key]);
@@ -176,7 +182,7 @@ class Builder extends WoniuController {
         }
         $tpl = $this->view('builder/TplList', $data, true);
         $tpl = str_replace("&{", '<?php ', $tpl);
-        $tpl = str_replace("}&", ';?>', $tpl);
+        $tpl = str_replace("}&", '?>', $tpl);
         force_download($this->input->post('table') . '_list.view.php', $tpl);
     }
 

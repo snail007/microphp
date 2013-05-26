@@ -42,7 +42,15 @@ class ccc extends WoniuController {
 
     public function doPage() {
         $page = intval($this->input->get('p')) ? $this->input->get('p') : 1;
-        $data = $this->model->mmm->getPage($page, 10, '?ccc.page&p={page}', '*');
+        $query = $this->input->get('query');
+        $pageKey = 'p';
+        if ($query) {
+            $data = $this->model->mmm->search($page, 10, '?ccc.page&query=' . $query . '&' . $pageKey . '={page}', '*', urldecode($query));
+        } else {
+            $data = $this->model->mmm->getPage($page, 10, '?ccc.page&' . $pageKey . '={page}', '*');
+        }
+        $data['openSearch'] = TRUE;
+        $data['pageKey'] = $pageKey;
         $data['pk'] = 'ppk';
         $this->view('ttt/ttt_list', $data);
     }

@@ -90,18 +90,18 @@ class mmm extends WoniuModel {
      * 根据条件删除记录
      */
     public function deleteByWhereIn($key, Array $in) {
-        return $this->db->where_in($key,$in)->delete($this->table);
+        return $this->db->where_in($key, $in)->delete($this->table);
     }
 
-    public function getPage($page, $pagesize, $url, $fields, Array $where= null, Array $like = null, $orderby = null) {
+    public function getPage($page, $pagesize, $url, $fields, Array $where = null, Array $like = null, $orderby = null) {
         $data = array();
-        
+
         if (is_array($where)) {
             $this->db->where($where);
         }
         $total = $this->db->from($this->table)->count_all_results();
-        
-         if (is_array($where)) {
+
+        if (is_array($where)) {
             $this->db->where($where);
         }
         if (is_array($like)) {
@@ -111,6 +111,16 @@ class mmm extends WoniuModel {
             $this->db->order_by($orderby);
         }
         $data['items'] = $this->db->select($fields)->limit($pagesize, ($page - 1) * $pagesize)->get($this->table)->result_array();
+        $data['page'] = $this->page($total, $page, $pagesize, $url);
+        return $data;
+    }
+
+    public function search($page, $pagesize, $url, $fields, $cond) {
+        $data = array();
+
+        $query = $this->db->query('select count(*) as total from ' . $this->table . ' where ' . $cond)->row_array();
+        $total = $query['total']; 
+        $data['items'] = $this->db->query('select '.$fields.' from ' . $this->table . ' where ' . $cond.' limit '.(($page - 1) * $pagesize).','.$pagesize )->result_array();
         $data['page'] = $this->page($total, $page, $pagesize, $url);
         return $data;
     }

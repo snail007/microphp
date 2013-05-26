@@ -214,7 +214,7 @@ td{text-align:center;}
 <legend>字段表单显示形式</legend>
 <hr class="hr1"/>
 <table cellpadding="0" cellspacing="0" >
-<tr><th>字段名</th><th>显示形式</th><th>表单(或列表页表头)提示名称</th></tr>
+<tr><th>字段名</th><th>显示形式</th><th>表单(或列表页表头)提示名称</th><th>是否搜索</th></tr>
 <?php  foreach($rule  as $col){?>
 <tr>
     <td><?php echo $col;?></td>
@@ -228,6 +228,10 @@ td{text-align:center;}
         </select>
     </td>
     <td><input type="text" name="name[]"/><input type="hidden" name="col[]" value="<?php echo $col;?>"/></td>
+    <td><select name="search[]" class="zdy">
+        <option value="">否</option>
+        <option value="<?php echo $col;?>">是</option>
+        </select></td>
 </tr>
 <?php  }//end foreach?>
 </table>
