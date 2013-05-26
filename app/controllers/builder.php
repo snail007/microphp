@@ -14,28 +14,34 @@ class Builder extends WoniuController {
 
     public function doReadInfo() {
 
-        if ($this->db->simple_query('select count(*) from ' . $this->input->post('table')) === FALSE) {
-            exit('表  ' . $this->input->post('table') . ' 不存在.');
-        } else {
-            if ($row = $this->db->limit(1)->get($this->input->post('table'))->row_array()) {
-                if (!isset($row[$this->input->post('pk')])) {
-                    exit('主键' . $this->input->post('pk') . '不存在。');
-                }
-                $rule = array();
-                foreach ($row as $col => $value) {
-                    $rule[] = $col;
-                    if ($this->input->post('pk') == $col)
-                        continue;
-                    $rule2[] = $col;
-                }
-                $data['rule_add'] = $rule2;
-                $data['rule_modify'] = $rule;
-                $data['attach'] = $this->input->post();
-                $this->view('builder/show_create_model', $data);
-            }else {
-                exit('请保证表' . $this->input->post('table') . '至少存在一条记录.');
-            }
+        $fields = $this->input->post('cols');
+        if (!$fields) {
+            exit('字段不能为空');
         }
+        $fields = explode(',', $fields);
+        if (!in_array($this->input->post('pk'), $fields)) {
+            exit('主键' . $this->input->post('pk') . '不存在。');
+        }
+        $rule = array();
+        foreach ($fields as $col) {
+            $rule[] = $col;
+            if ($this->input->post('pk') == $col)
+                continue;
+            $rule2[] = $col;
+        }
+        $data['rule_add'] = $rule2;
+        $data['rule_modify'] = $rule;
+        $data['attach'] = $this->input->post();
+        $this->view('builder/show_create_model', $data);
+    }
+
+    public function doGetFields() {
+        $fields = $this->db->list_fields($this->input->post('table'));
+        $ret = '';
+        if (!empty($fields)) {
+            $ret = implode(',', $fields);
+        }
+        exit($ret);
     }
 
     public function doShowCreateAction() {
@@ -72,7 +78,7 @@ class Builder extends WoniuController {
             $rule[$col] = array('rule' => $this->input->post($col . '_add_reg'), 'msg' => $this->input->post($col . '_add_hint'));
         }
         $keys = $this->formatArray(stripslashes(var_export($keys, true)));
- 
+
         $rule = stripslashes(var_export($rule, true));
         $rule = str_replace("\n", "\n" . str_repeat(' ', 26), $rule);
 

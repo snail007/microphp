@@ -179,6 +179,17 @@ function dosubmit(){
          }
      return true;
 }
+$(function(){
+    $('#read').click(function(){
+        $.post('?builder.getFields',{table:$('#table').val()},function(ret){
+            if(!ret){
+                alert('表'+$('#table').val()+'字段为空');
+            }else{
+                $('#cols').val(ret);
+            }
+        });
+    });
+});
 </script>
 </head>
 <body>
@@ -187,10 +198,11 @@ function dosubmit(){
 <hr class="hr1"/>
 <form id="form" action="?builder.readInfo" method="post" onsubmit="return dosubmit();">
 <table cellpadding="0" cellspacing="0">
-<tr><td>表名：</td><td><input type="text" id="table" name="table" value="<?php echo $this->input->post('table');;?>"/></td><td>&nbsp;</td></tr>
-<tr><td>表主键名：</td><td><input type="text" id="pk" name="pk" value="<?php echo $this->input->post('pk');;?>"/></td><td>&nbsp;</td></tr>
-<tr><td>模型类名:</td><td><input type="text" id="model" name="model" value="<?php echo $this->input->post('model');;?>"/></td><td>.Model.php</td></tr>
-<tr><td colspan="3" align="center"><input type="button" onclick="$('#form').submit();" value=" 读取信息 "/></td></tr>
+<tr><td>所有字段名：</td><td  colspan="2"  style="text-align:left;"><input type="text" id="cols" name="cols"  style="padding:3px;width:400px;"/>(多个用逗号分隔)</td></tr>
+<tr><td>表名：</td><td style="text-align:left;"><input type="text" id="table" name="table"/>&nbsp;&nbsp;<input id="read" type="button" value="读取"/></td><td>&nbsp;</td></tr>
+<tr><td>表主键名：</td><td style="text-align:left;"><input type="text" id="pk" name="pk" value="<?php echo $this->input->post('pk');;?>"/></td><td>&nbsp;</td></tr>
+<tr><td>模型类名:</td><td style="text-align:left;"><input type="text" id="model" name="model" value="<?php echo $this->input->post('model');;?>"/>.Model.php</td><td>&nbsp;</td></tr>
+<tr><td colspan="3" align="center"><input type="submit" value=" 下一步 "/></td></tr>
 </table>
 </form>
 </fieldset>
