@@ -13,7 +13,6 @@ class Builder extends WoniuController {
     }
 
     public function doReadInfo() {
-
         $fields = $this->input->post('cols');
         if (!$fields) {
             exit('字段不能为空');

@@ -181,13 +181,20 @@ function dosubmit(){
 }
 $(function(){
     $('#read').click(function(){
-        $.post('?builder.getFields',{table:$('#table').val()},function(ret){
-            if(!ret){
-                alert('表'+$('#table').val()+'字段为空');
-            }else{
-                $('#cols').val(ret);
-            }
-        });
+        $.ajax({
+                url:'?builder.getFields',
+                data:{table:$('#table').val()},
+                type:'post',
+                success:function(ret){
+                    if(!ret){
+                        alert('表'+$('#table').val()+'字段为空');
+                    }else{
+                        $('#cols').val(ret);
+                    }
+                },error:function(x,m,s){
+                    alert($(x.responseText).text());
+                }
+        }); 
     });
 });
 </script>
