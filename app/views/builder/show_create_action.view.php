@@ -194,7 +194,8 @@ body{padding:40px;}
 th,td{padding:10px;}
 legend{color:green;font-size:16px;font-weight:bold;}
 fieldset{border:2px solid #cdcdcd;margin-bottom:20px;}
-input[type=button]{cursor:pointer;}
+input[type=button]{cursor:pointer;padding:5px;}
+input[type=text],select{padding:5px;}
 td{text-align:center;}
 </style>
 </head>
@@ -243,7 +244,7 @@ td{text-align:center;}
      <input type="button" id="createAction" value="1.生成控制器"/>
      <input type="button" id="createAddView" value="2.生成添加视图"/>
      <input type="button" id="createMdifyView" value="3.生成修改视图"/>
-     <input type="button" id="createListView" value="4.生成列表视图（字段要设置为非不显示）"/>
+     <input type="button" id="createListView" value="4.生成列表视图"/>（字段要设置为非"不显示"）
     <!--input type="button" id="next" value="下一步"/-->
     </td>
      </tr>

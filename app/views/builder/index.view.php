@@ -198,6 +198,10 @@ $(function(){
     });
 });
 </script>
+<style>
+    input[type=text],select{padding:5px;}
+    input[type=button],input[type=submit]{cursor:pointer;}
+</style>
 </head>
 <body>
 <fieldset>
@@ -205,7 +209,7 @@ $(function(){
 <hr class="hr1"/>
 <form id="form" action="?builder.readInfo" method="post" onsubmit="return dosubmit();">
 <table cellpadding="0" cellspacing="0">
-<tr><td>所有字段名：</td><td  colspan="2"  style="text-align:left;"><input type="text" id="cols" name="cols"  style="padding:3px;width:400px;"/>(多个用逗号分隔)</td></tr>
+<tr><td>所有字段名：</td><td  colspan="2"  style="text-align:left;"><input type="text" id="cols" name="cols"  style="width:400px;"/>(多个用逗号分隔)</td></tr>
 <tr><td>表名：</td><td style="text-align:left;"><input type="text" id="table" name="table"/>&nbsp;&nbsp;<input id="read" type="button" value="读取"/></td><td>&nbsp;</td></tr>
 <tr><td>表主键名：</td><td style="text-align:left;"><input type="text" id="pk" name="pk" value="<?php echo $this->input->post('pk');;?>"/></td><td>&nbsp;</td></tr>
 <tr><td>模型类名:</td><td style="text-align:left;"><input type="text" id="model" name="model" value="<?php echo $this->input->post('model');;?>"/>.Model.php</td><td>&nbsp;</td></tr>

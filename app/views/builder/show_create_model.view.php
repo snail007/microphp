@@ -185,6 +185,7 @@ legend{color:green;font-size:16px;font-weight:bold;}
 fieldset{border:2px solid #cdcdcd;margin-bottom:20px;}
 .hr1{border-bottom:2px solid #A6C61C;margin:0;padding:0;}
 input[type=button]{cursor:pointer;}
+input[type=text],select{padding:5px;}
 td{text-align:center;}
 </style>
 </head>
@@ -198,7 +199,7 @@ td{text-align:center;}
 <?php foreach($rule_add  as $col){?>
 <tr>
     <td><?php echo $col;?></td>
-    <td><input style="width:200px;padding:2px;" type="text" id="<?php echo $col;?>_add_reg" name="<?php echo $col;?>_add_reg"/>
+    <td><input style="width:200px;" type="text" id="<?php echo $col;?>_add_reg" name="<?php echo $col;?>_add_reg"/>
     <select class="reghelper">
         <option value="">预置规则</option>
         <option value="/^.+$/">单行不为空</option>
@@ -250,7 +251,7 @@ td{text-align:center;}
 <?php foreach($rule_modify  as $col){?>
 <tr>
     <td><?php echo $col;?></td>
-    <td><input  style="width:200px;padding:2px;" type="text" id="<?php echo $col;?>_modify_reg" name="<?php echo $col;?>_modify_reg"/>
+    <td><input  style="width:200px;" type="text" id="<?php echo $col;?>_modify_reg" name="<?php echo $col;?>_modify_reg"/>
     <select class="reghelper">
         <option value="">预置规则</option>
         <option value="/^.+$/">单行不为空</option>
