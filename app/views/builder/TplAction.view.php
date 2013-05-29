@@ -3,9 +3,9 @@
 class ccc extends WoniuController {
 
     public  //保存图片和文件的根目录绝对路径，可以指定绝对路径，比如 /var/www/attached/
-            $save_path
+              $save_path='res/attached/'
             //保存图片和文件的根目录URL，可以指定绝对路径，比如 http://www.yoursite.com/attached/
-            , $save_url
+            , $save_url='res/attached/'
             , $res_folder = 'res'
             , $controller_path = 'ccc'
             , $model_path = 'mmm'
@@ -14,9 +14,7 @@ class ccc extends WoniuController {
     ;
 
     public function __construct() {
-        parent::__construct(); #一定不能忘记调用父类构造方法
-        $this->save_path = 'res/attached/';
-        $this->save_url = 'res/attached/';
+        parent::__construct(); 
         $this->model($this->model_path);
     }
 
