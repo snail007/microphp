@@ -43,11 +43,9 @@ class Builder extends WoniuController {
         exit($ret);
     }
 
-    public function doShowCreateAction() {
-        $row = $this->db->limit(1)->get($this->input->post('table'))->row_array();
-        foreach ($row as $col => $value) {
-            $rule[] = $col;
-        }
+    public function doShowCreateAction() { 
+        $fields = $this->input->post('cols');
+        $rule = explode(',', $fields);
         $data['rule'] = $rule;
         $data['attach'] = array('table' => $this->input->post('table'), 'pk' => $this->input->post('pk'), 'model' => $this->input->post('model'));
         $this->view('builder/show_create_action', $data);
@@ -63,8 +61,9 @@ class Builder extends WoniuController {
         $rule = array();
         $rule2 = array();
         $map = array();
-        $row = $this->db->limit(1)->get($this->input->post('table'))->row_array();
-        foreach (array_keys($row) as $col) {
+        $fields = $this->input->post('cols');
+        $cols = explode(',', $fields);
+        foreach ($cols as $col) {
             if (!(trim($this->input->post($col . '_modify_reg'), '  '))) {
                 $rule2[$col] = array('rule' => $this->input->post($col . '_add_reg'), 'msg' => $this->input->post($col . '_add_hint'));
             } else {
