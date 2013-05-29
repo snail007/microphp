@@ -26,7 +26,7 @@ if (!defined('IN_WONIU_APP')) {
         <script>
             var found = false;
             var _editor = [];
-            var actionName = '<?php echo $_POST['action_name']; ?>';
+            var actionName = '&{ echo $this->controller_path ;}&';
             KindEditor.ready(function(K) {
                 $('textarea.textareahtml').each(function() {
                     var id = $(this).attr('id');
@@ -187,7 +187,7 @@ if (!defined('IN_WONIU_APP')) {
             //###########自动保存相关函数结束#######################
         </script>
     </head>
-    <body><form method="post" action="?<?php echo $_POST['action_name']; ?>.update" id="cform">
+    <body><form method="post" action="?&{ echo $this->controller_path ;}&.update" id="cform">
             <fieldset><legend><h3>修改界面</h3></legend>
                 <hr class="hr1"/>
                 <table>
@@ -201,13 +201,13 @@ if (!defined('IN_WONIU_APP')) {
                         }
                         ?>
                         <?php if ($row['type'] == 'text') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><input type="text" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
+                            <tr><td><?php echo $row['name']; ?></td><td><input type="text" name="<?php echo $row['col']; ?>" value="&{ echo htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
                         <?php } elseif ($row['type'] == 'textarea') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:400px;height:120px;" type="text" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
+                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:400px;height:120px;" type="text" name="<?php echo $row['col']; ?>">&{  echo htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
                         <?php } elseif ($row['type'] == 'textareahtml') { ?>
-                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="<?php echo $row['col']; ?>" name="<?php echo $row['col']; ?>">&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
+                            <tr><td><?php echo $row['name']; ?></td><td><textarea style="width:700px;height:350px;" class="textareahtml" type="text" id="<?php echo $row['col']; ?>" name="<?php echo $row['col']; ?>">&{ echo htmlspecialchars($row['<?php echo $row['col']; ?>'])}&</textarea></td></tr>
                         <?php } elseif ($row['type'] == 'hidden') { ?>
-                            <tr><td>&nbsp;</td><td><input type="hidden" name="<?php echo $row['col']; ?>" value="&{htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
+                            <tr><td>&nbsp;</td><td><input type="hidden" name="<?php echo $row['col']; ?>" value="&{ echo htmlspecialchars($row['<?php echo $row['col']; ?>'])}&"/></td></tr>
                         <?php } else { ?>
                             <tr><td><?php echo $row['name']; ?></td><td>自定义</td></tr>
                         <?php } ?>

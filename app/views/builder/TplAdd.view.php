@@ -30,7 +30,7 @@ if (!defined('IN_WONIU_APP')) {
         <script>
             var found = false;
             var _editor = [];
-            var actionName = '<?php echo $_POST['action_name']; ?>';
+            var actionName = '&{ echo $this->controller_path ;}&';
             KindEditor.ready(function(K) {
                 $('textarea.textareahtml').each(function() {
                     var id = $(this).attr('id');
@@ -194,7 +194,7 @@ if (!defined('IN_WONIU_APP')) {
             //###########自动保存相关函数结束#######################
         </script>
     </head>
-    <body><form method="post" action="?<?php echo $_POST['action_name']; ?>.create" id="cform">
+    <body><form method="post" action="?&{ echo $this->controller_path ;}&.create" id="cform">
             <fieldset><legend><h3>添加界面</h3></legend>
                 <hr class="hr1"/>
                 <table>

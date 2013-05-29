@@ -206,8 +206,8 @@ td{text-align:center;}
         <option value="/.+/">多行不为空</option>
         <option value="/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email</option>
         <option value="/^$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email或空</option>
-        <option value="/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址</option>
-        <option value="/^$|^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址或空</option>
+        <option value="/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>])*$/">网址</option>
+        <option value="/^$|^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>])*$/">网址或空</option>
         <option value="/^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5</option>
         <option value="/^$|^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5或空</option>
         <option value="/^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话</option>

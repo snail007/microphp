@@ -7,6 +7,8 @@ class ccc extends WoniuController {
             //保存图片和文件的根目录URL，可以指定绝对路径，比如 http://www.yoursite.com/attached/
             , $save_url
             , $res_folder = 'res'
+            , $controller_path = 'ccc'
+            , $model_path = 'mmm'
             , $view_folder_name = 'ttt'
 
     ;
@@ -15,13 +17,13 @@ class ccc extends WoniuController {
         parent::__construct(); #一定不能忘记调用父类构造方法
         $this->save_path = 'res/attached/';
         $this->save_url = 'res/attached/';
-        $this->model('mmm');
+        $this->model($this->model_path);
     }
 
     #显示添加数据界面
 
     public function doAdd() {
-        $this->view('ttt/ttt_add');
+        $this->view($this->view_folder_name.'/ttt_add');
     }
 
     #显示修改数据界面
@@ -32,7 +34,7 @@ class ccc extends WoniuController {
         $row = $this->model->mmm->selectRowByWhere(array($pk => $pid));
         if (is_numeric($pid) && !empty($row)) {
             $data['row'] = $row;
-            $this->view('ttt/ttt_modify', $data);
+            $this->view($this->view_folder_name.'/ttt_modify', $data);
         } else {
             trigger404();
         }
@@ -52,7 +54,7 @@ class ccc extends WoniuController {
         $data['openSearch'] = TRUE;
         $data['pageKey'] = $pageKey;
         $data['pk'] = 'ppk';
-        $this->view('ttt/ttt_list', $data);
+        $this->view($this->view_folder_name.'/ttt_list', $data);
     }
 
     #显示列表

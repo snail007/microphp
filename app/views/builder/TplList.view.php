@@ -8,7 +8,7 @@ if (!defined('IN_WONIU_APP')) {
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>列表展示</title>
-        <script src="res/js/jq/j.js"></script>
+        <script src="&{ echo $this->res_folder ;}&/js/jq/j.js"></script>
         <style type="text/css">
             body{font-size:15px;padding:30px;}
             fieldset{width:820px;margin:0 auto;}
@@ -34,7 +34,7 @@ if (!defined('IN_WONIU_APP')) {
             .searchbtn{padding:8px;}
         </style>
         <script>
-            var actionName = '<?php echo $_POST['action_name']; ?>';
+            var actionName = '&{ echo $this->controller_path ;}&';
             $.ajaxSetup({
                 error: function(x) {
                     alert('通信出错,代码[' + x.status + ']');
@@ -112,7 +112,7 @@ if (!defined('IN_WONIU_APP')) {
                         conds.push(where);
                     }
                 });
-                if (conds.length && $('.by').val()) {
+                if ($('.by').val()) {
                     conds.push(' order by ' + $('.by').val() + ' ' + $('.order').val());
                 }
                 conds = conds.join('');
@@ -167,7 +167,7 @@ if (!defined('IN_WONIU_APP')) {
         </script></head>
     <body>
         <fieldset>
-            <legend>列表页&nbsp;&nbsp;[<a href="?<?php echo $_POST['action_name']; ?>.add">添加</a>]</legend>
+            <legend>列表页&nbsp;&nbsp;[<a href="?&{ echo $this->controller_path ;}&.add">添加</a>]</legend>
             <hr class="hr1"/>
             &{ if($openSearch){ }&
             <p>搜索选项：
@@ -213,7 +213,7 @@ if (!defined('IN_WONIU_APP')) {
                 <tr><?php foreach ($rows as $row) { ?><th><?php echo $row['th']; ?></th><?php } ?><th>操作</th></tr>
                 &{foreach($items as $row){}&
                 <tr><?php foreach ($rows as $key => $row) { ?><?php if ($key == 0) { ?><td><label><input type="checkbox" value="&{ echo $row['<?php echo $row['col']; ?>']}&" class="pk"/>&{ echo $row['<?php echo $row['col']; ?>']}&</label></td><?php } else { ?><td>&{ echo $row['<?php echo $row['col']; ?>']}&</td><?php } ?><?php } ?>
-                    <td>[<a href="?<?php echo $_POST['action_name']; ?>.modify&<?php echo $_POST['pk']; ?>=&{ echo $row[$pk]}&">修改</a>]</td>
+                    <td>[<a href="?&{ echo $this->controller_path ;}&.modify&<?php echo $_POST['pk']; ?>=&{ echo $row[$pk]}&">修改</a>]</td>
                 </tr>
                 &{}//end foreach}&
             </table>

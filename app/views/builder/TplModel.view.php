@@ -118,9 +118,9 @@ class mmm extends WoniuModel {
     public function search($page, $pagesize, $url, $fields, $cond) {
         $data = array();
 
-        $query = $this->db->query('select count(*) as total from ' . $this->table . ' where ' . $cond)->row_array();
-        $total = $query['total']; 
-        $data['items'] = $this->db->query('select '.$fields.' from ' . $this->table . ' where ' . $cond.' limit '.(($page - 1) * $pagesize).','.$pagesize )->result_array();
+        $query = $this->db->query('select count(*) as total from ' . $this->table . (strpos($cond, ' order') === 0 ? '' : ' where') . $cond)->row_array();
+        $total = $query['total'];
+        $data['items'] = $this->db->query('select ' . $fields . ' from ' . $this->table . (strpos($cond, ' order') === 0 ? '' : ' where') . $cond . ' limit ' . (($page - 1) * $pagesize) . ',' . $pagesize)->result_array();
         $data['page'] = $this->page($total, $page, $pagesize, $url);
         return $data;
     }
