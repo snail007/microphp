@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -106,7 +106,7 @@ if (!$system['debug']) {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuRouter {
 
@@ -210,7 +210,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuLoader {
 
@@ -388,7 +388,6 @@ class WoniuLoader {
 
     public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        header('Content-type:application/json;charset=urf-8');
         echo $str;
         if ($is_exit) {
             exit();
@@ -547,7 +546,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuController extends WoniuLoader {
 
@@ -605,7 +604,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuModel extends WoniuLoader {
 
@@ -655,7 +654,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuDB {
 
@@ -5738,7 +5737,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -5861,7 +5860,7 @@ function force_download($filename = '', $data = ''){
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-05-25 10:15:38
+ * @createdtime       2013-05-31 11:18:54
  */
 class WoniuInput {
 
