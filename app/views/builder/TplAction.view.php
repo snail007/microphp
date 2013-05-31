@@ -45,9 +45,9 @@ class ccc extends WoniuController {
         $query = $this->input->get('query');
         $pageKey = 'p';
         if ($query) {
-            $data = $this->model->mmm->search($page, 10, '?ccc.page&query=' . $query . '&' . $pageKey . '={page}', '*', urldecode($query));
+            $data = $this->model->mmm->search($page, 10, '?'.$this->controller_path.'.page&query=' . $query . '&' . $pageKey . '={page}', '*', urldecode($query));
         } else {
-            $data = $this->model->mmm->getPage($page, 10, '?ccc.page&' . $pageKey . '={page}', '*');
+            $data = $this->model->mmm->getPage($page, 10, '?'.$this->controller_path.'.page&' . $pageKey . '={page}', '*');
         }
         $data['openSearch'] = TRUE;
         $data['pageKey'] = $pageKey;
