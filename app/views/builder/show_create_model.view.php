@@ -260,8 +260,6 @@ td{text-align:center;}
         <option value="/^$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/">Email或空</option>
         <option value="/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址</option>
         <option value="/^$|^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/">网址或空</option>
-        <option value="/^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5</option>
-        <option value="/^$|^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5或空</option>
         <option value="/^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话</option>
         <option value="/^$|^\d{3}-\d{8}|\d{4}-\d{7,8}$/">电话或空</option>
         <option value="/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/">手机</option>
@@ -274,6 +272,9 @@ td{text-align:center;}
         <option value="/^$|^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/">身份证或空</option>
         <option value="/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP</option>
         <option value="/^$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/">IP或空</option>
+        <option value="/^.{0,6}$/u">0-6个字符</option>
+        <option value="/^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5</option>
+        <option value="/^$|^[\x{4e00}-\x{9fa5}]{3,5}$/u">中文3-5或空</option>
         <option value="/^[1-9][0-9]{1,5}$/">正整数1-6位</option>
         <option value="/^$|^[1-9][0-9]{1,5}$/">正整数1-6位或空</option>
         <option value="/^[A-Za-z]{6,16}$/">字母6-16</option>
