@@ -280,7 +280,7 @@ class WoniuLoader {
         $info = " 第{$curpage}/{$pages}页 ";
         $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         $total = "共{$total}条";
-        return $total .' '. $info .' '. $prefix . $body . $subfix.' ' . $go;
+        return $total .' '. $info .' '. $prefix . $body . $subfix.'&nbsp;' . $go;
     }
 
     /**
