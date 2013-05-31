@@ -55,12 +55,6 @@ class ccc extends WoniuController {
         $this->view($this->view_folder_name.'/ttt_list', $data);
     }
 
-    #显示列表
-
-    public function doSearch() {
-        
-    }
-
     #执行添加数据
 
     public function doCreate() {
