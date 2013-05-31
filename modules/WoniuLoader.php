@@ -189,7 +189,6 @@ class WoniuLoader {
 
     public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        header('Content-type:application/json;charset=urf-8');
         echo $str;
         if ($is_exit) {
             exit();
