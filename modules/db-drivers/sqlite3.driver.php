@@ -53,6 +53,25 @@ class CI_DB_sqlite3_driver extends CI_DB {
     var $_escape_char = ''; // The character used to escape with - not needed for SQLite
     var $conn_id;
     var $_random_keyword = ' Random()'; // database specific random keyword
+// clause and character used for LIKE escape sequences - not used in MySQL
+    var $_like_escape_str = '';
+    var $_like_escape_chr = '';
+
+    /**
+     * Whether to use the MySQL "delete hack" which allows the number
+     * of affected rows to be shown. Uses a preg_replace when enabled,
+     * adding a bit more processing to all queries.
+     */
+    var $delete_hack = TRUE;
+
+    /**
+     * The syntax to count rows is slightly different across different
+     * database engines, so this string appears in each driver and is
+     * used for the count_all() and count_all_results() functions.
+     */
+    var $_count_string = 'SELECT COUNT(*) AS ';
+// whether SET NAMES must be used to set the character set
+    var $use_set_names;
 
     /**
      * Non-persistent database connection
@@ -60,7 +79,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * @access	private called by the base class
      * @return	resource
      */
-
     function db_connect() {
         $conn_id = false;
         try {

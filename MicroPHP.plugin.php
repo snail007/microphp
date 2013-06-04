@@ -10,7 +10,7 @@
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -112,7 +112,7 @@ include('DB_driver.php');
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuRouter {
 
@@ -216,7 +216,7 @@ class WoniuRouter {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuLoader {
 
@@ -553,7 +553,7 @@ class WoniuModelLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuController extends WoniuLoader {
 
@@ -611,7 +611,7 @@ class WoniuController extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuModel extends WoniuLoader {
 
@@ -660,7 +660,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuDB {
 
@@ -5858,7 +5858,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -5900,6 +5900,25 @@ class CI_DB_sqlite3_driver extends CI_DB {
     var $_escape_char = ''; // The character used to escape with - not needed for SQLite
     var $conn_id;
     var $_random_keyword = ' Random()'; // database specific random keyword
+// clause and character used for LIKE escape sequences - not used in MySQL
+    var $_like_escape_str = '';
+    var $_like_escape_chr = '';
+
+    /**
+     * Whether to use the MySQL "delete hack" which allows the number
+     * of affected rows to be shown. Uses a preg_replace when enabled,
+     * adding a bit more processing to all queries.
+     */
+    var $delete_hack = TRUE;
+
+    /**
+     * The syntax to count rows is slightly different across different
+     * database engines, so this string appears in each driver and is
+     * used for the count_all() and count_all_results() functions.
+     */
+    var $_count_string = 'SELECT COUNT(*) AS ';
+// whether SET NAMES must be used to set the character set
+    var $use_set_names;
 
     /**
      * Non-persistent database connection
@@ -5907,7 +5926,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * @access	private called by the base class
      * @return	resource
      */
-
     function db_connect() {
         $conn_id = false;
         try {
@@ -6673,7 +6691,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6796,7 +6814,7 @@ function force_download($filename = '', $data = ''){
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-03 15:44:17
+ * @createdtime       2013-06-04 02:39:37
  */
 class WoniuInput {
 
