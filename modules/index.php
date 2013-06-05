@@ -89,7 +89,10 @@ if (!$system['debug']) {
 }
 include('WoniuInput.class.php'); 
 include('WoniuHelper.php');
-include('DB_driver.php');
+include('db-drivers/db.drivers.php');
+include('db-drivers/mysql.driver.php');
+include('db-drivers/pdo.driver.php');
+include('db-drivers/sqlite3.driver.php');
 include('WoniuRouter.php');
 include('WoniuLoader.php'); 
 include('WoniuController.php');
