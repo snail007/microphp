@@ -8,12 +8,12 @@
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuRouter {
@@ -112,12 +112,12 @@ class WoniuRouter {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuLoader {
@@ -449,12 +449,12 @@ class WoniuModelLoader {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuController extends WoniuLoader {
@@ -507,12 +507,12 @@ class WoniuController extends WoniuLoader {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuModel extends WoniuLoader {
@@ -556,12 +556,12 @@ class WoniuModel extends WoniuLoader {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuDB {
@@ -593,11 +593,11 @@ class CI_DB extends CI_DB_active_record {
  * This class will not be called directly. Rather, the adapter
  * class for the specific database will extend and instantiate it.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_driver {
 
@@ -660,9 +660,9 @@ class CI_DB_driver {
     /**
      * Initialize Database Settings
      *
-     * @access	private Called by the constructor
-     * @param	mixed
-     * @return	void
+     * @access        private Called by the constructor
+     * @param        mixed
+     * @return        void
      */
     function initialize() {
 // If an existing connection resource is available
@@ -713,10 +713,10 @@ class CI_DB_driver {
     /**
      * Set client character set
      *
-     * @access	public
-     * @param	string
-     * @param	string
-     * @return	resource
+     * @access        public
+     * @param        string
+     * @param        string
+     * @return        resource
      */
     function db_set_charset($charset, $collation) {
         if (!$this->_db_set_charset($this->char_set, $this->dbcollat)) {
@@ -737,8 +737,8 @@ class CI_DB_driver {
     /**
      * The name of the platform in use (mysql, mssql, etc...)
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function platform() {
         return $this->dbdriver;
@@ -750,8 +750,8 @@ class CI_DB_driver {
      * Database Version Number.  Returns a string containing the
      * version of the database being used
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function version() {
         if (FALSE === ($sql = $this->_version())) {
@@ -784,10 +784,10 @@ class CI_DB_driver {
      * FALSE upon failure, and if the $db_debug variable is set to TRUE
      * will raise an error.
      *
-     * @access	public
-     * @param	string	An SQL query string
-     * @param	array	An array of binding data
-     * @return	mixed
+     * @access        public
+     * @param        string        An SQL query string
+     * @param        array        An array of binding data
+     * @return        mixed
      */
     function query($sql, $binds = FALSE, $return_object = TRUE) {
         if ($sql == '') {
@@ -939,8 +939,8 @@ class CI_DB_driver {
     /**
      * Load the result drivers
      *
-     * @access	public
-     * @return	string	the name of the result class
+     * @access        public
+     * @return        string        the name of the result class
      */
     function load_rdriver() {
         $driver = 'CI_DB_' . $this->dbdriver . '_result';
@@ -961,9 +961,9 @@ class CI_DB_driver {
      * we only use it when running transaction commands since they do
      * not require all the features of the main query() function.
      *
-     * @access	public
-     * @param	string	the sql query
-     * @return	mixed
+     * @access        public
+     * @param        string        the sql query
+     * @return        mixed
      */
     function simple_query($sql) {
         if (!$this->conn_id) {
@@ -979,8 +979,8 @@ class CI_DB_driver {
      * Disable Transactions
      * This permits transactions to be disabled at run-time.
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function trans_off() {
         $this->trans_enabled = FALSE;
@@ -995,8 +995,8 @@ class CI_DB_driver {
      * If strict mode is disabled, each group is treated autonomously, meaning
      * a failure of one group will not affect any others
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function trans_strict($mode = TRUE) {
         $this->trans_strict = is_bool($mode) ? $mode : TRUE;
@@ -1007,8 +1007,8 @@ class CI_DB_driver {
     /**
      * Start Transaction
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function trans_start($test_mode = FALSE) {
         if (!$this->trans_enabled) {
@@ -1029,8 +1029,8 @@ class CI_DB_driver {
     /**
      * Complete Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_complete() {
         if (!$this->trans_enabled) {
@@ -1067,8 +1067,8 @@ class CI_DB_driver {
     /**
      * Lets you retrieve the transaction flag to determine if it has failed
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_status() {
         return $this->_trans_status;
@@ -1079,10 +1079,10 @@ class CI_DB_driver {
     /**
      * Compile Bindings
      *
-     * @access	public
-     * @param	string	the sql statement
-     * @param	array	an array of bind data
-     * @return	string
+     * @access        public
+     * @param        string        the sql statement
+     * @param        array        an array of bind data
+     * @return        string
      */
     function compile_binds($sql, $binds) {
         if (strpos($sql, $this->bind_marker) === FALSE) {
@@ -1118,9 +1118,9 @@ class CI_DB_driver {
     /**
      * Determines if a query is a "write" type.
      *
-     * @access	public
-     * @param	string	An SQL query string
-     * @return	boolean
+     * @access        public
+     * @param        string        An SQL query string
+     * @return        boolean
      */
     function is_write_type($sql) {
         if (!preg_match('/^\s*"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD DATA|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s+/i', $sql)) {
@@ -1134,9 +1134,9 @@ class CI_DB_driver {
     /**
      * Calculate the aggregate query elapsed time
      *
-     * @access	public
-     * @param	integer	The number of decimal places
-     * @return	integer
+     * @access        public
+     * @param        integer        The number of decimal places
+     * @return        integer
      */
     function elapsed_time($decimals = 6) {
         return number_format($this->benchmark, $decimals);
@@ -1147,8 +1147,8 @@ class CI_DB_driver {
     /**
      * Returns the total number of queries
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function total_queries() {
         return $this->query_count;
@@ -1159,8 +1159,8 @@ class CI_DB_driver {
     /**
      * Returns the last query that was executed
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function last_query() {
         return end($this->queries);
@@ -1174,9 +1174,9 @@ class CI_DB_driver {
      * Escapes data based on type
      * Sets boolean and null types
      *
-     * @access	public
-     * @param	string
-     * @return	mixed
+     * @access        public
+     * @param        string
+     * @return        mixed
      */
     function escape($str) {
         if (is_string($str)) {
@@ -1198,9 +1198,9 @@ class CI_DB_driver {
      * Calls the individual driver for platform
      * specific escaping for LIKE conditions
      *
-     * @access	public
-     * @param	string
-     * @return	mixed
+     * @access        public
+     * @param        string
+     * @return        mixed
      */
     function escape_like_str($str) {
         return $this->escape_str($str, TRUE);
@@ -1214,9 +1214,9 @@ class CI_DB_driver {
      * Retrieves the primary key.  It assumes that the row in the first
      * position is the primary key
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function primary($table = '') {
         $fields = $this->list_fields($table);
@@ -1233,8 +1233,8 @@ class CI_DB_driver {
     /**
      * Returns an array of table names
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
     function list_tables($constrain_by_prefix = FALSE) {
 // Is there a cached result?
@@ -1270,8 +1270,8 @@ class CI_DB_driver {
 
     /**
      * Determine if a particular table exists
-     * @access	public
-     * @return	boolean
+     * @access        public
+     * @return        boolean
      */
     function table_exists($table_name) {
         return (!in_array($this->_protect_identifiers($table_name, TRUE, FALSE, FALSE), $this->list_tables())) ? FALSE : TRUE;
@@ -1282,9 +1282,9 @@ class CI_DB_driver {
     /**
      * Fetch MySQL Field Names
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	array
+     * @access        public
+     * @param        string        the table name
+     * @return        array
      */
     function list_fields($table = '') {
 // Is there a cached result?
@@ -1325,10 +1325,10 @@ class CI_DB_driver {
 
     /**
      * Determine if a particular field exists
-     * @access	public
-     * @param	string
-     * @param	string
-     * @return	boolean
+     * @access        public
+     * @param        string
+     * @param        string
+     * @return        boolean
      */
     function field_exists($field_name, $table_name) {
         return (!in_array($field_name, $this->list_fields($table_name))) ? FALSE : TRUE;
@@ -1339,9 +1339,9 @@ class CI_DB_driver {
     /**
      * Returns an object with field data
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	object
+     * @access        public
+     * @param        string        the table name
+     * @return        object
      */
     function field_data($table = '') {
         if ($table == '') {
@@ -1361,10 +1361,10 @@ class CI_DB_driver {
     /**
      * Generate an insert string
      *
-     * @access	public
-     * @param	string	the table upon which the query will be performed
-     * @param	array	an associative array data of key/values
-     * @return	string
+     * @access        public
+     * @param        string        the table upon which the query will be performed
+     * @param        array        an associative array data of key/values
+     * @return        string
      */
     function insert_string($table, $data) {
         $fields = array();
@@ -1383,11 +1383,11 @@ class CI_DB_driver {
     /**
      * Generate an update string
      *
-     * @access	public
-     * @param	string	the table upon which the query will be performed
-     * @param	array	an associative array data of key/values
-     * @param	mixed	the "where" statement
-     * @return	string
+     * @access        public
+     * @param        string        the table upon which the query will be performed
+     * @param        array        an associative array data of key/values
+     * @param        mixed        the "where" statement
+     * @return        string
      */
     function update_string($table, $data, $where) {
         if ($where == '') {
@@ -1426,9 +1426,9 @@ class CI_DB_driver {
     /**
      * Tests whether the string has an SQL operator
      *
-     * @access	private
-     * @param	string
-     * @return	bool
+     * @access        private
+     * @param        string
+     * @return        bool
      */
     function _has_operator($str) {
         $str = trim($str);
@@ -1444,10 +1444,10 @@ class CI_DB_driver {
     /**
      * Enables a native PHP function to be run, using a platform agnostic wrapper.
      *
-     * @access	public
-     * @param	string	the function name
-     * @param	mixed	any parameters needed by the function
-     * @return	mixed
+     * @access        public
+     * @param        string        the function name
+     * @param        mixed        any parameters needed by the function
+     * @return        mixed
      */
     function call_function($function) {
         $driver = ($this->dbdriver == 'postgre') ? 'pg_' : $this->dbdriver . '_';
@@ -1476,9 +1476,9 @@ class CI_DB_driver {
     /**
      * Set Cache Directory Path
      *
-     * @access	public
-     * @param	string	the path to the cache directory
-     * @return	void
+     * @access        public
+     * @param        string        the path to the cache directory
+     * @return        void
      */
     function cache_set_path($path = '') {
         $this->cachedir = $path;
@@ -1489,8 +1489,8 @@ class CI_DB_driver {
     /**
      * Enable Query Caching
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function cache_on() {
         $this->cache_on = TRUE;
@@ -1502,8 +1502,8 @@ class CI_DB_driver {
     /**
      * Disable Query Caching
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function cache_off() {
         $this->cache_on = FALSE;
@@ -1515,8 +1515,8 @@ class CI_DB_driver {
     /**
      * Delete the cache files associated with a particular URI
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function cache_delete($segment_one = '', $segment_two = '') {
         if (!$this->_cache_init()) {
@@ -1530,8 +1530,8 @@ class CI_DB_driver {
     /**
      * Delete All cache files
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function cache_delete_all() {
         if (!$this->_cache_init()) {
@@ -1546,8 +1546,8 @@ class CI_DB_driver {
     /**
      * Initialize the Cache Class
      *
-     * @access	private
-     * @return	void
+     * @access        private
+     * @return        void
      */
     function _cache_init() {
         if (is_object($this->CACHE) AND class_exists('CI_DB_Cache')) {
@@ -1569,8 +1569,8 @@ class CI_DB_driver {
     /**
      * Close DB Connection
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function close() {
         if (is_resource($this->conn_id) OR is_object($this->conn_id)) {
@@ -1584,11 +1584,11 @@ class CI_DB_driver {
     /**
      * Display an error message
      *
-     * @access	public
-     * @param	string	the error message
-     * @param	string	any "swap" values
-     * @param	boolean	whether to localize the message
-     * @return	string	sends the application/error_db.php template
+     * @access        public
+     * @param        string        the error message
+     * @param        string        any "swap" values
+     * @param        boolean        whether to localize the message
+     * @return        string        sends the application/error_db.php template
      */
     function display_error($error = '', $swap = '', $native = FALSE) {
         $msg = '';
@@ -1618,9 +1618,9 @@ class CI_DB_driver {
      *
      * This function adds backticks if appropriate based on db type
      *
-     * @access	private
-     * @param	mixed	the item to escape
-     * @return	mixed	the item with backticks
+     * @access        private
+     * @param        mixed        the item to escape
+     * @return        mixed        the item with backticks
      */
     function protect_identifiers($item, $prefix_single = FALSE) {
         return $this->_protect_identifiers($item, $prefix_single);
@@ -1648,12 +1648,12 @@ class CI_DB_driver {
      * insert the table prefix (if it exists) in the proper position, and escape only
      * the correct identifiers.
      *
-     * @access	private
-     * @param	string
-     * @param	bool
-     * @param	mixed
-     * @param	bool
-     * @return	string
+     * @access        private
+     * @param        string
+     * @param        bool
+     * @param        mixed
+     * @param        bool
+     * @return        string
      */
     function _protect_identifiers($item, $prefix_single = FALSE, $protect_identifiers = NULL, $field_exists = TRUE) {
         if (!is_bool($protect_identifiers)) {
@@ -1785,7 +1785,7 @@ class CI_DB_driver {
      *
      * This function is used extensively by every db driver.
      *
-     * @return	void
+     * @return        void
      */
     protected function _reset_select() {
         
@@ -1806,9 +1806,9 @@ class CI_DB_driver {
  * This class will not be called directly. Rather, the adapter
  * class for the specific database will extend and instantiate it.
  *
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_result {
 
@@ -1824,9 +1824,9 @@ class CI_DB_result {
     /**
      * Query result.  Acts as a wrapper function for the following functions.
      *
-     * @access	public
-     * @param	string	can be "object" or "array"
-     * @return	mixed	either a result object or array
+     * @access        public
+     * @param        string        can be "object" or "array"
+     * @return        mixed        either a result object or array
      */
     public function result($type = 'object') {
         if ($type == 'array')
@@ -1877,8 +1877,8 @@ class CI_DB_result {
     /**
      * Query result.  "object" version.
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function result_object() {
         if (count($this->result_object) > 0) {
@@ -1905,8 +1905,8 @@ class CI_DB_result {
     /**
      * Query result.  "array" version.
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
     public function result_array() {
         if (count($this->result_array) > 0) {
@@ -1933,10 +1933,10 @@ class CI_DB_result {
     /**
      * Query result.  Acts as a wrapper function for the following functions.
      *
-     * @access	public
-     * @param	string
-     * @param	string	can be "object" or "array"
-     * @return	mixed	either a result object or array
+     * @access        public
+     * @param        string
+     * @param        string        can be "object" or "array"
+     * @return        mixed        either a result object or array
      */
     public function row($n = 0, $type = 'object') {
         if (!is_numeric($n)) {
@@ -1966,8 +1966,8 @@ class CI_DB_result {
     /**
      * Assigns an item into a particular column slot
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function set_row($key, $value = NULL) {
 // We cache the row data for subsequent uses
@@ -1993,8 +1993,8 @@ class CI_DB_result {
     /**
      * Returns a single result row - custom object version
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function custom_row_object($n, $type) {
         $result = $this->custom_result_object($type);
@@ -2013,8 +2013,8 @@ class CI_DB_result {
     /**
      * Returns a single result row - object version
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function row_object($n = 0) {
         $result = $this->result_object();
@@ -2035,8 +2035,8 @@ class CI_DB_result {
     /**
      * Returns a single result row - array version
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
     public function row_array($n = 0) {
         $result = $this->result_array();
@@ -2057,8 +2057,8 @@ class CI_DB_result {
     /**
      * Returns the "first" row
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function first_row($type = 'object') {
         $result = $this->result($type);
@@ -2074,8 +2074,8 @@ class CI_DB_result {
     /**
      * Returns the "last" row
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function last_row($type = 'object') {
         $result = $this->result($type);
@@ -2091,8 +2091,8 @@ class CI_DB_result {
     /**
      * Returns the "next" row
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function next_row($type = 'object') {
         $result = $this->result($type);
@@ -2113,8 +2113,8 @@ class CI_DB_result {
     /**
      * Returns the "previous" row
      *
-     * @access	public
-     * @return	object
+     * @access        public
+     * @return        object
      */
     public function previous_row($type = 'object') {
         $result = $this->result($type);
@@ -2186,11 +2186,11 @@ class CI_DB_result {
  *
  * This is the platform-independent base Active Record implementation class.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_active_record extends CI_DB_driver {
 
@@ -2233,8 +2233,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates the SELECT portion of the query
      *
-     * @param	string
-     * @return	object
+     * @param        string
+     * @return        object
      */
     public function select($select = '*', $escape = NULL) {
         if (is_string($select)) {
@@ -2265,9 +2265,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates a SELECT MAX(field) portion of a query
      *
-     * @param	string	the field
-     * @param	string	an alias
-     * @return	object
+     * @param        string        the field
+     * @param        string        an alias
+     * @return        object
      */
     public function select_max($select = '', $alias = '') {
         return $this->_max_min_avg_sum($select, $alias, 'MAX');
@@ -2280,9 +2280,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates a SELECT MIN(field) portion of a query
      *
-     * @param	string	the field
-     * @param	string	an alias
-     * @return	object
+     * @param        string        the field
+     * @param        string        an alias
+     * @return        object
      */
     public function select_min($select = '', $alias = '') {
         return $this->_max_min_avg_sum($select, $alias, 'MIN');
@@ -2295,9 +2295,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates a SELECT AVG(field) portion of a query
      *
-     * @param	string	the field
-     * @param	string	an alias
-     * @return	object
+     * @param        string        the field
+     * @param        string        an alias
+     * @return        object
      */
     public function select_avg($select = '', $alias = '') {
         return $this->_max_min_avg_sum($select, $alias, 'AVG');
@@ -2310,9 +2310,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates a SELECT SUM(field) portion of a query
      *
-     * @param	string	the field
-     * @param	string	an alias
-     * @return	object
+     * @param        string        the field
+     * @param        string        an alias
+     * @return        object
      */
     public function select_sum($select = '', $alias = '') {
         return $this->_max_min_avg_sum($select, $alias, 'SUM');
@@ -2323,14 +2323,14 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Processing Function for the four functions above:
      *
-     * 	select_max()
-     * 	select_min()
-     * 	select_avg()
+     *         select_max()
+     *         select_min()
+     *         select_avg()
      *  select_sum()
      *
-     * @param	string	the field
-     * @param	string	an alias
-     * @return	object
+     * @param        string        the field
+     * @param        string        an alias
+     * @return        object
      */
     protected function _max_min_avg_sum($select = '', $alias = '', $type = 'MAX') {
         if (!is_string($select) OR $select == '') {
@@ -2364,8 +2364,8 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Determines the alias name based on the table
      *
-     * @param	string
-     * @return	string
+     * @param        string
+     * @return        string
      */
     protected function _create_alias_from_table($item) {
         if (strpos($item, '.') !== FALSE) {
@@ -2382,8 +2382,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Sets a flag which tells the query string compiler to add DISTINCT
      *
-     * @param	bool
-     * @return	object
+     * @param        bool
+     * @return        object
      */
     public function distinct($val = TRUE) {
         $this->ar_distinct = (is_bool($val)) ? $val : TRUE;
@@ -2397,8 +2397,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates the FROM portion of the query
      *
-     * @param	mixed	can be a string or array
-     * @return	object
+     * @param        mixed        can be a string or array
+     * @return        object
      */
     public function from($from) {
         foreach ((array) $from as $val) {
@@ -2440,10 +2440,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Generates the JOIN portion of the query
      *
-     * @param	string
-     * @param	string	the join condition
-     * @param	string	the type of join
-     * @return	object
+     * @param        string
+     * @param        string        the join condition
+     * @param        string        the type of join
+     * @return        object
      */
     public function join($table, $cond, $type = '') {
         if ($type != '') {
@@ -2488,9 +2488,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates the WHERE portion of the query. Separates
      * multiple calls with AND
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function where($key, $value = NULL, $escape = TRUE) {
         return $this->_where($key, $value, 'AND ', $escape);
@@ -2504,9 +2504,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates the WHERE portion of the query. Separates
      * multiple calls with OR
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function or_where($key, $value = NULL, $escape = TRUE) {
         return $this->_where($key, $value, 'OR ', $escape);
@@ -2519,10 +2519,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Called by where() or or_where()
      *
-     * @param	mixed
-     * @param	mixed
-     * @param	string
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @param        string
+     * @return        object
      */
     protected function _where($key, $value = NULL, $type = 'AND ', $escape = NULL) {
         if (!is_array($key)) {
@@ -2575,9 +2575,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a WHERE field IN ('item', 'item') SQL query joined with
      * AND if appropriate
      *
-     * @param	string	The field to search
-     * @param	array	The values searched on
-     * @return	object
+     * @param        string        The field to search
+     * @param        array        The values searched on
+     * @return        object
      */
     public function where_in($key = NULL, $values = NULL) {
         return $this->_where_in($key, $values);
@@ -2591,9 +2591,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a WHERE field IN ('item', 'item') SQL query joined with
      * OR if appropriate
      *
-     * @param	string	The field to search
-     * @param	array	The values searched on
-     * @return	object
+     * @param        string        The field to search
+     * @param        array        The values searched on
+     * @return        object
      */
     public function or_where_in($key = NULL, $values = NULL) {
         return $this->_where_in($key, $values, FALSE, 'OR ');
@@ -2607,9 +2607,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a WHERE field NOT IN ('item', 'item') SQL query joined
      * with AND if appropriate
      *
-     * @param	string	The field to search
-     * @param	array	The values searched on
-     * @return	object
+     * @param        string        The field to search
+     * @param        array        The values searched on
+     * @return        object
      */
     public function where_not_in($key = NULL, $values = NULL) {
         return $this->_where_in($key, $values, TRUE);
@@ -2623,9 +2623,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a WHERE field NOT IN ('item', 'item') SQL query joined
      * with OR if appropriate
      *
-     * @param	string	The field to search
-     * @param	array	The values searched on
-     * @return	object
+     * @param        string        The field to search
+     * @param        array        The values searched on
+     * @return        object
      */
     public function or_where_not_in($key = NULL, $values = NULL) {
         return $this->_where_in($key, $values, TRUE, 'OR ');
@@ -2638,11 +2638,11 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Called by where_in, where_in_or, where_not_in, where_not_in_or
      *
-     * @param	string	The field to search
-     * @param	array	The values searched on
-     * @param	boolean	If the statement would be IN or NOT IN
-     * @param	string
-     * @return	object
+     * @param        string        The field to search
+     * @param        array        The values searched on
+     * @param        boolean        If the statement would be IN or NOT IN
+     * @param        string
+     * @return        object
      */
     protected function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ') {
         if ($key === NULL OR $values === NULL) {
@@ -2682,9 +2682,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a %LIKE% portion of the query. Separates
      * multiple calls with AND
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function like($field, $match = '', $side = 'both') {
         return $this->_like($field, $match, 'AND ', $side);
@@ -2698,9 +2698,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a NOT LIKE portion of the query. Separates
      * multiple calls with AND
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function not_like($field, $match = '', $side = 'both') {
         return $this->_like($field, $match, 'AND ', $side, 'NOT');
@@ -2714,9 +2714,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a %LIKE% portion of the query. Separates
      * multiple calls with OR
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function or_like($field, $match = '', $side = 'both') {
         return $this->_like($field, $match, 'OR ', $side);
@@ -2730,9 +2730,9 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a NOT LIKE portion of the query. Separates
      * multiple calls with OR
      *
-     * @param	mixed
-     * @param	mixed
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @return        object
      */
     public function or_not_like($field, $match = '', $side = 'both') {
         return $this->_like($field, $match, 'OR ', $side, 'NOT');
@@ -2745,10 +2745,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Called by like() or orlike()
      *
-     * @param	mixed
-     * @param	mixed
-     * @param	string
-     * @return	object
+     * @param        mixed
+     * @param        mixed
+     * @param        string
+     * @return        object
      */
     protected function _like($field, $match = '', $type = 'AND ', $side = 'both', $not = '') {
         if (!is_array($field)) {
@@ -2791,8 +2791,8 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * GROUP BY
      *
-     * @param	string
-     * @return	object
+     * @param        string
+     * @return        object
      */
     public function group_by($by) {
         if (is_string($by)) {
@@ -2821,9 +2821,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Separates multiple calls with AND
      *
-     * @param	string
-     * @param	string
-     * @return	object
+     * @param        string
+     * @param        string
+     * @return        object
      */
     public function having($key, $value = '', $escape = TRUE) {
         return $this->_having($key, $value, 'AND ', $escape);
@@ -2836,9 +2836,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Separates multiple calls with OR
      *
-     * @param	string
-     * @param	string
-     * @return	object
+     * @param        string
+     * @param        string
+     * @return        object
      */
     public function or_having($key, $value = '', $escape = TRUE) {
         return $this->_having($key, $value, 'OR ', $escape);
@@ -2851,9 +2851,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Called by having() or or_having()
      *
-     * @param	string
-     * @param	string
-     * @return	object
+     * @param        string
+     * @param        string
+     * @return        object
      */
     protected function _having($key, $value = '', $type = 'AND ', $escape = TRUE) {
         if (!is_array($key)) {
@@ -2890,9 +2890,9 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Sets the ORDER BY value
      *
-     * @param	string
-     * @param	string	direction: asc or desc
-     * @return	object
+     * @param        string
+     * @param        string        direction: asc or desc
+     * @return        object
      */
     public function order_by($orderby, $direction = '') {
         if (strtolower($direction) == 'random') {
@@ -2935,9 +2935,9 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Sets the LIMIT value
      *
-     * @param	integer	the limit value
-     * @param	integer	the offset value
-     * @return	object
+     * @param        integer        the limit value
+     * @param        integer        the offset value
+     * @return        object
      */
     public function limit($value, $offset = '') {
         $this->ar_limit = (int) $value;
@@ -2954,8 +2954,8 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Sets the OFFSET value
      *
-     * @param	integer	the offset value
-     * @return	object
+     * @param        integer        the offset value
+     * @return        object
      */
     public function offset($offset) {
         $this->ar_offset = $offset;
@@ -2967,10 +2967,10 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * The "set" function.  Allows key/value pairs to be set for inserting or updating
      *
-     * @param	mixed
-     * @param	string
-     * @param	boolean
-     * @return	object
+     * @param        mixed
+     * @param        string
+     * @param        boolean
+     * @return        object
      */
     public function set($key, $value = '', $escape = TRUE) {
         $key = $this->_object_to_array($key);
@@ -2998,10 +2998,10 @@ class CI_DB_active_record extends CI_DB_driver {
      * Compiles the select statement based on the other functions called
      * and runs the query
      *
-     * @param	string	the table
-     * @param	string	the limit clause
-     * @param	string	the offset clause
-     * @return	object
+     * @param        string        the table
+     * @param        string        the limit clause
+     * @param        string        the offset clause
+     * @return        object
      */
     public function get($table = '', $limit = null, $offset = null) {
         if ($table != '') {
@@ -3026,8 +3026,8 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a platform-specific query string that counts all records
      * returned by an Active Record query.
      *
-     * @param	string
-     * @return	string
+     * @param        string
+     * @return        string
      */
     public function count_all_results($table = '') {
         if ($table != '') {
@@ -3055,10 +3055,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Allows the where clause, limit and offset to be added directly
      *
-     * @param	string	the where clause
-     * @param	string	the limit clause
-     * @param	string	the offset clause
-     * @return	object
+     * @param        string        the where clause
+     * @param        string        the limit clause
+     * @param        string        the offset clause
+     * @return        object
      */
     public function get_where($table = '', $where = null, $limit = null, $offset = null) {
         if ($table != '') {
@@ -3087,9 +3087,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles batch insert strings and runs the queries
      *
-     * @param	string	the table to retrieve the results from
-     * @param	array	an associative array of insert values
-     * @return	object
+     * @param        string        the table to retrieve the results from
+     * @param        array        an associative array of insert values
+     * @return        object
      */
     public function insert_batch($table = '', $set = NULL) {
         if (!is_null($set)) {
@@ -3136,10 +3136,10 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * The "set_insert_batch" function.  Allows key/value pairs to be set for batch inserts
      *
-     * @param	mixed
-     * @param	string
-     * @param	boolean
-     * @return	object
+     * @param        mixed
+     * @param        string
+     * @param        boolean
+     * @return        object
      */
     public function set_insert_batch($key, $value = '', $escape = TRUE) {
         $key = $this->_object_to_array_batch($key);
@@ -3187,9 +3187,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles an insert string and runs the query
      *
-     * @param	string	the table to insert data into
-     * @param	array	an associative array of insert values
-     * @return	object
+     * @param        string        the table to insert data into
+     * @param        array        an associative array of insert values
+     * @return        object
      */
     function insert($table = '', $set = NULL) {
         if (!is_null($set)) {
@@ -3227,9 +3227,9 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles an replace into string and runs the query
      *
-     * @param	string	the table to replace data into
-     * @param	array	an associative array of insert values
-     * @return	object
+     * @param        string        the table to replace data into
+     * @param        array        an associative array of insert values
+     * @return        object
      */
     public function replace($table = '', $set = NULL) {
         if (!is_null($set)) {
@@ -3267,10 +3267,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles an update string and runs the query
      *
-     * @param	string	the table to retrieve the results from
-     * @param	array	an associative array of update values
-     * @param	mixed	the where clause
-     * @return	object
+     * @param        string        the table to retrieve the results from
+     * @param        array        an associative array of update values
+     * @param        mixed        the where clause
+     * @return        object
      */
     public function update($table = '', $set = NULL, $where = NULL, $limit = NULL) {
 // Combine any cached components with the current statements
@@ -3319,10 +3319,10 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles an update string and runs the query
      *
-     * @param	string	the table to retrieve the results from
-     * @param	array	an associative array of update values
-     * @param	string	the where key
-     * @return	object
+     * @param        string        the table to retrieve the results from
+     * @param        array        an associative array of update values
+     * @param        string        the where key
+     * @return        object
      */
     public function update_batch($table = '', $set = NULL, $index = NULL) {
 // Combine any cached components with the current statements
@@ -3374,10 +3374,10 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * The "set_update_batch" function.  Allows key/value pairs to be set for batch updating
      *
-     * @param	array
-     * @param	string
-     * @param	boolean
-     * @return	object
+     * @param        array
+     * @param        string
+     * @param        boolean
+     * @return        object
      */
     public function set_update_batch($key, $index = '', $escape = TRUE) {
         $key = $this->_object_to_array_batch($key);
@@ -3421,8 +3421,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles a delete string and runs "DELETE FROM table"
      *
-     * @param	string	the table to empty
-     * @return	object
+     * @param        string        the table to empty
+     * @return        object
      */
     public function empty_table($table = '') {
         if ($table == '') {
@@ -3454,8 +3454,8 @@ class CI_DB_active_record extends CI_DB_driver {
      * If the database does not support the truncate() command
      * This function maps to "DELETE FROM table"
      *
-     * @param	string	the table to truncate
-     * @return	object
+     * @param        string        the table to truncate
+     * @return        object
      */
     public function truncate($table = '') {
         if ($table == '') {
@@ -3485,11 +3485,11 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Compiles a delete string and runs the query
      *
-     * @param	mixed	the table(s) to delete from. String or array
-     * @param	mixed	the where clause
-     * @param	mixed	the limit clause
-     * @param	boolean
-     * @return	object
+     * @param        mixed        the table(s) to delete from. String or array
+     * @param        mixed        the where clause
+     * @param        mixed        the limit clause
+     * @param        boolean
+     * @return        object
      */
     public function delete($table = '', $where = '', $limit = NULL, $reset_data = TRUE) {
 // Combine any cached components with the current statements
@@ -3547,8 +3547,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Prepends a database prefix if one exists in configuration
      *
-     * @param	string	the table
-     * @return	string
+     * @param        string        the table
+     * @return        string
      */
     public function dbprefix($table = '') {
         if ($table == '') {
@@ -3565,8 +3565,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Set's the DB Prefix to something new without needing to reconnect
      *
-     * @param	string	the prefix
-     * @return	string
+     * @param        string        the prefix
+     * @return        string
      */
     public function set_dbprefix($prefix = '') {
         return $this->dbprefix = $prefix;
@@ -3579,8 +3579,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Used to track SQL statements written with aliased tables.
      *
-     * @param	string	The table to inspect
-     * @return	string
+     * @param        string        The table to inspect
+     * @return        string
      */
     protected function _track_aliases($table) {
         if (is_array($table)) {
@@ -3619,7 +3619,7 @@ class CI_DB_active_record extends CI_DB_driver {
      * Generates a query string based on which functions were used.
      * Should not be called directly.  The get() function calls it.
      *
-     * @return	string
+     * @return        string
      */
     protected function _compile_select($select_override = FALSE) {
 // Combine any cached components with the current statements
@@ -3733,8 +3733,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Takes an object as input and converts the class variables to array key/vals
      *
-     * @param	object
-     * @return	array
+     * @param        object
+     * @return        array
      */
     public function _object_to_array($object) {
         if (!is_object($object)) {
@@ -3759,8 +3759,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Takes an object as input and converts the class variables to array key/vals
      *
-     * @param	object
-     * @return	array
+     * @param        object
+     * @return        array
      */
     public function _object_to_array_batch($object) {
         if (!is_object($object)) {
@@ -3793,7 +3793,7 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Starts AR caching
      *
-     * @return	void
+     * @return        void
      */
     public function start_cache() {
         $this->ar_caching = TRUE;
@@ -3806,7 +3806,7 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Stops AR caching
      *
-     * @return	void
+     * @return        void
      */
     public function stop_cache() {
         $this->ar_caching = FALSE;
@@ -3819,8 +3819,8 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Empties the AR cache
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     public function flush_cache() {
         $this->_reset_run(array(
@@ -3846,7 +3846,7 @@ class CI_DB_active_record extends CI_DB_driver {
      * When called, this function merges any cached AR arrays with
      * locally called ones.
      *
-     * @return	void
+     * @return        void
      */
     protected function _merge_cache() {
         if (count($this->ar_cache_exists) == 0) {
@@ -3878,8 +3878,8 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Resets the active record values.  Called by the get() function
      *
-     * @param	array	An array of fields to reset
-     * @return	void
+     * @param        array        An array of fields to reset
+     * @return        void
      */
     protected function _reset_run($ar_reset_items) {
         foreach ($ar_reset_items as $item => $default_value) {
@@ -3894,7 +3894,7 @@ class CI_DB_active_record extends CI_DB_driver {
     /**
      * Resets the active record values.  Called by the get() function
      *
-     * @return	void
+     * @return        void
      */
     protected function _reset_select() {
         $ar_reset_items = array(
@@ -3925,7 +3925,7 @@ class CI_DB_active_record extends CI_DB_driver {
      *
      * Called by the insert() update() insert_batch() update_batch() and delete() functions
      *
-     * @return	void
+     * @return        void
      */
     protected function _reset_write() {
         $ar_reset_items = array(
@@ -3962,11 +3962,11 @@ function log_message($level, $msg) {/* just suppress logging */
  * creates dynamically based on whether the active record
  * class is being used or not.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_mysql_driver extends CI_DB{
 
@@ -3997,8 +3997,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Non-persistent database connection
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_connect() {
         if ($this->port != '') {
@@ -4012,8 +4012,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Persistent database connection
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_pconnect() {
         if ($this->port != '') {
@@ -4031,8 +4031,8 @@ class CI_DB_mysql_driver extends CI_DB{
      * Keep / reestablish the db connection if no queries have been
      * sent for a length of time exceeding the server's idle timeout
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function reconnect() {
         if (mysql_ping($this->conn_id) === FALSE) {
@@ -4045,8 +4045,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Select the database
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_select() {
         return @mysql_select_db($this->database, $this->conn_id);
@@ -4057,10 +4057,10 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Set client character set
      *
-     * @access	public
-     * @param	string
-     * @param	string
-     * @return	resource
+     * @access        public
+     * @param        string
+     * @param        string
+     * @return        resource
      */
     function _db_set_charset($charset, $collation) {
         if (!isset($this->use_set_names)) {
@@ -4080,8 +4080,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Version number query string
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function _version() {
         return "SELECT version() AS ver";
@@ -4092,9 +4092,9 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Execute the query
      *
-     * @access	private called by the base class
-     * @param	string	an SQL query
-     * @return	resource
+     * @access        private called by the base class
+     * @param        string        an SQL query
+     * @return        resource
      */
     function _execute($sql) {
         $sql = $this->_prep_query($sql);
@@ -4108,9 +4108,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * If needed, each database adapter can prep the query string
      *
-     * @access	private called by execute()
-     * @param	string	an SQL query
-     * @return	string
+     * @access        private called by execute()
+     * @param        string        an SQL query
+     * @return        string
      */
     function _prep_query($sql) {
 // "DELETE FROM TABLE" returns 0 affected rows This hack modifies
@@ -4129,8 +4129,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Begin Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_begin($test_mode = FALSE) {
         if (!$this->trans_enabled) {
@@ -4157,8 +4157,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Commit Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_commit() {
         if (!$this->trans_enabled) {
@@ -4180,8 +4180,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Rollback Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_rollback() {
         if (!$this->trans_enabled) {
@@ -4203,10 +4203,10 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Escape String
      *
-     * @access	public
-     * @param	string
-     * @param	bool	whether or not the string will be used in a LIKE condition
-     * @return	string
+     * @access        public
+     * @param        string
+     * @param        bool        whether or not the string will be used in a LIKE condition
+     * @return        string
      */
     function escape_str($str, $like = FALSE) {
         if (is_array($str)) {
@@ -4238,8 +4238,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Affected Rows
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function affected_rows() {
         return @mysql_affected_rows($this->conn_id);
@@ -4250,8 +4250,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Insert ID
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function insert_id() {
         return @mysql_insert_id($this->conn_id);
@@ -4265,9 +4265,9 @@ class CI_DB_mysql_driver extends CI_DB{
      * Generates a platform-specific query string that counts all records in
      * the specified database
      *
-     * @access	public
-     * @param	string
-     * @return	string
+     * @access        public
+     * @param        string
+     * @return        string
      */
     function count_all($table = '') {
         if ($table == '') {
@@ -4292,9 +4292,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query string so that the table names can be fetched
      *
-     * @access	private
-     * @param	boolean
-     * @return	string
+     * @access        private
+     * @param        boolean
+     * @return        string
      */
     function _list_tables($prefix_limit = FALSE) {
         $sql = "SHOW TABLES FROM " . $this->_escape_char . $this->database . $this->_escape_char;
@@ -4313,9 +4313,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query string so that the column names can be fetched
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function _list_columns($table = '') {
         return "SHOW COLUMNS FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE);
@@ -4328,9 +4328,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query so that the column data can be retrieved
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	object
+     * @access        public
+     * @param        string        the table name
+     * @return        object
      */
     function _field_data($table) {
         return "DESCRIBE " . $table;
@@ -4341,8 +4341,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * The error message string
      *
-     * @access	private
-     * @return	string
+     * @access        private
+     * @return        string
      */
     function _error_message() {
         return mysql_error($this->conn_id);
@@ -4353,8 +4353,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * The error message number
      *
-     * @access	private
-     * @return	integer
+     * @access        private
+     * @return        integer
      */
     function _error_number() {
         return mysql_errno($this->conn_id);
@@ -4367,9 +4367,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * This function escapes column and table names
      *
-     * @access	private
-     * @param	string
-     * @return	string
+     * @access        private
+     * @param        string
+     * @return        string
      */
     function _escape_identifiers($item) {
         if ($this->_escape_char == '') {
@@ -4403,9 +4403,9 @@ class CI_DB_mysql_driver extends CI_DB{
      * This function implicitly groups FROM tables so there is no confusion
      * about operator precedence in harmony with SQL standards
      *
-     * @access	public
-     * @param	type
-     * @return	type
+     * @access        public
+     * @param        type
+     * @return        type
      */
     function _from_tables($tables) {
         if (!is_array($tables)) {
@@ -4422,11 +4422,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific insert string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _insert($table, $keys, $values) {
         return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
@@ -4439,11 +4439,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific replace string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _replace($table, $keys, $values) {
         return "REPLACE INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
@@ -4456,11 +4456,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific insert string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _insert_batch($table, $keys, $values) {
         return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES " . implode(', ', $values);
@@ -4473,13 +4473,13 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific update string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the update data
-     * @param	array	the where clause
-     * @param	array	the orderby clause
-     * @param	array	the limit clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the update data
+     * @param        array        the where clause
+     * @param        array        the orderby clause
+     * @param        array        the limit clause
+     * @return        string
      */
     function _update($table, $values, $where, $orderby = array(), $limit = FALSE) {
         foreach ($values as $key => $val) {
@@ -4506,11 +4506,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific batch update string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the update data
-     * @param	array	the where clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the update data
+     * @param        array        the where clause
+     * @return        string
      */
     function _update_batch($table, $values, $index, $where = NULL) {
         $ids = array();
@@ -4554,9 +4554,9 @@ class CI_DB_mysql_driver extends CI_DB{
      * If the database does not support the truncate() command
      * This function maps to "DELETE FROM table"
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function _truncate($table) {
         return "TRUNCATE " . $table;
@@ -4569,11 +4569,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific delete string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the where clause
-     * @param	string	the limit clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the where clause
+     * @param        string        the limit clause
+     * @return        string
      */
     function _delete($table, $where = array(), $like = array(), $limit = FALSE) {
         $conditions = '';
@@ -4600,11 +4600,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific LIMIT clause
      *
-     * @access	public
-     * @param	string	the sql query string
-     * @param	integer	the number of rows to limit the query to
-     * @param	integer	the offset value
-     * @return	string
+     * @access        public
+     * @param        string        the sql query string
+     * @param        integer        the number of rows to limit the query to
+     * @param        integer        the offset value
+     * @return        string
      */
     function _limit($sql, $limit, $offset) {
         if ($offset == 0) {
@@ -4621,9 +4621,9 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Close DB Connection
      *
-     * @access	public
-     * @param	resource
-     * @return	void
+     * @access        public
+     * @param        resource
+     * @return        void
      */
     function _close($conn_id) {
         @mysql_close($conn_id);
@@ -4642,17 +4642,17 @@ class CI_DB_mysql_driver extends CI_DB{
  *
  * This class extends the parent result class: CI_DB_result
  *
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_mysql_result extends CI_DB_result {
 
     /**
      * Number of rows in the result set
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function num_rows() {
         return @mysql_num_rows($this->result_id);
@@ -4663,8 +4663,8 @@ class CI_DB_mysql_result extends CI_DB_result {
     /**
      * Number of fields in the result set
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function num_fields() {
         return @mysql_num_fields($this->result_id);
@@ -4677,8 +4677,8 @@ class CI_DB_mysql_result extends CI_DB_result {
      *
      * Generates an array of column names
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
     function list_fields() {
         $field_names = array();
@@ -4696,8 +4696,8 @@ class CI_DB_mysql_result extends CI_DB_result {
      *
      * Generates an array of objects containing field meta-data
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
     function field_data() {
         $retval = array();
@@ -4725,7 +4725,7 @@ class CI_DB_mysql_result extends CI_DB_result {
     /**
      * Free the result
      *
-     * @return	null
+     * @return        null
      */
     function free_result() {
         if (is_resource($this->result_id)) {
@@ -4743,8 +4743,8 @@ class CI_DB_mysql_result extends CI_DB_result {
      * this internally before fetching results to make sure the
      * result set starts at zero
      *
-     * @access	private
-     * @return	array
+     * @access        private
+     * @return        array
      */
     function _data_seek($n = 0) {
         return mysql_data_seek($this->result_id, $n);
@@ -4757,8 +4757,8 @@ class CI_DB_mysql_result extends CI_DB_result {
      *
      * Returns the result set as an array
      *
-     * @access	private
-     * @return	array
+     * @access        private
+     * @return        array
      */
     function _fetch_assoc() {
         return mysql_fetch_assoc($this->result_id);
@@ -4771,8 +4771,8 @@ class CI_DB_mysql_result extends CI_DB_result {
      *
      * Returns the result set as an object
      *
-     * @access	private
-     * @return	object
+     * @access        private
+     * @return        object
      */
     function _fetch_object() {
         return mysql_fetch_object($this->result_id);
@@ -4792,786 +4792,786 @@ class CI_DB_mysql_result extends CI_DB_result {
  * creates dynamically based on whether the active record
  * class is being used or not.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                EllisLab Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_pdo_driver extends CI_DB{
 
-	var $dbdriver = 'pdo';
-
-	// the character used to excape - not necessary for PDO
-	var $_escape_char = '';
-	var $_like_escape_str;
-	var $_like_escape_chr;
-	
-
-	/**
-	 * The syntax to count rows is slightly different across different
-	 * database engines, so this string appears in each driver and is
-	 * used for the count_all() and count_all_results() functions.
-	 */
-	var $_count_string = "SELECT COUNT(*) AS ";
-	var $_random_keyword;
-	
-	var $options = array();
-
-	function __construct($params)
-	{
-		parent::__construct($params);
-
-		// clause and character used for LIKE escape sequences
-		if (strpos($this->hostname, 'mysql') !== FALSE)
-		{
-			$this->_like_escape_str = '';
-			$this->_like_escape_chr = '';
-
-			//Prior to this version, the charset can't be set in the dsn
-			if(is_php('5.3.6'))
-			{
-				$this->hostname .= ";charset={$this->char_set}";
-			}
-
-			//Set the charset with the connection options
-			$this->options['PDO::MYSQL_ATTR_INIT_COMMAND'] = "SET NAMES {$this->char_set}";
-		}
-		elseif (strpos($this->hostname, 'odbc') !== FALSE)
-		{
-			$this->_like_escape_str = " {escape '%s'} ";
-			$this->_like_escape_chr = '!';
-		}
-		else
-		{
-			$this->_like_escape_str = " ESCAPE '%s' ";
-			$this->_like_escape_chr = '!';
-		}
-
-		empty($this->database) OR $this->hostname .= ';dbname='.$this->database;
-
-		$this->trans_enabled = FALSE;
-
-		$this->_random_keyword = ' RND('.time().')'; // database specific random keyword
-	}
-
-	/**
-	 * Non-persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_connect()
-	{
-		$this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
-
-		return new PDO($this->hostname, $this->username, $this->password, $this->options);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_pconnect()
-	{
-		$this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
-		$this->options['PDO::ATTR_PERSISTENT'] = TRUE;
-	
-		return new PDO($this->hostname, $this->username, $this->password, $this->options);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Reconnect
-	 *
-	 * Keep / reestablish the db connection if no queries have been
-	 * sent for a length of time exceeding the server's idle timeout
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	function reconnect()
-	{
-		if ($this->db->db_debug)
-		{
-			return $this->db->display_error('db_unsuported_feature');
-		}
-		return FALSE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Select the database
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_select()
-	{
-		// Not needed for PDO
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Set client character set
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	string
-	 * @return	resource
-	 */
-	function _db_set_charset($charset, $collation)
-	{
-		// @todo - add support if needed
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Version number query string
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	function _version()
-	{
-		return $this->conn_id->getAttribute(PDO::ATTR_CLIENT_VERSION);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Execute the query
-	 *
-	 * @access	private called by the base class
-	 * @param	string	an SQL query
-	 * @return	object
-	 */
-	function _execute($sql)
-	{
-		$sql = $this->_prep_query($sql);
-		$result_id = $this->conn_id->prepare($sql);
-		$result_id->execute();
-		
-		if (is_object($result_id))
-		{
-			if (is_numeric(stripos($sql, 'SELECT')))
-			{
-				$this->affect_rows = count($result_id->fetchAll());
-				$result_id->execute();
-			}
-			else
-			{
-				$this->affect_rows = $result_id->rowCount();
-			}
-		}
-		else
-		{
-			$this->affect_rows = 0;
-		}
-		
-		return $result_id;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Prep the query
-	 *
-	 * If needed, each database adapter can prep the query string
-	 *
-	 * @access	private called by execute()
-	 * @param	string	an SQL query
-	 * @return	string
-	 */
-	function _prep_query($sql)
-	{
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Begin Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_begin($test_mode = FALSE)
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		// Reset the transaction failure flag.
-		// If the $test_mode flag is set to TRUE transactions will be rolled back
-		// even if the queries produce a successful result.
-		$this->_trans_failure = (bool) ($test_mode === TRUE);
-
-		return $this->conn_id->beginTransaction();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Commit Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_commit()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$ret = $this->conn->commit();
-		return $ret;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Rollback Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_rollback()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$ret = $this->conn_id->rollBack();
-		return $ret;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape String
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	bool	whether or not the string will be used in a LIKE condition
-	 * @return	string
-	 */
-	function escape_str($str, $like = FALSE)
-	{
-		if (is_array($str))
-		{
-			foreach ($str as $key => $val)
-			{
-				$str[$key] = $this->escape_str($val, $like);
-			}
-
-			return $str;
-		}
-		
-		//Escape the string
-		$str = $this->conn_id->quote($str);
-		
-		//If there are duplicated quotes, trim them away
-		if (strpos($str, "'") === 0)
-		{
-			$str = substr($str, 1, -1);
-		}
-		
-		// escape LIKE condition wildcards
-		if ($like === TRUE)
-		{
-			$str = str_replace(	array('%', '_', $this->_like_escape_chr),
-								array($this->_like_escape_chr.'%', $this->_like_escape_chr.'_', $this->_like_escape_chr.$this->_like_escape_chr),
-								$str);
-		}
-
-		return $str;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Affected Rows
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function affected_rows()
-	{
-		return $this->affect_rows;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert ID
-	 * 
-	 * @access	public
-	 * @return	integer
-	 */
-	function insert_id($name=NULL)
-	{
-		//Convenience method for postgres insertid
-		if (strpos($this->hostname, 'pgsql') !== FALSE)
-		{
-			$v = $this->_version();
-
-			$table	= func_num_args() > 0 ? func_get_arg(0) : NULL;
-
-			if ($table == NULL && $v >= '8.1')
-			{
-				$sql='SELECT LASTVAL() as ins_id';
-			}
-			$query = $this->query($sql);
-			$row = $query->row();
-			return $row->ins_id;
-		}
-		else
-		{
-			return $this->conn_id->lastInsertId($name);
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * "Count All" query
-	 *
-	 * Generates a platform-specific query string that counts all records in
-	 * the specified database
-	 *
-	 * @access	public
-	 * @param	string
-	 * @return	string
-	 */
-	function count_all($table = '')
-	{
-		if ($table == '')
-		{
-			return 0;
-		}
-
-		$query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
-
-		if ($query->num_rows() == 0)
-		{
-			return 0;
-		}
-
-		$row = $query->row();
-		$this->_reset_select();
-		return (int) $row->numrows;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Show table query
-	 *
-	 * Generates a platform-specific query string so that the table names can be fetched
-	 *
-	 * @access	private
-	 * @param	boolean
-	 * @return	string
-	 */
-	function _list_tables($prefix_limit = FALSE)
-	{
-		$sql = "SHOW TABLES FROM `".$this->database."`";
-
-		if ($prefix_limit !== FALSE AND $this->dbprefix != '')
-		{
-			//$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%' ".sprintf($this->_like_escape_str, $this->_like_escape_chr);
-			return FALSE; // not currently supported
-		}
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Show column query
-	 *
-	 * Generates a platform-specific query string so that the column names can be fetched
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _list_columns($table = '')
-	{
-		return "SHOW COLUMNS FROM ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Field data query
-	 *
-	 * Generates a platform-specific query so that the column data can be retrieved
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	object
-	 */
-	function _field_data($table)
-	{
-		return "SELECT TOP 1 FROM ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message string
-	 *
-	 * @access	private
-	 * @return	string
-	 */
-	function _error_message()
-	{
-		$error_array = $this->conn_id->errorInfo();
-		return $error_array[2];
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message number
-	 *
-	 * @access	private
-	 * @return	integer
-	 */
-	function _error_number()
-	{
-		return $this->conn_id->errorCode();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape the SQL Identifiers
-	 *
-	 * This function escapes column and table names
-	 *
-	 * @access	private
-	 * @param	string
-	 * @return	string
-	 */
-	function _escape_identifiers($item)
-	{
-		if ($this->_escape_char == '')
-		{
-			return $item;
-		}
-
-		foreach ($this->_reserved_identifiers as $id)
-		{
-			if (strpos($item, '.'.$id) !== FALSE)
-			{
-				$str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
-
-				// remove duplicates if the user already included the escape
-				return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-			}
-		}
-
-		if (strpos($item, '.') !== FALSE)
-		{
-			$str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
-			
-		}
-		else
-		{
-			$str = $this->_escape_char.$item.$this->_escape_char;
-		}
-
-		// remove duplicates if the user already included the escape
-		return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * From Tables
-	 *
-	 * This function implicitly groups FROM tables so there is no confusion
-	 * about operator precedence in harmony with SQL standards
-	 *
-	 * @access	public
-	 * @param	type
-	 * @return	type
-	 */
-	function _from_tables($tables)
-	{
-		if ( ! is_array($tables))
-		{
-			$tables = array($tables);
-		}
-
-		return (count($tables) == 1) ? $tables[0] : '('.implode(', ', $tables).')';
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the insert keys
-	 * @param	array	the insert values
-	 * @return	string
-	 */
-	function _insert($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES (".implode(', ', $values).")";
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert_batch statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access  public
-	 * @param   string  the table name
-	 * @param   array   the insert keys
-	 * @param   array   the insert values
-	 * @return  string
-	 */
-	function _insert_batch($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES ".implode(', ', $values);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update statement
-	 *
-	 * Generates a platform-specific update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @param	array	the orderby clause
-	 * @param	array	the limit clause
-	 * @return	string
-	 */
-	function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
-	{
-		foreach ($values as $key => $val)
-		{
-			$valstr[] = $key." = ".$val;
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		$orderby = (count($orderby) >= 1)?' ORDER BY '.implode(", ", $orderby):'';
-
-		$sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
-
-		$sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
-
-		$sql .= $orderby.$limit;
-
-		return $sql;
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update_Batch statement
-	 *
-	 * Generates a platform-specific batch update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @return	string
-	 */
-	function _update_batch($table, $values, $index, $where = NULL)
-	{
-		$ids = array();
-		$where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
-
-		foreach ($values as $key => $val)
-		{
-			$ids[] = $val[$index];
-
-			foreach (array_keys($val) as $field)
-			{
-				if ($field != $index)
-				{
-					$final[$field][] =  'WHEN '.$index.' = '.$val[$index].' THEN '.$val[$field];
-				}
-			}
-		}
-
-		$sql = "UPDATE ".$table." SET ";
-		$cases = '';
-
-		foreach ($final as $k => $v)
-		{
-			$cases .= $k.' = CASE '."\n";
-			foreach ($v as $row)
-			{
-				$cases .= $row."\n";
-			}
-
-			$cases .= 'ELSE '.$k.' END, ';
-		}
-
-		$sql .= substr($cases, 0, -2);
-
-		$sql .= ' WHERE '.$where.$index.' IN ('.implode(',', $ids).')';
-
-		return $sql;
-	}
-
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Truncate statement
-	 *
-	 * Generates a platform-specific truncate string from the supplied data
-	 * If the database does not support the truncate() command
-	 * This function maps to "DELETE FROM table"
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _truncate($table)
-	{
-		return $this->_delete($table);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Delete statement
-	 *
-	 * Generates a platform-specific delete string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the where clause
-	 * @param	string	the limit clause
-	 * @return	string
-	 */
-	function _delete($table, $where = array(), $like = array(), $limit = FALSE)
-	{
-		$conditions = '';
-
-		if (count($where) > 0 OR count($like) > 0)
-		{
-			$conditions = "\nWHERE ";
-			$conditions .= implode("\n", $this->ar_where);
-
-			if (count($where) > 0 && count($like) > 0)
-			{
-				$conditions .= " AND ";
-			}
-			$conditions .= implode("\n", $like);
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		return "DELETE FROM ".$table.$conditions.$limit;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Limit string
-	 *
-	 * Generates a platform-specific LIMIT clause
-	 *
-	 * @access	public
-	 * @param	string	the sql query string
-	 * @param	integer	the number of rows to limit the query to
-	 * @param	integer	the offset value
-	 * @return	string
-	 */
-	function _limit($sql, $limit, $offset)
-	{
-		if (strpos($this->hostname, 'cubrid') !== FALSE || strpos($this->hostname, 'sqlite') !== FALSE)
-		{
-			if ($offset == 0)
-			{
-				$offset = '';
-			}
-			else
-			{
-				$offset .= ", ";
-			}
-
-			return $sql."LIMIT ".$offset.$limit;
-		}
-		else
-		{
-			$sql .= "LIMIT ".$limit;
-
-			if ($offset > 0)
-			{
-				$sql .= " OFFSET ".$offset;
-			}
-			
-			return $sql;
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Close DB Connection
-	 *
-	 * @access	public
-	 * @param	resource
-	 * @return	void
-	 */
-	function _close($conn_id)
-	{
-		$this->conn_id = null;
-	}
+        var $dbdriver = 'pdo';
+
+        // the character used to excape - not necessary for PDO
+        var $_escape_char = '';
+        var $_like_escape_str;
+        var $_like_escape_chr;
+        
+
+        /**
+         * The syntax to count rows is slightly different across different
+         * database engines, so this string appears in each driver and is
+         * used for the count_all() and count_all_results() functions.
+         */
+        var $_count_string = "SELECT COUNT(*) AS ";
+        var $_random_keyword;
+        
+        var $options = array();
+
+        function __construct($params)
+        {
+                parent::__construct($params);
+
+                // clause and character used for LIKE escape sequences
+                if (strpos($this->hostname, 'mysql') !== FALSE)
+                {
+                        $this->_like_escape_str = '';
+                        $this->_like_escape_chr = '';
+
+                        //Prior to this version, the charset can't be set in the dsn
+                        if(is_php('5.3.6'))
+                        {
+                                $this->hostname .= ";charset={$this->char_set}";
+                        }
+
+                        //Set the charset with the connection options
+                        $this->options['PDO::MYSQL_ATTR_INIT_COMMAND'] = "SET NAMES {$this->char_set}";
+                }
+                elseif (strpos($this->hostname, 'odbc') !== FALSE)
+                {
+                        $this->_like_escape_str = " {escape '%s'} ";
+                        $this->_like_escape_chr = '!';
+                }
+                else
+                {
+                        $this->_like_escape_str = " ESCAPE '%s' ";
+                        $this->_like_escape_chr = '!';
+                }
+
+                empty($this->database) OR $this->hostname .= ';dbname='.$this->database;
+
+                $this->trans_enabled = FALSE;
+
+                $this->_random_keyword = ' RND('.time().')'; // database specific random keyword
+        }
+
+        /**
+         * Non-persistent database connection
+         *
+         * @access        private called by the base class
+         * @return        resource
+         */
+        function db_connect()
+        {
+                $this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
+
+                return new PDO($this->hostname, $this->username, $this->password, $this->options);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Persistent database connection
+         *
+         * @access        private called by the base class
+         * @return        resource
+         */
+        function db_pconnect()
+        {
+                $this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
+                $this->options['PDO::ATTR_PERSISTENT'] = TRUE;
+        
+                return new PDO($this->hostname, $this->username, $this->password, $this->options);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Reconnect
+         *
+         * Keep / reestablish the db connection if no queries have been
+         * sent for a length of time exceeding the server's idle timeout
+         *
+         * @access        public
+         * @return        void
+         */
+        function reconnect()
+        {
+                if ($this->db->db_debug)
+                {
+                        return $this->db->display_error('db_unsuported_feature');
+                }
+                return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Select the database
+         *
+         * @access        private called by the base class
+         * @return        resource
+         */
+        function db_select()
+        {
+                // Not needed for PDO
+                return TRUE;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Set client character set
+         *
+         * @access        public
+         * @param        string
+         * @param        string
+         * @return        resource
+         */
+        function _db_set_charset($charset, $collation)
+        {
+                // @todo - add support if needed
+                return TRUE;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Version number query string
+         *
+         * @access        public
+         * @return        string
+         */
+        function _version()
+        {
+                return $this->conn_id->getAttribute(PDO::ATTR_CLIENT_VERSION);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Execute the query
+         *
+         * @access        private called by the base class
+         * @param        string        an SQL query
+         * @return        object
+         */
+        function _execute($sql)
+        {
+                $sql = $this->_prep_query($sql);
+                $result_id = $this->conn_id->prepare($sql);
+                $result_id->execute();
+                
+                if (is_object($result_id))
+                {
+                        if (is_numeric(stripos($sql, 'SELECT')))
+                        {
+                                $this->affect_rows = count($result_id->fetchAll());
+                                $result_id->execute();
+                        }
+                        else
+                        {
+                                $this->affect_rows = $result_id->rowCount();
+                        }
+                }
+                else
+                {
+                        $this->affect_rows = 0;
+                }
+                
+                return $result_id;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Prep the query
+         *
+         * If needed, each database adapter can prep the query string
+         *
+         * @access        private called by execute()
+         * @param        string        an SQL query
+         * @return        string
+         */
+        function _prep_query($sql)
+        {
+                return $sql;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Begin Transaction
+         *
+         * @access        public
+         * @return        bool
+         */
+        function trans_begin($test_mode = FALSE)
+        {
+                if ( ! $this->trans_enabled)
+                {
+                        return TRUE;
+                }
+
+                // When transactions are nested we only begin/commit/rollback the outermost ones
+                if ($this->_trans_depth > 0)
+                {
+                        return TRUE;
+                }
+
+                // Reset the transaction failure flag.
+                // If the $test_mode flag is set to TRUE transactions will be rolled back
+                // even if the queries produce a successful result.
+                $this->_trans_failure = (bool) ($test_mode === TRUE);
+
+                return $this->conn_id->beginTransaction();
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Commit Transaction
+         *
+         * @access        public
+         * @return        bool
+         */
+        function trans_commit()
+        {
+                if ( ! $this->trans_enabled)
+                {
+                        return TRUE;
+                }
+
+                // When transactions are nested we only begin/commit/rollback the outermost ones
+                if ($this->_trans_depth > 0)
+                {
+                        return TRUE;
+                }
+
+                $ret = $this->conn->commit();
+                return $ret;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Rollback Transaction
+         *
+         * @access        public
+         * @return        bool
+         */
+        function trans_rollback()
+        {
+                if ( ! $this->trans_enabled)
+                {
+                        return TRUE;
+                }
+
+                // When transactions are nested we only begin/commit/rollback the outermost ones
+                if ($this->_trans_depth > 0)
+                {
+                        return TRUE;
+                }
+
+                $ret = $this->conn_id->rollBack();
+                return $ret;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Escape String
+         *
+         * @access        public
+         * @param        string
+         * @param        bool        whether or not the string will be used in a LIKE condition
+         * @return        string
+         */
+        function escape_str($str, $like = FALSE)
+        {
+                if (is_array($str))
+                {
+                        foreach ($str as $key => $val)
+                        {
+                                $str[$key] = $this->escape_str($val, $like);
+                        }
+
+                        return $str;
+                }
+                
+                //Escape the string
+                $str = $this->conn_id->quote($str);
+                
+                //If there are duplicated quotes, trim them away
+                if (strpos($str, "'") === 0)
+                {
+                        $str = substr($str, 1, -1);
+                }
+                
+                // escape LIKE condition wildcards
+                if ($like === TRUE)
+                {
+                        $str = str_replace(        array('%', '_', $this->_like_escape_chr),
+                                                                array($this->_like_escape_chr.'%', $this->_like_escape_chr.'_', $this->_like_escape_chr.$this->_like_escape_chr),
+                                                                $str);
+                }
+
+                return $str;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Affected Rows
+         *
+         * @access        public
+         * @return        integer
+         */
+        function affected_rows()
+        {
+                return $this->affect_rows;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Insert ID
+         * 
+         * @access        public
+         * @return        integer
+         */
+        function insert_id($name=NULL)
+        {
+                //Convenience method for postgres insertid
+                if (strpos($this->hostname, 'pgsql') !== FALSE)
+                {
+                        $v = $this->_version();
+
+                        $table        = func_num_args() > 0 ? func_get_arg(0) : NULL;
+
+                        if ($table == NULL && $v >= '8.1')
+                        {
+                                $sql='SELECT LASTVAL() as ins_id';
+                        }
+                        $query = $this->query($sql);
+                        $row = $query->row();
+                        return $row->ins_id;
+                }
+                else
+                {
+                        return $this->conn_id->lastInsertId($name);
+                }
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * "Count All" query
+         *
+         * Generates a platform-specific query string that counts all records in
+         * the specified database
+         *
+         * @access        public
+         * @param        string
+         * @return        string
+         */
+        function count_all($table = '')
+        {
+                if ($table == '')
+                {
+                        return 0;
+                }
+
+                $query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
+
+                if ($query->num_rows() == 0)
+                {
+                        return 0;
+                }
+
+                $row = $query->row();
+                $this->_reset_select();
+                return (int) $row->numrows;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Show table query
+         *
+         * Generates a platform-specific query string so that the table names can be fetched
+         *
+         * @access        private
+         * @param        boolean
+         * @return        string
+         */
+        function _list_tables($prefix_limit = FALSE)
+        {
+                $sql = "SHOW TABLES FROM `".$this->database."`";
+
+                if ($prefix_limit !== FALSE AND $this->dbprefix != '')
+                {
+                        //$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%' ".sprintf($this->_like_escape_str, $this->_like_escape_chr);
+                        return FALSE; // not currently supported
+                }
+
+                return $sql;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Show column query
+         *
+         * Generates a platform-specific query string so that the column names can be fetched
+         *
+         * @access        public
+         * @param        string        the table name
+         * @return        string
+         */
+        function _list_columns($table = '')
+        {
+                return "SHOW COLUMNS FROM ".$table;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Field data query
+         *
+         * Generates a platform-specific query so that the column data can be retrieved
+         *
+         * @access        public
+         * @param        string        the table name
+         * @return        object
+         */
+        function _field_data($table)
+        {
+                return "SELECT TOP 1 FROM ".$table;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * The error message string
+         *
+         * @access        private
+         * @return        string
+         */
+        function _error_message()
+        {
+                $error_array = $this->conn_id->errorInfo();
+                return $error_array[2];
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * The error message number
+         *
+         * @access        private
+         * @return        integer
+         */
+        function _error_number()
+        {
+                return $this->conn_id->errorCode();
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Escape the SQL Identifiers
+         *
+         * This function escapes column and table names
+         *
+         * @access        private
+         * @param        string
+         * @return        string
+         */
+        function _escape_identifiers($item)
+        {
+                if ($this->_escape_char == '')
+                {
+                        return $item;
+                }
+
+                foreach ($this->_reserved_identifiers as $id)
+                {
+                        if (strpos($item, '.'.$id) !== FALSE)
+                        {
+                                $str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
+
+                                // remove duplicates if the user already included the escape
+                                return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
+                        }
+                }
+
+                if (strpos($item, '.') !== FALSE)
+                {
+                        $str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
+                        
+                }
+                else
+                {
+                        $str = $this->_escape_char.$item.$this->_escape_char;
+                }
+
+                // remove duplicates if the user already included the escape
+                return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * From Tables
+         *
+         * This function implicitly groups FROM tables so there is no confusion
+         * about operator precedence in harmony with SQL standards
+         *
+         * @access        public
+         * @param        type
+         * @return        type
+         */
+        function _from_tables($tables)
+        {
+                if ( ! is_array($tables))
+                {
+                        $tables = array($tables);
+                }
+
+                return (count($tables) == 1) ? $tables[0] : '('.implode(', ', $tables).')';
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Insert statement
+         *
+         * Generates a platform-specific insert string from the supplied data
+         *
+         * @access        public
+         * @param        string        the table name
+         * @param        array        the insert keys
+         * @param        array        the insert values
+         * @return        string
+         */
+        function _insert($table, $keys, $values)
+        {
+                return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES (".implode(', ', $values).")";
+        }
+        
+        // --------------------------------------------------------------------
+
+        /**
+         * Insert_batch statement
+         *
+         * Generates a platform-specific insert string from the supplied data
+         *
+         * @access  public
+         * @param   string  the table name
+         * @param   array   the insert keys
+         * @param   array   the insert values
+         * @return  string
+         */
+        function _insert_batch($table, $keys, $values)
+        {
+                return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES ".implode(', ', $values);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Update statement
+         *
+         * Generates a platform-specific update string from the supplied data
+         *
+         * @access        public
+         * @param        string        the table name
+         * @param        array        the update data
+         * @param        array        the where clause
+         * @param        array        the orderby clause
+         * @param        array        the limit clause
+         * @return        string
+         */
+        function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
+        {
+                foreach ($values as $key => $val)
+                {
+                        $valstr[] = $key." = ".$val;
+                }
+
+                $limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
+
+                $orderby = (count($orderby) >= 1)?' ORDER BY '.implode(", ", $orderby):'';
+
+                $sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
+
+                $sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
+
+                $sql .= $orderby.$limit;
+
+                return $sql;
+        }
+        
+        // --------------------------------------------------------------------
+
+        /**
+         * Update_Batch statement
+         *
+         * Generates a platform-specific batch update string from the supplied data
+         *
+         * @access        public
+         * @param        string        the table name
+         * @param        array        the update data
+         * @param        array        the where clause
+         * @return        string
+         */
+        function _update_batch($table, $values, $index, $where = NULL)
+        {
+                $ids = array();
+                $where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
+
+                foreach ($values as $key => $val)
+                {
+                        $ids[] = $val[$index];
+
+                        foreach (array_keys($val) as $field)
+                        {
+                                if ($field != $index)
+                                {
+                                        $final[$field][] =  'WHEN '.$index.' = '.$val[$index].' THEN '.$val[$field];
+                                }
+                        }
+                }
+
+                $sql = "UPDATE ".$table." SET ";
+                $cases = '';
+
+                foreach ($final as $k => $v)
+                {
+                        $cases .= $k.' = CASE '."\n";
+                        foreach ($v as $row)
+                        {
+                                $cases .= $row."\n";
+                        }
+
+                        $cases .= 'ELSE '.$k.' END, ';
+                }
+
+                $sql .= substr($cases, 0, -2);
+
+                $sql .= ' WHERE '.$where.$index.' IN ('.implode(',', $ids).')';
+
+                return $sql;
+        }
+
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Truncate statement
+         *
+         * Generates a platform-specific truncate string from the supplied data
+         * If the database does not support the truncate() command
+         * This function maps to "DELETE FROM table"
+         *
+         * @access        public
+         * @param        string        the table name
+         * @return        string
+         */
+        function _truncate($table)
+        {
+                return $this->_delete($table);
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Delete statement
+         *
+         * Generates a platform-specific delete string from the supplied data
+         *
+         * @access        public
+         * @param        string        the table name
+         * @param        array        the where clause
+         * @param        string        the limit clause
+         * @return        string
+         */
+        function _delete($table, $where = array(), $like = array(), $limit = FALSE)
+        {
+                $conditions = '';
+
+                if (count($where) > 0 OR count($like) > 0)
+                {
+                        $conditions = "\nWHERE ";
+                        $conditions .= implode("\n", $this->ar_where);
+
+                        if (count($where) > 0 && count($like) > 0)
+                        {
+                                $conditions .= " AND ";
+                        }
+                        $conditions .= implode("\n", $like);
+                }
+
+                $limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
+
+                return "DELETE FROM ".$table.$conditions.$limit;
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Limit string
+         *
+         * Generates a platform-specific LIMIT clause
+         *
+         * @access        public
+         * @param        string        the sql query string
+         * @param        integer        the number of rows to limit the query to
+         * @param        integer        the offset value
+         * @return        string
+         */
+        function _limit($sql, $limit, $offset)
+        {
+                if (strpos($this->hostname, 'cubrid') !== FALSE || strpos($this->hostname, 'sqlite') !== FALSE)
+                {
+                        if ($offset == 0)
+                        {
+                                $offset = '';
+                        }
+                        else
+                        {
+                                $offset .= ", ";
+                        }
+
+                        return $sql."LIMIT ".$offset.$limit;
+                }
+                else
+                {
+                        $sql .= "LIMIT ".$limit;
+
+                        if ($offset > 0)
+                        {
+                                $sql .= " OFFSET ".$offset;
+                        }
+                        
+                        return $sql;
+                }
+        }
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Close DB Connection
+         *
+         * @access        public
+         * @param        resource
+         * @return        void
+         */
+        function _close($conn_id)
+        {
+                $this->conn_id = null;
+        }
 
 
 }
@@ -5586,161 +5586,161 @@ class CI_DB_pdo_driver extends CI_DB{
  *
  * This class extends the parent result class: CI_DB_result
  *
- * @category	Database
- * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @category        Database
+ * @author                EllisLab Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_pdo_result extends CI_DB_result {
 
-	public $num_rows;
+        public $num_rows;
 
-	/**
-	 * Number of rows in the result set
-	 *
-	 * @return	int
-	 */
-	public function num_rows()
-	{
-		if (is_int($this->num_rows))
-		{
-			return $this->num_rows;
-		}
-		elseif (($this->num_rows = $this->result_id->rowCount()) > 0)
-		{
-			return $this->num_rows;
-		}
+        /**
+         * Number of rows in the result set
+         *
+         * @return        int
+         */
+        public function num_rows()
+        {
+                if (is_int($this->num_rows))
+                {
+                        return $this->num_rows;
+                }
+                elseif (($this->num_rows = $this->result_id->rowCount()) > 0)
+                {
+                        return $this->num_rows;
+                }
 
-		$this->num_rows = count($this->result_id->fetchAll());
-		$this->result_id->execute();
-		return $this->num_rows;
-	}
+                $this->num_rows = count($this->result_id->fetchAll());
+                $this->result_id->execute();
+                return $this->num_rows;
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Number of fields in the result set
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function num_fields()
-	{
-		return $this->result_id->columnCount();
-	}
+        /**
+         * Number of fields in the result set
+         *
+         * @access        public
+         * @return        integer
+         */
+        function num_fields()
+        {
+                return $this->result_id->columnCount();
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Fetch Field Names
-	 *
-	 * Generates an array of column names
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function list_fields()
-	{
-		if ($this->db->db_debug)
-		{
-			return $this->db->display_error('db_unsuported_feature');
-		}
-		return FALSE;
-	}
+        /**
+         * Fetch Field Names
+         *
+         * Generates an array of column names
+         *
+         * @access        public
+         * @return        array
+         */
+        function list_fields()
+        {
+                if ($this->db->db_debug)
+                {
+                        return $this->db->display_error('db_unsuported_feature');
+                }
+                return FALSE;
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Field data
-	 *
-	 * Generates an array of objects containing field meta-data
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function field_data()
-	{
-		$data = array();
-	
-		try
-		{
-			for($i = 0; $i < $this->num_fields(); $i++)
-			{
-				$data[] = $this->result_id->getColumnMeta($i);
-			}
-			
-			return $data;
-		}
-		catch (Exception $e)
-		{
-			if ($this->db->db_debug)
-			{
-				return $this->db->display_error('db_unsuported_feature');
-			}
-			return FALSE;
-		}
-	}
+        /**
+         * Field data
+         *
+         * Generates an array of objects containing field meta-data
+         *
+         * @access        public
+         * @return        array
+         */
+        function field_data()
+        {
+                $data = array();
+        
+                try
+                {
+                        for($i = 0; $i < $this->num_fields(); $i++)
+                        {
+                                $data[] = $this->result_id->getColumnMeta($i);
+                        }
+                        
+                        return $data;
+                }
+                catch (Exception $e)
+                {
+                        if ($this->db->db_debug)
+                        {
+                                return $this->db->display_error('db_unsuported_feature');
+                        }
+                        return FALSE;
+                }
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Free the result
-	 *
-	 * @return	null
-	 */
-	function free_result()
-	{
-		if (is_object($this->result_id))
-		{
-			$this->result_id = FALSE;
-		}
-	}
+        /**
+         * Free the result
+         *
+         * @return        null
+         */
+        function free_result()
+        {
+                if (is_object($this->result_id))
+                {
+                        $this->result_id = FALSE;
+                }
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Data Seek
-	 *
-	 * Moves the internal pointer to the desired offset.  We call
-	 * this internally before fetching results to make sure the
-	 * result set starts at zero
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _data_seek($n = 0)
-	{
-		return FALSE;
-	}
+        /**
+         * Data Seek
+         *
+         * Moves the internal pointer to the desired offset.  We call
+         * this internally before fetching results to make sure the
+         * result set starts at zero
+         *
+         * @access        private
+         * @return        array
+         */
+        function _data_seek($n = 0)
+        {
+                return FALSE;
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Result - associative array
-	 *
-	 * Returns the result set as an array
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _fetch_assoc()
-	{
-		return $this->result_id->fetch(PDO::FETCH_ASSOC);
-	}
+        /**
+         * Result - associative array
+         *
+         * Returns the result set as an array
+         *
+         * @access        private
+         * @return        array
+         */
+        function _fetch_assoc()
+        {
+                return $this->result_id->fetch(PDO::FETCH_ASSOC);
+        }
 
-	// --------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	/**
-	 * Result - object
-	 *
-	 * Returns the result set as an object
-	 *
-	 * @access	private
-	 * @return	object
-	 */
-	function _fetch_object()
-	{	
-		return $this->result_id->fetchObject();
-	}
+        /**
+         * Result - object
+         *
+         * Returns the result set as an object
+         *
+         * @access        private
+         * @return        object
+         */
+        function _fetch_object()
+        {        
+                return $this->result_id->fetchObject();
+        }
 
 }
 
@@ -5754,12 +5754,12 @@ class CI_DB_pdo_result extends CI_DB_result {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
@@ -5772,12 +5772,12 @@ class CI_DB_pdo_result extends CI_DB_result {
  *
  * An open source application development framework for PHP 4.3.2 or newer
  *
- * @package		CodeIgniter
- * @author		Rick Ellis
- * @copyright	Copyright (c) 2006, pMachine, Inc.
- * @license		http://www.codeignitor.com/user_guide/license.html
- * @link		http://www.codeigniter.com
- * @since		Version 2.0
+ * @package                CodeIgniter
+ * @author                Rick Ellis
+ * @copyright  Copyright (c) 2006, pMachine, Inc.
+ * @license                http://www.codeignitor.com/user_guide/license.html
+ * @link                http://www.codeigniter.com
+ * @since                Version 2.0
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -5789,11 +5789,11 @@ class CI_DB_pdo_result extends CI_DB_result {
  * creates dynamically based on whether the active record
  * class is being used or not.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		Dready
- * @link		http://dready.jexiste.fr/dotclear/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                Dready
+ * @link                http://dready.jexiste.fr/dotclear/
  */
 class CI_DB_sqlite3_driver extends CI_DB {
 
@@ -5825,8 +5825,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Non-persistent database connection
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_connect() {
         $conn_id = false;
@@ -5856,8 +5856,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Persistent database connection
      *
-     * @access	private, called by the base class
-     * @return	resource
+     * @access        private, called by the base class
+     * @return        resource
      */
     function db_pconnect() {
         // For SQLite architecture can not enable persistent connection
@@ -5887,8 +5887,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Select the database
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_select() {
         return TRUE;
@@ -5899,9 +5899,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Execute the query
      *
-     * @access	private, called by the base class
-     * @param	string	an SQL query
-     * @return	resource
+     * @access        private, called by the base class
+     * @param        string        an SQL query
+     * @return        resource
      */
     function _execute($sql) {
         $sql = $this->_prep_query($sql);
@@ -5916,9 +5916,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * If needed, each database adapter can prep the query string
      *
-     * @access	private called by execute()
-     * @param	string	an SQL query
-     * @return	string
+     * @access        private called by execute()
+     * @param        string        an SQL query
+     * @return        string
      */
     function &_prep_query($sql) {
         return $sql;
@@ -5931,9 +5931,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * Escapes data based on type
      * Sets boolean and null types
      *
-     * @access	public
-     * @param	string
-     * @return	integer
+     * @access        public
+     * @param        string
+     * @return        integer
      */
     function escape($str) {
         switch (gettype($str)) {
@@ -5953,9 +5953,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Escape String
      *
-     * @access	public
-     * @param	string
-     * @return	string
+     * @access        public
+     * @param        string
+     * @return        string
      */
     /*
       function escape_str($str)
@@ -6014,8 +6014,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Begin Transaction
      *
-     * @access	public
-     * @return	bool		
+     * @access        public
+     * @return        bool                
      */
     function trans_begin($test_mode = FALSE) {
         if (!$this->trans_enabled) {
@@ -6041,8 +6041,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Commit Transaction
      *
-     * @access	public
-     * @return	bool		
+     * @access        public
+     * @return        bool                
      */
     function trans_commit() {
         if (!$this->trans_enabled) {
@@ -6063,8 +6063,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Rollback Transaction
      *
-     * @access	public
-     * @return	bool		
+     * @access        public
+     * @return        bool                
      */
     function trans_rollback() {
         if (!$this->trans_enabled) {
@@ -6085,9 +6085,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Close DB Connection
      *
-     * @access	public
-     * @param	resource
-     * @return	void
+     * @access        public
+     * @param        resource
+     * @return        void
      */
     function destroy($conn_id) {
         $conn_id = null;
@@ -6098,8 +6098,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Insert ID
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function insert_id() {
         return @$this->conn_id->lastInsertId();
@@ -6113,9 +6113,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * Generates a platform-specific query string that counts all records in
      * the specified database
      *
-     * @access	public
-     * @param	string
-     * @return	string
+     * @access        public
+     * @param        string
+     * @return        string
      */
     function count_all($table = '') {
         if ($table == '')
@@ -6135,8 +6135,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * The error message string
      *
-     * @access	private
-     * @return	string
+     * @access        private
+     * @return        string
      */
     function _error_message() {
         $infos = $this->conn_id->errorInfo();
@@ -6148,8 +6148,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * The error message number
      *
-     * @access	private
-     * @return	integer
+     * @access        private
+     * @return        integer
      */
     function _error_number() {
         $infos = $this->conn_id->errorInfo();
@@ -6161,8 +6161,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
     /**
      * Version number query string
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function version() {
         return $this->conn_id->getAttribute(constant("PDO::ATTR_SERVER_VERSION"));
@@ -6176,9 +6176,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * This function adds backticks if the table name has a period
      * in it. Some DBs will get cranky unless periods are escaped
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function escape_table($table) {
         if (stristr($table, '.')) {
@@ -6195,9 +6195,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific query so that the column data can be retrieved
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	object
+     * @access        public
+     * @param        string        the table name
+     * @return        object
      */
     function _field_data($table) {
         $sql = "SELECT * FROM " . $this->escape_table($table) . " LIMIT 1";
@@ -6212,11 +6212,11 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific insert string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _insert($table, $keys, $values) {
         return "INSERT INTO " . $this->escape_table($table) . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
@@ -6229,11 +6229,11 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific update string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the update data
-     * @param	array	the where clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the update data
+     * @param        array        the where clause
+     * @return        string
      */
     function _update($table, $values, $where) {
         foreach ($values as $key => $val) {
@@ -6250,10 +6250,10 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific delete string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the where clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the where clause
+     * @return        string
      */
     function _delete($table, $where) {
         return "DELETE FROM " . $this->escape_table($table) . " WHERE " . implode(" ", $where);
@@ -6266,8 +6266,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific query string so that the table names can be fetched
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function _show_tables() {
         return "SELECT name from sqlite_master WHERE type='table'";
@@ -6280,9 +6280,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific query string so that the column names can be fetched
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function _show_columns($table = '') {
         // Not supported
@@ -6296,11 +6296,11 @@ class CI_DB_sqlite3_driver extends CI_DB {
      *
      * Generates a platform-specific LIMIT clause
      *
-     * @access	public
-     * @param	string	the sql query string
-     * @param	integer	the number of rows to limit the query to
-     * @param	integer	the offset value
-     * @return	string
+     * @access        public
+     * @param        string        the sql query string
+     * @param        integer        the number of rows to limit the query to
+     * @param        integer        the offset value
+     * @return        string
      */
     function _limit($sql, $limit, $offset) {
         if ($offset == 0) {
@@ -6446,9 +6446,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
  *
  * This class extends the parent result class: CI_DB_result
  *
- * @category	Database
- * @author		Dready
- * @link			http://dready.jexiste.fr/dotclear/
+ * @category        Database
+ * @author                Dready
+ * @link                        http://dready.jexiste.fr/dotclear/
  */
 class CI_DB_sqlite3_result extends CI_DB_result {
 
@@ -6474,8 +6474,8 @@ class CI_DB_sqlite3_result extends CI_DB_result {
      *
      * Holy cow !
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function num_rows() {
         if (!$this->pdo_results) {
@@ -6489,8 +6489,8 @@ class CI_DB_sqlite3_result extends CI_DB_result {
     /**
      * Number of fields in the result set
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function num_fields() {
         if (is_array($this->pdo_results)) {
@@ -6507,20 +6507,20 @@ class CI_DB_sqlite3_result extends CI_DB_result {
      *
      * Generates an array of objects containing field meta-data
      *
-     * @access	public
-     * @return	array
+     * @access        public
+     * @return        array
      */
-    /* 	function field_data()
+    /*         function field_data()
       {
       $retval = array();
       for ($i = 0; $i < $this->num_fields(); $i++)
       {
-      $F 				= new CI_DB_field();
-      $F->name 		= sqlite_field_name($this->result_id, $i);
-      $F->type 		= 'varchar';
-      $F->max_length	= 0;
+      $F                                 = new CI_DB_field();
+      $F->name                 = sqlite_field_name($this->result_id, $i);
+      $F->type                 = 'varchar';
+      $F->max_length        = 0;
       $F->primary_key = 0;
-      $F->default		= '';
+      $F->default                = '';
 
       $retval[] = $F;
       }
@@ -6535,8 +6535,8 @@ class CI_DB_sqlite3_result extends CI_DB_result {
      *
      * Returns the result set as an array
      *
-     * @access	private
-     * @return	array
+     * @access        private
+     * @return        array
      */
     function _fetch_assoc() {
         if (is_array($this->pdo_results)) {
@@ -6556,8 +6556,8 @@ class CI_DB_sqlite3_result extends CI_DB_result {
      *
      * Returns the result set as an object
      *
-     * @access	private
-     * @return	object
+     * @access        private
+     * @return        object
      */
     function _fetch_object() {
         if (is_array($this->pdo_results)) {
@@ -6587,12 +6587,12 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
@@ -6710,12 +6710,12 @@ function force_download($filename = '', $data = ''){
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                https://bitbucket.org/snail/microphp/
+ * @since                Version 2.0
  * @createdtime       2013-06-05 02:26:57
  */
 class WoniuInput {

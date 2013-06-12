@@ -8,7 +8,7 @@
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 1.0
  * @createdtime       {createdtime}
@@ -25,7 +25,7 @@
  *
  * @package		CodeIgniter
  * @author		Rick Ellis
- * @copyright	Copyright (c) 2006, pMachine, Inc.
+ * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
  * @since		Version 1.0

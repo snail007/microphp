@@ -7,11 +7,11 @@
  * creates dynamically based on whether the active record
  * class is being used or not.
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
- * @category	Database
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @package                CodeIgniter
+ * @subpackage        Drivers
+ * @category        Database
+ * @author                ExpressionEngine Dev Team
+ * @link                http://codeigniter.com/user_guide/database/
  */
 class CI_DB_mysql_driver extends CI_DB{
 
@@ -42,8 +42,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Non-persistent database connection
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_connect() {
         if ($this->port != '') {
@@ -57,8 +57,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Persistent database connection
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_pconnect() {
         if ($this->port != '') {
@@ -76,8 +76,8 @@ class CI_DB_mysql_driver extends CI_DB{
      * Keep / reestablish the db connection if no queries have been
      * sent for a length of time exceeding the server's idle timeout
      *
-     * @access	public
-     * @return	void
+     * @access        public
+     * @return        void
      */
     function reconnect() {
         if (mysql_ping($this->conn_id) === FALSE) {
@@ -90,8 +90,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Select the database
      *
-     * @access	private called by the base class
-     * @return	resource
+     * @access        private called by the base class
+     * @return        resource
      */
     function db_select() {
         return @mysql_select_db($this->database, $this->conn_id);
@@ -102,10 +102,10 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Set client character set
      *
-     * @access	public
-     * @param	string
-     * @param	string
-     * @return	resource
+     * @access        public
+     * @param        string
+     * @param        string
+     * @return        resource
      */
     function _db_set_charset($charset, $collation) {
         if (!isset($this->use_set_names)) {
@@ -125,8 +125,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Version number query string
      *
-     * @access	public
-     * @return	string
+     * @access        public
+     * @return        string
      */
     function _version() {
         return "SELECT version() AS ver";
@@ -137,9 +137,9 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Execute the query
      *
-     * @access	private called by the base class
-     * @param	string	an SQL query
-     * @return	resource
+     * @access        private called by the base class
+     * @param        string        an SQL query
+     * @return        resource
      */
     function _execute($sql) {
         $sql = $this->_prep_query($sql);
@@ -153,9 +153,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * If needed, each database adapter can prep the query string
      *
-     * @access	private called by execute()
-     * @param	string	an SQL query
-     * @return	string
+     * @access        private called by execute()
+     * @param        string        an SQL query
+     * @return        string
      */
     function _prep_query($sql) {
 // "DELETE FROM TABLE" returns 0 affected rows This hack modifies
@@ -174,8 +174,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Begin Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_begin($test_mode = FALSE) {
         if (!$this->trans_enabled) {
@@ -202,8 +202,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Commit Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_commit() {
         if (!$this->trans_enabled) {
@@ -225,8 +225,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Rollback Transaction
      *
-     * @access	public
-     * @return	bool
+     * @access        public
+     * @return        bool
      */
     function trans_rollback() {
         if (!$this->trans_enabled) {
@@ -248,10 +248,10 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Escape String
      *
-     * @access	public
-     * @param	string
-     * @param	bool	whether or not the string will be used in a LIKE condition
-     * @return	string
+     * @access        public
+     * @param        string
+     * @param        bool        whether or not the string will be used in a LIKE condition
+     * @return        string
      */
     function escape_str($str, $like = FALSE) {
         if (is_array($str)) {
@@ -283,8 +283,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Affected Rows
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function affected_rows() {
         return @mysql_affected_rows($this->conn_id);
@@ -295,8 +295,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * Insert ID
      *
-     * @access	public
-     * @return	integer
+     * @access        public
+     * @return        integer
      */
     function insert_id() {
         return @mysql_insert_id($this->conn_id);
@@ -310,9 +310,9 @@ class CI_DB_mysql_driver extends CI_DB{
      * Generates a platform-specific query string that counts all records in
      * the specified database
      *
-     * @access	public
-     * @param	string
-     * @return	string
+     * @access        public
+     * @param        string
+     * @return        string
      */
     function count_all($table = '') {
         if ($table == '') {
@@ -337,9 +337,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query string so that the table names can be fetched
      *
-     * @access	private
-     * @param	boolean
-     * @return	string
+     * @access        private
+     * @param        boolean
+     * @return        string
      */
     function _list_tables($prefix_limit = FALSE) {
         $sql = "SHOW TABLES FROM " . $this->_escape_char . $this->database . $this->_escape_char;
@@ -358,9 +358,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query string so that the column names can be fetched
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @return        string
      */
     function _list_columns($table = '') {
         return "SHOW COLUMNS FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE);
@@ -373,9 +373,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific query so that the column data can be retrieved
      *
-     * @access	public
-     * @param	string	the table name
-     * @return	object
+     * @access        public
+     * @param        string        the table name
+     * @return        object
      */
     function _field_data($table) {
         return "DESCRIBE " . $table;
@@ -386,8 +386,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * The error message string
      *
-     * @access	private
-     * @return	string
+     * @access        private
+     * @return        string
      */
     function _error_message() {
         return mysql_error($this->conn_id);
@@ -398,8 +398,8 @@ class CI_DB_mysql_driver extends CI_DB{
     /**
      * The error message number
      *
-     * @access	private
-     * @return	integer
+     * @access        private
+     * @return        integer
      */
     function _error_number() {
         return mysql_errno($this->conn_id);
@@ -412,9 +412,9 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * This function escapes column and table names
      *
-     * @access	private
-     * @param	string
-     * @return	string
+     * @access        private
+     * @param        string
+     * @return        string
      */
     function _escape_identifiers($item) {
         if ($this->_escape_char == '') {
@@ -448,9 +448,9 @@ class CI_DB_mysql_driver extends CI_DB{
      * This function implicitly groups FROM tables so there is no confusion
      * about operator precedence in harmony with SQL standards
      *
-     * @access	public
-     * @param	type
-     * @return	type
+     * @access        public
+     * @param        type
+     * @return        type
      */
     function _from_tables($tables) {
         if (!is_array($tables)) {
@@ -467,11 +467,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific insert string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _insert($table, $keys, $values) {
         return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
@@ -484,11 +484,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific replace string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _replace($table, $keys, $values) {
         return "REPLACE INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
@@ -501,11 +501,11 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific insert string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the insert keys
-     * @param	array	the insert values
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the insert keys
+     * @param        array        the insert values
+     * @return        string
      */
     function _insert_batch($table, $keys, $values) {
         return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES " . implode(', ', $values);
@@ -518,13 +518,13 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific update string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
-     * @param	array	the update data
-     * @param	array	the where clause
-     * @param	array	the orderby clause
-     * @param	array	the limit clause
-     * @return	string
+     * @access        public
+     * @param        string        the table name
+     * @param        array        the update data
+     * @param        array        the where clause
+     * @param        array        the orderby clause
+     * @param        array        the limit clause
+     * @return        string
      */
     function _update($table, $values, $where, $orderby = array(), $limit = FALSE) {
         foreach ($values as $key => $val) {
@@ -551,8 +551,8 @@ class CI_DB_mysql_driver extends CI_DB{
      *
      * Generates a platform-specific batch update string from the supplied data
      *
-     * @access	public
-     * @param	string	the table name
+     * @access        public
+     * @param        string        the table name
      * @param	array	the update data
      * @param	array	the where clause
      * @return	string
