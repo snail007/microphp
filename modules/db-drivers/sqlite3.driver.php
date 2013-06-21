@@ -102,6 +102,19 @@ class CI_DB_sqlite3_driver extends CI_DB {
         return $conn_id;
     }
 
+    /**
+     * Show column query
+     *
+     * Generates a platform-specific query string so that the column names can be fetched
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _list_columns($table = '') {
+        return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
+    }
+
     // --------------------------------------------------------------------
 
     /**
@@ -798,19 +811,6 @@ class CI_DB_sqlite3_result extends CI_DB_result {
             return null;
         }
         return $this->result_id->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Show column query
-     *
-     * Generates a platform-specific query string so that the column names can be fetched
-     *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
-     */
-    function _list_columns($table = '') {
-        return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
     }
 
     // --------------------------------------------------------------------

@@ -14,7 +14,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuRouter {
 
@@ -118,7 +118,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuLoader {
 
@@ -455,7 +455,7 @@ class WoniuModelLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuController extends WoniuLoader {
 
@@ -513,7 +513,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuModel extends WoniuLoader {
 
@@ -563,7 +563,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuDB {
 
@@ -5764,7 +5764,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -5853,6 +5853,19 @@ class CI_DB_sqlite3_driver extends CI_DB {
         $this->conn_id = $conn_id;
 
         return $conn_id;
+    }
+
+    /**
+     * Show column query
+     *
+     * Generates a platform-specific query string so that the column names can be fetched
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _list_columns($table = '') {
+        return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
     }
 
     // --------------------------------------------------------------------
@@ -6553,19 +6566,6 @@ class CI_DB_sqlite3_result extends CI_DB_result {
         return $this->result_id->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Show column query
-     *
-     * Generates a platform-specific query string so that the column names can be fetched
-     *
-     * @access	public
-     * @param	string	the table name
-     * @return	string
-     */
-    function _list_columns($table = '') {
-        return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
-    }
-
     // --------------------------------------------------------------------
 
     /**
@@ -6610,7 +6610,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6733,7 +6733,7 @@ function force_download($filename = '', $data = ''){
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-06-21 09:32:49
+ * @createdtime       2013-06-21 09:36:48
  */
 class WoniuInput {
 
