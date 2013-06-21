@@ -764,7 +764,7 @@ class CI_DB_driver {
                 $retval[] = $row['COLUMN_NAME'];
             } else if ($this->dbdriver == 'sqlite3') {
                 $retval[] = $row['name'];
-            } {
+            } else {
                 $retval[] = current($row);
             }
         }
