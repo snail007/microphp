@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -19,7 +20,7 @@ class WoniuDB {
     public static function getInstance($config) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        if(!isset(self::$conns[$hash])){
+        if (!isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
         if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {
@@ -34,6 +35,7 @@ class WoniuDB {
 class CI_DB extends CI_DB_active_record {
     
 }
+
 /**
  * Database Driver Class
  *
@@ -760,7 +762,9 @@ class CI_DB_driver {
         foreach ($query->result_array() as $row) {
             if (isset($row['COLUMN_NAME'])) {
                 $retval[] = $row['COLUMN_NAME'];
-            } else {
+            } else if ($this->dbdriver == 'sqlite3') {
+                $retval[] = $row['name'];
+            } {
                 $retval[] = current($row);
             }
         }
