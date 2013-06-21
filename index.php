@@ -4,13 +4,13 @@
  *
  * An open source application development framework for PHP 5.1.6 or newer
  *
- * @package                MicroPHP
- * @author                狂奔的蜗牛
- * @email                672308444@163.com
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
- * @since                Version 2.0
- * @createdtime       2013-06-05 02:26:57
+ * @link		https://bitbucket.org/snail/microphp/
+ * @since		Version 2.0
+ * @createdtime       2013-06-21 09:32:49
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
