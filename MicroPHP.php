@@ -14,7 +14,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuRouter {
 
@@ -118,11 +118,11 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuLoader {
 
-    public $db, $input,$cache;
+    public $db, $input, $cache;
     private $helper_files = array();
     public $model;
     private $view_vars = array();
@@ -132,8 +132,10 @@ class WoniuLoader {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
-        $this->cache=new phpFastCache();
-        $this->cache->path='cache';
+        WoniuCache::$path='cache';
+        $this->cache = new phpFastCache();
+//        $this->cache->path = 'cache';
+        
         if ($this->config('system', "autoload_db")) {
             $this->database();
         }
@@ -389,7 +391,7 @@ class WoniuLoader {
         $info = " 第{$curpage}/{$pages}页 ";
         $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         $total = "共{$total}条";
-        return $total .' '. $info .' '. $prefix . $body . $subfix.'&nbsp;' . $go;
+        return $total . ' ' . $info . ' ' . $prefix . $body . $subfix . '&nbsp;' . $go;
     }
 
     /**
@@ -457,7 +459,7 @@ class WoniuModelLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuController extends WoniuLoader {
 
@@ -515,7 +517,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuModel extends WoniuLoader {
 
@@ -565,7 +567,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuDB {
 
@@ -5766,7 +5768,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -6612,7 +6614,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6735,7 +6737,7 @@ function force_download($filename = '', $data = ''){
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.0
- * @createdtime       2013-07-03 02:05:39
+ * @createdtime       2013-07-03 02:14:31
  */
 class WoniuInput {
 
