@@ -26,7 +26,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib=new WoniuLibLoader();
-        WoniuCache::$path = $this->config('system', 'cache_dirnaem');
+        WoniuCache::$path = $this->config('system', 'cache_dirname');
         $this->autoload();
         if ($this->config('system', "autoload_db")) {
             $this->database();

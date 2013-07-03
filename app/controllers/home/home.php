@@ -24,9 +24,9 @@ class Home extends WoniuController {
     }
 
     public function doIndex($name = '') {
-        testFunction('aaaaaa');
-        var_dump($this->lib->image);
-        exit();
+//        WoniuCache::set('aaa', array(1,2,3,4,5,6));
+//        var_dump(WoniuCache::get('aaa'));
+//        exit();
         WoniuController::instance('home.TestHook')->doTest();
         echo '<br/>';
         WoniuModel::instance('User2')->printHook();

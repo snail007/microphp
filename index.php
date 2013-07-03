@@ -10,7 +10,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.1.4
- * @createdtime       2013-07-03 05:25:49
+ * @createdtime       2013-07-03 05:50:07
  */
 define('IN_WONIU_APP', TRUE);
 define('DS', DIRECTORY_SEPARATOR);
@@ -33,7 +33,7 @@ $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['helper_file_autoload']=array();//array($item);  $item:such as html etc.
 $system['library_file_autoload']=array();//array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
-$system['cache_dirname']=$_SERVER['DOCUMENT ROOT'].DS.'cache';
+$system['cache_dirname']='cache';
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;

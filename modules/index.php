@@ -33,7 +33,7 @@ $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
 $system['helper_file_autoload']=array();//array($item);  $item:such as html etc.
 $system['library_file_autoload']=array();//array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
-$system['cache_dirname']=$_SERVER['DOCUMENT ROOT'].DS.'cache';
+$system['cache_dirname']='cache';
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;
