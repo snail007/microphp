@@ -17,7 +17,7 @@ class WoniuLoader {
 
     public $db, $input;
     private $helper_files = array();
-    public $model;
+    public $model, $lib;
     private $view_vars = array();
     private static $instance;
 
@@ -25,11 +25,23 @@ class WoniuLoader {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
-        WoniuCache::$path='cache';
+        WoniuCache::$path = 'cache';
+        $this->autoload();
         if ($this->config('system', "autoload_db")) {
             $this->database();
         }
         stripslashes_all();
+    }
+
+    private function autoload() {
+        $autoload_helper = $this->config('system', 'helper_file_autoload');
+        $autoload_library = $this->config('system', 'library_file_autoload');
+        foreach ($autoload_helper as $file_name) {
+            $this->helper($file_name);
+        }
+        foreach ($autoload_library as $class) {
+            $this->lib($class);
+        }
     }
 
     public function config($config_group, $key = '') {
@@ -86,6 +98,31 @@ class WoniuLoader {
             }
         } else {
             trigger404($filename . ' not found.');
+        }
+    }
+
+    public function lib($file_name, $alias_name = null) {
+        global $system;
+        $classname = $file_name;
+        if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
+            $classname = basename($file_name);
+        }
+        if (!$alias_name) {
+            $alias_name = strtolower($classname);
+        }
+        $filepath = $system['library_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
+        if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
+            return WoniuLibLoader::$lib_files[$alias_name];
+        }
+        if (file_exists($filepath)) {
+            include $filepath;
+            if (class_exists($classname)) {
+                return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+            } else {
+                trigger404('Model Class:' . $classname . ' not found.');
+            }
+        } else {
+            trigger404($filepath . ' not found.');
         }
     }
 
@@ -330,6 +367,16 @@ class WoniuModelLoader {
 
     function __get($classname) {
         return isset(self::$model_files[strtolower($classname)]) ? self::$model_files[strtolower($classname)] : null;
+    }
+
+}
+
+class WoniuLibLoader {
+
+    public static $lib_files = array();
+
+    function __get($classname) {
+        return isset(self::$lib_files[strtolower($classname)]) ? self::$lib_files[strtolower($classname)] : null;
     }
 
 }
