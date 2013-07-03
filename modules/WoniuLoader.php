@@ -15,7 +15,7 @@
  */
 class WoniuLoader {
 
-    public $db, $input;
+    public $db, $input,$cache;
     private $helper_files = array();
     public $model;
     private $view_vars = array();
@@ -25,6 +25,8 @@ class WoniuLoader {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
+        $this->cache=new phpFastCache();
+        $this->cache->path='cache';
         if ($this->config('system', "autoload_db")) {
             $this->database();
         }
