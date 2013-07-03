@@ -10,7 +10,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.0
- * @createdtime       2013-07-03 03:21:57
+ * @createdtime       2013-07-03 03:24:11
  */
 define('IN_WONIU_APP', TRUE);
 //------------------------system config----------------------------
@@ -30,8 +30,8 @@ $system['model_file_subfix']='.model.php';
 $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
-$system['helper_file_autoload']=array('function');//such as html etc.
-$system['library_file_autoload']=array(array('FormValidator'=>'image'));//such as ImageTool or array('ImageTool'=>'image') etc.
+$system['helper_file_autoload']=array();//such as html etc.
+$system['library_file_autoload']=array();//such as ImageTool or array('ImageTool'=>'image') etc.
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;

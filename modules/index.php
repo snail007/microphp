@@ -30,8 +30,8 @@ $system['model_file_subfix']='.model.php';
 $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
-$system['helper_file_autoload']=array('function');//such as html etc.
-$system['library_file_autoload']=array(array('FormValidator'=>'image'));//such as ImageTool or array('ImageTool'=>'image') etc.
+$system['helper_file_autoload']=array();//such as html etc.
+$system['library_file_autoload']=array();//such as ImageTool or array('ImageTool'=>'image') etc.
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;
