@@ -9,17 +9,18 @@
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
- * @since		Version 2.0
- * @createdtime       2013-07-03 03:24:11
+ * @since		Version 2.1.4
+ * @createdtime       2013-07-03 05:25:49
  */
 define('IN_WONIU_APP', TRUE);
+define('DS', DIRECTORY_SEPARATOR);
 //------------------------system config----------------------------
 $system['application_folder']='app';
-$system['controller_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'controllers';
-$system['model_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'models';
-$system['view_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'views';
-$system['library_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'library';
-$system['helper_folder']=$system['application_folder'].DIRECTORY_SEPARATOR.'helper';
+$system['controller_folder']=$system['application_folder'].DS.'controllers';
+$system['model_folder']=$system['application_folder'].DS.'models';
+$system['view_folder']=$system['application_folder'].DS.'views';
+$system['library_folder']=$system['application_folder'].DS.'library';
+$system['helper_folder']=$system['application_folder'].DS.'helper';
 $system['error_page_404']='app/error/error_404.php';
 $system['error_page_db']='app/error/error_db.php';
 $system['default_controller']='home.welcome';
@@ -30,8 +31,9 @@ $system['model_file_subfix']='.model.php';
 $system['view_file_subfix']='.view.php';
 $system['library_file_subfix']='.class.php';
 $system['helper_file_subfix']='.php';
-$system['helper_file_autoload']=array();//such as html etc.
-$system['library_file_autoload']=array();//such as ImageTool or array('ImageTool'=>'image') etc.
+$system['helper_file_autoload']=array();//array($item);  $item:such as html etc.
+$system['library_file_autoload']=array();//array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
+$system['cache_dirname']=$_SERVER['DOCUMENT ROOT'].DS.'cache';
 $system['controller_method_ucfirst']=TRUE;
 $system['autoload_db']=FALSE;
 $system['debug']=TRUE;
