@@ -6,4 +6,4 @@ echo '<br/>';
 WoniuModel::instance('User2')->printHook();
 echo '<br/>';
 WoniuModel::instance('test.User')->sayHello('snail');
-WoniuLoader::instance()->view('snail');
+WoniuLoader::instance()->view('snail'); 
