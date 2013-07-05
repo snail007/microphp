@@ -10,17 +10,17 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 define('IN_WONIU_APP', TRUE);
-define('DS', DIRECTORY_SEPARATOR);
+define('WDS', DIRECTORY_SEPARATOR);
 //------------------------system config----------------------------
 $system['application_folder']='app';
-$system['controller_folder']=$system['application_folder'].DS.'controllers';
-$system['model_folder']=$system['application_folder'].DS.'models';
-$system['view_folder']=$system['application_folder'].DS.'views';
-$system['library_folder']=$system['application_folder'].DS.'library';
-$system['helper_folder']=$system['application_folder'].DS.'helper';
+$system['controller_folder']=$system['application_folder'].WDS.'controllers';
+$system['model_folder']=$system['application_folder'].WDS.'models';
+$system['view_folder']=$system['application_folder'].WDS.'views';
+$system['library_folder']=$system['application_folder'].WDS.'library';
+$system['helper_folder']=$system['application_folder'].WDS.'helper';
 $system['error_page_404']='app/error/error_404.php';
 $system['error_page_db']='app/error/error_db.php';
 $system['default_controller']='home.welcome';
@@ -119,7 +119,7 @@ if (!$system['debug']) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuLoader {
 
@@ -616,7 +616,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuController extends WoniuLoader {
 
@@ -674,7 +674,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuModel extends WoniuLoader {
 
@@ -724,7 +724,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuDB {
 
@@ -5925,7 +5925,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		https://bitbucket.org/snail/microphp/
  * @since		Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -6771,7 +6771,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6894,7 +6894,7 @@ function force_download($filename = '', $data = ''){
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                https://bitbucket.org/snail/microphp/
  * @since                Version 2.1.4
- * @createdtime       2013-07-03 05:50:07
+ * @createdtime       2013-07-05 11:27:49
  */
 class WoniuInput {
 

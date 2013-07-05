@@ -13,14 +13,14 @@
  * @createdtime       {createdtime}
  */
 define('IN_WONIU_APP', TRUE);
-define('DS', DIRECTORY_SEPARATOR);
+define('WDS', DIRECTORY_SEPARATOR);
 //------------------------system config----------------------------
 $system['application_folder']='../app';
-$system['controller_folder']=$system['application_folder'].DS.'controllers';
-$system['model_folder']=$system['application_folder'].DS.'models';
-$system['view_folder']=$system['application_folder'].DS.'views';
-$system['library_folder']=$system['application_folder'].DS.'library';
-$system['helper_folder']=$system['application_folder'].DS.'helper';
+$system['controller_folder']=$system['application_folder'].WDS.'controllers';
+$system['model_folder']=$system['application_folder'].WDS.'models';
+$system['view_folder']=$system['application_folder'].WDS.'views';
+$system['library_folder']=$system['application_folder'].WDS.'library';
+$system['helper_folder']=$system['application_folder'].WDS.'helper';
 $system['error_page_404']='../app/error/error_404.php';
 $system['error_page_db']='../app/error/error_db.php';
 $system['default_controller']='home.welcome';
