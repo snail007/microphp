@@ -12,7 +12,7 @@
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -116,7 +116,7 @@ class WoniuRouter {
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -509,7 +509,7 @@ class WoniuLibLoader {
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -567,7 +567,7 @@ class WoniuController extends WoniuLoader {
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -617,7 +617,7 @@ class WoniuModel extends WoniuLoader {
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -5818,7 +5818,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		https://bitbucket.org/snail/microphp/
+ * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -6664,7 +6664,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
@@ -6787,7 +6787,7 @@ function force_download($filename = '', $data = ''){
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                https://bitbucket.org/snail/microphp/
+ * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
  * @createdtime       2013-07-05 11:27:49
  */
