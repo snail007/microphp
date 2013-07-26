@@ -6,7 +6,7 @@ location ~* /(source|other)$ {
 #去掉index.php
 location / {
   if (!-e $request_filename){
-    rewrite ^(.*)$ /index.php/$1 break;
+    rewrite ^(.*)$ /index.php?$1 break;
   }
 }
 #禁止执行php js html的目录
