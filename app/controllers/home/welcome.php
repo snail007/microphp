@@ -32,7 +32,7 @@ class Welcome extends WoniuController {
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
-    public function do__output($html) {
+    public function __output($html) {
         echo '__output' . $html;
     }
 
