@@ -1,16 +1,5 @@
-#½ûÖ¹·ÃÎÊµÄÄ¿Â¼
-location ~* /(source|other)$ {
+#ç¦æ­¢è®¿é—®çš„ç›®å½•
+location ^~ /source {
     deny all;
-    return 404;
-}
-#È¥µôindex.php
-location / {
-  if (!-e $request_filename){
-    rewrite ^(.*)$ /index.php?$1 break;
-  }
-}
-#½ûÖ¹Ö´ĞĞphp js htmlµÄÄ¿Â¼
-location ~* ^/(public/js/kindeditor/attached)/.*\.(php|php5|js|htm|html)$ {
-    deny all;
-    return 404;
+    return 404; 
 }
