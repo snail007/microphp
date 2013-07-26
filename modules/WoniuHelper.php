@@ -40,7 +40,7 @@ function woniuException($exception) {
     $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
     $errline = $exception->getLine();
     $errstr = $exception->getMessage();
-    ob_clean();
+    @ob_clean();
     trigger500(format_error($errno, $errstr, $errfile, $errline));
 }
 
@@ -55,7 +55,7 @@ function fatal_handler() {
         $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
         $errline = $error["line"];
         $errstr = $error["message"];
-        ob_clean();
+        @ob_clean();
         trigger500(format_error($errno, $errstr, $errfile, $errline));
     }
 }
