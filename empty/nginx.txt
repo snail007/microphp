@@ -1,0 +1,16 @@
+#禁止访问的目录
+location ~* /(source|other)$ {
+    deny all;
+    return 404;
+}
+#去掉index.php
+location / {
+  if (!-e $request_filename){
+    rewrite ^(.*)$ /index.php/$1 break;
+  }
+}
+#禁止执行php js html的目录
+location ~* ^/(public/js/kindeditor/attached)/.*\.(php|php5|js|htm|html)$ {
+    deny all;
+    return 404;
+}
