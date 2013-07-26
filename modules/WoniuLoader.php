@@ -23,9 +23,10 @@ class WoniuLoader {
 
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
+        $this->registerErrorHandle();
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
-        $this->lib=new WoniuLibLoader();
+        $this->lib = new WoniuLibLoader();
         WoniuCache::$path = $this->config('system', 'cache_dirname');
         $this->autoload();
         if ($this->config('system', "autoload_db")) {
@@ -34,18 +35,27 @@ class WoniuLoader {
         stripslashes_all();
     }
 
+    public function registerErrorHandle() {
+        if (!$this->config('system', 'debug')) {
+            error_reporting(0);
+            register_shutdown_function('fatal_handler');
+        } else {
+            error_reporting(E_ALL);
+        }
+    }
+
     private function autoload() {
         $autoload_helper = $this->config('system', 'helper_file_autoload');
         $autoload_library = $this->config('system', 'library_file_autoload');
         foreach ($autoload_helper as $file_name) {
             $this->helper($file_name);
         }
-        foreach ($autoload_library as $key=>$val) {
-            if(is_array($val)){
-                $key=  key($val);
-                $val=$val[$key];
-                $this->lib($key,$val);
-            }else{
+        foreach ($autoload_library as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->lib($key, $val);
+            } else {
                 $this->lib($val);
             }
         }
@@ -118,7 +128,7 @@ class WoniuLoader {
             $alias_name = strtolower($classname);
         }
         $filepath = $system['library_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
-        
+
         if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
             return WoniuLibLoader::$lib_files[$alias_name];
         }
