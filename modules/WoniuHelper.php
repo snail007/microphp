@@ -35,6 +35,15 @@ function trigger500($msg = '<h1>Server Error</h1>') {
     exit();
 }
 
+function woniuException($exception) {
+    $errno= $exception->getCode();
+    $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
+    $errline = $exception->getLine();
+    $errstr = $exception->getMessage();
+    ob_clean();
+    trigger500(format_error($errno, $errstr, $errfile, $errline));
+}
+
 function fatal_handler() {
     $errfile = "unknown file";
     $errstr = "shutdown";
@@ -43,7 +52,7 @@ function fatal_handler() {
     $error = error_get_last();
     if ($error !== NULL && isset($error["type"]) && ($error["type"] === E_ERROR || ($error['type'] === E_USER_ERROR))) {
         $errno = $error["type"];
-        $errfile = pathinfo($error["file"],PATHINFO_FILENAME);
+        $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
         $errline = $error["line"];
         $errstr = $error["message"];
         ob_clean();
@@ -54,7 +63,7 @@ function fatal_handler() {
 function format_error($errno, $errstr, $errfile, $errline) {
 //    $trace = print_r(debug_backtrace(false), true);
     $content = "<table><tbody>";
-    $content .= "<tr valign='top'><td><b>Error</b></td><td>:$errstr</td></tr>";
+    $content .= "<tr valign='top'><td><b>Error</b></td><td>:" . nl2br($errstr) . "</td></tr>";
     $content .= "<tr valign='top'><td><b>Errno</b></td><td>:$errno</td></tr>";
     $content .= "<tr valign='top'><td><b>File</b></td><td>:$errfile</td></tr>";
     $content .= "<tr valign='top'><td><b>Line</b></td><td>:$errline</td></tr>";

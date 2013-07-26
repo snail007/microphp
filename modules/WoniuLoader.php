@@ -38,7 +38,9 @@ class WoniuLoader {
     public function registerErrorHandle() {
         if (!$this->config('system', 'debug')) {
             error_reporting(0);
+            set_exception_handler('woniuException');
             register_shutdown_function('fatal_handler');
+            
         } else {
             error_reporting(E_ALL);
         }

@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -116,7 +116,7 @@ $woniu_db['default']['stricton'] = FALSE;
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuRouter {
 
@@ -220,7 +220,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuLoader {
 
@@ -247,7 +247,9 @@ class WoniuLoader {
     public function registerErrorHandle() {
         if (!$this->config('system', 'debug')) {
             error_reporting(0);
+            set_exception_handler('woniuException');
             register_shutdown_function('fatal_handler');
+            
         } else {
             error_reporting(E_ALL);
         }
@@ -623,7 +625,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuController extends WoniuLoader {
 
@@ -681,7 +683,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuModel extends WoniuLoader {
 
@@ -731,7 +733,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuDB {
 
@@ -5932,7 +5934,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -6778,7 +6780,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6794,37 +6796,46 @@ function trigger404($msg = '<h1>Not Found</h1>') {
 function trigger500($msg = '<h1>Server Error</h1>') {
     global $system;
     header('HTTP/1.1 500 Server Error');
-    var_dump(file_exists($system['error_page_50x']));
-    if (!empty($system['error_page_50x']) && file_exists($system['error_page_50x'])) {
-        include $system['error_page_50x'];
+    if (!empty($system['error_page_50x']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_50x'])) {
+        include dirname(__FILE__) . '/' . $system['error_page_50x'];
     } else {
         echo $msg;
     }
     exit();
 }
-function fatal_handler() {
+
+function woniuException($exception) {
+    $errno= $exception->getCode();
+    $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
+    $errline = $exception->getLine();
+    $errstr = $exception->getMessage();
     ob_clean();
+    trigger500(format_error($errno, $errstr, $errfile, $errline));
+}
+
+function fatal_handler() {
     $errfile = "unknown file";
     $errstr = "shutdown";
     $errno = E_CORE_ERROR;
     $errline = 0;
     $error = error_get_last();
-    if ($error !== NULL) {
+    if ($error !== NULL && isset($error["type"]) && ($error["type"] === E_ERROR || ($error['type'] === E_USER_ERROR))) {
         $errno = $error["type"];
-        $errfile = $error["file"];
+        $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
         $errline = $error["line"];
         $errstr = $error["message"];
+        ob_clean();
+        trigger500(format_error($errno, $errstr, $errfile, $errline));
     }
-    trigger500(format_error($errno, $errstr, $errfile, $errline));
 }
 
 function format_error($errno, $errstr, $errfile, $errline) {
-    $trace = print_r(debug_backtrace(false), true);
-    $content = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
-    $content .= "<tr valign='top'><td><b>Error</b></td><td><pre>$errstr</pre></td></tr>";
-    $content .= "<tr valign='top'><td><b>Errno</b></td><td><pre>$errno</pre></td></tr>";
-    $content .= "<tr valign='top'><td><b>File</b></td><td>$errfile</td></tr>";
-    $content .= "<tr valign='top'><td><b>Line</b></td><td>$errline</td></tr>";
+//    $trace = print_r(debug_backtrace(false), true);
+    $content = "<table><tbody>";
+    $content .= "<tr valign='top'><td><b>Error</b></td><td>:" . nl2br($errstr) . "</td></tr>";
+    $content .= "<tr valign='top'><td><b>Errno</b></td><td>:$errno</td></tr>";
+    $content .= "<tr valign='top'><td><b>File</b></td><td>:$errfile</td></tr>";
+    $content .= "<tr valign='top'><td><b>Line</b></td><td>:$errline</td></tr>";
 //    $content .= "<tr valign='top'><td><b>Trace</b></td><td><pre>$trace</pre></td></tr>";
     $content .= '</tbody></table>';
     return $content;
@@ -6941,7 +6952,7 @@ function force_download($filename = '', $data = '') {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-26 14:36:28
+ * @createdtime       2013-07-26 15:42:28
  */
 class WoniuInput {
 

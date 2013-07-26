@@ -22,8 +22,7 @@ class Welcome extends WoniuController {
         var_dump($val);
         return false;
     }
-    public function doIndex($name = '') { 
-       $b->a();
+    public function doIndex($name = '') {
 //        $this->redirect("http://www.163.com","测试",'message',5);
 //        $this->message("提示信息",'message',"http://www.163.com",5);
 //        var_dump($this->input->server('http_host',2222));
@@ -32,7 +31,7 @@ class Welcome extends WoniuController {
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
-    public function __output($html) {
+    public function a__output($html) {
         echo '__output' . $html;
     }
 
