@@ -3,3 +3,19 @@ location ^~ /source {
     deny all;
     return 404; 
 }
+location ^~ /.git {
+    deny all;
+    return 404; 
+}
+location ^~ /.svn {
+    deny all;
+    return 404; 
+}
+location ^~ /.gitignore {
+    deny all;
+    return 404; 
+}
+location ^~ /.nbproject {
+    deny all;
+    return 404; 
+}
