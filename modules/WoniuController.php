@@ -21,7 +21,6 @@ class WoniuController extends WoniuLoader {
     public function __construct() {
         $this->autoload();
         parent::__construct();
-
         self::$woniu = &$this;
     }
 
