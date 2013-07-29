@@ -32,7 +32,6 @@ class WoniuLoader {
             $this->database();
         }
         stripslashes_all();
-        $this->autoload();
     }
 
     public function registerErrorHandle() {
@@ -44,34 +43,6 @@ class WoniuLoader {
             error_reporting(E_ALL);
         }
     }
-
-    private function autoload() {
-        $autoload_helper = $this->config('system', 'helper_file_autoload');
-        $autoload_library = $this->config('system', 'library_file_autoload');
-        $autoload_models = $this->config('system', 'models_file_autoload');
-        foreach ($autoload_helper as $file_name) {
-            $this->helper($file_name);
-        }
-        foreach ($autoload_library as $key => $val) {
-            if (is_array($val)) {
-                $key = key($val);
-                $val = $val[$key];
-                $this->lib($key, $val);
-            } else {
-                $this->lib($val);
-            }
-        }
-        foreach ($autoload_models as $key => $val) {
-            if (is_array($val)) {
-                $key = key($val);
-                $val = $val[$key];
-                $this->model($key, $val);
-            } else {
-                $this->model($val);
-            }
-        }
-    }
-
     public function config($config_group, $key = '') {
         global $$config_group;
         if ($key) {
@@ -143,9 +114,9 @@ class WoniuLoader {
         if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
             return WoniuLibLoader::$lib_files[$alias_name];
         } else {
-            foreach (WoniuLibLoader::$lib_files as $alias_name => $obj) {
+            foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
                 if (strtolower(get_class($obj)) === strtolower($classname)) {
-                    return WoniuLibLoader::$lib_files[$alias_name];
+                    return WoniuLibLoader::$lib_files[$aname];
                 }
             }
         }
@@ -171,13 +142,12 @@ class WoniuLoader {
             $alias_name = strtolower($classname);
         }
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-
-        if (in_array($alias_name, array_keys(WoniuLibLoader::$model_files))) {
-            return WoniuLibLoader::$model_files[$alias_name];
+        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+            return WoniuModelLoader::$model_files[$alias_name];
         } else {
-            foreach (WoniuLibLoader::$model_files as $alias_name => $obj) {
-                if (strtolower(get_class($obj)) === strtolower($classname)) {
-                    return WoniuLibLoader::$model_files[$alias_name];
+            foreach (WoniuModelLoader::$model_files as &$obj) {
+                if (strtolower(get_class($obj)) == strtolower($classname)) {
+                    return WoniuModelLoader::$model_files[$alias_name] = $obj;
                 }
             }
         }

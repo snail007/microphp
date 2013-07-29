@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
- * @createdtime       2013-07-29 15:45:18
+ * @createdtime       2013-07-29 16:59:11
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -35,11 +35,11 @@ $system['library_file_subfix'] = '.class.php';
 $system['helper_file_subfix'] = '.php';
 $system['helper_file_autoload'] = array(); //array($item);  $item:such as html etc.
 $system['library_file_autoload'] = array(); //array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
-$system['models_file_autoload']=array();//array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
+$system['models_file_autoload']=array(array('User2'=>'c'));//array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
 $system['cache_dirname'] = 'cache';
 $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
-$system['debug'] = FALSE;
+$system['debug'] = TRUE;
 $system['default_timezone'] = 'PRC';
 
 //-----------------------end system config--------------------------

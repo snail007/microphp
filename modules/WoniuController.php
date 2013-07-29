@@ -19,13 +19,43 @@ class WoniuController extends WoniuLoader {
     private static $instance;
 
     public function __construct() {
+        $this->autoload();
         parent::__construct();
+
         self::$woniu = &$this;
+    }
+
+    private function autoload() {
+        $autoload_helper = $this->config('system', 'helper_file_autoload');
+        $autoload_library = $this->config('system', 'library_file_autoload');
+        $autoload_models = $this->config('system', 'models_file_autoload');
+        foreach ($autoload_helper as $file_name) {
+            $this->helper($file_name);
+        }
+        foreach ($autoload_library as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->lib($key, $val);
+            } else {
+                $this->lib($val);
+            }
+        }
+        foreach ($autoload_models as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->model($key, $val);
+            } else {
+                $this->model($val);
+            }
+        }
     }
 
     public static function &getInstance() {
         return self::$woniu;
     }
+
     public static function instance($classname_path) {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
@@ -51,7 +81,6 @@ class WoniuController extends WoniuLoader {
             trigger404($filepath . ' not found.');
         }
     }
-
 }
 
 /* End of file Controller.php */
