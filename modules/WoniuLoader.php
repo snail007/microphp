@@ -40,7 +40,6 @@ class WoniuLoader {
             error_reporting(0);
             set_exception_handler('woniuException');
             register_shutdown_function('fatal_handler');
-            
         } else {
             error_reporting(E_ALL);
         }
@@ -49,6 +48,7 @@ class WoniuLoader {
     private function autoload() {
         $autoload_helper = $this->config('system', 'helper_file_autoload');
         $autoload_library = $this->config('system', 'library_file_autoload');
+        $autoload_models = $this->config('system', 'models_file_autoload');
         foreach ($autoload_helper as $file_name) {
             $this->helper($file_name);
         }
@@ -59,6 +59,15 @@ class WoniuLoader {
                 $this->lib($key, $val);
             } else {
                 $this->lib($val);
+            }
+        }
+        foreach ($autoload_models as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->model($key, $val);
+            } else {
+                $this->model($val);
             }
         }
     }
@@ -133,6 +142,12 @@ class WoniuLoader {
 
         if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
             return WoniuLibLoader::$lib_files[$alias_name];
+        } else {
+            foreach (WoniuLibLoader::$lib_files as $alias_name => $obj) {
+                if (strtolower(get_class($obj)) === strtolower($classname)) {
+                    return WoniuLibLoader::$lib_files[$alias_name];
+                }
+            }
         }
         if (file_exists($filepath)) {
             include $filepath;
@@ -156,8 +171,15 @@ class WoniuLoader {
             $alias_name = strtolower($classname);
         }
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
+
+        if (in_array($alias_name, array_keys(WoniuLibLoader::$model_files))) {
+            return WoniuLibLoader::$model_files[$alias_name];
+        } else {
+            foreach (WoniuLibLoader::$model_files as $alias_name => $obj) {
+                if (strtolower(get_class($obj)) === strtolower($classname)) {
+                    return WoniuLibLoader::$model_files[$alias_name];
+                }
+            }
         }
         if (file_exists($filepath)) {
             include $filepath;
