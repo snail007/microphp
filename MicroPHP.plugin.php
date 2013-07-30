@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -35,7 +35,7 @@ $system['library_file_subfix'] = '.class.php';
 $system['helper_file_subfix'] = '.php';
 $system['helper_file_autoload'] = array(); //array($item);  $item:such as html etc.
 $system['library_file_autoload'] = array(); //array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
-$system['models_file_autoload']=array(array('User2'=>'c'));//array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
+$system['models_file_autoload']=array();//array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
 $system['cache_dirname'] = 'cache';
 $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
@@ -117,7 +117,7 @@ $woniu_db['default']['stricton'] = FALSE;
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuRouter {
 
@@ -221,7 +221,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuLoader {
 
@@ -242,7 +242,6 @@ class WoniuLoader {
             $this->database();
         }
         stripslashes_all();
-        $this->autoload();
     }
 
     public function registerErrorHandle() {
@@ -254,34 +253,6 @@ class WoniuLoader {
             error_reporting(E_ALL);
         }
     }
-
-    private function autoload() {
-        $autoload_helper = $this->config('system', 'helper_file_autoload');
-        $autoload_library = $this->config('system', 'library_file_autoload');
-        $autoload_models = $this->config('system', 'models_file_autoload');
-        foreach ($autoload_helper as $file_name) {
-            $this->helper($file_name);
-        }
-        foreach ($autoload_library as $key => $val) {
-            if (is_array($val)) {
-                $key = key($val);
-                $val = $val[$key];
-                $this->lib($key, $val);
-            } else {
-                $this->lib($val);
-            }
-        }
-        foreach ($autoload_models as $key => $val) {
-            if (is_array($val)) {
-                $key = key($val);
-                $val = $val[$key];
-                $this->model($key, $val);
-            } else {
-                $this->model($val);
-            }
-        }
-    }
-
     public function config($config_group, $key = '') {
         global $$config_group;
         if ($key) {
@@ -389,11 +360,9 @@ class WoniuLoader {
                     return WoniuModelLoader::$model_files[$alias_name] = $obj;
                 }
             }
-        }$this->printTrace();
+        }
         if (file_exists($filepath)) {
-            var_dump(class_exists($classname));
             include $filepath;
-            var_dump(class_exists($classname));
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
@@ -402,10 +371,6 @@ class WoniuLoader {
         } else {
             trigger404($filepath . ' not found.');
         }
-        
-    }
-    public function printTrace(){
-       debug_print_backtrace();
     }
 
     public function view($view_name, $data = null, $return = false) {
@@ -653,7 +618,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuController extends WoniuLoader {
 
@@ -661,13 +626,42 @@ class WoniuController extends WoniuLoader {
     private static $instance;
 
     public function __construct() {
+        $this->autoload();
         parent::__construct();
         self::$woniu = &$this;
+    }
+
+    private function autoload() {
+        $autoload_helper = $this->config('system', 'helper_file_autoload');
+        $autoload_library = $this->config('system', 'library_file_autoload');
+        $autoload_models = $this->config('system', 'models_file_autoload');
+        foreach ($autoload_helper as $file_name) {
+            $this->helper($file_name);
+        }
+        foreach ($autoload_library as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->lib($key, $val);
+            } else {
+                $this->lib($val);
+            }
+        }
+        foreach ($autoload_models as $key => $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->model($key, $val);
+            } else {
+                $this->model($val);
+            }
+        }
     }
 
     public static function &getInstance() {
         return self::$woniu;
     }
+
     public static function instance($classname_path) {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
@@ -693,7 +687,6 @@ class WoniuController extends WoniuLoader {
             trigger404($filepath . ' not found.');
         }
     }
-
 }
 
 /* End of file Controller.php */
@@ -711,7 +704,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuModel extends WoniuLoader {
 
@@ -761,7 +754,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuDB {
 
@@ -5962,7 +5955,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -6808,7 +6801,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
@@ -6980,7 +6973,7 @@ function force_download($filename = '', $data = '') {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.4
- * @createdtime       2013-07-29 16:59:11
+ * @createdtime       2013-07-30 10:27:38
  */
 class WoniuInput {
 
