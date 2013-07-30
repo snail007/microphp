@@ -19,13 +19,13 @@ $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/','',$file) . "');", '', $index);
 }
-$index = str_replace("../app", 'app', $index);
+$index = str_replace("../app", 'application', $index);
 $index = str_replace("WoniuRouter::loadClass();", '', $index);
 common_replace($index);
 file_put_contents('index.php', $index . "\ninclude('MicroPHP.php');");
 
 #ver modify
-file_put_contents('app/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
+file_put_contents('application/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
 
 
 
