@@ -10,21 +10,21 @@
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.1.4
- * @createdtime       2013-07-30 11:03:08
+ * @since		Version 1.0
+ * @createdtime       {createdtime}
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
 //------------------------system config----------------------------
-$system['application_folder'] = 'application';
+$system['application_folder'] = '../app';
 $system['controller_folder'] = $system['application_folder'] . WDS . 'controllers';
 $system['model_folder'] = $system['application_folder'] . WDS . 'models';
 $system['view_folder'] = $system['application_folder'] . WDS . 'views';
 $system['library_folder'] = $system['application_folder'] . WDS . 'library';
 $system['helper_folder'] = $system['application_folder'] . WDS . 'helper';
-$system['error_page_404'] = 'application/error/error_404.php';
-$system['error_page_50x'] = 'application/error/error_50x.php';
-$system['error_page_db'] = 'application/error/error_db.php';
+$system['error_page_404'] = '../app/error/error_404.php';
+$system['error_page_50x'] = '../app/error/error_50x.php';
+$system['error_page_db'] = '../app/error/error_db.php';
 $system['default_controller'] = 'welcome';
 $system['default_controller_method'] = 'index';
 $system['controller_method_prefix'] = 'do';
@@ -89,17 +89,16 @@ $woniu_db['default']['stricton'] = FALSE;
  */
 //-------------------------end database config--------------------------
 
-
-
-
-
-
-
-
-
-
-
-
+include('WoniuInput.class.php');
+include('WoniuHelper.php');
+include('db-drivers/db.drivers.php');
+include('db-drivers/mysql.driver.php');
+include('db-drivers/pdo.driver.php');
+include('db-drivers/sqlite3.driver.php');
+include('WoniuRouter.php');
+include('WoniuLoader.php');
+include('WoniuController.php');
+include('WoniuModel.php');
+WoniuRouter::loadClass();
 
 /* End of file index.php */
-include('MicroPHP.php');
