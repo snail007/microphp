@@ -14,7 +14,7 @@ foreach ($files as $file) {
 }
 common_replace($core);
 file_put_contents('MicroPHP.php', "<?php\n" . $core . "\nWoniuRouter::loadClass();");
-file_put_contents('MicroPHP.php', php_strip_whitespace('MicroPHP.php').'　');
+file_put_contents('MicroPHP.php', php_strip_whitespace('MicroPHP.php').'//结束');
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/','',$file) . "');", '', $index);
@@ -31,7 +31,7 @@ file_put_contents('docs/index.html', str_replace('{version}',$ver,  file_get_con
 
 
 file_put_contents('MicroPHP.plugin.php',"<?php \n" . $core);
-file_put_contents('MicroPHP.plugin.php', $index.str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php')).'　');
+file_put_contents('MicroPHP.plugin.php', $index.str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php')).'//结束');
 echo 'done';
 
 function common_replace(&$str) {
