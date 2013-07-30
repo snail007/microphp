@@ -56,6 +56,7 @@
                         $system['helper_file_subfix']       函数文件名称后缀,比如.php';<br>
                         $system['helper_file_autoload']=array(); 自动加载的helper文件,比如:array($item); $item是helper文件名,不包含后缀,比如: html 等.<br>
                         $system['library_file_autoload']=array();自动加载的library文件,比如array($item); $item是library文件名或者"配置数组",不包含后缀,比如: ImageTool 或者配置数组 array('ImageTool'=>'image')配置数组的作用是为长的类库名用别名代替.<br>
+                        $system['models_file_autoload']=array(); 自动加载的model,比如array($item); $item是model文件名或者"配置数组",不包含后缀,比如: UserModel 或者配置数组 array('UserModel'=>'user')配置数组的作用是为长的model名用别名代替.<br>
                         $system['cache_dirname']=$_SERVER['DOCUMENT ROOT'].DS.'cache'; 使用文件缓存的时候,缓存数据保存的文件夹,确保程序有读写权限<br>
                         $system['controller_method_ucfirst']控制器方法名称是否首字母大写,默认true<br>
                         $system['autoload_db']              是否自动连接数据库,默认true<br>
@@ -219,7 +220,8 @@
                     <p>在入口文件里面可以通过
 <pre>
 $system['helper_file_autoload']=array($item);//$item:such as html etc.
-$system['library_file_autoload']=array($item);//$item:such as ImageTool or array('ImageTool'=>'image') etc.。
+$system['library_file_autoload']=array($item);//$item:such as ImageTool or array('ImageTool'=>'image') etc.
+$system['models_file_autoload']=array();//array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
 </pre>进行自动加载一些helper文件和类库文件,$system['helper_file_autoload']数组里面是helper文件名不含后缀,
 $system['library_file_autoload']数组里面是类库文件名不含后缀,而且可以通过array('类库文件名'=>'别名')的形式为类库使用别名,在类库名字很长的时候比较有用,
 然后在控制器和模型里面都可以通过$this->lib->别名,进行访问,如果没有设置别名,就通过$this->lib->类库名,进行访问。
