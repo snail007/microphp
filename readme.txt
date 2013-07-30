@@ -1,4 +1,4 @@
-文件说明:
+文件说明: 
 app是程序目录
 docs是说明文档目录
 index.php和MicroPHP.php是整个框架程序
