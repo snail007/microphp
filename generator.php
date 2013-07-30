@@ -35,7 +35,7 @@ file_put_contents('MicroPHP.plugin.php', $index.str_replace("<?php", "\n", php_s
 echo 'done';
 
 function common_replace(&$str) {
-    global $ver;
+    global $ver ;
     $str = str_replace("Version 1.0", $ver, $str);
     $str = str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
