@@ -265,6 +265,7 @@ class WoniuLoader {
                 $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
             }
         }
+        exit();
     }
 
     public function message($msg, $view = null, $url = null, $time = 3) {
@@ -277,6 +278,7 @@ class WoniuLoader {
         } else {
             echo $msg;
         }
+        exit();
     }
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
