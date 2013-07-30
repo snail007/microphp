@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('PRC');
-$ver = "Version 2.1.4";
+$ver = "Version 2.1.7";
 $files = array('modules/WoniuRouter.php', 'modules/WoniuLoader.php',
     'modules/WoniuController.php', 'modules/WoniuModel.php',
     'modules/db-drivers/db.drivers.php', 'modules/db-drivers/mysql.driver.php', 
@@ -26,6 +26,7 @@ file_put_contents('index.php', $index . "\ninclude('MicroPHP.php');");
 
 #ver modify
 file_put_contents('application/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
+file_put_contents('docs/index.html', str_replace('{version}',$ver,  file_get_contents('docs/index_ver.html')));
 
 
 
