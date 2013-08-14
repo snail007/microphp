@@ -125,7 +125,7 @@ class WoniuLoader {
             if (class_exists($classname)) {
                 return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
             } else {
-                trigger404('Model Class:' . $classname . ' not found.');
+                trigger404('Library Class:' . $classname . ' not found.');
             }
         } else {
             trigger404($filepath . ' not found.');
