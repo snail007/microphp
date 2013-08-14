@@ -9,6 +9,7 @@ class Welcome extends WoniuController {
 
     public function __construct() {
         parent::__construct();
+        $this->view_vars['vars']='aaaaa';
 //        $this->helper('html.helper');
     }
 
