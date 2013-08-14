@@ -15,10 +15,8 @@
  */
 class WoniuLoader {
 
-    public $db, $input;
-    private $helper_files = array();
-    public $model, $lib;
-    private $view_vars = array();
+    public $model, $lib, $router, $db, $input;
+    private $helper_files = array(), $view_vars = array();
     private static $instance;
 
     public function __construct() {
@@ -33,6 +31,9 @@ class WoniuLoader {
         }
         stripslashes_all();
     }
+    public function setRouter($router){
+        $this->router=$router;
+    }
 
     public function registerErrorHandle() {
         if (!$this->config('system', 'debug')) {
@@ -43,6 +44,7 @@ class WoniuLoader {
             error_reporting(E_ALL);
         }
     }
+
     public function config($config_group, $key = '') {
         global $$config_group;
         if ($key) {

@@ -25,8 +25,8 @@ class WoniuRouter {
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
-            WoniuInput::$router=$methodInfo;
             $class = new $methodInfo['class']();
+            $class->setRouter($methodInfo);
             if (method_exists($class, $methodInfo['method'])) {
                 $methodInfo['parameters'] = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
                 if (method_exists($class, '__output')) {
@@ -70,9 +70,9 @@ class WoniuRouter {
             $requests = explode("/", $pathinfo_query);
             //看看是否指定了类和方法名
             preg_match('/[^&]+(?:\.[^&]+)+/', $requests[0]) ? $class_method = $requests[0] : null;
-            if(strstr($class_method, '&')!==false){
-                $cm=  explode('&', $class_method);
-                $class_method=$cm[0];
+            if (strstr($class_method, '&') !== false) {
+                $cm = explode('&', $class_method);
+                $class_method = $cm[0];
             }
         }
         //去掉查询字符串中的类方法部分，只留下参数
@@ -83,6 +83,7 @@ class WoniuRouter {
         $pathinfo_query_parameters_str && $pathinfo_query_parameters_str{0} === '/' ? $pathinfo_query_parameters_str = substr($pathinfo_query_parameters_str, 1) : '';
 
         //现在已经解析出了，$class_method类方法名称字符串(main.index），$pathinfo_query_parameters_str参数字符串(1/2)，进一步解析为真实路径
+        $origin_class_method = $class_method;
         $class_method = explode(".", $class_method);
         $method = end($class_method);
         $method = $system['controller_method_prefix'] . ($system['controller_method_ucfirst'] ? ucfirst($method) : $method);
@@ -96,7 +97,23 @@ class WoniuRouter {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
         }
-        return array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
+        $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
+        #开始准备router信息
+        $path = explode('.', $origin_class_method);
+        $router['mpath'] = $origin_class_method;
+        $router['m'] = $path[count($path) - 1];
+        if(count($path)>1){
+            $router['c'] = $path[count($path) - 2];
+        }
+        $router['prefix'] =$system['controller_method_prefix'];
+        unset($path[count($path) - 1]);
+        $router['capth'] = implode('.', $path);
+        if(count($path)>1){
+            unset($path[count($path) - 1]);
+            $router['folder'] = implode('.', $path);
+        }
+        
+        return $router+$info;
     }
 
 }

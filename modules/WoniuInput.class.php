@@ -20,8 +20,6 @@
  */
 class WoniuInput {
 
-    public static $router;
-
     public static function get_post($key = null, $default = null) {
         $get = self::gpcs('_GET', $key, $default);
         return $get === null ? self::gpcs('_POST', $key, $default) : $get;
