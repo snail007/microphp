@@ -1,6 +1,6 @@
 ver 2.1.8:
-修复了:
+修复了:找不到library class的提示信息。
 
-增加了:$this->router;
+增加了:$this->router;包含了所有的路由信息。
 
-升级提示:
+升级提示:无
