@@ -15,8 +15,8 @@
  */
 class WoniuLoader {
 
-    public $model, $lib, $router, $db, $input;
-    private $helper_files = array(), $view_vars = array();
+    public $model, $lib, $router, $db, $input,$view_vars = array();
+    private $helper_files = array();
     private static $instance;
 
     public function __construct() {
