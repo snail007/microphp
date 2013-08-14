@@ -22,6 +22,7 @@ class WoniuLoader {
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->registerErrorHandle();
+        $this->router = WoniuInput::$router;
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
@@ -30,9 +31,6 @@ class WoniuLoader {
             $this->database();
         }
         stripslashes_all();
-    }
-    public function setRouter($router){
-        $this->router=$router;
     }
 
     public function registerErrorHandle() {

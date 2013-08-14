@@ -25,8 +25,8 @@ class WoniuRouter {
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
+            WoniuInput::$router=$methodInfo;
             $class = new $methodInfo['class']();
-            $class->setRouter($methodInfo);
             if (method_exists($class, $methodInfo['method'])) {
                 $methodInfo['parameters'] = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
                 if (method_exists($class, '__output')) {
