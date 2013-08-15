@@ -15,7 +15,7 @@
  */
 class WoniuLoader {
 
-    public $model, $lib, $router, $db, $input,$view_vars = array();
+    public $model, $lib, $router, $db, $input, $view_vars = array();
     private $helper_files = array();
     private static $instance;
 
@@ -166,6 +166,8 @@ class WoniuLoader {
     public function view($view_name, $data = null, $return = false) {
         if (is_array($data)) {
             $this->view_vars = array_merge($this->view_vars, $data);
+            extract($this->view_vars);
+        } elseif (is_array($this->view_vars) && !empty($this->view_vars)) {
             extract($this->view_vars);
         }
         global $system;
