@@ -1,10 +1,9 @@
 ver 2.1.9beta2:
 
 修复了:
-1.$this->view()。
+1.$this->view()不传递数据时，$this->view_vars无效的问题。
 
-增加了:
-1.控制器中$this->view_vars['vars']='xxx';可以向$this->view_vars添加附加的视图数据，该数据会在显示视图的时候附加到视图数据里面。
+增加了:无
 
 升级提示:无
 
