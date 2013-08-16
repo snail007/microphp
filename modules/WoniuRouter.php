@@ -97,6 +97,9 @@ class WoniuRouter {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
         }
+        if(count($parameters)===1&&empty($parameters[0])){
+            $parameters=array();
+        }
         $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
         #开始准备router信息
         $path = explode('.', $origin_class_method);
