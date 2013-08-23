@@ -22,11 +22,11 @@ the following conditions are met:
    of the change and the names of those who changed them.
 
 5. Products derived from the Software must include an acknowledgment that
-   they are derived from CodeIgniter in their documentation and/or other
+   they are derived from MicroPHP in their documentation and/or other
    materials provided with the distribution.
 
-6. Products derived from the Software may not be called "CodeIgniter",
-   nor may "CodeIgniter" appear in their name, without prior written
+6. Products derived from the Software may not be called "MicroPHP",
+   nor may "MicroPHP" appear in their name, without prior written
    permission from EllisLab, Inc.
 
 INDEMNITY
