@@ -16,8 +16,8 @@
 function trigger404($msg = '<h1>Not Found</h1>') {
     global $system;
     header('HTTP/1.1 404 NotFound');
-    if (!empty($system['error_page_404']) && file_exists($system['error_page_404'])) {
-        include $system['error_page_404'];
+    if (!empty($system['error_page_404']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_404'])) {
+        include dirname(__FILE__) . '/' . $system['error_page_404'];
     } else {
         echo $msg;
     }
@@ -36,7 +36,7 @@ function trigger500($msg = '<h1>Server Error</h1>') {
 }
 
 function woniuException($exception) {
-    $errno= $exception->getCode();
+    $errno = $exception->getCode();
     $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
     $errline = $exception->getLine();
     $errstr = $exception->getMessage();
