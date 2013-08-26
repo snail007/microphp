@@ -1,8 +1,8 @@
 Copyright (c) 2012 - 2013, BoltedSnail, Inc.
 All rights reserved.
 
-This license is a legal agreement between you and EllisLab Inc. for the use
-of CodeIgniter Software (the "Software").  By obtaining the Software you
+This license is a legal agreement between you and  BoltedSnail Inc. for the use
+of MicroPHP Software (the "Software").  By obtaining the Software you
 agree to comply with the terms and conditions of this license.
 
 PERMITTED USE
