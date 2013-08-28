@@ -162,5 +162,74 @@ function force_download($filename = '', $data = '') {
     exit($data);
 }
 
+/**
+ * 获取结果集中的一个字段的数组
+ * @param type $rows
+ * @param type $col_name
+ * @return array
+ */
+function getRsCol($rows, $col_name) {
+    $ret = array();
+    foreach ($rows as &$row) {
+        $ret[] = $row[$col_name];
+    }
+    return $ret;
+}
+/**
+ * 按字段对结果集进行排序
+ * @param type $rows
+ * @param type $key
+ * @param type $order
+ * @return array
+ */
+function sortRs($rows, $key, $order = 'asc') {
+    $sort = array();
+    foreach ($rows as $k => $value) {
+        $sort[$k] = $value[$key];
+    }
+    $order == 'asc' ? asort($sort) : arsort($sort);
+    $ret = array();
+    foreach ($sort as $k => $value) {
+        $ret[] = $rows[$k];
+    }
+    return $ret;
+}
+/**
+ * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
+ * 比如：$rs1=array(array('a'=>'1111','b'=>'fasdfas'),array('a'=>'222','b'=>'fasdfas'),array('a'=>'333','b'=>'fasdfas'));
+         $rs2=array(array('c'=>'1111','r'=>'fasd22fas'),array('c'=>'222','r'=>'fasd22fas'),array('c'=>'333','r'=>'fasdf22as'));
+         $rs3=array(array('a'=>'1111','e'=>'fasd33fas'),array('a'=>'222','e'=>'fas33dfas'),array('a'=>'333','e'=>'fas33dfas'));
+         var_dump(mergeRs(array($rs1,'a'),array($rs2,'c'),array($rs3,'a')));
+ * 上面的例子中三个结果集中的关联字段是$rs1.a=$rs2.c=$rs3.a
+ * @return array
+ */
+function mergeRs() {
+    $argv = func_get_args();
+    $argc = count($argv);
+    $ret = array();
+    foreach ($argv[0][0] as $v) {
+        $r = $v;
+        for ($j = 1; $j < $argc; $j++) {
+            foreach ($argv[$j][0] as $row) {
+                if ($v[$argv[0][1]] == $row[$argv[$j][1]]) {
+                    $r = array_merge($r, $row);
+                    break;
+                }
+            }
+        }
+        $ret[] = $r;
+    }
+    return $ret;
+}
+
+
+
+
+
+
+
+
+
+
 /* End of file Helper.php */
  
