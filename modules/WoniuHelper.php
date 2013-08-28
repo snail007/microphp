@@ -124,7 +124,7 @@ function is_php($version = '5.0.0') {
  * @param    mixed    the data to be downloaded
  * @return    void
  */
-function force_download($filename = '', $data = '') {
+function forceDownload($filename = '', $data = '') {
     if ($filename == '' OR $data == '') {
         return FALSE;
     }
