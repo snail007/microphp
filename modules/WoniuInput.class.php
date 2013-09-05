@@ -56,7 +56,9 @@ class WoniuInput {
             return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
         }
     }
-
+    public static function isCli(){
+        return php_sapi_name()=='cli';
+    }
 }
 
 /* Revision 618

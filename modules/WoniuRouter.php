@@ -25,7 +25,7 @@ class WoniuRouter {
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
-            WoniuInput::$router=$methodInfo;
+            WoniuInput::$router = $methodInfo;
             $class = new $methodInfo['class']();
             if (method_exists($class, $methodInfo['method'])) {
                 $methodInfo['parameters'] = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
@@ -60,8 +60,17 @@ class WoniuRouter {
                 trigger404();
             }
         }
+        //命令行运行检查
+        if (WoniuInput::isCli()) {
+            global $argv;
+            $pathinfo_query = '/';
+            if (isset($argv[1])) {
+                $pathinfo_query = '/' . $argv[1];
+            }
+        } else {
+            $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
+        }
         //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
-        $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
@@ -97,26 +106,26 @@ class WoniuRouter {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
         }
-        if(count($parameters)===1&&empty($parameters[0])){
-            $parameters=array();
+        if (count($parameters) === 1 && empty($parameters[0])) {
+            $parameters = array();
         }
         $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
         #开始准备router信息
         $path = explode('.', $origin_class_method);
         $router['mpath'] = $origin_class_method;
         $router['m'] = $path[count($path) - 1];
-        if(count($path)>1){
+        if (count($path) > 1) {
             $router['c'] = $path[count($path) - 2];
         }
-        $router['prefix'] =$system['controller_method_prefix'];
+        $router['prefix'] = $system['controller_method_prefix'];
         unset($path[count($path) - 1]);
         $router['capth'] = implode('.', $path);
-        if(count($path)>1){
+        if (count($path) > 1) {
             unset($path[count($path) - 1]);
             $router['folder'] = implode('.', $path);
         }
-        
-        return $router+$info;
+
+        return $router + $info;
     }
 
 }
