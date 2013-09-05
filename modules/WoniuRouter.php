@@ -52,26 +52,23 @@ class WoniuRouter {
 
     private static function parseURI() {
         global $system;
-        $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
-        if (empty($pathinfo)) {
-            if ($system['debug']) {
-                trigger404('request parse error:' . $_SERVER['REQUEST_URI']);
-            } else {
-                trigger404();
-            }
-        }
         //命令行运行检查
         if (WoniuInput::isCli()) {
             global $argv;
-            $pathinfo_query = '';
-            if (isset($argv[1])) {
-                $pathinfo_query = $argv[1];
-            }
-            var_dump($argv, $pathinfo_query);
+            $pathinfo_query = isset($argv[1]) ? $argv[1] : '';
         } else {
+            $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
+            if (empty($pathinfo)) {
+                if ($system['debug']) {
+                    trigger404('request parse error:' . $_SERVER['REQUEST_URI']);
+                } else {
+                    trigger404();
+                }
+            }
             //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
             $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
         }
+        var_dump($pathinfo_query);
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
