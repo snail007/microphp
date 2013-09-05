@@ -68,7 +68,6 @@ class WoniuRouter {
             //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
             $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
         }
-        var_dump($pathinfo_query);
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
