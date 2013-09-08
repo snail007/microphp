@@ -55,7 +55,7 @@ class WoniuController extends WoniuLoader {
         return self::$woniu;
     }
 
-    public static function instance($classname_path) {
+    public static function instance($classname_path=null) {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
