@@ -1,3 +1,14 @@
+ver 2.1.10:
+
+修复了:
+1.在PHP5.4及以上版本中的notice问题 Strict Standards: Declaration of xxx。
+
+增加了:
+1.命令行支持
+
+升级提示:无
+
+
 ver 2.1.9beta2:
 
 修复了:
