@@ -46,7 +46,7 @@ $system['default_timezone'] = 'PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "mysql"; #可用的有mysql,pdo,sqlite3,配置见下面
+$woniu_db['default']['dbdriver'] = "mysql"; #可用的有mysql,mysqli,pdo,sqlite3,配置见下面
 $woniu_db['default']['hostname'] = 'localhost';
 $woniu_db['default']['port'] = '3306';
 $woniu_db['default']['username'] = 'root';

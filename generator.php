@@ -4,6 +4,7 @@ $ver = "Version 2.1.9";
 $files = array('modules/WoniuRouter.php', 'modules/WoniuLoader.php',
     'modules/WoniuController.php', 'modules/WoniuModel.php',
     'modules/db-drivers/db.drivers.php', 'modules/db-drivers/mysql.driver.php', 
+    'modules/db-drivers/mysqli.driver.php',
     'modules/db-drivers/pdo.driver.php', 'modules/db-drivers/sqlite3.driver.php',
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php'
