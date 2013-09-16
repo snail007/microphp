@@ -175,6 +175,7 @@ function getRsCol($rows, $col_name) {
     }
     return $ret;
 }
+
 /**
  * 按字段对结果集进行排序
  * @param type $rows
@@ -194,12 +195,13 @@ function sortRs($rows, $key, $order = 'asc') {
     }
     return $ret;
 }
+
 /**
  * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
  * 比如：$rs1=array(array('a'=>'1111','b'=>'fasdfas'),array('a'=>'222','b'=>'fasdfas'),array('a'=>'333','b'=>'fasdfas'));
-         $rs2=array(array('c'=>'1111','r'=>'fasd22fas'),array('c'=>'222','r'=>'fasd22fas'),array('c'=>'333','r'=>'fasdf22as'));
-         $rs3=array(array('a'=>'1111','e'=>'fasd33fas'),array('a'=>'222','e'=>'fas33dfas'),array('a'=>'333','e'=>'fas33dfas'));
-         var_dump(mergeRs(array($rs1,'a'),array($rs2,'c'),array($rs3,'a')));
+  $rs2=array(array('c'=>'1111','r'=>'fasd22fas'),array('c'=>'222','r'=>'fasd22fas'),array('c'=>'333','r'=>'fasdf22as'));
+  $rs3=array(array('a'=>'1111','e'=>'fasd33fas'),array('a'=>'222','e'=>'fas33dfas'),array('a'=>'333','e'=>'fas33dfas'));
+  var_dump(mergeRs(array($rs1,'a'),array($rs2,'c'),array($rs3,'a')));
  * 上面的例子中三个结果集中的关联字段是$rs1.a=$rs2.c=$rs3.a
  * @return array
  */
@@ -219,17 +221,21 @@ function mergeRs() {
         }
         $ret[] = $r;
     }
+    $allkeys = array();
+    foreach ($argv as $rs) {
+        foreach (array_keys($rs[0][0]) as $key) {
+            $allkeys[] = $key;
+        }
+    }
+    foreach ($ret as &$row) {
+        foreach ($allkeys as $key) {
+            if (!isset($row[$key])) {
+                $row[$key] = null;
+            }
+        }
+    }
     return $ret;
 }
-
-
-
-
-
-
-
-
-
 
 /* End of file Helper.php */
  
