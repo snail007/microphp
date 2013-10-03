@@ -43,9 +43,9 @@ class WoniuLoader {
         }
     }
 
-    public function config($config_group, $key = '') {
+    public function config($config_group, $key = null) {
         global $$config_group;
-        if ($key) {
+        if (!is_null($key)) {
             $config_group = $$config_group;
             return isset($config_group[$key]) ? $config_group[$key] : null;
         } else {

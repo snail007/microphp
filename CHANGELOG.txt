@@ -1,6 +1,15 @@
 ver 2.1.10:
 
 修复了:
+1.$this->config($group,$key),当$key是0时无效的问题。
+
+增加了:
+
+升级提示:无
+
+ver 2.1.10:
+
+修复了:
 1.在PHP5.4及以上版本中的notice问题 Strict Standards: Declaration of xxx。
 
 增加了:
