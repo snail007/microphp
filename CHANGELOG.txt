@@ -1,4 +1,4 @@
-ver 2.1.10:
+ver 2.1.11:
 
 修复了:
 1.$this->config($group,$key),当$key是0时无效的问题。
