@@ -2,7 +2,7 @@ ver 2.1.11:
 
 修复了:
 1.$this->config($group,$key),当$key是0时无效的问题。
-
+2.修改$this->helper()和$this->config()把配置变量放到$this->config避免与全局变量冲突
 增加了:
 
 升级提示:无

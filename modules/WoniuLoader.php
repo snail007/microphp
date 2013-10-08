@@ -20,21 +20,23 @@ class WoniuLoader {
     private static $instance;
     
     public function __construct() {
-        date_default_timezone_set($this->config('system', 'default_timezone'));
+        global $system;
+        date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
         $this->router = WoniuInput::$router;
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        WoniuCache::$path = $this->config('system', 'cache_dirname');
-        if ($this->config('system', "autoload_db")) {
+        WoniuCache::$path = $system['cache_dirname'];
+        if ($system['autoload_db']) {
             $this->database();
         }
         stripslashes_all();
     }
 
     public function registerErrorHandle() {
-        if (!$this->config('system', 'debug')) {
+        global $system;
+        if (!$system['debug']) {
             error_reporting(0);
             set_exception_handler('woniuException');
             register_shutdown_function('fatal_handler');

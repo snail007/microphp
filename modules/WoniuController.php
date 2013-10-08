@@ -25,9 +25,10 @@ class WoniuController extends WoniuLoader {
     }
 
     private function autoload() {
-        $autoload_helper = $this->config('system', 'helper_file_autoload');
-        $autoload_library = $this->config('system', 'library_file_autoload');
-        $autoload_models = $this->config('system', 'models_file_autoload');
+        global $system;
+        $autoload_helper = $system['helper_file_autoload'];
+        $autoload_library = $system['library_file_autoload'];
+        $autoload_models = $system['models_file_autoload'];
         foreach ($autoload_helper as $file_name) {
             $this->helper($file_name);
         }
