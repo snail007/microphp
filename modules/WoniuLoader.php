@@ -16,9 +16,9 @@
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array();
-    private $helper_files = array(),$config= array();
+    private $helper_files = array(), $config = array();
     private static $instance;
-    
+
     public function __construct() {
         global $system;
         date_default_timezone_set($system['default_timezone']);
@@ -75,6 +75,10 @@ class WoniuLoader {
                 $this->db = WoniuDB::getInstance($config);
             }
         }
+    }
+
+    public function setConfig($key, $val) {
+        $this->config[$key] = $val;
     }
 
     public function helper($file_name) {
@@ -226,7 +230,7 @@ class WoniuLoader {
         }
     }
 
-    public static function instance($name=null) {
+    public static function instance($name = null) {
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         self::classAutoloadRegister();
