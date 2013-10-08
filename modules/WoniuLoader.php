@@ -16,9 +16,9 @@
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array();
-    private $helper_files = array();
+    private $helper_files = array(),$config= array();
     private static $instance;
-
+    
     public function __construct() {
         date_default_timezone_set($this->config('system', 'default_timezone'));
         $this->registerErrorHandle();
@@ -44,12 +44,10 @@ class WoniuLoader {
     }
 
     public function config($config_group, $key = null) {
-        global $$config_group;
         if (!is_null($key)) {
-            $config_group = $$config_group;
-            return isset($config_group[$key]) ? $config_group[$key] : null;
+            return isset($this->config[$config_group][$key]) ? $this->config[$config_group][$key] : null;
         } else {
-            return isset($$config_group) ? $$config_group : null;
+            return isset($this->config[$config_group]) ? $this->config[$config_group] : null;
         }
     }
 
@@ -85,14 +83,14 @@ class WoniuLoader {
         }
         if (file_exists($filename)) {
             $this->helper_files[] = $filename;
-            //包含文件，并把文件里面的变量变为全局变量
+            //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
             include $filename;
             $vars = get_defined_vars();
             $all_vars = array_keys($vars);
             foreach ($all_vars as $key) {
                 if (!in_array($key, $before_vars) && isset($vars[$key])) {
-                    $GLOBALS[$key] = $vars[$key];
+                    $this->config[$key] = $vars[$key];
                 }
             }
         } else {
