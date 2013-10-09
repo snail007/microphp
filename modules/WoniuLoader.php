@@ -88,7 +88,6 @@ class WoniuLoader {
         }
         $val = $argv[$argc - 1];
         unset($argv[$argc - 1]);
-        $argv = array('a', 'b', 'c');
         $result = $val;
         for ($i = count($argv) - 1; $i >= 0; $i--) {
             $result = array($argv[$i] => $result);
