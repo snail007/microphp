@@ -47,9 +47,9 @@ class WoniuLoader {
 
     public function config($config_group, $key = null) {
         if (!is_null($key)) {
-            return isset($this->config[$config_group][$key]) ? $this->config[$config_group][$key] : null;
+            return isset(self::$config[$config_group][$key]) ? self::$config[$config_group][$key] : null;
         } else {
-            return isset($this->config[$config_group]) ? $this->config[$config_group] : null;
+            return isset(self::$config[$config_group]) ? self::$config[$config_group] : null;
         }
     }
 
@@ -92,7 +92,7 @@ class WoniuLoader {
         for ($i = count($argv) - 1; $i >= 0; $i--) {
             $result = array($argv[$i] => $result);
         }
-        $this->config = array_merge_recursive($result, $this->config);
+        self::$config = array_merge_recursive($result, self::$config);
     }
 
     public function helper($file_name) {
@@ -110,7 +110,7 @@ class WoniuLoader {
             $all_vars = array_keys($vars);
             foreach ($all_vars as $key) {
                 if (!in_array($key, $before_vars) && isset($vars[$key])) {
-                    $this->config[$key] = $vars[$key];
+                    self::$config[$key] = $vars[$key];
                 }
             }
         } else {
