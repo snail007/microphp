@@ -2,10 +2,10 @@ ver 2.1.11:
 
 修复了:
 1.$this->config($group,$key),当$key是0时无效的问题。
-2.修改$this->helper()和$this->config()把配置变量放到$this->config避免与全局变量冲突
-3.增加了$this->setConfig()方法，设置配置
 增加了:
-
+1.增加了$this->setConfig($key,$val)方法，设置配置,$key是helper文件里面的全局变量名称
+优化了：
+1.修改$this->helper()和$this->config()把配置变量放到$this->config避免与全局变量冲突
 升级提示:无
 
 ver 2.1.10:
