@@ -76,23 +76,9 @@ class WoniuLoader {
             }
         }
     }
-
-    /**
-     * 设置配置，参数数量大于等于2,前面的参数都是数组key，最后一个参数是值
-     */
-    public function setConfig() {
-        $argv = func_get_args();
-        $argc = count($argv);
-        if ($argc < 2) {
-            return false;
-        }
-        $val = $argv[$argc - 1];
-        unset($argv[$argc - 1]);
-        $result = $val;
-        for ($i = count($argv) - 1; $i >= 0; $i--) {
-            $result = array($argv[$i] => $result);
-        }
-        self::$config = array_merge_recursive($result, self::$config);
+ 
+    public function setConfig($key,$val) {
+        self::$config[$key]=$val;
     }
 
     public function helper($file_name) {
