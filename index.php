@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.1.9
- * @createdtime       2013-08-16 15:03:33
+ * @since		Version 2.1.11
+ * @createdtime       2013-10-24 15:10:45
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -46,7 +46,7 @@ $system['default_timezone'] = 'PRC';
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "mysql"; #可用的有mysql,pdo,sqlite3,配置见下面
+$woniu_db['default']['dbdriver'] = "mysql"; #可用的有mysql,mysqli,pdo,sqlite3,配置见下面
 $woniu_db['default']['hostname'] = 'localhost';
 $woniu_db['default']['port'] = '3306';
 $woniu_db['default']['username'] = 'root';

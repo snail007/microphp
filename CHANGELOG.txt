@@ -1,3 +1,26 @@
+ver 2.1.11:
+
+修复了:
+1.$this->config($group,$key),当$key是0时无效的问题。
+增加了:
+1.增加了$this->setConfig($key,$val)方法，设置配置,$key是helper文件里面的全局变量名称
+优化了：
+1.修改$this->helper()和$this->config()把配置变量放到$this->config避免与全局变量冲突
+2.在支持代码提示的IDE中，例如Netbeans，增加了$this->db->...的数据库方法提示
+升级提示:无
+
+ver 2.1.10:
+
+修复了:
+1.在PHP5.4及以上版本中的notice问题 Strict Standards: Declaration of xxx。
+
+增加了:
+1.命令行支持
+2.mysqli驱动支持
+
+升级提示:无
+
+
 ver 2.1.9beta2:
 
 修复了:

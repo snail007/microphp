@@ -31,6 +31,7 @@
             <li><a href="#message">输出提示信息</a></li>
             <li><a href="#core-ext">拓展核心</a></li>
             <li><a href="#plugin">和其它框架共存</a></li>
+            <li><a href="#console">命令行下的MicroPHP</a></li>
         </ol>
         <ol>
             <li><fieldset style="border-color:gray;border-style:solid;border-width:0;">
@@ -241,6 +242,17 @@ WoniuCache::cleanup($key),清空缓存.
                 </fieldset>
             </li><li>
                 <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="ajax">Ajax输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p>
+                        在控制器和模型里面都可以直接通过$this->ajax_echo($code, $tip = '', $data = '', $is_exit = true),进行ajax标准输出，
+                        标准输出为：{"code":200,"tip":"message","data":""}
+                        js里面通过code判断状态码，tip获取提示信息，data里面是数据，可以是数组，字符串。
+                        $is_exit控制是否执行完ajax_echo就推出脚本，默认是。
+                    </p> 
+                </fieldset>
+            </li><li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
                     <h2><legend style="color: #990000;"><a name="xml">XML输出</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
 
                     <p>
@@ -364,7 +376,18 @@ WoniuLoader::instance()->view('snail');
                     </p> 
                 </fieldset>
             </li>
+            <li>
+                <fieldset style="border-color:gray;border-style:solid;border-width:0;">
+                    <h2><legend style="color: #990000;"><a name="console">命令行下的MicroPHP</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
+
+                    <p> 
+                        很多情况下网站会有一些corntab任务调用php脚本定期执行一定的任务，MicorPHP也支持命令行执行，调用方式和url方式很相似，
+                        比如假定index.php是入口文件，调用home控制器的index方法并传给index方法一个参数demo：php index.php home.index/demo，“home.index/demo”这部分和url方式一样。
+                    </p> 
+                </fieldset>
+            </li>
         </ol>
         <p style="text-align: center;border-top:solid #000000 thin;padding:20px;  ">Edited by:狂奔的蜗牛 Email:672308444@163.com</p>
+        <p style="text-align: center; "><a href="quick-start.html">快速入门</a>|<a href="http://www.oschina.net/p/microphp">MicroPHP</a></p>
     </body>
 </html>
