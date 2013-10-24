@@ -32,7 +32,9 @@ file_put_contents('docs/index.html', str_replace('{version}',$ver,  file_get_con
 
 
 file_put_contents('MicroPHP.plugin.php',"<?php \n" . $core);
-file_put_contents('MicroPHP.plugin.php', $index.str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php')));
+$content=$index.str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php'));
+str_replace("class WoniuLoader {", "/**\n* @property CI_DB_active_record \$db\n*/class WoniuLoader {", $str);
+file_put_contents('MicroPHP.plugin.php', $content);
 echo 'done';
 
 function common_replace(&$str) {
@@ -40,4 +42,7 @@ function common_replace(&$str) {
     $str = str_replace("Version 1.0", $ver, $str);
     $str = str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
+    $str = str_replace("class WoniuLoader {", "/**\n* @property CI_DB_active_record \$db\n*/class WoniuLoader {", $str);
+
+
 } 
