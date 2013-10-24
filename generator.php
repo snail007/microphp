@@ -15,7 +15,10 @@ foreach ($files as $file) {
 }
 common_replace($core);
 file_put_contents('MicroPHP.php', "<?php\n" . $core . "\nWoniuRouter::loadClass();");
-file_put_contents('MicroPHP.php', php_strip_whitespace('MicroPHP.php'));
+$content= php_strip_whitespace('MicroPHP.php');
+$content=str_replace("class WoniuLoader", "/**\n* @property CI_DB_active_record \$db\n*/class WoniuLoader", $content);
+file_put_contents('MicroPHP.php',$content);
+
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/','',$file) . "');", '', $index);
@@ -23,7 +26,6 @@ foreach ($files as $file) {
 $index = str_replace("../app", 'application', $index);
 $index = str_replace("WoniuRouter::loadClass();", '', $index);
 common_replace($index);
-$index=str_replace("class WoniuLoader", "/*** @property CI_DB_active_record \$db\n*/class WoniuLoader", $index);
 file_put_contents('index.php', $index . "\ninclude('MicroPHP.php');");
 
 #ver modify
