@@ -33,7 +33,7 @@ file_put_contents('docs/index.html', str_replace('{version}',$ver,  file_get_con
 
 file_put_contents('MicroPHP.plugin.php',"<?php \n" . $core);
 $content=$index.str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php'));
-str_replace("class WoniuLoader {", "/**\n* @property CI_DB_active_record \$db\n*/class WoniuLoader {", $str);
+str_replace("class WoniuLoader {", "/**\n* @property CI_DB_active_record \$db\n*/class WoniuLoader {", $content);
 file_put_contents('MicroPHP.plugin.php', $content);
 echo 'done';
 
