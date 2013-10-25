@@ -13,7 +13,7 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
-if (function_exists('trigger404')) {
+if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
         global $system;
@@ -27,7 +27,7 @@ if (function_exists('trigger404')) {
     }
 
 }
-if (function_exists('trigger500')) {
+if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
         global $system;
@@ -41,7 +41,7 @@ if (function_exists('trigger500')) {
     }
 
 }
-if (function_exists('woniuException')) {
+if (!function_exists('woniuException')) {
 
     function woniuException($exception) {
         $errno = $exception->getCode();
@@ -53,7 +53,7 @@ if (function_exists('woniuException')) {
     }
 
 }
-if (function_exists('fatal_handler')) {
+if (!function_exists('fatal_handler')) {
 
     function fatal_handler() {
         $errfile = "unknown file";
@@ -72,7 +72,7 @@ if (function_exists('fatal_handler')) {
     }
 
 }
-if (function_exists('format_error')) {
+if (!function_exists('format_error')) {
 
     function format_error($errno, $errstr, $errfile, $errline) {
 //    $trace = print_r(debug_backtrace(false), true);
@@ -87,7 +87,7 @@ if (function_exists('format_error')) {
     }
 
 }
-if (function_exists('stripslashes_all')) {
+if (!function_exists('stripslashes_all')) {
 
     function stripslashes_all() {
         if (!get_magic_quotes_gpc()) {
@@ -101,7 +101,7 @@ if (function_exists('stripslashes_all')) {
     }
 
 }
-if (function_exists('stripslashes2')) {
+if (!function_exists('stripslashes2')) {
 #过滤魔法转义，参数可以是字符串或者数组，支持嵌套数组
 
     function stripslashes2($var) {
@@ -123,7 +123,7 @@ if (function_exists('stripslashes2')) {
     }
 
 }
-if (function_exists('is_php')) {
+if (!function_exists('is_php')) {
 
     function is_php($version = '5.0.0') {
         static $_is_php;
@@ -137,7 +137,7 @@ if (function_exists('is_php')) {
     }
 
 }
-if (function_exists('forceDownload')) {
+if (!function_exists('forceDownload')) {
 
     /**
      * 强制下载
@@ -188,7 +188,7 @@ if (function_exists('forceDownload')) {
     }
 
 }
-if (function_exists('getRsCol')) {
+if (!function_exists('getRsCol')) {
 
     /**
      * 获取结果集中的一个字段的数组
@@ -205,7 +205,7 @@ if (function_exists('getRsCol')) {
     }
 
 }
-if (function_exists('sortRs')) {
+if (!function_exists('sortRs')) {
 
     /**
      * 按字段对结果集进行排序
@@ -229,7 +229,7 @@ if (function_exists('sortRs')) {
 
 }
 
-if (function_exists('mergeRs')) {
+if (!function_exists('mergeRs')) {
 
     /**
      * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
