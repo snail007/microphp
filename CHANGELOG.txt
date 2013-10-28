@@ -1,5 +1,21 @@
 ver 2.1.11:
+增加了：
+1.自定义路由模式。
+    比如：
+    (1).http://localhost/index.php?welcome.index
+    (2).http://localhost/index.php/welcome.index
+    路由字符串是welcome.index(不包含最前面的?或者/)，路由规则都是针对“路由字符串”的。
+    现在定义路由规则：
+    $system['route']=array(
+        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
+    );
+    路由规则说：
+    1.路由规则是一个关联数组
+    2.数组的key是匹配“路由字符串”的正则表达式，其实就是preg_match的第一个参数。
+    3.数组的value是替换后的路由字符串
+    4.系统使用的就是最后替换后的路由字符串
 
+ver 2.1.11:
 修复了:
 1.$this->config($group,$key),当$key是0时无效的问题。
 增加了:
@@ -10,41 +26,28 @@ ver 2.1.11:
 升级提示:无
 
 ver 2.1.10:
-
 修复了:
 1.在PHP5.4及以上版本中的notice问题 Strict Standards: Declaration of xxx。
-
 增加了:
 1.命令行支持
 2.mysqli驱动支持
-
 升级提示:无
-
 
 ver 2.1.9beta2:
 
 修复了:
 1.$this->view()不传递数据时，$this->view_vars无效的问题。
-
 增加了:无
-
 升级提示:无
 
 ver 2.1.9beta:
-
 修复了:
 1.router的注入时机，使得在父类的构造方法之后即可使用路由信息。
-
 增加了:
 1.控制器中$this->view_vars['vars']='xxx';可以向$this->view_vars添加附加的视图数据，该数据会在显示视图的时候附加到视图数据里面。
-
 升级提示:无
-
-
 
 ver 2.1.8:
 修复了:找不到library class的提示信息。
-
 增加了:$this->router;包含了所有的路由信息。
-
 升级提示:无

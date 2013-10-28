@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.11
- * @createdtime       2013-10-25 11:55:38
+ * @createdtime       2013-10-28 10:06:10
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -41,8 +41,8 @@ $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
 $system['debug'] = TRUE;
 $system['default_timezone'] = 'PRC';
-$system['router']=array(
-    "/^welcome$/u"=>'welcome.index'
+$system['route']=array(
+    "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
 );
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
