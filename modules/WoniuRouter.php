@@ -53,6 +53,7 @@ class WoniuRouter {
     private static function parseURI() {
         global $system;
         $pathinfo_query = self::getQueryStr();
+        var_dump($pathinfo_query);
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
