@@ -37,8 +37,8 @@ class Welcome extends WoniuController {
         echo '__output' . $html;
     }
 
-    public function doAjax() {
-        $this->ajax_echo(200, 'tip', array('a', 'b'),false);
+    public function doAjax($arg=null) {
+        $this->ajax_echo(200, 'tip',$arg);
     }
 
 }

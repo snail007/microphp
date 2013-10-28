@@ -41,7 +41,9 @@ $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
 $system['debug'] = TRUE;
 $system['default_timezone'] = 'PRC';
-
+$system['router']=array(
+    "/^welcome$/u"=>'welcome.index'
+);
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';

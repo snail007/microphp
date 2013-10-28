@@ -52,22 +52,7 @@ class WoniuRouter {
 
     private static function parseURI() {
         global $system;
-        //命令行运行检查
-        if (WoniuInput::isCli()) {
-            global $argv;
-            $pathinfo_query = isset($argv[1]) ? $argv[1] : '';
-        } else {
-            $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
-            if (empty($pathinfo)) {
-                if ($system['debug']) {
-                    trigger404('request parse error:' . $_SERVER['REQUEST_URI']);
-                } else {
-                    trigger404();
-                }
-            }
-            //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
-            $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
-        }
+        $pathinfo_query = self::getQueryStr();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
@@ -123,6 +108,41 @@ class WoniuRouter {
         }
 
         return $router + $info;
+    }
+
+    public static function getQueryStr() {
+        global $system;
+        //命令行运行检查
+        if (WoniuInput::isCli()) {
+            global $argv;
+            $pathinfo_query = isset($argv[1]) ? $argv[1] : '';
+        } else {
+            $pathinfo = @parse_url($_SERVER['REQUEST_URI']);
+            if (empty($pathinfo)) {
+                if ($system['debug']) {
+                    trigger404('request parse error:' . $_SERVER['REQUEST_URI']);
+                } else {
+                    trigger404();
+                }
+            }
+            //优先以查询模式获取查询字符串，然后尝试获取pathinfo模式的查询字符串
+            $pathinfo_query = !empty($pathinfo['query']) ? $pathinfo['query'] : (!empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '');
+        }
+        $pathinfo_query=self::checkRouter($pathinfo_query);
+        return $pathinfo_query;
+    }
+
+    public static function checkRouter($pathinfo_query) {
+        global $system;
+        if (is_array($system['route'])) {
+            foreach ($system['route'] as $reg => $replace) {
+                if (preg_match($reg, $pathinfo_query)) {
+                    $pathinfo_query = preg_replace($reg, $replace, $pathinfo_query);
+                    break;
+                }
+            }
+        }
+        return $pathinfo_query;
     }
 
 }
