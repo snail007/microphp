@@ -1,6 +1,21 @@
 <?php
 date_default_timezone_set('PRC');
-$ver = "Version 2.1.11";
+$ver = "Version 2.1.12";
+$header='
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link		http://git.oschina.net/snail/microphp
+ * @since		'.$ver.'
+ * @createdtime         '.date('Y-m-d H:i:s').'
+ */
+ ';
 $files = array('modules/WoniuRouter.php', 'modules/WoniuLoader.php',
     'modules/WoniuController.php', 'modules/WoniuModel.php',
     'modules/db-drivers/db.drivers.php', 'modules/db-drivers/mysql.driver.php', 
@@ -20,7 +35,7 @@ $content=str_replace("class WoniuLoader", "\n /**
  * @property CI_DB_active_record \$db
  **/
  class WoniuLoader", $content);
-file_put_contents('MicroPHP.php',$content);
+file_put_contents('MicroPHP.php',$header.$content);
 
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
