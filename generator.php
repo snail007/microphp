@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('PRC');
 $ver = "Version 2.1.12";
-$header='
+$header='<?php
 /**
  * MicroPHP
  *
@@ -35,7 +35,7 @@ $content=str_replace("class WoniuLoader", "\n /**
  * @property CI_DB_active_record \$db
  **/
  class WoniuLoader", $content);
-file_put_contents('MicroPHP.php',$header.$content);
+file_put_contents('MicroPHP.php',  str_replace('<?php', $header, $content));
 
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
