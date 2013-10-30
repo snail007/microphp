@@ -17,6 +17,9 @@ ver 2.1.11:
 优化了：
 1.$this->db->xxx_where_in($key,$array),自动检测$array是否是空数组，
   当$array为空数组时,就认为$array=array('')即$key为''空值,不再报错。
+升级提示:
+1.如果想使用路由功能请在index.php的$system里面增加$system['route']=array();即可。
+
 
 ver 2.1.11:
 修复了:
