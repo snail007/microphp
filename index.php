@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.1.11
- * @createdtime       2013-10-24 15:10:45
+ * @since		Version 2.1.12
+ * @createdtime       2013-10-30 13:30:44
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -41,7 +41,9 @@ $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
 $system['debug'] = TRUE;
 $system['default_timezone'] = 'PRC';
-
+$system['route']=array(
+    "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
+);
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
