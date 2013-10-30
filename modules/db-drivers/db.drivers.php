@@ -2103,8 +2103,8 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if (!is_array($values)) {
             $values = array($values);
-        }elseif(empty($values)){
-            return $this;
+        } elseif (empty($values)) {
+            $values = array('');
         }
 
         $not = ($not) ? ' NOT' : '';
