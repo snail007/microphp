@@ -2097,7 +2097,7 @@ class CI_DB_active_record extends CI_DB_driver {
      * @return        object
      */
     protected function _where_in($key = NULL, $values = NULL, $not = FALSE, $type = 'AND ') {
-        if ($key === NULL OR $values === NULL) {
+        if ($key === NULL OR $values === NULL OR (is_array($values) && empty($values))) {
             return;
         }
 
