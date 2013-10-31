@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -10,13 +9,15 @@
  *
  * @author Administrator
  */
-class User extends WoniuModel {
+class User2 extends WoniuModel {
 
     public function __construct() {
         parent::__construct();
     }
 
     public function sayHello($name) {
-        echo 'hello:' . $name."\n<br/>";
+        var_dump(array_keys(WoniuModelLoader::$model_files),'------------');
+        $this->model('User');
+        echo 'User2 say: hello:' . $name."\n<br/>";
     }
 }
