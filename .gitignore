@@ -1,4 +1,4 @@
 nbproject/private/
 cache/
 .directory
-modules/cache-drivers/cache.*
+*cache.storage*
