@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-10-31 20:07:11
+ * @createdtime       2013-10-31 20:59:22
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -69,7 +69,6 @@ $system['cache_config'] = array(
      * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
      */
     "fallback" => array(
-        "example" => "files",
         "memcache" => "files",
         "memcached" => "files",
         "wincache" => "files",

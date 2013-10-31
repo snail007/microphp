@@ -72,7 +72,8 @@ file_put_contents('MicroPHP.plugin.php', "<?php \n" . $core);
 $content = $index . str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php'));
 $content = str_replace("class WoniuLoader", "\n /**
  * @property CI_DB_active_record \$db
- * @property phpFastCache        \$cache      
+ * @property phpFastCache        \$cache
+ * @property WoniuInput          \$input
  **/
  class WoniuLoader", $content);
 file_put_contents('MicroPHP.plugin.php', $content);
@@ -85,22 +86,3 @@ function common_replace(&$str) {
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
 }
 
-function getCache() {
-    $dir = 'modules/cache-drivers';
-    $drivers = dir($dir . '/drivers');
-    $content = '';
-    while ($file = $drivers->read()) {
-        if ($file != '.' && $file != '..' && is_file($dir . '/drivers/' . $file)) {
-            $content.=str_replace('<?php', '', file_get_contents($dir . '/drivers/' . $file)) . "\n";
-        }
-    }
-    $drivers_content = $content;
-
-    $driver = str_replace('<?php', '', file_get_contents($dir . '/driver.php')) . "\n";
-
-    $phpfastcache = str_replace('<?php', '', file_get_contents($dir . '/phpfastcache.php')) . "\n";
-
-    $contents = $driver . $drivers_content . $phpfastcache;
-
-    return $contents;
-}

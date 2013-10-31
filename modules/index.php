@@ -69,7 +69,6 @@ $system['cache_config'] = array(
      * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
      */
     "fallback" => array(
-        "example" => "files",
         "memcache" => "files",
         "memcached" => "files",
         "wincache" => "files",
