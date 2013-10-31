@@ -50,7 +50,7 @@ $system['cache_config'] = array(
      * Default storage
      * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
      */
-    "storage" => "sqlite", // files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
+    "storage" => "files", // files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
 
     /*
      * Default Path for Cache on HDD
@@ -136,6 +136,7 @@ include('db-drivers/db.drivers.php');
 include('db-drivers/mysql.driver.php');
 include('db-drivers/pdo.driver.php');
 include('db-drivers/sqlite3.driver.php');
+include('cache-drivers/phpfastcache.php');
 include('cache-drivers/driver.php');
 include('cache-drivers/drivers/apc.php');
 include('cache-drivers/drivers/example.php');
@@ -145,7 +146,6 @@ include('cache-drivers/drivers/memcached.php');
 include('cache-drivers/drivers/sqlite.php');
 include('cache-drivers/drivers/wincache.php');
 include('cache-drivers/drivers/xcache.php');
-include('cache-drivers/phpfastcache.php');
 include('WoniuRouter.php');
 include('WoniuLoader.php');
 include('WoniuController.php');

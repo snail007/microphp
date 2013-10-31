@@ -31,7 +31,7 @@ class Welcome extends WoniuController {
 //        $this->helper('config');
 //        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
         $this->cache->set('test', array('aa','bb'));
-        var_dump($this->cache->get('test'),  $this->cache->stats());
+//        var_dump($this->cache->get('test'));
     }
 
     public function a__output($html) {

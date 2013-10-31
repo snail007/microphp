@@ -28,8 +28,8 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        $this->cache = phpFastCache();
-        $this->cache->setOption($system['cache_config']);
+        $this->cache = phpFastCache($system['cache_config']['storage'],$system['cache_config']);
+       
         if ($system['autoload_db']) {
             $this->database();
         }

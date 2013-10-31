@@ -36,7 +36,6 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
-
         $data = apc_fetch($keyword,$bo);
         if($bo === false) {
             return null;

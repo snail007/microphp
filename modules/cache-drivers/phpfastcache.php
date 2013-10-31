@@ -390,6 +390,7 @@ class phpFastCache {
     public function setOption($option = array()) {
         $this->option = array_merge($this->option, self::$config, $option);
         $this->checked['path'] = false;
+        
     }
 
     function __get($name) {
