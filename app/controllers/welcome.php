@@ -28,10 +28,8 @@ class Welcome extends WoniuController {
 //        $this->message("提示信息",'message',"http://www.163.com",5);
 //        var_dump($this->input->server('http_host',2222));
 //        echo $this->page(100, $this->input->get('p'), 10, '?home.welcome.index&p={page}');
-//        $this->helper('config');
-//        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
-        $this->cache->set('test', array('aa','bb'));
-//        var_dump($this->cache->get('test'));
+        $this->helper('config');
+        $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
     public function a__output($html) {
