@@ -19,6 +19,7 @@
  * @createdtime       {createdtime}
  */
 class WoniuInput {
+
     public static $router;
 
     public static function get_post($key = null, $default = null) {
@@ -56,57 +57,1647 @@ class WoniuInput {
             return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
         }
     }
-    public static function isCli(){
-        return php_sapi_name()=='cli';
+
+    public static function isCli() {
+        return php_sapi_name() == 'cli';
     }
+
 }
 
-/* Revision 618
- * ALl EXAMPLE & DOCUMENT ARE ON www.phpFastCache.com
- * IF YOU FOUND A BUG, PLEASE GO THERE: https://github.com/khoaofgod/phpfastcache/issues?state=open
- * Please feel free
- * Open new issue and I will fix it for you in 24 hours
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class WoniuCache extends phpFastCache {
-    
+
+interface phpfastcache_driver {
+    /*
+     * Check if this Cache driver is available for server or not
+     */
+     function __construct($option = array());
+
+     function checkdriver();
+
+    /*
+     * SET
+     * set a obj to cache
+     */
+     function driver_set($keyword, $value = "", $time = 300, $option = array() );
+
+    /*
+     * GET
+     * return null or value of cache
+     */
+     function driver_get($keyword, $option = array());
+
+    /*
+     * Stats
+     * Show stats of caching
+     * Return array ("info","size","data")
+     */
+     function driver_stats($option = array());
+
+    /*
+     * Delete
+     * Delete a cache
+     */
+     function driver_delete($keyword, $option = array());
+
+    /*
+     * clean
+     * Clean up whole cache
+     */
+     function driver_clean($option = array());
+
+
+
+
+
 }
 
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+
+class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver {
+
+    var $instant;
+
+    function checkdriver() {
+        // Check memcache
+        if(function_exists("memcache_connect")) {
+            return true;
+        }
+        return false;
+    }
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+        if ($this->checkdriver() && !is_object($this->instant)) {
+            $this->instant = new Memcache();
+        }
+    }
+
+    function connectServer() {
+        $server = $this->option['server'];
+        if(count($server) < 1) {
+            $server = array(
+                array("127.0.0.1",11211),
+            );
+        }
+
+        foreach($server as $s) {
+            $name = $s[0]."_".$s[1];
+            if(!isset($this->checked[$name])) {
+                $this->instant->addserver($s[0],$s[1]);
+                $this->checked[$name] = 1;
+            }
+
+        }
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        $this->connectServer();
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return $this->instant->add($keyword, $value, false, $time );
+
+        } else {
+            return $this->instant->set($keyword, $value, false, $time );
+        }
+
+    }
+
+    function driver_get($keyword, $option = array()) {
+        $this->connectServer();
+        // return null if no caching
+        // return value if in caching
+        $x = $this->instant->get($keyword);
+        if($x == false) {
+            return null;
+        } else {
+            return $x;
+        }
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        $this->connectServer();
+         $this->instant->delete($keyword);
+    }
+
+    function driver_stats($option = array()) {
+        $this->connectServer();
+        $res = array(
+            "info"  => "",
+            "size"  =>  "",
+            "data"  => $this->instant->getStats(),
+        );
+
+        return $res;
+
+    }
+
+    function driver_clean($option = array()) {
+        $this->connectServer();
+        $this->instant->flush();
+    }
+
+    function driver_isExisting($keyword) {
+        $this->connectServer();
+        $x = $this->get($keyword);
+        if($x == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+
+}
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver  {
+
+    function checkdriver() {
+        if(extension_loaded('wincache') && function_exists("wincache_ucache_set"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return wincache_ucache_add($keyword, $value, $time);
+        } else {
+            return wincache_ucache_set($keyword, $value, $time);
+        }
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+
+        $x = wincache_ucache_get($keyword,$suc);
+
+        if($suc == false) {
+            return null;
+        } else {
+            return $x;
+        }
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        return wincache_ucache_delete($keyword);
+    }
+
+    function driver_stats($option = array()) {
+        $res = array(
+            "info"  =>  "",
+            "size"  =>  "",
+            "data"  =>  wincache_scache_info(),
+        );
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+        wincache_ucache_clear();
+        return true;
+    }
+
+    function driver_isExisting($keyword) {
+        if(wincache_ucache_exists($keyword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+}
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+
+class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
+    function checkdriver() {
+        // Check apc
+        if(extension_loaded('apc') && ini_get('apc.enabled'))
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return apc_add($keyword,$value,$time);
+        } else {
+            return apc_store($keyword,$value,$time);
+        }
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+
+        $data = apc_fetch($keyword,$bo);
+        if($bo === false) {
+            return null;
+        }
+        return $data;
+
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        return apc_delete($keyword);
+    }
+
+    function driver_stats($option = array()) {
+        $res = array(
+            "info" => "",
+            "size"  => "",
+            "data"  =>  "",
+        );
+
+        try {
+            $res['data'] = apc_cache_info("user");
+        } catch(Exception $e) {
+            $res['data'] =  array();
+        }
+
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+        @apc_clear_cache();
+        @apc_clear_cache("user");
+    }
+
+    function driver_isExisting($keyword) {
+        if(apc_exists($keyword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
+
+}
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
+
+    function checkdriver() {
+        // Check xcache
+        if(extension_loaded('xcache') && function_exists("xcache_get"))
+        {
+           return true;
+        }
+        return false;
+
+    }
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            if(!$this->isExisting($keyword)) {
+                return xcache_set($keyword,$value,$time);
+            }
+        } else {
+            return xcache_set($keyword,$value,$time);
+        }
+        return false;
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+        $data = xcache_get($keyword);
+        if($data === false || $data == "") {
+            return null;
+        }
+        return $data;
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        return xcache_unset($keyword);
+    }
+
+    function driver_stats($option = array()) {
+        $res = array(
+            "info"  =>  "",
+            "size"  =>  "",
+            "data"  =>  "",
+        );
+
+        try {
+            $res['data'] = xcache_list(XC_TYPE_VAR,100);
+        } catch(Exception $e) {
+            $res['data'] = array();
+        }
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+        $cnt = xcache_count(XC_TYPE_VAR);
+        for ($i=0; $i < $cnt; $i++) {
+            xcache_clear_cache(XC_TYPE_VAR, $i);
+        }
+        return true;
+    }
+
+    function driver_isExisting($keyword) {
+        if(xcache_isset($keyword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+}
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+
+class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver  {
+    var $max_size = 10; // 10 mb
+
+    var $instant = array();
+    var $indexing = NULL;
+    var $path = "";
+
+    var $currentDB = 1;
+
+    /*
+     * INIT NEW DB
+     */
+    function initDB(PDO $db) {
+        $db->exec('drop table if exists "caching"');
+        $db->exec('CREATE TABLE "caching" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "keyword" VARCHAR UNIQUE, "object" BLOB, "exp" INTEGER)');
+        $db->exec('CREATE UNIQUE INDEX "cleaup" ON "caching" ("keyword","exp")');
+        $db->exec('CREATE INDEX "exp" ON "caching" ("exp")');
+        $db->exec('CREATE UNIQUE INDEX "keyword" ON "caching" ("keyword")');
+    }
+
+    /*
+     * INIT Indexing DB
+     */
+    function initIndexing(PDO $db) {
+
+        // delete everything before reset indexing
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file != "." && $file!=".." && $file != "indexing" && $file!="dbfastcache") {
+                unlink($this->path."/".$file);
+            }
+        }
+
+        $db->exec('drop table if exists "balancing"');
+        $db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
+        $db->exec('CREATE INDEX "db" ON "balancing" ("db")');
+        $db->exec('CREATE UNIQUE INDEX "lookup" ON "balacing" ("keyword")');
+
+    }
+
+    /*
+     * INIT Instant DB
+     * Return Database of Keyword
+     */
+    function indexing($keyword) {
+        if($this->indexing == NULL) {
+            $createTable = false;
+            if(!file_exists($this->path."/indexing")) {
+                $createTable = true;
+            }
+
+            $PDO = new PDO("sqlite:".$this->path."/indexing");
+            $PDO->setAttribute(PDO::ATTR_ERRMODE,
+                PDO::ERRMODE_EXCEPTION);
+
+            if($createTable == true) {
+                $this->initIndexing($PDO);
+            }
+            $this->indexing = $PDO;
+            unset($PDO);
+
+            $stm = $this->indexing->prepare("SELECT MAX(`db`) as `db` FROM `balancing`");
+            $stm->execute();
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+            if(!isset($row['db'])) {
+                $db = 1;
+            } elseif($row['db'] <=1 ) {
+                $db = 1;
+            } else {
+                $db = $row['db'];
+            }
+
+            // check file size
+
+            $size = file_exists($this->path."/db".$db) ? filesize($this->path."/db".$db) : 1;
+            $size = round($size / 1024 / 1024,1);
+
+
+            if($size > $this->max_size) {
+                $db = $db + 1;
+            }
+            $this->currentDB = $db;
+
+        }
+
+        // look for keyword
+        $stm = $this->indexing->prepare("SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1");
+        $stm->execute(array(
+             ":keyword"  => $keyword
+        ));
+        $row = $stm->fetch(PDO::FETCH_ASSOC);
+        if(isset($row['db']) && $row['db'] != "") {
+            $db = $row['db'];
+        } else {
+            /*
+             * Insert new to Indexing
+             */
+            $db = $this->currentDB;
+            $stm = $this->indexing->prepare("INSERT INTO `balancing` (`keyword`,`db`) VALUES(:keyword, :db)");
+            $stm->execute(array(
+                ":keyword"  => $keyword,
+                ":db"       =>  $db,
+            ));
+        }
+
+        return $db;
+    }
+
+
+
+    function db($keyword, $reset = false) {
+        /*
+         * Default is fastcache
+         */
+        $instant = $this->indexing($keyword);
+
+        /*
+         * init instant
+         */
+        if(!isset($this->instant[$instant])) {
+            // check DB Files ready or not
+            $createTable = false;
+            if(!file_exists($this->path."/db".$instant) || $reset == true) {
+                $createTable = true;
+            }
+            $PDO = new PDO("sqlite:".$this->path."/db".$instant);
+            $PDO->setAttribute(PDO::ATTR_ERRMODE,
+                               PDO::ERRMODE_EXCEPTION);
+
+            if($createTable == true) {
+                $this->initDB($PDO);
+            }
+
+            $this->instant[$instant] = $PDO;
+            unset($PDO);
+
+        }
+
+
+        return $this->instant[$instant];
+    }
+
+
+
+    function checkdriver() {
+        if(extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
+           return true;
+        }
+        return false;
+    }
+
+    /*
+     * Init Main Database & Sub Database
+     */
+    function __construct($option = array()) {
+        /*
+         * init the path
+         */
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+        if(!file_exists($this->getPath()."/sqlite")) {
+            if(!@mkdir($this->getPath()."/sqlite",0777)) {
+                die("Sorry, Please CHMOD 0777 for this path: ".$this->getPath());
+            }
+        }
+        $this->path = $this->getPath()."/sqlite";
+    }
+
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        $skipExisting = isset($option['skipExisting']) ? $option['skipExisting'] : false;
+        $toWrite = true;
+
+        // check in cache first
+        $in_cache = $this->get($keyword,$option);
+
+        if($skipExisting == true) {
+            if($in_cache == null) {
+                $toWrite = true;
+            } else {
+                $toWrite = false;
+            }
+        }
+
+        if($toWrite == true) {
+            try {
+                $stm = $this->db($keyword)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                $stm->execute(array(
+                    ":keyword"  => $keyword,
+                    ":object"   =>  $this->encode($value),
+                    ":exp"      => @date("U") + (Int)$time,
+                ));
+
+                return true;
+            } catch(PDOException $e) {
+                $stm = $this->db($keyword,true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
+                $stm->execute(array(
+                    ":keyword"  => $keyword,
+                    ":object"   =>  $this->encode($value),
+                    ":exp"      => @date("U") + (Int)$time,
+                ));
+            }
+
+
+        }
+
+        return false;
+
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+        try {
+            $stm = $this->db($keyword)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+            $stm->execute(array(
+                ":keyword"  =>  $keyword
+            ));
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+
+        } catch(PDOException $e) {
+
+            $stm = $this->db($keyword,true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
+            $stm->execute(array(
+                ":keyword"  =>  $keyword
+            ));
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+        }
+
+
+        if($this->isExpired($row)) {
+            $this->deleteRow($row);
+            return null;
+        }
+
+
+
+        if(isset($row['id'])) {
+            $data = $this->decode($row['object']);
+            return $data;
+        }
+
+
+        return null;
+    }
+
+    function isExpired($row) {
+        if(isset($row['exp']) && @date("U") >= $row['exp']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function deleteRow($row) {
+        $stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
+        $stm->execute(array(
+            ":id"   => $row['id'],
+            ":U"    =>  @date("U"),
+        ));
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        $stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
+        $stm->execute(array(
+            ":keyword"   => $keyword,
+            ":U"    =>  @date("U"),
+        ));
+    }
+
+    function driver_stats($option = array()) {
+        $res = array(
+            "info"  =>  "",
+            "size"  =>  "",
+            "data"  =>  "",
+        );
+        $total = 0;
+        $optimized = 0;
+
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file!="." && $file!="..") {
+                $file_path = $this->path."/".$file;
+                $size = filesize($file_path);
+                $total = $total + $size;
+
+                $PDO = new PDO("sqlite:".$file_path);
+                $PDO->setAttribute(PDO::ATTR_ERRMODE,
+                    PDO::ERRMODE_EXCEPTION);
+
+                $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
+                $stm->execute(array(
+                    ":U"    =>  @date("U"),
+                ));
+
+                $PDO->exec("VACUUM;");
+                $size = filesize($file_path);
+                $optimized = $optimized + $size;
+
+            }
+        }
+        $res['size'] = round($optimized/1024/1024,1);
+        $res['info'] = array(
+            "total" => round($total/1024/1024,1),
+            "optimized" => round($optimized/1024/1024,1),
+        );
+
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+        // delete everything before reset indexing
+        $dir = opendir($this->path);
+        while($file = readdir($dir)) {
+            if($file != "." && $file!="..") {
+                unlink($this->path."/".$file);
+            }
+        }
+    }
+
+    function driver_isExisting($keyword) {
+        $stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
+        $stm->execute(array(
+            ":keyword"   => $keyword
+        ));
+        $data = $stm->fetch(PDO::FETCH_ASSOC);
+        if($data['total'] >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+}
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
+
+    function checkdriver() {
+        if(is_writable($this->getPath())) {
+            return true;
+        } else {
+
+        }
+        return false;
+    }
+
+    /*
+     * Init Cache Path
+     */
+    function __construct($option = array()) {
+
+        $this->setOption($option);
+        $this->getPath();
+
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+    }
+
+    /*
+     * Return $FILE FULL PATH
+     */
+    private function getFilePath($keyword, $skip = false) {
+        $path = $this->getPath();
+        $code = md5($keyword);
+        $folder = substr($code,0,2);
+        $path = $path."/".$folder;
+        /*
+         * Skip Create Sub Folders;
+         */
+        if($skip == false) {
+            if(!file_exists($path)) {
+                if(!@mkdir($path,0777)) {
+                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+                }
+
+            } elseif(!is_writeable($path)) {
+                @chmod($path,0777);
+            }
+        }
+
+        $file_path = $path."/".$code.".txt";
+        return $file_path;
+    }
+
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        $file_path = $this->getFilePath($keyword);
+      //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
+        $data = $this->encode($value);
+
+        $toWrite = true;
+        /*
+         * Skip if Existing Caching in Options
+         */
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+            $content = $this->readfile($file_path);
+            $old = $this->decode($content);
+            $toWrite = false;
+            if($this->isExpired($old)) {
+                $toWrite = true;
+            }
+        }
+
+        if($toWrite == true) {
+                $f = fopen($file_path,"w+");
+                fwrite($f,$data);
+                fclose($f);
+        }
+    }
+
+
+
+
+    function driver_get($keyword, $option = array()) {
+
+        $file_path = $this->getFilePath($keyword);
+        if(!file_exists($file_path)) {
+            return null;
+        }
+
+        $content = $this->readfile($file_path);
+        $object = $this->decode($content);
+        if($this->isExpired($object)) {
+            @unlink($file_path);
+            $this->auto_clean_expired();
+            return null;
+        }
+
+        return $object;
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        $file_path = $this->getFilePath($keyword,true);
+        if(@unlink($file_path)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Return total cache size + auto removed expired files
+     */
+    function driver_stats($option = array()) {
+        $res = array(
+            "info"  =>  "",
+            "size"  =>  "",
+            "data"  =>  "",
+        );
+
+        $path = $this->getPath();
+        $dir = @opendir($path);
+        if(!$dir) {
+            throw new Exception("Can't read PATH:".$path,94);
+        }
+
+        $total = 0;
+        $removed = 0;
+        while($file=readdir($dir)) {
+            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+                // read sub dir
+                $subdir = @opendir($path."/".$file);
+                if(!$subdir) {
+                    throw new Exception("Can't read path:".$path."/".$file,93);
+                }
+
+                while($f = readdir($subdir)) {
+                    if($f!="." && $f!="..") {
+                        $file_path = $path."/".$file."/".$f;
+                        $size = filesize($file_path);
+                        $object = $this->decode($this->readfile($file_path));
+                        if($this->isExpired($object)) {
+                            unlink($file_path);
+                            $removed = $removed + $size;
+                        }
+                        $total = $total + $size;
+                    }
+                } // end read subdir
+            } // end if
+       } // end while
+
+       $res['size']  = $total - $removed;
+       $res['info'] = array(
+                "Total" => $total,
+                "Removed"   => $removed,
+                "Current"   => $res['size'],
+       );
+       return $res;
+    }
+
+    function auto_clean_expired() {
+        $autoclean = $this->get("keyword_clean_up_driver_files");
+        if($autoclean == null) {
+            $this->set("keyword_clean_up_driver_files",3600*24);
+            $res = $this->stats();
+        }
+    }
+
+    function driver_clean($option = array()) {
+
+        $path = $this->getPath();
+        $dir = @opendir($path);
+        if(!$dir) {
+            throw new Exception("Can't read PATH:".$path,94);
+        }
+
+        while($file=readdir($dir)) {
+            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+                // read sub dir
+                $subdir = @opendir($path."/".$file);
+                if(!$subdir) {
+                    throw new Exception("Can't read path:".$path."/".$file,93);
+                }
+
+                while($f = readdir($subdir)) {
+                    if($f!="." && $f!="..") {
+                        $file_path = $path."/".$file."/".$f;
+                        unlink($file_path);
+                    }
+                } // end read subdir
+            } // end if
+        } // end while
+
+
+    }
+
+
+    function driver_isExisting($keyword) {
+        $file_path = $this->getFilePath($keyword,true);
+        if(!file_exists($file_path)) {
+            return false;
+        } else {
+            // check expired or not
+            $value = $this->get($keyword);
+            if($value == null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    function isExpired($object) {
+
+        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
+}
+
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+
+class phpfastcache_example extends phpFastCache implements phpfastcache_driver  {
+
+    function checkdriver() {
+        // return true;
+        return false;
+    }
+
+
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if(!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            // skip driver
+        } else {
+            // add driver
+        }
+
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+
+        return null;
+    }
+
+    function driver_delete($keyword, $option = array()) {
+
+    }
+
+    function driver_stats($option = array()) {
+        $res = array(
+            "info"  => "",
+            "size"  =>  "",
+            "data"  => "",
+        );
+
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+
+    }
+
+    function driver_isExisting($keyword) {
+
+    }
+
+
+
+}
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver {
+
+    var $instant;
+
+    function checkdriver() {
+        if (class_exists("Memcached")) {
+            return true;
+        }
+        return false;
+    }
+
+    function __construct($option = array()) {
+        $this->setOption($option);
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
+            throw new Exception("Can't use this driver for your website!");
+        }
+
+        if ($this->checkdriver() && !is_object($this->instant)) {
+            $this->instant = new Memcached();
+        }
+    }
+
+    function connectServer() {
+        $s = $this->option['server'];
+        if (count($s) < 1) {
+            $s = array(
+                array("127.0.0.1", 11211, 100),
+            );
+        }
+
+        foreach ($s as $server) {
+            $name = isset($server[0]) ? $server[0] : "127.0.0.1";
+            $port = isset($server[1]) ? $server[1] : 11211;
+            $sharing = isset($server[2]) ? $server[2] : 0;
+            $checked = $name . "_" . $port;
+            if (!isset($this->checked[$checked])) {
+                if ($sharing > 0) {
+                    $this->instant->addServer($name, $port, $sharing);
+                } else {
+                    $this->instant->addServer($name, $port);
+                }
+                $this->checked[$checked] = 1;
+            }
+        }
+    }
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
+        $this->connectServer();
+        if (isset($option['isExisting']) && $option['isExisting'] == true) {
+            return $this->instant->add($keyword, $value, time() + $time);
+        } else {
+            return $this->instant->set($keyword, $value, time() + $time);
+        }
+    }
+
+    function driver_get($keyword, $option = array()) {
+        // return null if no caching
+        // return value if in caching
+        $this->connectServer();
+        $x = $this->instant->get($keyword);
+        if ($x == false) {
+            return null;
+        } else {
+            return $x;
+        }
+    }
+
+    function driver_delete($keyword, $option = array()) {
+        $this->connectServer();
+        $this->instant->delete($keyword);
+    }
+
+    function driver_stats($option = array()) {
+        $this->connectServer();
+        $res = array(
+            "info" => "",
+            "size" => "",
+            "data" => $this->instant->getStats(),
+        );
+
+        return $res;
+    }
+
+    function driver_clean($option = array()) {
+        $this->connectServer();
+        $this->instant->flush();
+    }
+
+    function driver_isExisting($keyword) {
+        $this->connectServer();
+        $x = $this->get($keyword);
+        if ($x == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+}
+
+
+/*
+ * khoaofgod@yahoo.com
+ * Website: http://www.phpfastcache.com
+ * Example at our website, any bugs, problems, please visit http://www.codehelper.io
+ */
+
+
+
+// short function
+if (!function_exists("__c")) {
+
+    function __c($storage = "", $option = array()) {
+        return phpfastcache($storage, $option);
+    }
+
+}
+
+// main function
+if (!function_exists("phpFastCache")) {
+
+    function phpFastCache($storage = "", $option = array()) {
+        if (!isset(phpFastCache_instances::$instances[$storage])) {
+            phpFastCache_instances::$instances[$storage] = new phpFastCache($storage, $option);
+        }
+        return phpFastCache_instances::$instances[$storage];
+    }
+
+}
+
+class phpFastCache_instances {
+
+    public static $instances = array();
+
+}
+
+// main class
 class phpFastCache {
 
-    // Public OPTIONS
-    // Can be set by phpFastCache::$option_name = $value|array|string
-    public static $storage = "auto"; // PDO | mpdo | Auto | Files | memcache | apc | wincache | xcache
-    public static $files_cleanup_after = 1; // hour | auto clean up files after this
-    public static $autosize = 40; // Megabytes
-    public static $path = ""; // PATH/TO/CACHE/ default will be current path
-    public static $securityKey = "cache.storage"; // phpFastCache::$securityKey = "newKey";
-    public static $securityHtAccess = true; // auto create .htaccess
-    public static $option = array();
-    public static $server = array(array("localhost", 11211)); // for MemCache
-    public static $useTmpCache = false; // use for get from Tmp Memory, will be faster in checking cache on LOOP.
-    public static $debugging = false; // turn true for debugging
-    // NOTHING TO CHANGE FROM HERE
-    private static $step_debugging = 0;
-    private static $Tmp = array();
-    private static $supported_api = array("pdo", "mpdo", "files", "memcache", "memcached", "apc", "xcache", "wincache");
-    private static $filename = "pdo.caching";
-    private static $table = "objects";
-    private static $autodb = "";
-    private static $multiPDO = array();
-    public static $sys = array();
-    private static $checked = array(
-        "path" => false,
-        "servers" => array(),
-        "config_file" => "",
+    public static $storage = "auto";
+    public static $config = array(
+        "storage" => "auto",
+        "fallback" => array(
+            "example" => "files",
+        ),
+        "securityKey" => "auto",
+        "htaccess" => true,
+        "path" => "",
+        "server" => array(
+            array("127.0.0.1", 11211, 1),
+        //  array("new.host.ip",11211,1),
+        ),
+        "extensions" => array(),
     );
-    private static $objects = array(
-        "memcache" => "",
-        "memcached" => "",
-        "pdo" => "",
+    var $tmp = array();
+    var $checked = array(
+        "path" => false,
+        "fallback" => false,
+        "hook" => false,
+    );
+    var $is_driver = false;
+    var $driver = NULL;
+    // default options, this will be merge to Driver's Options
+    var $option = array(
+        "path" => "", // path for cache folder
+        "htaccess" => null, // auto create htaccess
+        "securityKey" => null, // Key Folder, Setup Per Domain will good.
+        "system" => array(),
+        "storage" => "",
+        "cachePath" => "",
     );
 
-    private static function getOS() {
+    /*
+     * Basic Method
+     */
+
+    function set($keyword, $value = "", $time = 300, $option = array()) {
+        $object = array(
+            "value" => $value,
+            "write_time" => @date("U"),
+            "expired_in" => $time,
+            "expired_time" => @date("U") + (Int) $time,
+        );
+        if ($this->is_driver == true) {
+            return $this->driver_set($keyword, $object, $time, $option);
+        } else {
+            return $this->driver->driver_set($keyword, $object, $time, $option);
+        }
+    }
+
+    function get($keyword, $option = array()) {
+        if ($this->is_driver == true) {
+            $object = $this->driver_get($keyword, $option);
+        } else {
+            $object = $this->driver->driver_get($keyword, $option);
+        }
+
+        if ($object == null) {
+            return null;
+        }
+        return $object['value'];
+    }
+
+    function getInfo($keyword, $option = array()) {
+        if ($this->is_driver == true) {
+            $object = $this->driver_get($keyword, $option);
+        } else {
+            $object = $this->driver->driver_get($keyword, $option);
+        }
+
+        if ($object == null) {
+            return null;
+        }
+        return $object;
+    }
+
+    function delete($keyword, $option = array()) {
+        if ($this->is_driver == true) {
+            return $this->driver_delete($keyword, $option);
+        } else {
+            return $this->driver->driver_delete($keyword, $option);
+        }
+    }
+
+    function stats($option = array()) {
+        if ($this->is_driver == true) {
+            return $this->driver_stats($option);
+        } else {
+            return $this->driver->driver_stats($option);
+        }
+    }
+
+    function clean($option = array()) {
+        if ($this->is_driver == true) {
+            return $this->driver_clean($option);
+        } else {
+            return $this->driver->driver_clean($option);
+        }
+    }
+
+    function isExisting($keyword) {
+        if ($this->is_driver == true) {
+            if (method_exists($this, "driver_isExisting")) {
+                return $this->driver_isExisting($keyword);
+            }
+        } else {
+            if (method_exists($this->driver, "driver_isExisting")) {
+                return $this->driver->driver_isExisting($keyword);
+            }
+        }
+
+        $data = $this->get($keyword);
+        if ($data == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function increment($keyword, $step = 1, $option = array()) {
+        $object = $this->get($keyword);
+        if ($object == null) {
+            return false;
+        } else {
+            $value = (Int) $object['value'] + (Int) $step;
+            $time = $object['expired_time'] - @date("U");
+            $this->set($keyword, $value, $time, $option);
+            return true;
+        }
+    }
+
+    function decrement($keyword, $step = 1, $option = array()) {
+        $object = $this->get($keyword);
+        if ($object == null) {
+            return false;
+        } else {
+            $value = (Int) $object['value'] - (Int) $step;
+            $time = $object['expired_time'] - @date("U");
+            $this->set($keyword, $value, $time, $option);
+            return true;
+        }
+    }
+
+    /*
+     * Extend more time
+     */
+
+    function touch($keyword, $time = 300, $option = array()) {
+        $object = $this->get($keyword);
+        if ($object == null) {
+            return false;
+        } else {
+            $value = $object['value'];
+            $time = $object['expired_time'] - @date("U") + $time;
+            $this->set($keyword, $value, $time, $option);
+            return true;
+        }
+    }
+
+    /*
+     * Other Functions Built-int for phpFastCache since 1.3
+     */
+
+    public function setMulti($list = array()) {
+        foreach ($list as $array) {
+            $this->set($array[0], isset($array[1]) ? $array[1] : 300, isset($array[2]) ? $array[2] : array());
+        }
+    }
+
+    public function getMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->get($name, isset($array[1]) ? $array[1] : array());
+        }
+        return $res;
+    }
+
+    public function getInfoMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->getInfo($name, isset($array[1]) ? $array[1] : array());
+        }
+        return $res;
+    }
+
+    public function deleteMulti($list = array()) {
+        foreach ($list as $array) {
+            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
+        }
+    }
+
+    public function isExistingMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->isExisting($name);
+        }
+        return $res;
+    }
+
+    public function incrementMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->increment($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+    public function decrementMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->decrement($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+    public function touchMulti($list = array()) {
+        $res = array();
+        foreach ($list as $array) {
+            $name = $array[0];
+            $res[$name] = $this->touch($name, $array[1], isset($array[2]) ? $array[2] : array());
+        }
+        return $res;
+    }
+
+    /*
+     * Begin Parent Classes;
+     */
+
+    public static function setup($name, $value = "") {
+        if (!is_array($name)) {
+            if ($name == "storage") {
+                self::$storage = $value;
+            }
+
+            self::$config[$name] = $value;
+        } else {
+            foreach ($name as $n => $value) {
+                self::setup($n, $value);
+            }
+        }
+    }
+
+    function __construct($storage = "", $option = array()) {
+        if (isset(self::$config['fallback'][$storage])) {
+            $storage = self::$config['fallback'][$storage];
+        }
+
+        if ($storage == "") {
+            $storage = self::$storage;
+            self::option("storage", $storage);
+        } else {
+            self::$storage = $storage;
+        }
+
+        $this->tmp['storage'] = $storage;
+
+        $this->option = array_merge($this->option, self::$config, $option);
+
+        if ($storage != "auto" && $storage != "" && $this->isExistingDriver($storage)) {
+            $driver = "phpfastcache_" . $storage;
+        } else {
+            $storage = $this->autoDriver();
+            self::$storage = $storage;
+            $driver = "phpfastcache_" . $storage;
+        }
+
+        $this->option("storage", $storage);
+
+        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
+            $this->option['securityKey'] = "cache.storage." . $_SERVER['HTTP_HOST'];
+        }
+
+
+        $this->driver = new $driver($this->option);
+        $this->driver->is_driver = true;
+    }
+
+    /*
+     * For Auto Driver
+     *
+     */
+
+    function autoDriver() {
+
+        $driver = "files";
+
+        if (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, "CGI") === false) {
+            $driver = "apc";
+        } elseif (extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
+            $driver = "sqlite";
+        } elseif (is_writeable($this->getPath())) {
+            $driver = "files";
+        } else if (class_exists("memcached")) {
+            $driver = "memcached";
+        } elseif (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
+            $driver = "wincache";
+        } elseif (extension_loaded('xcache') && function_exists("xcache_get")) {
+            $driver = "xcache";
+        } else if (function_exists("memcache_connect")) {
+            $driver = "memcache";
+        } else {
+            global $system;
+            foreach ($system['cache_drivers'] as $filepath) {
+                include $filepath;
+                $file = pathinfo($filepath, PATHINFO_BASENAME);
+                $namex = str_replace(".php", "", $file);
+                $class = "phpfastcache_" . $namex;
+                $option = $this->option;
+                $option['skipError'] = true;
+                $driver = new $class($option);
+                $driver->option = $option;
+                if ($driver->checkdriver()) {
+                    $driver = $namex;
+                }
+            }
+        }
+
+
+        return $driver;
+    }
+
+    function option($name, $value = null) {
+        if ($value == null) {
+            if (isset($this->option[$name])) {
+                return $this->option[$name];
+            } else {
+                return null;
+            }
+        } else {
+
+            if ($name == "path") {
+                $this->checked['path'] = false;
+                $this->driver->checked['path'] = false;
+            }
+
+            self::$config[$name] = $value;
+            $this->option[$name] = $value;
+            $this->driver->option[$name] = $this->option[$name];
+
+            return $this;
+        }
+    }
+
+    public function setOption($option = array()) {
+        $this->option = array_merge($this->option, self::$config, $option);
+        $this->checked['path'] = false;
+    }
+
+    function __get($name) {
+        $this->driver->option = $this->option;
+        return $this->driver->get($name);
+    }
+
+    function __set($name, $v) {
+        $this->driver->option = $this->option;
+        if (isset($v[1]) && is_numeric($v[1])) {
+            return $this->driver->set($name, $v[0], $v[1], isset($v[2]) ? $v[2] : array() );
+        } else {
+            throw new Exception("Example ->$name = array('VALUE', 300);", 98);
+        }
+    }
+
+    /*
+     * Only require_once for the class u use.
+     * Not use autoload default of PHP and don't need to load all classes as default
+     */
+
+    private function isExistingDriver($class) {
+        return true;
+    }
+
+    /*
+     * return System Information
+     */
+
+    public function systemInfo() {
+        if (count($this->option("system")) == 0) {
+
+
+            $this->option['system']['driver'] = "files";
+
+            $this->option['system']['drivers'] = array();
+
+            global $system;
+
+            foreach (array('apc', 'sqlite', 'files', 'memcached', 'wincache', 'xcache', 'memcache') as $namex) {
+                $class = "phpfastcache_" . $namex;
+                $this->option['skipError'] = true;
+                $driver = new $class($this->option);
+                $driver->option = $this->option;
+                if ($driver->checkdriver()) {
+                    $this->option['system']['drivers'][$namex] = true;
+                    $this->option['system']['driver'] = $namex;
+                } else {
+                    $this->option['system']['drivers'][$namex] = false;
+                }
+            }
+
+            foreach ($system['cache_drivers'] as $filepath) {
+                include $filepath;
+                $file = pathinfo($filepath, PATHINFO_BASENAME);
+                $namex = str_replace(".php", "", $file);
+                $class = "phpfastcache_" . $namex;
+                $this->option['skipError'] = true;
+                $driver = new $class($this->option);
+                $driver->option = $this->option;
+                if ($driver->checkdriver()) {
+                    $this->option['system']['drivers'][$namex] = true;
+                    $this->option['system']['driver'] = $namex;
+                } else {
+                    $this->option['system']['drivers'][$namex] = false;
+                }
+            }
+
+
+
+            /*
+             * PDO is highest priority with SQLite
+             */
+            if ($this->option['system']['drivers']['sqlite'] == true) {
+                $this->option['system']['driver'] = "sqlite";
+            }
+        }
+
+        $example = new phpfastcache_example($this->option);
+        $this->option("path", $example->getPath(true));
+        return $this->option;
+    }
+
+    public function getOS() {
         $os = array(
             "os" => PHP_OS,
             "php" => PHP_SAPI,
@@ -116,117 +1707,53 @@ class phpFastCache {
         return $os;
     }
 
-    public static function systemInfo() {
-        // self::startDebug(self::$sys,"Check Sys",__LINE__,__FUNCTION__);
+    /*
+     * Object for Files & SQLite
+     */
 
-        if (count(self::$sys) == 0) {
-
-            // self::startDebug("Start System Info");
-
-            self::$sys['os'] = self::getOS();
-
-            self::$sys['errors'] = array();
-            self::$sys['storage'] = "";
-            self::$sys['method'] = "pdo";
-            self::$sys['drivers'] = array(
-                "apc" => false,
-                "xcache" => false,
-                "memcache" => false,
-                "memcached" => false,
-                "wincache" => false,
-                "pdo" => false,
-                "mpdo" => false,
-                "files" => false,
-            );
-
-
-
-            // Check apc
-            if (extension_loaded('apc') && ini_get('apc.enabled')) {
-                self::$sys['drivers']['apc'] = true;
-                self::$sys['storage'] = "memory";
-                self::$sys['method'] = "apc";
-            }
-
-            // Check xcache
-            if (extension_loaded('xcache') && function_exists("xcache_get")) {
-                self::$sys['drivers']['xcache'] = true;
-                self::$sys['storage'] = "memory";
-                self::$sys['method'] = "xcache";
-            }
-
-            if (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
-                self::$sys['drivers']['wincache'] = true;
-                self::$sys['storage'] = "memory";
-                self::$sys['method'] = "wincache";
-            }
-
-            // Check memcache
-            if (function_exists("memcache_connect")) {
-                self::$sys['drivers']['memcache'] = true;
-
-                try {
-                    memcache_connect("127.0.0.1");
-                    self::$sys['storage'] = "memory";
-                    self::$sys['method'] = "memcache";
-                } catch (Exception $e) {
-                    
-                }
-            }
-
-
-            // Check memcached
-            if (class_exists("memcached")) {
-                self::$sys['drivers']['memcached'] = true;
-
-                try {
-                    $memcached = new memcached();
-                    $memcached->addServer("127.0.0.1", "11211");
-                    self::$sys['storage'] = "memory";
-                    self::$sys['method'] = "memcached";
-                } catch (Exception $e) {
-                    
-                }
-            }
-
-            if (extension_loaded('pdo_sqlite')) {
-                self::$sys['drivers']['pdo'] = true;
-                self::$sys['drivers']['mpdo'] = true;
-            }
-
-            if (is_writable(self::getPath(true))) {
-                self::$sys['drivers']['files'] = true;
-            }
-
-            if (self::$sys['storage'] == "") {
-
-                if (extension_loaded('pdo_sqlite')) {
-                    self::$sys['storage'] = "disk";
-                    self::$sys['method'] = "pdo";
-                } else {
-
-                    self::$sys['storage'] = "disk";
-                    self::$sys['method'] = "files";
-                }
-            }
-
-
-
-            if (self::$sys['storage'] == "disk" && !is_writable(self::getPath())) {
-                self::$sys['errors'][] = "Please Create & CHMOD 0777 or any Writeable Mode for " . self::getPath();
-            }
-        }
-
-        // self::startDebug(self::$sys);
-        return self::$sys;
+    public function encode($data) {
+        return serialize($data);
     }
 
-    // return Folder Cache PATH
-    // PATH Edit by SecurityKey
-    // Auto create, Chmod and Warning
-    // Revision 618
-    // PHP_SAPI =  apache2handler should go to tmp
-    private static function isPHPModule() {
+    public function decode($value) {
+        $x = @unserialize($value);
+        if ($x == false) {
+            return $value;
+        } else {
+            return $x;
+        }
+    }
+
+    /*
+     * Auto Create .htaccess to protect cache folder
+     */
+
+    public function htaccessGen($path = "") {
+        if ($this->option("htaccess") == true) {
+
+            if (!file_exists($path . "/.htaccess")) {
+                //   echo "write me";
+                $html = "order deny, allow \r\n
+deny from all \r\n
+allow from 127.0.0.1";
+
+                $f = @fopen($path . "/.htaccess", "w+");
+                if (!$f) {
+                    throw new Exception("Can't create .htaccess", 97);
+                }
+                fwrite($f, $html);
+                fclose($f);
+            } else {
+                //   echo "got me";
+            }
+        }
+    }
+
+    /*
+     * Check phpModules or CGI
+     */
+
+    public function isPHPModule() {
         if (PHP_SAPI == "apache2handler") {
             return true;
         } else {
@@ -237,1626 +1764,79 @@ class phpFastCache {
         return false;
     }
 
-    // Revision 618
-    // Security with .htaccess
-    static function htaccessGen($path = "") {
-        if (self::$securityHtAccess == true) {
+    /*
+     * return PATH for Files & PDO only
+     */
 
-            if (!file_exists($path . "/.htaccess")) {
-                //   echo "write me";
-                $html = "order deny, allow \r\n
-deny from all \r\n
-allow from 127.0.0.1";
-                $f = @fopen($path . "/.htaccess", "w+");
-                @fwrite($f, $html);
-                @fclose($f);
-            } else {
-                //   echo "got me";
-            }
+    public function getPath($create_path = false) {
+
+        if ($this->option['path'] == "" && self::$config['path'] != "") {
+            $this->option("path", self::$config['path']);
         }
-    }
 
-    private static function getPath($skip_create = false) {
 
-        if (self::$path == '') {
+        if ($this->option['path'] == '') {
             // revision 618
-            if (self::isPHPModule()) {
+            if ($this->isPHPModule()) {
                 $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
-                self::$path = $tmp_dir;
+                $this->option("path", $tmp_dir);
             } else {
-                self::$path = dirname(__FILE__);
+                $this->option("path", dirname(__FILE__));
+            }
+
+            if (self::$config['path'] == "") {
+                self::$config['path'] = $this->option("path");
             }
         }
 
-        if ($skip_create == false && self::$checked['path'] == false) {
-            if (!file_exists(self::$path . "/" . self::$securityKey . "/") || !is_writable(self::$path . "/" . self::$securityKey . "/")) {
-                if (!file_exists(self::$path . "/" . self::$securityKey . "/")) {
-                    @mkdir(self::$path . "/" . self::$securityKey . "/", 0777);
+
+        $full_path = $this->option("path") . "/" . $this->option("securityKey") . "/";
+
+        if ($create_path == false && $this->checked['path'] == false) {
+
+            if (!file_exists($full_path) || !is_writable($full_path)) {
+                if (!file_exists($full_path)) {
+                    @mkdir($full_path, 0777);
                 }
-                if (!is_writable(self::$path . "/" . self::$securityKey . "/")) {
-                    @chmod(self::$path . "/" . self::$securityKey . "/", 0777);
+                if (!is_writable($full_path)) {
+                    @chmod($full_path, 0777);
                 }
-                if (!file_exists(self::$path . "/" . self::$securityKey . "/") || !is_writable(self::$path . "/" . self::$securityKey . "/")) {
-                    die("Sorry, Please create " . self::$path . "/" . self::$securityKey . "/ and SET Mode 0777 or any Writable Permission!");
-                }
-            }
-
-            self::$checked['path'] = true;
-            // Revision 618
-            self::htaccessGen(self::$path . "/" . self::$securityKey . "/");
-        }
-
-
-
-        return self::$path . "/" . self::$securityKey . "/";
-    }
-
-    // return method automatic;
-    // APC will be TOP, then Memcached, Memcache, PDO and Files
-    public static function autoconfig($name = "") {
-        // self::startDebug($name,"Check Name",__LINE__,__FUNCTION__);
-
-        $cache = self::cacheMethod($name);
-        if ($cache != "" && $cache != self::$storage && $cache != "auto") {
-            return $cache;
-        }
-
-        // self::startDebug($cache,"Check Cache",__LINE__,__FUNCTION__);
-
-        $os = self::getOS();
-        // self::startDebug(self::$storage,"User Set",__LINE__,__FUNCTION__);
-        if (self::$storage == "" || self::$storage == "auto") {
-            // self::startDebug(self::$storage,"User Set Auto",__LINE__,__FUNCTION__);
-
-            if (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, "CGI") === false) {
-
-                self::$sys['drivers']['apc'] = true;
-                self::$sys['storage'] = "memory";
-                self::$sys['method'] = "apc";
-
-                // self::startDebug(self::$sys,"GOT APC",__LINE__,__FUNCTION__);
-            } elseif (extension_loaded('xcache')) {
-                self::$sys['drivers']['xcache'] = true;
-                self::$sys['storage'] = "memory";
-                self::$sys['method'] = "xcache";
-                // self::startDebug(self::$sys,"GOT XCACHE",__LINE__,__FUNCTION__);
-            } else {
-                // fix PATH for existing
-                $reconfig = false;
-                // self::startDebug(self::getPath()."/config.".$os['unique'].".cache.ini","CHECK CONFIG FILE",__LINE__,__FUNCTION__);
-
-
-                if (file_exists(self::getPath() . "/config." . $os['unique'] . ".cache.ini")) {
-                    $info = self::decode(file_get_contents(self::getPath() . "/config." . $os['unique'] . ".cache.ini"));
-
-                    // self::startDebug($info,"CHECK INFO",__LINE__,__FUNCTION__);
-
-                    if (!isset($info['value'])) {
-                        $reconfig = true;
-                    } else {
-                        $info = $info['value'];
-                        self::$sys = $info;
-                    }
-                } else {
-
-                    $info = self::systemInfo();
-                    // self::startDebug($info,"CHECK INFO BY SYSTEM INFO",__LINE__,__FUNCTION__);
-                }
-
-                if (isset($info['os']['unique'])) {
-
-                    if ($info['os']['unique'] != $os['unique']) {
-                        $reconfig = true;
-                    }
-                } else {
-                    $reconfig = true;
-                }
-
-                if (!file_exists(self::getPath() . "/config." . $os['unique'] . ".cache.ini") || $reconfig == true) {
-
-                    $info = self::systemInfo();
-                    self::$sys = $info;
-                    // self::startDebug($info,"Check Info",__LINE__,__FUNCTION__);
-
-                    try {
-                        $f = fopen(self::getPath() . "/config." . $os['unique'] . ".cache.ini", "w+");
-                        fwrite($f, self::encode($info));
-                        fclose($f);
-                    } catch (Exception $e) {
-                        die("Please chmod 0777 " . self::getPath() . "/config." . $os['unique'] . ".cache.ini");
-                    }
-                } else {
-                    
+                if (!file_exists($full_path) || !is_writable($full_path)) {
+                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
                 }
             }
 
 
-
-            self::$storage = self::$sys['method'];
-        } else {
-
-            if (in_array(self::$storage, array("files", "pdo", "mpdo"))) {
-                self::$sys['storage'] = "disk";
-            } elseif (in_array(self::$storage, array("apc", "memcache", "memcached", "wincache", "xcache"))) {
-                self::$sys['storage'] = "memory";
-            } else {
-                self::$sys['storage'] = "";
-            }
-
-            if (self::$sys['storage'] == "" || !in_array(self::$storage, self::$supported_api)) {
-                die("Don't have this Cache " . self::$storage . " In your System! Please double check!");
-            }
-
-            self::$sys['method'] = strtolower(self::$storage);
+            $this->checked['path'] = true;
+            $this->htaccessGen($full_path);
         }
 
-        if (self::$sys['method'] == "files") {
-            $last_cleanup = self::files_get("last_cleanup_cache");
-            if ($last_cleanup == null) {
-                self::files_cleanup();
-                self::files_set("last_cleanup_cache", @date("U"), 3600 * self::$files_cleanup_after);
-            }
-        }
-
-        // self::startDebug(self::$sys,"Check RETURN SYS",__LINE__,__FUNCTION__);
-
-        return self::$sys['method'];
-    }
-
-    private static function cacheMethod($name = "") {
-        $cache = self::$storage;
-        if (is_array($name)) {
-            $key = array_keys($name);
-            $key = $key[0];
-            if (in_array($key, self::$supported_api)) {
-                $cache = $key;
-            }
-        }
-        return $cache;
-    }
-
-    public static function safename($name) {
-        return strtolower(preg_replace("/[^a-zA-Z0-9_\s\.]+/", "", $name));
-    }
-
-    private static function encode($value, $time_in_second = "") {
-        $value = serialize(array(
-            "time" => @date("U"),
-            "value" => $value,
-            "endin" => $time_in_second
-        ));
-        return $value;
-    }
-
-    private static function decode($value) {
-        $x = @unserialize($value);
-        if ($x == false) {
-            return $value;
-        } else {
-            return $x;
-        }
+        $this->option['cachePath'] = $full_path;
+        return $this->option['cachePath'];
     }
 
     /*
-     * Start Public Static
+     * Read File
+     * Use file_get_contents OR ALT read
      */
 
-    public static function cleanup($option = "") {
-        $api = self::autoconfig();
-        self::$Tmp = array();
-
-        switch ($api) {
-            case "pdo":
-                return self::pdo_cleanup($option);
-                break;
-            case "mpdo":
-                return self::pdo_cleanup($option);
-                break;
-            case "files":
-                return self::files_cleanup($option);
-                break;
-            case "memcache":
-                return self::memcache_cleanup($option);
-                break;
-            case "memcached":
-                return self::memcached_cleanup($option);
-                break;
-            case "wincache":
-                return self::wincache_cleanup($option);
-                break;
-            case "apc":
-                return self::apc_cleanup($option);
-                break;
-            case "xcache":
-                return self::xcache_cleanup($option);
-                break;
-            default:
-                return self::pdo_cleanup($option);
-                break;
-        }
-    }
-
-    public static function delete($name = "string|array(db->item)") {
-
-        $api = self::autoconfig($name);
-        if (self::$useTmpCache == true) {
-            $tmp_name = md5(serialize($api . $name));
-            if (isset(self::$Tmp[$tmp_name])) {
-                unset(self::$Tmp[$tmp_name]);
-            }
-        }
-
-        switch ($api) {
-            case "pdo":
-                return self::pdo_delete($name);
-                break;
-            case "mpdo":
-                return self::pdo_delete($name);
-                break;
-            case "files":
-                return self::files_delete($name);
-                break;
-            case "memcache":
-                return self::memcache_delete($name);
-                break;
-            case "memcached":
-                return self::memcached_delete($name);
-                break;
-            case "wincache":
-                return self::wincache_delete($name);
-                break;
-            case "apc":
-                return self::apc_delete($name);
-                break;
-            case "xcache":
-                return self::xcache_delete($name);
-                break;
-            default:
-                return self::pdo_delete($name);
-                break;
-        }
-    }
-
-    public static function exists($name = "string|array(db->item)") {
-
-        $api = self::autoconfig($name);
-        switch ($api) {
-            case "pdo":
-                return self::pdo_exist($name);
-                break;
-            case "mpdo":
-                return self::pdo_exist($name);
-                break;
-            case "files":
-                return self::files_exist($name);
-                break;
-            case "memcache":
-                return self::memcache_exist($name);
-                break;
-            case "memcached":
-                return self::memcached_exist($name);
-                break;
-            case "wincache":
-                return self::wincache_exist($name);
-                break;
-            case "apc":
-                return self::apc_exist($name);
-                break;
-            case "xcache":
-                return self::xcache_exist($name);
-                break;
-            default:
-                return self::pdo_exist($name);
-                break;
-        }
-    }
-
-    public static function deleteMulti($object = array()) {
-        $res = array();
-        foreach ($object as $driver => $name) {
-            if (!is_numeric($driver)) {
-                $n = $driver . "_" . $name;
-                $name = array($driver => $name);
-            } else {
-                $n = $name;
-            }
-            $res[$n] = self::delete($name);
-        }
-        return $res;
-    }
-
-    public static function setMulti($mname = array(), $time_in_second_for_all = 600, $skip_for_all = false) {
-        $res = array();
-
-        foreach ($mname as $object) {
-            //   print_r($object);
-
-            $keys = array_keys($object);
-
-            if ($keys[0] != "0") {
-                $k = $keys[0];
-                $name = isset($object[$k]) ? array($k => $object[$k]) : "";
-                $n = $k . "_" . $object[$k];
-                $x = 0;
-            } else {
-                $name = isset($object[0]) ? $object[0] : "";
-                $x = 1;
-                $n = $name;
-            }
-
-            $value = isset($object[$x]) ? $object[$x] : "";
-            $x++;
-            $time = isset($object[$x]) ? $object[$x] : $time_in_second_for_all;
-            $x++;
-            $skip = isset($object[$x]) ? $object[$x] : $skip_for_all;
-            $x++;
-
-            if ($name != "" && $value != "") {
-                $res[$n] = self::set($name, $value, $time, $skip);
-            }
-            // echo "<br> ----- <br>";
-        }
-
-        return $res;
-    }
-
-    public static function set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $api = self::autoconfig($name);
-        if (self::$useTmpCache == true) {
-            $tmp_name = md5(serialize($api . $name));
-            self::$Tmp[$tmp_name] = $value;
-        }
-
-        switch ($api) {
-            case "pdo":
-                return self::pdo_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "mpdo":
-                return self::pdo_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "files":
-                return self::files_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "memcache":
-                return self::memcache_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "memcached":
-                return self::memcached_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "wincache":
-                return self::wincache_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "apc":
-                return self::apc_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            case "xcache":
-                return self::xcache_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-            default:
-                return self::pdo_set($name, $value, $time_in_second, $skip_if_existing);
-                break;
-        }
-    }
-
-    public static function decrement($name, $step = 1) {
-        $api = self::autoconfig($name);
-        if (self::$useTmpCache == true) {
-            $tmp_name = md5(serialize($api . $name));
-            if (isset(self::$Tmp[$tmp_name])) {
-                self::$Tmp[$tmp_name] = (Int) self::$Tmp[$tmp_name] - $step;
-            } else {
-                self::$Tmp[$tmp_name] = $step;
-            }
-        }
-        switch ($api) {
-            case "pdo":
-                return self::pdo_decrement($name, $step);
-                break;
-            case "mpdo":
-                return self::pdo_decrement($name, $step);
-                break;
-            case "files":
-                return self::files_decrement($name, $step);
-                break;
-            case "memcache":
-                return self::memcache_decrement($name, $step);
-                break;
-            case "memcached":
-                return self::memcached_decrement($name, $step);
-                break;
-            case "wincache":
-                return self::wincache_decrement($name, $step);
-                break;
-            case "apc":
-                return self::apc_decrement($name, $step);
-                break;
-            case "xcache":
-                return self::xcache_decrement($name, $step);
-                break;
-            default:
-                return self::pdo_decrement($name, $step);
-                break;
-        }
-    }
-
-    public static function get($name) {
-        $api = self::autoconfig($name);
-        if (self::$useTmpCache == true) {
-            $tmp_name = md5(serialize($api . $name));
-            if (isset(self::$Tmp[$tmp_name])) {
-                return self::$Tmp[$tmp_name];
-            }
-        }
-
-        // self::startDebug($api,"API",__LINE__,__FUNCTION__);
-        // for files, check it if NULL and "empty" string
-        switch ($api) {
-            case "pdo":
-                return self::pdo_get($name);
-                break;
-            case "mpdo":
-                return self::pdo_get($name);
-
-                break;
-            case "files":
-                return self::files_get($name);
-                break;
-            case "memcache":
-                return self::memcache_get($name);
-                break;
-            case "memcached":
-                return self::memcached_get($name);
-                break;
-            case "wincache":
-                return self::wincache_get($name);
-                break;
-            case "apc":
-                return self::apc_get($name);
-                break;
-            case "xcache":
-                return self::xcache_get($name);
-                break;
-            default:
-                return self::pdo_get($name);
-                break;
-        }
-    }
-
-    public static function getMulti($object = array()) {
-        $res = array();
-        foreach ($object as $driver => $name) {
-            if (!is_numeric($driver)) {
-                $n = $driver . "_" . $name;
-                $name = array($driver => $name);
-            } else {
-                $n = $name;
-            }
-            $res[$n] = self::get($name);
-        }
-        return $res;
-    }
-
-    public static function stats() {
-        $api = self::autoconfig();
-        switch ($api) {
-            case "pdo":
-                return self::pdo_stats();
-                break;
-            case "mpdo":
-                return self::pdo_stats();
-                break;
-            case "files":
-                return self::files_stats();
-                break;
-            case "memcache":
-                return self::memcache_stats();
-                break;
-            case "memcached":
-                return self::memcached_stats();
-                break;
-            case "wincache":
-                return self::wincache_stats();
-                break;
-            case "apc":
-                return self::apc_stats();
-                break;
-            case "xcache":
-                return self::xcache_stats();
-                break;
-            default:
-                return self::pdo_stats();
-                break;
-        }
-    }
-
-    public static function increment($name, $step = 1) {
-        $api = self::autoconfig($name);
-
-        if (self::$useTmpCache == true) {
-            $tmp_name = md5(serialize($api . $name));
-            if (isset(self::$Tmp[$tmp_name])) {
-                self::$Tmp[$tmp_name] = (Int) self::$Tmp[$tmp_name] + $step;
-            } else {
-                self::$Tmp[$tmp_name] = $step;
-            }
-        }
-
-        switch ($api) {
-            case "pdo":
-                return self::pdo_increment($name, $step);
-                break;
-            case "mpdo":
-                return self::pdo_increment($name, $step);
-                break;
-            case "files":
-                return self::files_increment($name, $step);
-                break;
-            case "memcache":
-                return self::memcache_increment($name, $step);
-                break;
-            case "memcached":
-                return self::memcached_increment($name, $step);
-                break;
-            case "wincache":
-                return self::wincache_increment($name, $step);
-                break;
-            case "apc":
-                return self::apc_increment($name, $step);
-                break;
-            case "xcache":
-                return self::xcache_increment($name, $step);
-                break;
-            default:
-                return self::pdo_increment($name, $step);
-                break;
-        }
-    }
-
-    /*
-     * Begin FILES Cache Static
-     * Use Files & Folders to cache
-     */
-
-    private static function files_exist($name) {
-        $data = self::files_get($name);
-        if ($data == null) {
-            return false;
+    function readfile($file) {
+        if (function_exists("file_get_contents")) {
+            return file_get_contents($file);
         } else {
-            return true;
-        }
-    }
+            $string = "";
 
-    private static function files_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-
-        $path = self::getPath();
-        $tmp = explode("/", $folder);
-        foreach ($tmp as $dir) {
-            if ($dir != "" && $dir != "." && $dir != "..") {
-                $path.="/" . $dir;
-                if (!file_exists($path)) {
-                    mkdir($path, 0777);
-                }
+            $file_handle = @fopen($file, "r");
+            if (!$file_handle) {
+                throw new Exception("Can't Read File", 96);
             }
-        }
-
-        $file = $path . "/" . $name . ".c.html";
-
-        $write = true;
-        if (file_exists($file)) {
-            $data = self::decode(file_get_contents($file));
-            if ($skip_if_existing == true && ((Int) $data['time'] + (Int) $data['endin'] > @date("U"))) {
-                $write = false;
+            while (!feof($file_handle)) {
+                $line = fgets($file_handle);
+                $string .= $line;
             }
-        }
+            fclose($file_handle);
 
-        if ($write == true) {
-            try {
-                $f = fopen($file, "w+");
-                fwrite($f, self::encode($value, $time_in_second));
-                fclose($f);
-            } catch (Exception $e) {
-                die("Sorry, can't write cache to file :" . $file);
-            }
-        }
-
-        return $value;
-    }
-
-    private static function files_get($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-
-        $path = self::getPath();
-        $tmp = explode("/", $folder);
-        foreach ($tmp as $dir) {
-            if ($dir != "" && $dir != "." && $dir != "..") {
-                $path.="/" . $dir;
-            }
-        }
-
-        $file = $path . "/" . $name . ".c.html";
-
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $data = self::decode(file_get_contents($file));
-
-        if (!isset($data['time']) || !isset($data['endin']) || !isset($data['value'])) {
-            return null;
-        }
-
-        if ($data['time'] + $data['endin'] < @date("U")) {
-            // exp
-            unlink($file);
-            return null;
-        }
-
-        return isset($data['value']) ? $data['value'] : null;
-    }
-
-    private static function files_stats($dir = "") {
-        $total = array(
-            "expired" => 0,
-            "size" => 0,
-            "files" => 0
-        );
-        if ($dir == "") {
-            $dir = self::getPath();
-        }
-        $d = opendir($dir);
-        while ($file = readdir($d)) {
-            if ($file != "." && $file != "..") {
-                $path = $dir . "/" . $file;
-                if (is_dir($path)) {
-                    $in = self::files_stats($path);
-                    $total['expired'] = $total['expired'] + $in['expired'];
-                    $total['size'] = $total['size'] + $in['size'];
-                    $total['files'] = $total['files'] + $in['files'];
-                } elseif (strpos($path, ".c.html") !== false) {
-                    $data = self::decode($path);
-                    if (isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
-                        $total['files']++;
-                        if ($data['time'] + $data['endin'] < @date("U")) {
-                            $total['expired']++;
-                        }
-                        $total['size'] = $total['size'] + filesize($path);
-                    }
-                }
-            }
-        }
-        if ($total['size'] > 0) {
-            $total['size'] = $total['size'] / 1024 / 1024;
-        }
-        return $total;
-    }
-
-    private static function files_cleanup($dir = "") {
-        $total = 0;
-        if ($dir == "") {
-            $dir = self::getPath();
-        }
-        $d = opendir($dir);
-        while ($file = readdir($d)) {
-            if ($file != "." && $file != "..") {
-                $path = $dir . "/" . $file;
-                if (is_dir($path)) {
-                    $total = $total + self::files_cleanup($path);
-                    try {
-                        @unlink($path);
-                    } catch (Exception $e) {
-                        // nothing;
-                    }
-                } elseif (strpos($path, ".c.html") !== false) {
-                    $data = self::decode($path);
-                    if (isset($data['value']) && isset($data['time']) && isset($data['endin'])) {
-                        if ((Int) $data['time'] + (Int) $data['endin'] < @date("U")) {
-                            unlink($path);
-                            $total++;
-                        }
-                    } else {
-                        unlink($path);
-                        $total++;
-                    }
-                }
-            }
-        }
-        return $total;
-    }
-
-    private static function files_delete($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-
-        $path = self::getPath();
-        $tmp = explode("/", $folder);
-        foreach ($tmp as $dir) {
-            if ($dir != "" && $dir != "." && $dir != "..") {
-                $path.="/" . $dir;
-            }
-        }
-
-        $file = $path . "/" . $name . ".c.html";
-        if (file_exists($file)) {
-            try {
-                unlink($file);
-                return true;
-            } catch (Exception $e) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static function files_increment($name, $step = 1) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-
-        $path = self::getPath();
-        $tmp = explode("/", $folder);
-        foreach ($tmp as $dir) {
-            if ($dir != "" && $dir != "." && $dir != "..") {
-                $path.="/" . $dir;
-            }
-        }
-
-        $file = $path . "/" . $name . ".c.html";
-        if (!file_exists($file)) {
-            self::files_set($name, $step, 3600);
-            return $step;
-        }
-
-        $data = self::decode(file_get_contents($file));
-        if (isset($data['time']) && isset($data['value']) && isset($data['endin'])) {
-            $data['value'] = $data['value'] + $step;
-            self::files_set($name, $data['value'], $data['endin']);
-        }
-        return $data['value'];
-    }
-
-    private static function files_decrement($name, $step = 1) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-
-        $path = self::getPath();
-        $tmp = explode("/", $folder);
-        foreach ($tmp as $dir) {
-            if ($dir != "" && $dir != "." && $dir != "..") {
-                $path.="/" . $dir;
-            }
-        }
-
-        $file = $path . "/" . $name . ".c.html";
-        if (!file_exists($file)) {
-            self::files_set($name, $step, 3600);
-            return $step;
-        }
-
-        $data = self::decode(file_get_contents($file));
-        if (isset($data['time']) && isset($data['value']) && isset($data['endin'])) {
-            $data['value'] = $data['value'] - $step;
-            self::files_set($name, $data['value'], $data['endin']);
-        }
-        return $data['value'];
-    }
-
-    private static function getMemoryName($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        $folder = $db['db'];
-        $name = $folder . "_" . $name;
-
-        // connect memory server
-        if (self::$sys['method'] == "memcache" || $db['db'] == "memcache") {
-            self::memcache_addserver();
-        } elseif (self::$sys['method'] == "memcached" || $db['db'] == "memcached") {
-            self::memcached_addserver();
-        } elseif (self::$sys['method'] == "wincache") {
-            // init WinCache here
-        }
-
-        return $name;
-    }
-
-    /*
-     * Begin XCache Static
-     * http://xcache.lighttpd.net/wiki/XcacheApi
-     */
-
-    private static function xcache_exist($name) {
-        $name = self::getMemoryName($name);
-        if (xcache_isset($name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static function xcache_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $name = self::getMemoryName($name);
-        if ($skip_if_existing == true) {
-            if (!self::xcache_exist($name)) {
-                return xcache_set($name, $value, $time_in_second);
-            }
-        } else {
-            return xcache_set($name, $value, $time_in_second);
-        }
-        return false;
-    }
-
-    private static function xcache_get($name) {
-
-        $name = self::getMemoryName($name);
-
-        $data = xcache_get($name);
-
-        if ($data === false || $data == "") {
-            return null;
-        }
-        return $data;
-    }
-
-    private static function xcache_stats() {
-        try {
-            return xcache_list(XC_TYPE_VAR, 100);
-        } catch (Exception $e) {
-            return array();
-        }
-    }
-
-    private static function xcache_cleanup($option = array()) {
-        xcache_clear_cache(XC_TYPE_VAR);
-        return true;
-    }
-
-    private static function xcache_delete($name) {
-        $name = self::getMemoryName($name);
-        return xcache_unset($name);
-    }
-
-    private static function xcache_increment($name, $step = 1) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        $ret = xcache_inc($name, $step);
-        if ($ret === false) {
-            self::xcache_set($orgi, $step, 3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
-
-    private static function xcache_decrement($name, $step = 1) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        $ret = xcache_dec($name, $step);
-        if ($ret === false) {
-            self::xcache_set($orgi, $step, 3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
-
-    /*
-     * Begin APC Static
-     * http://www.php.net/manual/en/ref.apc.php
-     */
-
-    private static function apc_exist($name) {
-        $name = self::getMemoryName($name);
-        if (apc_exists($name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static function apc_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $name = self::getMemoryName($name);
-        if ($skip_if_existing == true) {
-            return apc_add($name, $value, $time_in_second);
-        } else {
-            return apc_store($name, $value, $time_in_second);
-        }
-    }
-
-    private static function apc_get($name) {
-
-        $name = self::getMemoryName($name);
-
-        $data = apc_fetch($name, $bo);
-
-        if ($bo === false) {
-            return null;
-        }
-        return $data;
-    }
-
-    private static function apc_stats() {
-        try {
-            return apc_cache_info("user");
-        } catch (Exception $e) {
-            return array();
-        }
-    }
-
-    private static function apc_cleanup($option = array()) {
-        return apc_clear_cache("user");
-    }
-
-    private static function apc_delete($name) {
-        $name = self::getMemoryName($name);
-        return apc_delete($name);
-    }
-
-    private static function apc_increment($name, $step = 1) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        $ret = apc_inc($name, $step, $fail);
-        if ($ret === false) {
-            self::apc_set($orgi, $step, 3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
-
-    private static function apc_decrement($name, $step = 1) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        $ret = apc_dec($name, $step, $fail);
-        if ($ret === false) {
-            self::apc_set($orgi, $step, 3600);
-            return $step;
-        } else {
-            return $ret;
-        }
-    }
-
-    /*
-     * Begin Memcache Static
-     * http://www.php.net/manual/en/class.memcache.php
-     */
-
-    private static function memcache_addserver() {
-        if (!isset(self::$checked['memcache'])) {
-            self::$checked['memcache'] = array();
-        }
-
-        if (self::$objects['memcache'] == "") {
-            self::$objects['memcache'] = new Memcache;
-
-            foreach (self::$server as $server) {
-                $name = isset($server[0]) ? $server[0] : "";
-                $port = isset($server[1]) ? $server[1] : 11211;
-                if (!in_array($server, self::$checked['memcache']) && $name != "") {
-                    self::$objects['memcache']->addServer($name, $port);
-                    self::$checked['memcache'][] = $name;
-                }
-            }
-        }
-    }
-
-    private static function memcache_exist($name) {
-        $x = self::memcache_get($name);
-        if ($x == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private static function memcache_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        if ($skip_if_existing == false) {
-            return self::$objects['memcache']->set($name, $value, false, $time_in_second);
-        } else {
-            return self::$objects['memcache']->add($name, $value, false, $time_in_second);
-        }
-    }
-
-    private static function memcache_get($name) {
-        $name = self::getMemoryName($name);
-        $x = self::$objects['memcache']->get($name);
-        if ($x == false) {
-            return null;
-        } else {
-            return $x;
-        }
-    }
-
-    private static function memcache_stats() {
-        self::memcache_addserver();
-        return self::$objects['memcache']->getStats();
-    }
-
-    private static function memcache_cleanup($option = "") {
-        self::memcache_addserver();
-        self::$objects['memcache']->flush();
-        return true;
-    }
-
-    private static function memcache_delete($name) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcache']->delete($name);
-    }
-
-    private static function memcache_increment($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcache']->increment($name, $step);
-    }
-
-    private static function memcache_decrement($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcache']->decrement($name, $step);
-    }
-
-    /*
-     * Begin Memcached Static
-     */
-
-    private static function memcached_addserver() {
-        if (!isset(self::$checked['memcached'])) {
-            self::$checked['memcached'] = array();
-        }
-
-        if (self::$objects['memcached'] == "") {
-            self::$objects['memcached'] = new Memcache;
-
-            foreach (self::$server as $server) {
-                $name = isset($server[0]) ? $server[0] : "";
-                $port = isset($server[1]) ? $server[1] : 11211;
-                $sharing = isset($server[2]) ? $server[2] : 0;
-                if (!in_array($server, self::$checked['memcached']) && $name != "") {
-                    if ($sharing > 0) {
-                        self::$objects['memcached']->addServer($name, $port, $sharing);
-                    } else {
-                        self::$objects['memcached']->addServer($name, $port);
-                    }
-
-                    self::$checked['memcached'][] = $name;
-                }
-            }
-        }
-    }
-
-    private static function memcached_exist($name) {
-        $x = self::memcached_get($name);
-        if ($x == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private static function memcached_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        if ($skip_if_existing == false) {
-            return self::$objects['memcached']->set($name, $value, time() + $time_in_second);
-        } else {
-            return self::$objects['memcached']->add($name, $value, time() + $time_in_second);
-        }
-    }
-
-    private static function memcached_get($name) {
-        $name = self::getMemoryName($name);
-        $x = self::$objects['memcached']->get($name);
-        if ($x == false) {
-            return null;
-        } else {
-            return $x;
-        }
-    }
-
-    private static function memcached_stats() {
-        self::memcached_addserver();
-        return self::$objects['memcached']->getStats();
-    }
-
-    private static function memcached_cleanup($option = "") {
-        self::memcached_addserver();
-        self::$objects['memcached']->flush();
-        return true;
-    }
-
-    private static function memcached_delete($name) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcached']->delete($name);
-    }
-
-    private static function memcached_increment($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcached']->increment($name, $step);
-    }
-
-    private static function memcached_decrement($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return self::$objects['memcached']->decrement($name, $step);
-    }
-
-    /*
-     * Begin WinCache Static
-     */
-
-    private static function wincache_exist($name) {
-        $name = self::getMemoryName($name);
-        if (wincache_ucache_exists($name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static function wincache_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $orgi = $name;
-        $name = self::getMemoryName($name);
-        if ($skip_if_existing == false) {
-            return wincache_ucache_set($name, $value, $time_in_second);
-        } else {
-            return wincache_ucache_add($name, $value, $time_in_second);
-        }
-    }
-
-    private static function wincache_get($name) {
-        $name = self::getMemoryName($name);
-
-        $x = wincache_ucache_get($name, $suc);
-
-        if ($suc == false) {
-            return null;
-        } else {
-            return $x;
-        }
-    }
-
-    private static function wincache_stats() {
-        return wincache_scache_info();
-    }
-
-    private static function wincache_cleanup($option = "") {
-        wincache_ucache_clear();
-        return true;
-    }
-
-    private static function wincache_delete($name) {
-        $name = self::getMemoryName($name);
-        return wincache_ucache_delete($name);
-    }
-
-    private static function wincache_increment($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return wincache_ucache_inc($name, $step);
-    }
-
-    private static function wincache_decrement($name, $step = 1) {
-        $name = self::getMemoryName($name);
-        return wincache_ucache_dec($name, $step);
-    }
-
-    /*
-     * Begin PDO Static
-     */
-
-    private static function pdo_exist($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-
-        $x = self::db(array('db' => $db['db']))->prepare("SELECT COUNT(*) as `total` FROM " . self::$table . " WHERE `name`=:name");
-
-        $x->execute(array(
-            ":name" => $name,
-        ));
-
-        $row = $x->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static function pdo_cleanup($option = "") {
-        self::db(array("skip_clean" => true))->exec("drop table if exists " . self::$table);
-        self::initDatabase();
-        return true;
-    }
-
-    private static function pdo_stats($full = false) {
-        $res = array();
-        if ($full == true) {
-            $stm = self::db()->prepare("SELECT * FROM " . self::$table . "");
-            $stm->execute();
-            $result = $stm->fetchAll();
-            $res['data'] = $result;
-        }
-        $stm = self::db()->prepare("SELECT COUNT(*) as `total` FROM " . self::$table . "");
-        $stm->execute();
-        $result = $stm->fetch();
-        $res['record'] = $result['total'];
-        if (self::$path != "memory") {
-            $res['size'] = filesize(self::getPath() . "/" . self::$filename);
-        }
-
-        return $res;
-    }
-
-    // for PDO return DB name,
-    // For Files, return Dir
-    private static function selectDB($object) {
-        $res = array(
-            'db' => "",
-            'item' => "",
-        );
-        if (is_array($object)) {
-            $key = array_keys($object);
-            $key = $key[0];
-            $res['db'] = $key;
-            $res['item'] = self::safename($object[$key]);
-        } else {
-            $res['item'] = self::safename($object);
-        }
-
-        if ($res['db'] == "" && self::$sys['method'] == "files") {
-            $res['db'] = "files";
-        }
-
-        // for auto database
-        if ($res['db'] == "" && self::$storage == "mpdo") {
-            $create_table = false;
-            if (!file_exists('sqlite:' . self::getPath() . '/phpfastcache.c')) {
-                $create_table = true;
-            }
-            if (self::$autodb == "") {
-                try {
-                    self::$autodb = new PDO('sqlite:' . self::getPath() . '/phpfastcache.c');
-                    self::$autodb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                } catch (PDOexception $e) {
-                    die("Please CHMOD 0777 or Writable Permission for " . self::getPath());
-                }
-            }
-
-            if ($create_table == true) {
-                self::$autodb->exec('CREATE TABLE IF NOT EXISTS "main"."db" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "item" VARCHAR NOT NULL  UNIQUE , "dbname" INTEGER NOT NULL )');
-            }
-
-            $db = self::$autodb->prepare("SELECT * FROM `db` WHERE `item`=:item");
-            $db->execute(array(
-                ":item" => $res['item'],
-            ));
-            $row = $db->fetch(PDO::FETCH_ASSOC);
-            if (isset($row['dbname'])) {
-                // found key
-                $res['db'] = $row['dbname'];
-            } else {
-                // not key // check filesize
-                if ((Int) self::$autosize < 10) {
-                    self::$autosize = 10;
-                }
-                // get last key
-                $db = self::$autodb->prepare("SELECT * FROM `db` ORDER BY `id` DESC");
-                $db->execute();
-                $row = $db->fetch(PDO::FETCH_ASSOC);
-                $dbname = isset($row['dbname']) ? $row['dbname'] : 1;
-                $fsize = file_exists(self::getPath() . "/" . $dbname . ".cache") ? filesize(self::getPath() . "/" . $dbname . ".cache") : 0;
-                if ($fsize > (1024 * 1024 * (Int) self::$autosize)) {
-                    $dbname = (Int) $dbname + 1;
-                }
-                try {
-                    $insert = self::$autodb->prepare("INSERT INTO `db` (`item`,`dbname`) VALUES(:item,:dbname)");
-                    $insert->execute(array(
-                        ":item" => $res['item'],
-                        ":dbname" => $dbname
-                    ));
-                } catch (PDOexception $e) {
-                    die('Database Error - Check A look at self::$autodb->prepare("INSERT INTO ');
-                }
-
-                $res['db'] = $dbname;
-            }
-        }
-
-        return $res;
-    }
-
-    private static function pdo_get($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        // array('db'=>$db['db'])
-        // self::startDebug($db,"",__LINE__,__FUNCTION__);
-
-        $stm = self::db(array('db' => $db['db']))->prepare("SELECT * FROM " . self::$table . " WHERE `name`='" . $name . "'");
-        $stm->execute();
-        $res = $stm->fetch(PDO::FETCH_ASSOC);
-
-        if (!isset($res['value'])) {
-            return null;
-        } else {
-            // decode value on SQL;
-            $data = self::decode($res['value']);
-            // check if VALUE on string encode
-            return isset($data['value']) ? $data['value'] : null;
-        }
-    }
-
-    private static function pdo_decrement($name, $step = 1) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        // array('db'=>$db['db'])
-
-        $int = self::get($name);
-        try {
-            $stm = self::db(array('db' => $db['db']))->prepare("UPDATE " . self::$table . " SET `value`=:new WHERE `name`=:name ");
-            $stm->execute(array(
-                ":new" => self::encode($int - $step),
-                ":name" => $name,
-            ));
-        } catch (PDOexception $e) {
-            die("Sorry! phpFastCache don't allow this type of value - Name: " . $name . " -> Decrement: " . $step);
-        }
-        return $int - $step;
-    }
-
-    private static function pdo_increment($name, $step = 1) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        // array('db'=>$db['db'])
-
-        $int = self::get($name);
-        // echo $int."xxx";
-        try {
-            $stm = self::db(array('db' => $db['db']))->prepare("UPDATE " . self::$table . " SET `value`=:new WHERE `name`=:name ");
-            $stm->execute(array(
-                ":new" => self::encode($int + $step),
-                ":name" => $name,
-            ));
-        } catch (PDOexception $e) {
-            die("Sorry! phpFastCache don't allow this type of value - Name: " . $name . " -> Increment: " . $step);
-        }
-        return $int + $step;
-    }
-
-    private static function pdo_delete($name) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-
-        return self::db(array('db' => $db['db']))->exec("DELETE FROM " . self::$table . " WHERE `name`='" . $name . "'");
-    }
-
-    private static function pdo_set($name, $value, $time_in_second = 600, $skip_if_existing = false) {
-        $db = self::selectDB($name);
-        $name = $db['item'];
-        // array('db'=>$db['db'])
-
-        if ($skip_if_existing == true) {
-            try {
-                $insert = self::db(array('db' => $db['db']))->prepare("INSERT OR IGNORE INTO " . self::$table . " (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
-                try {
-                    $value = self::encode($value);
-                } catch (Exception $e) {
-                    die("Sorry! phpFastCache don't allow this type of value - Name: " . $name);
-                }
-
-                $insert->execute(array(
-                    ":name" => $name,
-                    ":value" => $value,
-                    ":added" => @date("U"),
-                    ":endin" => (Int) $time_in_second
-                ));
-
-                return true;
-            } catch (PDOexception $e) {
-                return false;
-            }
-        } else {
-            try {
-                $insert = self::db(array('db' => $db['db']))->prepare("INSERT OR REPLACE INTO " . self::$table . " (name,value,added,endin) VALUES(:name,:value,:added,:endin)");
-                try {
-                    $value = self::encode($value);
-                } catch (Exception $e) {
-                    die("Sorry! phpFastCache don't allow this type of value - Name: " . $name);
-                }
-
-                $insert->execute(array(
-                    ":name" => $name,
-                    ":value" => $value,
-                    ":added" => @date("U"),
-                    ":endin" => (Int) $time_in_second
-                ));
-
-                return true;
-            } catch (PDOexception $e) {
-                return false;
-            }
-        }
-    }
-
-    private static function db($option = array()) {
-        $vacuum = false;
-        $dbname = isset($option['db']) ? $option['db'] : "";
-        $dbname = $dbname != "" ? $dbname : self::$filename;
-        if ($dbname != self::$filename) {
-            $dbname = $dbname . ".cache";
-        }
-        // debuging
-        // self::startDebug(self::$storage,"Check Storage",__LINE__,__FUNCTION__);
-        $initDB = false;
-
-        if (self::$storage == "pdo") {
-            // start self PDO
-            if (self::$objects['pdo'] == "") {
-
-                //  self::$objects['pdo'] == new PDO("sqlite:".self::$path."/cachedb.sqlite");
-                if (!file_exists(self::getPath() . "/" . $dbname)) {
-                    $initDB = true;
-                } else {
-                    if (!is_writable(self::getPath() . "/" . $dbname)) {
-                        @chmod(self::getPath() . "/" . $dbname, 0777);
-                        if (!is_writable(self::getPath() . "/" . $dbname)) {
-                            die("Please CHMOD 0777 or any Writable Permission for " . self::getPath() . "/" . $dbname);
-                        }
-                    }
-                }
-
-
-
-                try {
-                    self::$objects['pdo'] = new PDO("sqlite:" . self::getPath() . "/" . $dbname);
-                    self::$objects['pdo']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                    if ($initDB == true) {
-                        self::initDatabase();
-                    }
-
-                    $time = filemtime(self::getPath() . "/" . $dbname);
-                    if ($time + (3600 * 48) < @date("U")) {
-                        $vacuum = true;
-                    }
-                } catch (PDOexception $e) {
-                    die("Can't connect to caching file " . self::getPath() . "/" . $dbname);
-                }
-
-
-                // remove old cache
-                if (!isset($option['skip_clean'])) {
-
-                    try {
-                        self::$objects['pdo']->exec("DELETE FROM " . self::$table . " WHERE (`added` + `endin`) < " . @date("U"));
-                    } catch (PDOexception $e) {
-                        die("Please re-upload the caching file " . $dbname . " and chmod it 0777 or Writable permission!");
-                    }
-                }
-
-                // auto Vaccuum() every 48 hours
-                if ($vacuum == true) {
-                    self::$objects['pdo']->exec('VACUUM');
-                }
-
-
-                return self::$objects['pdo'];
-            } else {
-                return self::$objects['pdo'];
-            }
-            // end self pdo
-        } elseif (self::$storage == "mpdo") {
-
-            // start self PDO
-            if (!isset(self::$multiPDO[$dbname])) {
-                //  self::$objects['pdo'] == new PDO("sqlite:".self::$path."/cachedb.sqlite");
-                if (self::$path != "memory") {
-                    if (!file_exists(self::getPath() . "/" . $dbname)) {
-                        $initDB = true;
-                    } else {
-                        if (!is_writable(self::getPath() . "/" . $dbname)) {
-                            @chmod(self::getPath() . "/" . $dbname, 0777);
-                            if (!is_writable(self::getPath() . "/" . $dbname)) {
-                                die("Please CHMOD 0777 or any Writable Permission for PATH " . self::getPath());
-                            }
-                        }
-                    }
-
-
-
-                    try {
-                        self::$multiPDO[$dbname] = new PDO("sqlite:" . self::getPath() . "/" . $dbname);
-                        self::$multiPDO[$dbname]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        if ($initDB == true) {
-                            self::initDatabase(self::$multiPDO[$dbname]);
-                        }
-
-                        $time = filemtime(self::getPath() . "/" . $dbname);
-                        if ($time + (3600 * 48) < @date("U")) {
-                            $vacuum = true;
-                        }
-                    } catch (PDOexception $e) {
-                        die("Can't connect to caching file " . self::getPath() . "/" . $dbname);
-                    }
-                }
-
-                // remove old cache
-                if (!isset($option['skip_clean'])) {
-                    try {
-                        self::$multiPDO[$dbname]->exec("DELETE FROM " . self::$table . " WHERE (`added` + `endin`) < " . @date("U"));
-                    } catch (PDOexception $e) {
-                        die("Please re-upload the caching file " . $dbname . " and chmod it 0777 or Writable permission!");
-                    }
-                }
-
-                // auto Vaccuum() every 48 hours
-                if ($vacuum == true) {
-                    self::$multiPDO[$dbname]->exec('VACUUM');
-                }
-
-
-                return self::$multiPDO[$dbname];
-            } else {
-                return self::$multiPDO[$dbname];
-            }
-            // end self pdo
-        }
-    }
-
-    private static function initDatabase($object = null) {
-        if ($object == null) {
-            self::db(array("skip_clean" => true))->exec('CREATE TABLE IF NOT EXISTS "' . self::$table . '" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
-            self::db(array("skip_clean" => true))->exec('CREATE INDEX "lookup" ON "' . self::$table . '" ("added" ASC, "endin" ASC)');
-            self::db(array("skip_clean" => true))->exec('VACUUM');
-        } else {
-            $object->exec('CREATE TABLE IF NOT EXISTS "' . self::$table . '" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" VARCHAR UNIQUE NOT NULL  , "value" BLOB, "added" INTEGER NOT NULL  DEFAULT 0, "endin" INTEGER NOT NULL  DEFAULT 0)');
-            $object->exec('CREATE INDEX "lookup" ON "' . self::$table . '" ("added" ASC, "endin" ASC)');
-            $object->exec('VACUUM');
-        }
-    }
-
-    // send all bugs to my email
-    // you can replace it to your email
-    // maximum 1 email per hour
-    // you can use phpFastCache::bugs($title, $e) in any code
-    public static function bugs($title, $e) {
-        $code = md5("error_" . $title);
-        $send = self::get($code);
-        if ($send == null) {
-            $to = "khoaofgod@yahoo.com";
-            $subject = "Bugs: " . $title;
-            $message = "Error Serialize:" . serialize($e);
-            $from = "root@" . $_SERVER['HTTP_HOST'];
-            $headers = "From:" . $from;
-            @mail($to, $subject, $message, $headers);
-            self::set($code, 1, 3600);
-        }
-    }
-
-    // use for debug
-    // public function, you can use phpFastCache::debug($e|array|string) any time in any code
-    public static function debug($e, $exit = false) {
-        echo "<pre>";
-        print_r($e);
-        echo "</pre>";
-        if ($exit == true) {
-            exit;
-        }
-    }
-
-    public static function startDebug($value, $text = "", $line = __LINE__, $func = __FUNCTION__) {
-        if (self::$debugging == true) {
-            self::$step_debugging++;
-            if (!is_array($value)) {
-                echo "<br>" . self::$step_debugging . " => " . $line . " | " . $func . " | " . $text . " | " . $value;
-            } else {
-                echo "<br>" . self::$step_debugging . " => " . $line . " | " . $func . " | " . $text . " | ";
-                print_r($value);
-            }
+            return $string;
         }
     }
 

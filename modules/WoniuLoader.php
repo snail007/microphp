@@ -12,12 +12,13 @@
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 1.0
  * @createdtime       {createdtime}
+ * @property phpfastcache $cache
  */
 class WoniuLoader {
 
-    public $model, $lib, $router, $db, $input, $view_vars = array();
+    public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
     private $helper_files = array();
-    private static $instance,$config = array();
+    private static $instance, $config = array();
 
     public function __construct() {
         global $system;
@@ -27,7 +28,8 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        WoniuCache::$path = $system['cache_dirname'];
+        $this->cache = phpFastCache();
+        $this->cache->setOption($system['cache_config']);
         if ($system['autoload_db']) {
             $this->database();
         }
@@ -76,9 +78,9 @@ class WoniuLoader {
             }
         }
     }
- 
-    public function setConfig($key,$val) {
-        self::$config[$key]=$val;
+
+    public function setConfig($key, $val) {
+        self::$config[$key] = $val;
     }
 
     public function helper($file_name) {
