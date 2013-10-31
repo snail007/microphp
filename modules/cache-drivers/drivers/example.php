@@ -20,7 +20,7 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
     function __construct($option = array()) {
         $this->setOption($option);
         if(!$this->checkdriver() && !isset($option['skipError'])) {
-            throw new Exception("Can't use this driver for your website!");
+            //throw new Exception("Can't use this driver for your website!");
         }
 
     }

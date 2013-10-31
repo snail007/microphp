@@ -36,7 +36,6 @@ $system['helper_file_subfix'] = '.php';
 $system['helper_file_autoload'] = array(); //array($item);  $item:such as html etc.
 $system['library_file_autoload'] = array(); //array($item); $item:such as ImageTool or array('ImageTool'=>'image') etc.
 $system['models_file_autoload'] = array(); //array($item); $item:such as UserModel or array('UserModel'=>'user') etc.
-$system['cache_drivers'] = array();
 $system['controller_method_ucfirst'] = TRUE;
 $system['autoload_db'] = FALSE;
 $system['debug'] = TRUE;
@@ -44,13 +43,17 @@ $system['default_timezone'] = 'PRC';
 $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1'
 );
-
+/**
+ * Caching Config
+ */
+$system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
      * Default storage
      * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
+     * auto orders : apc,sqlite,files,memcached,wincache, xcache,memcache
      */
-    "storage" => "files", // files, sqlite, auto, apc, wincache, xcache, memcache, memcached,
+    "storage" => "example", // auto,apc,sqlite,files,memcached,wincache, xcache,memcache
 
     /*
      * Default Path for Cache on HDD
@@ -68,7 +71,11 @@ $system['cache_config'] = array(
     "fallback" => array(
         "example" => "files",
         "memcache" => "files",
-        "apc" => "sqlite",
+        "memcached" => "files",
+        "wincache" => "files",
+        "xcache" => "files",
+        "apc" => "files",
+        "sqlite" => "files",
     ),
     /*
      * .htaccess protect

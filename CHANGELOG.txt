@@ -1,4 +1,8 @@
 ver 2.1.13:
+增加了：
+1.$this->cache为最新的phpfastcache2.1,缓存功能更加强大,而且编写自己的缓存类非常容易。
+删除了：
+1.WoniuCache已经被移除，请使用$this->cache代替
 
 ver 2.1.12:
 增加了：
