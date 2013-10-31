@@ -287,6 +287,7 @@ class phpFastCache {
     }
 
     function __construct($storage = "", $option = array()) {
+        
         if (isset(self::$config['fallback'][$storage])) {
             $storage = self::$config['fallback'][$storage];
         }
@@ -360,7 +361,7 @@ class phpFastCache {
                 }
             }
         }
-
+        
 
         return $driver;
     }

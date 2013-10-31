@@ -1,8 +1,64 @@
 ver 2.1.13:
 增加了：
 1.$this->cache为最新的phpfastcache2.1,缓存功能更加强大,而且编写自己的缓存类非常容易。
+2.自定义缓存类说明：
+    $system['cache_drivers'] = array();
+    自定义缓存类文件的路径是$system['cache_drivers']的一个元素，可以有多个自定义缓存类。
+    缓存类文件名称命名规范是：
+       比如文件名是mycahe.php,那么文件mycahe.php里面的缓存类就是：class phpfastcache_mycahe{......}
+    mycahe.php的编写规范请参考：https://github.com/khoaofgod/phpfastcache/tree/Stable-Version-1.x/phpfastcache_v2.1_release/phpfastcache/drivers
 删除了：
 1.WoniuCache已经被移除，请使用$this->cache代替
+升级提示：
+1.如果项目中使用了WoniuCache进行缓存，请使用$this->cache代替
+2.在$system中增加如下配置：
+/**
+ * Caching Config
+ */
+$system['cache_drivers'] = array();
+$system['cache_config'] = array(
+    /*
+     * Default storage
+     * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
+     * auto orders : apc,sqlite,files,memcached,wincache, xcache,memcache
+     */
+    "storage" => "auto", // auto,apc,sqlite,files,memcached,wincache, xcache,memcache
+
+    /*
+     * Default Path for Cache on HDD
+     * Use full PATH like /home/username/cache
+     * Keep it blank "", it will automatic setup for you
+     */
+    "path" => "", // default path for files
+    "securityKey" => "", // default will good. It will create a path by PATH/securityKey
+
+    /*
+     * FallBack Driver
+     * Example, in your code, you use memcached, apc..etc, but when you moved your web hosting
+     * The new hosting don't have memcached, or apc. What you do? Set fallback that driver to other driver.
+     */
+    "fallback" => array(
+        "example" => "files",
+        "memcache" => "files",
+        "memcached" => "files",
+        "wincache" => "files",
+        "xcache" => "files",
+        "apc" => "files",
+        "sqlite" => "files",
+    ),
+    /*
+     * .htaccess protect
+     * default will be  true
+     */
+    "htaccess" => false,
+    /*
+     * Default Memcache Server for all $cache = phpFastCache("memcache");
+     */
+    "server" => array(
+        array("127.0.0.1", 11211, 1),
+    //  array("new.host.ip",11211,1),
+    ),
+);
 
 ver 2.1.12:
 增加了：

@@ -53,7 +53,7 @@ $system['cache_config'] = array(
      * if you set this storage => "files", then $cache = phpFastCache(); <-- will be files cache
      * auto orders : apc,sqlite,files,memcached,wincache, xcache,memcache
      */
-    "storage" => "example", // auto,apc,sqlite,files,memcached,wincache, xcache,memcache
+    "storage" => "auto", // auto,apc,sqlite,files,memcached,wincache, xcache,memcache
 
     /*
      * Default Path for Cache on HDD
