@@ -59,7 +59,6 @@
                         $system['helper_file_autoload']=array(); 自动加载的helper文件,比如:array($item); $item是helper文件名,不包含后缀,比如: html 等.<br>
                         $system['library_file_autoload']=array();自动加载的library文件,比如array($item); $item是library文件名或者"配置数组",不包含后缀,比如: ImageTool 或者配置数组 array('ImageTool'=>'image')配置数组的作用是为长的类库名用别名代替.<br>
                         $system['models_file_autoload']=array(); 自动加载的model,比如array($item); $item是model文件名或者"配置数组",不包含后缀,比如: UserModel 或者配置数组 array('UserModel'=>'user')配置数组的作用是为长的model名用别名代替.<br>
-                        $system['cache_dirname']=$_SERVER['DOCUMENT ROOT'].DS.'cache'; 使用文件缓存的时候,缓存数据保存的文件夹,确保程序有读写权限<br>
                         $system['controller_method_ucfirst']控制器方法名称是否首字母大写,默认true<br>
                         $system['autoload_db']              是否自动连接数据库,默认true<br>
                         $system['debug']                    是否开启调试模式,默认true显示错误信息,如果为false那么程序所有错误将不显示<br>
@@ -236,11 +235,11 @@ $system['library_file_autoload']数组里面是类库文件名不含后缀,而�
                     <h2><legend style="color: #990000;"><a name="cache">缓存</a>&nbsp;&nbsp;<a href="#">Top</a></legend></h2>
                     <pre>
 在控制器和模型里面都可以直接通过:
-WoniuCache::set($key,$val,$liftime,$skip=false),设置一个缓存.
-WoniuCache::get($key),获取一个缓存.
-WoniuCache::delete($key),删除一个缓存.
-WoniuCache::cleanup($key),清空缓存.
-缓存方式默认自动:WoniuCache::$storage = "auto";</pre>提示:缓存类使用的是phpFastCache,支持 auto | pdo | mpdo | files | memcache | memcached | apc | wincache | xcache,更多的使用方法和配置方法可以参考:<a href="http://www.phpfastcache.com/" target="_blank">http://www.phpfastcache.com/</a>
+$this->cache->set($key,$val,$liftime,$skip=false),设置一个缓存.
+$this->cache->get($key),获取一个缓存.
+$this->cache->delete($key),删除一个缓存.
+$this->cache->cleanup($key),清空缓存.
+缓存方式默认自动:"auto";可以在index.php里面修改相关配置。</pre>提示:缓存类使用的是phpFastCache2.1,支持 auto,apc,sqlite,files,memcached,wincache, xcache,memcache,更多的使用方法和配置方法可以参考:<a href="http://www.phpfastcache.com/" target="_blank">http://www.phpfastcache.com/</a>
                     为了方便,在框架里面把类名phpFastCache替换为了WoniuCache,所以配置的时候使用WoniuCache而不是phpFastCache.如果要自定义缓存类型配置,可以这样做:写一个helper文件,里面对WoniuCache就行配置,然后自动加载这个helper文件即可.
                 </fieldset>
             </li><li>

@@ -1,7 +1,7 @@
 <?php
 
 date_default_timezone_set('PRC');
-$ver = "Version 2.1.12";
+$ver = "Version 2.1.13";
 $header = '<?php
 /**
  * MicroPHP

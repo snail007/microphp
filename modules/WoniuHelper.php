@@ -17,7 +17,9 @@ if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
         global $system;
-        header('HTTP/1.1 404 NotFound');
+        if(!headers_sent()){
+            header('HTTP/1.1 404 NotFound');
+        }
         if (!empty($system['error_page_404']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_404'])) {
             include dirname(__FILE__) . '/' . $system['error_page_404'];
         } else {
@@ -31,7 +33,9 @@ if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
         global $system;
-        header('HTTP/1.1 500 Server Error');
+        if(!headers_sent()){
+            header('HTTP/1.1 500 Server Error');
+        }
         if (!empty($system['error_page_50x']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_50x'])) {
             include dirname(__FILE__) . '/' . $system['error_page_50x'];
         } else {

@@ -28,6 +28,7 @@ class Welcome extends WoniuController {
 //        var_dump($this->input->server('http_host',2222));
 //        echo $this->page(100, $this->input->get('p'), 10, '?home.welcome.index&p={page}');
         $this->helper('config');
+        $this->lib('TestLibrary','aaa');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
