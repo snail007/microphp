@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.12
- * @createdtime       2013-10-31 15:04:47
+ * @createdtime       2013-10-31 15:12:42
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -129,16 +129,6 @@ $woniu_db['default']['stricton'] = FALSE;
   $woniu_db['default']['stricton'] = FALSE;
  */
 //-------------------------end database config--------------------------
-
-
-
-
-
-
-
-
-
-
 
 
 

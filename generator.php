@@ -17,11 +17,26 @@ $header = '<?php
  * @createdtime         ' . date('Y-m-d H:i:s') . '
  */
  ';
-$files = array('modules/WoniuRouter.php', 'modules/WoniuLoader.php',
-    'modules/WoniuController.php', 'modules/WoniuModel.php',
-    'modules/db-drivers/db.drivers.php', 'modules/db-drivers/mysql.driver.php',
+$files = array(
+    'modules/WoniuRouter.php',
+    'modules/WoniuLoader.php',
+    'modules/WoniuController.php',
+    'modules/WoniuModel.php',
+    'modules/db-drivers/db.drivers.php',
+    'modules/db-drivers/mysql.driver.php',
     'modules/db-drivers/mysqli.driver.php',
-    'modules/db-drivers/pdo.driver.php', 'modules/db-drivers/sqlite3.driver.php',
+    'modules/db-drivers/pdo.driver.php',
+    'modules/db-drivers/sqlite3.driver.php',
+    'modules/cache-drivers/driver.php',
+    'modules/cache-drivers/drivers/apc.php',
+    'modules/cache-drivers/drivers/example.php',
+    'modules/cache-drivers/drivers/files.php',
+    'modules/cache-drivers/drivers/memcache.php',
+    'modules/cache-drivers/drivers/memcached.php',
+    'modules/cache-drivers/drivers/sqlite.php',
+    'modules/cache-drivers/drivers/wincache.php',
+    'modules/cache-drivers/drivers/xcache.php',
+    'modules/cache-drivers/phpfastcache.php',
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php'
 );
@@ -30,7 +45,6 @@ foreach ($files as $file) {
     $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
 }
 common_replace($core);
-$core.=getCache();
 file_put_contents('MicroPHP.php', "<?php\n" . $core . "\nWoniuRouter::loadClass();");
 $content = php_strip_whitespace('MicroPHP.php');
 $content = str_replace("class WoniuLoader", "\n /**
@@ -41,7 +55,7 @@ file_put_contents('MicroPHP.php', str_replace('<?php', $header, $content));
 
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
-    $index = str_replace("include('" . str_replace('modules/', '', $file) . "');", '', $index);
+    $index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
 }
 $index = str_replace("../app", 'application', $index);
 $index = str_replace("WoniuRouter::loadClass();", '', $index);
@@ -72,19 +86,19 @@ function common_replace(&$str) {
 }
 
 function getCache() {
-    $dir='modules/cache-drivers';
-    $drivers = dir($dir.'/drivers');
+    $dir = 'modules/cache-drivers';
+    $drivers = dir($dir . '/drivers');
     $content = '';
     while ($file = $drivers->read()) {
-        if ($file != '.' && $file != '..' && is_file($dir.'/drivers/' . $file)) {
-            $content.=str_replace('<?php', '', file_get_contents($dir.'/drivers/' . $file)) . "\n";
+        if ($file != '.' && $file != '..' && is_file($dir . '/drivers/' . $file)) {
+            $content.=str_replace('<?php', '', file_get_contents($dir . '/drivers/' . $file)) . "\n";
         }
     }
     $drivers_content = $content;
 
-    $driver = str_replace('<?php', '', file_get_contents($dir.'/driver.php')) . "\n";
+    $driver = str_replace('<?php', '', file_get_contents($dir . '/driver.php')) . "\n";
 
-    $phpfastcache = str_replace('<?php', '', file_get_contents($dir.'/phpfastcache.php')) . "\n";
+    $phpfastcache = str_replace('<?php', '', file_get_contents($dir . '/phpfastcache.php')) . "\n";
 
     $contents = $driver . $drivers_content . $phpfastcache;
 
