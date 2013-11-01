@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-02 00:05:16
+ * @createdtime       2013-11-02 00:07:17
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -108,9 +108,9 @@ $system['cache_config'] = array(
  * =======================SESSION管理配置=======================
  */
 $system['session_handle'] = array(
-    'handle' => 'redis', //mongodb,mysql,memcache,redis
+    'handle' => 'redis', //支持的管理类型：mongodb,mysql,memcache,redis
     'common' => array(
-        'autostart' => true,
+        'autostart' => true,//是否自动session_start()
         'cookie_path' => '/',
         'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
