@@ -40,6 +40,7 @@ $files = array(
     'modules/session_drivers/WoniuSessionHandle.php',
     'modules/session_drivers/MysqlSessionHandle.php',
     'modules/session_drivers/MongodbSessionHandle.php',
+    'modules/session_drivers/MemcacheSessionHandle.php',
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php'
 );

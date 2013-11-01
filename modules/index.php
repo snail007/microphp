@@ -93,7 +93,7 @@ $system['cache_config'] = array(
  * session管理自定义配置
  */
 $system['session_handle'] = array(
-    'handle' => '', //mongodb,mysql
+    'handle' => 'memcache', //mongodb,mysql,memcache
     'common' => array(
         'autostart'=>false,
         'cookie_path' => '/',
@@ -127,7 +127,7 @@ $system['session_handle'] = array(
         'host' => '10.0.0.251',
         'port'=>3306,
         'user' => 'root',
-        'password' => 'snailadmin',
+        'password' => '',
         'database' => 'test',
         'table' => 'session_handler_table',
     ),
@@ -199,10 +199,10 @@ include('cache-drivers/drivers/memcached.php');
 include('cache-drivers/drivers/sqlite.php');
 include('cache-drivers/drivers/wincache.php');
 include('cache-drivers/drivers/xcache.php');
-
 include('session_drivers/WoniuSessionHandle.php');
 include('session_drivers/MysqlSessionHandle.php');
 include('session_drivers/MongodbSessionHandle.php');
+include('session_drivers/MemcacheSessionHandle.php');
 include('WoniuRouter.php');
 include('WoniuLoader.php');
 include('WoniuController.php');

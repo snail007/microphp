@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-01 17:12:29
+ * @createdtime       2013-11-01 17:27:40
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -93,9 +93,9 @@ $system['cache_config'] = array(
  * session管理自定义配置
  */
 $system['session_handle'] = array(
-    'handle' => '', //mongodb,mysql
+    'handle' => 'memcache', //mongodb,mysql,memcache
     'common' => array(
-        'autostart'=>false,
+        'autostart'=>true,
         'cookie_path' => '/',
         'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
@@ -182,7 +182,6 @@ $woniu_db['default']['stricton'] = FALSE;
   $woniu_db['default']['stricton'] = FALSE;
  */
 //-------------------------end database config--------------------------
-
 
 
 
