@@ -41,6 +41,7 @@ $files = array(
     'modules/session_drivers/MysqlSessionHandle.php',
     'modules/session_drivers/MongodbSessionHandle.php',
     'modules/session_drivers/MemcacheSessionHandle.php',
+    'modules/session_drivers/RedisSessionHandle.php',
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php'
 );

@@ -13,7 +13,7 @@
  * @property MongoCollection __mongo_collection
  */
 
-class MemcacheSessionHandle implements WoniuSessionHandle {
+class RedisSessionHandle implements WoniuSessionHandle {
 
     /**
      * Default constructor.
@@ -21,16 +21,16 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
      * @access  public
      * @param   array   $config
      */
-    public function start($config = array()) { 
-        $session_save_path = $config['memcache'];
-        ini_set('session.save_handler', 'memcache');
+    public function start($config = array()) {
+        $session_save_path = $config['redis'];
+        ini_set('session.save_handler', 'redis');
         ini_set('session.save_path', $session_save_path);
         
         // set some important session vars
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
         ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $config['lifetime']);
+        ini_set('session.gc_maxlifetime', $config['common']['lifetime']);
         ini_set('session.referer_check', '');
         ini_set('session.entropy_file', '/dev/urandom');
         ini_set('session.entropy_length', 16);
@@ -51,6 +51,7 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         session_name($config['common']['session_name']);
 
         register_shutdown_function('session_write_close');
+        
         
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {

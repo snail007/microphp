@@ -30,10 +30,13 @@ class Welcome extends WoniuController {
 //        echo $this->page(100, $this->input->get('p'), 10, '?home.welcome.index&p={page}');
         $this->helper('config');
         //session_start();
-        $_SESSION['user']=array('aaa','bbb');
-        var_dump($_SESSION);
+//        $_SESSION['user']=array('aaa','bbb');
+//        var_dump($_SESSION);
 //        session_destroy();
 //        var_dump($_SESSION);
+        $this->cache->set('aaakey',array('555555fasdfasdf','dafasd'),60);
+        var_dump($this->cache->get('aaakey'));
+//        $this->cache->clean();
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
