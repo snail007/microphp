@@ -28,8 +28,13 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
+        static $included = array();
         foreach ($system['cache_drivers'] as $filepath) {
-            include $filepath;
+            if (!isset($included[realpath($filepath)])) {
+                include $filepath;
+            } else {
+                $included[realpath($filepath)] = 1;
+            }
         }
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);

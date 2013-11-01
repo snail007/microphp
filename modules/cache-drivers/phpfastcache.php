@@ -37,7 +37,6 @@ class phpFastCache_instances {
 
 // main class
 class phpFastCache {
-
     public static $storage = "auto";
     public static $config = array(
         "storage" => "auto",
@@ -340,13 +339,12 @@ class phpFastCache {
         }
         global $system;
         foreach ($system['cache_drivers'] as $filepath) {
-            include $filepath;
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
-            $class = "phpfastcache_" . $namex;
+            $clazz = "phpfastcache_" . $namex;
             $option = $this->option;
             $option['skipError'] = true;
-            $_driver = new $class($option);
+            $_driver = new $clazz($option);
             $_driver->option = $option;
             if ($_driver->checkdriver()) {
                 return $namex;
@@ -415,13 +413,12 @@ class phpFastCache {
         }
         global $system;
         foreach ($system['cache_drivers'] as $filepath) {
-            include $filepath;
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
-            $class = "phpfastcache_" . $namex;
+            $clazz = "phpfastcache_" . $namex;
             $option = $this->option;
             $option['skipError'] = true;
-            $_driver = new $class($option);
+            $_driver = new $clazz($option);
             $_driver->option = $option;
             if ($_driver->checkdriver()&&$class==$namex) {
                 return true;
@@ -458,7 +455,6 @@ class phpFastCache {
             }
 
             foreach ($system['cache_drivers'] as $filepath) {
-                include $filepath;
                 $file = pathinfo($filepath, PATHINFO_BASENAME);
                 $namex = str_replace(".php", "", $file);
                 $class = "phpfastcache_" . $namex;

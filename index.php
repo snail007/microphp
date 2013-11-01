@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-02 00:07:17
+ * @createdtime       2013-11-02 01:43:04
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -46,14 +46,14 @@ $system['route'] = array(
 /**
  * ========================缓存配置========================
  */
-$system['cache_drivers'] = array();
+$system['cache_drivers'] = array('modules/cache-drivers/drivers/example.php');
 $system['cache_config'] = array(
     /*
      * 默认存储方式
      * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
-    "storage" => "auto",
+    "storage" => "example",
     /*
      * 默认缓存文件存储的路径
      * 使用绝对全路径，比如： /home/username/cache
@@ -98,7 +98,7 @@ $system['cache_config'] = array(
         'sock'=>'',//sock的完整路径
         'host' => '192.168.199.25',
         'port' => 6379,
-        'password' => NULL,//密码，如果没有保持null
+        'password' => NULL,//密码，如果没有,保持null
         'timeout'=>0,//0意味着没有超时限制，单位秒
         'retry'=>100,//连接失败后的重试时间间隔，单位毫秒
         'db' => 0, // 数据库序号，默认0, 参考 http://redis.io/commands/select
