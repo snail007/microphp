@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-01 17:27:40
+ * @createdtime       2013-11-01 23:52:40
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -44,14 +44,14 @@ $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1'
 );
 /**
- * 缓存配置
+ * ========================缓存配置========================
  */
 $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
      * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,wincache, xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,wincache, xcache,memcache
+     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
@@ -71,6 +71,7 @@ $system['cache_config'] = array(
     "fallback" => array(
         "memcache" => "files",
         "memcached" => "files",
+        "redis" => "files",
         "wincache" => "files",
         "xcache" => "files",
         "apc" => "files",
@@ -82,28 +83,42 @@ $system['cache_config'] = array(
      */
     "htaccess" => false,
     /*
-     * 所有通过$cache = phpFastCache("memcache")创建的对象使用的Memcache服务器地址;
+     * Memcache服务器地址;
      */
     "server" => array(
-        array("127.0.0.1", 11211, 1),
+        array("192.168.199.25", 11211, 1),
     //  array("new.host.ip",11211,1),
+    ),
+    /*
+     * Redis服务器地址;
+     */
+    "redis" => array(
+        'type'=>'tcp',//sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
+        'prefix'=>$_SERVER['HTTP_HOST'],//key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
+        'sock'=>'',//sock的完整路径
+        'host' => '192.168.199.25',
+        'port' => 6379,
+        'password' => NULL,//密码，如果没有保持null
+        'timeout'=>0,//0意味着没有超时限制，单位秒
+        'retry'=>100,//连接失败后的重试时间间隔，单位毫秒
+        'db' => 0, // 数据库序号，默认0, 参考 http://redis.io/commands/select
     ),
 );
 /**
- * session管理自定义配置
+ * =======================SESSION管理配置=======================
  */
 $system['session_handle'] = array(
-    'handle' => 'memcache', //mongodb,mysql,memcache
+    'handle' => 'mongodb', //mongodb,mysql,memcache,redis
     'common' => array(
-        'autostart'=>true,
+        'autostart' => true,
         'cookie_path' => '/',
         'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
-        'lifetime' => 30, // session lifetime in seconds
+        'lifetime' => 3600, // session lifetime in seconds
     ),
     'mongodb' => array(
-        'host'=>'127.0.0.1',
-        'port'=>27017,
+        'host' => '192.168.199.25',
+        'port' => 27017,
         'user' => 'root',
         'password' => 'local',
         'database' => 'local', // name of MongoDB database
@@ -117,24 +132,32 @@ $system['session_handle'] = array(
     /**
      * mysql表结构
      *   CREATE TABLE `session_handler_table` (
-            `id` varchar(255) NOT NULL,
-            `data` mediumtext NOT NULL,
-            `timestamp` int(255) NOT NULL,
-            PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+      `id` varchar(255) NOT NULL,
+      `data` mediumtext NOT NULL,
+      `timestamp` int(255) NOT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `id` (`id`,`timestamp`),
+      KEY `timestamp` (`timestamp`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
      */
     'mysql' => array(
-        'host' => '10.0.0.251',
-        'port'=>3306,
+        'host' => '127.0.0.1',
+        'port' => 3306,
         'user' => 'root',
-        'password' => 'snailadmin',
+        'password' => 'admin',
         'database' => 'test',
         'table' => 'session_handler_table',
     ),
-    'memcache'=>array(
-        'host' => '127.0.0.1',
-        'port'=>11211
-    ),
+    /**
+     * memcache采用的是session.save_handler管理机制
+     * 需要php安装memcache拓展支持
+     */
+    'memcache' => "tcp://192.168.199.25:11211",
+    /**
+     * redis采用的是session.save_handler管理机制
+     * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
+     */
+    'redis' => "tcp://192.168.199.25:6379",
 );
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------

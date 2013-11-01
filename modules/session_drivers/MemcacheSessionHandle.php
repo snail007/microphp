@@ -30,7 +30,7 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
         ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $config['lifetime']);
+        ini_set('session.gc_maxlifetime', $config['common']['lifetime']);
         ini_set('session.referer_check', '');
         ini_set('session.entropy_file', '/dev/urandom');
         ini_set('session.entropy_length', 16);

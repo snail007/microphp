@@ -36,6 +36,7 @@ $files = array(
     'modules/cache-drivers/drivers/sqlite.php',
     'modules/cache-drivers/drivers/wincache.php',
     'modules/cache-drivers/drivers/xcache.php',
+    'modules/cache-drivers/drivers/redis.php',
     'modules/cache-drivers/phpfastcache.php',
     'modules/session_drivers/WoniuSessionHandle.php',
     'modules/session_drivers/MysqlSessionHandle.php',
