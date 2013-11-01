@@ -53,6 +53,7 @@ class phpFastCache {
         ),
         "extensions" => array(),
     );
+    var $drivers = array('apc', 'sqlite', 'files', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
     var $tmp = array();
     var $checked = array(
         "path" => false,
@@ -327,43 +328,31 @@ class phpFastCache {
      */
 
     function autoDriver() {
-
-        $driver = "files";
-
-        if (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, "CGI") === false) {
-            $driver = "apc";
-        } elseif (extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
-            $driver = "sqlite";
-        } elseif (is_writeable($this->getPath())) {
-            $driver = "files";
-        } else if (class_exists("memcached")) {
-            $driver = "memcached";
-        } else if (class_exists("redis")) {
-            $driver = "redis";
-        } elseif (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
-            $driver = "wincache";
-        } elseif (extension_loaded('xcache') && function_exists("xcache_get")) {
-            $driver = "xcache";
-        } else if (function_exists("memcache_connect")) {
-            $driver = "memcache";
-        } else {
-            global $system;
-            foreach ($system['cache_drivers'] as $filepath) {
-                include $filepath;
-                $file = pathinfo($filepath, PATHINFO_BASENAME);
-                $namex = str_replace(".php", "", $file);
-                $class = "phpfastcache_" . $namex;
-                $option = $this->option;
-                $option['skipError'] = true;
-                $driver = new $class($option);
-                $driver->option = $option;
-                if ($driver->checkdriver()) {
-                    $driver = $namex;
-                }
+        foreach ($this->drivers as $namex) {
+            $class = "phpfastcache_" . $namex;
+            $option = $this->option;
+            $option['skipError'] = true;
+            $_driver = new $class($option);
+            $_driver->option = $option;
+            if ($_driver->checkdriver()) {
+                return $namex;
             }
         }
-
-        return $driver;
+        global $system;
+        foreach ($system['cache_drivers'] as $filepath) {
+            include $filepath;
+            $file = pathinfo($filepath, PATHINFO_BASENAME);
+            $namex = str_replace(".php", "", $file);
+            $class = "phpfastcache_" . $namex;
+            $option = $this->option;
+            $option['skipError'] = true;
+            $_driver = new $class($option);
+            $_driver->option = $option;
+            if ($_driver->checkdriver()) {
+                return $namex;
+            }
+        }
+        return "";
     }
 
     function option($name, $value = null) {
@@ -414,42 +403,31 @@ class phpFastCache {
 
     private function isExistingDriver($class) {
         $class = strtolower($class);
-        switch ($class) {
-            case "files":
-                return is_writeable($this->getPath());
-            case "apc":
-                return (extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI, "CGI") === false);
-            case "sqlite":
-                return (extension_loaded('pdo_sqlite') && is_writeable($this->getPath()));
-            case "memcached":
-                return (class_exists("memcached"));
-            case "redis":
-                return class_exists("redis");
-            case "wincache":
-                return (extension_loaded('wincache') && function_exists("wincache_ucache_set"));
-            case "xcache":
-                return (extension_loaded('xcache') && function_exists("xcache_get"));
-            case "memcache":
-                return (class_exists("memcache"));
-            default:
-                global $system;
-                foreach ($system['cache_drivers'] as $filepath) {
-                    include $filepath;
-                    $file = pathinfo($filepath, PATHINFO_BASENAME);
-                    $namex = str_replace(".php", "", $file);
-                    if (strtolower($namex) == $class) {
-                        $class = "phpfastcache_" . $namex;
-                        $option = $this->option;
-                        $option['skipError'] = true;
-                        $driver = new $class($option);
-                        $driver->option = $option;
-                        return $driver->checkdriver();
-                    }
-                }
-                return false;
+        foreach ($this->drivers as $namex) {
+            $clazz = "phpfastcache_" . $namex;
+            $option = $this->option;
+            $option['skipError'] = true;
+            $_driver = new $clazz($option);
+            $_driver->option = $option;
+            if ($_driver->checkdriver()&&$class==$namex) {
+                return true;
+            }
         }
-
-        return $class == strtolower($this->autoDriver());
+        global $system;
+        foreach ($system['cache_drivers'] as $filepath) {
+            include $filepath;
+            $file = pathinfo($filepath, PATHINFO_BASENAME);
+            $namex = str_replace(".php", "", $file);
+            $class = "phpfastcache_" . $namex;
+            $option = $this->option;
+            $option['skipError'] = true;
+            $_driver = new $class($option);
+            $_driver->option = $option;
+            if ($_driver->checkdriver()&&$class==$namex) {
+                return true;
+            }
+        }
+        
     }
 
     /*
@@ -466,7 +444,7 @@ class phpFastCache {
 
             global $system;
 
-            foreach (array('apc', 'sqlite', 'files', 'memcached', 'redis', 'wincache', 'xcache', 'memcache') as $namex) {
+            foreach ($this->drivers as $namex) {
                 $class = "phpfastcache_" . $namex;
                 $this->option['skipError'] = true;
                 $driver = new $class($this->option);
@@ -504,9 +482,7 @@ class phpFastCache {
                 $this->option['system']['driver'] = "sqlite";
             }
         }
-
-        $example = new phpfastcache_example($this->option);
-        $this->option("path", $example->getPath(true));
+        $this->option("path", $this->getPath(true));
         return $this->option;
     }
 

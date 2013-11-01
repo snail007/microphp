@@ -29,7 +29,6 @@ $files = array(
     'modules/db-drivers/sqlite3.driver.php',
     'modules/cache-drivers/driver.php',
     'modules/cache-drivers/drivers/apc.php',
-    'modules/cache-drivers/drivers/example.php',
     'modules/cache-drivers/drivers/files.php',
     'modules/cache-drivers/drivers/memcache.php',
     'modules/cache-drivers/drivers/memcached.php',

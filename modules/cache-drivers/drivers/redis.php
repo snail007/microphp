@@ -24,16 +24,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
             throw new Exception("Can't use this driver for your website!");
         }
         if ($this->checkdriver() && !is_object($this->instant)) {
-            $config = $option['redis'];
             $this->instant = new Redis();
-            if ($config['type'] == 'sock') {
-                $this->instant->connect($config['sock']);
-            } else {
-                $this->instant->connect($config['host'], $config['port'], $config['timeout'], NULL, $config['retry']);
-            }
-            if (!empty($config['password'])) {
-                $this->instant->auth($config['password']);
-            }
         }
     }
 

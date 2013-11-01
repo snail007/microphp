@@ -53,7 +53,7 @@ $system['cache_config'] = array(
      * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
-    "storage" => "auto",
+    "storage" => "example",
     /*
      * 默认缓存文件存储的路径
      * 使用绝对全路径，比如： /home/username/cache
@@ -215,7 +215,6 @@ include('db-drivers/sqlite3.driver.php');
 include('cache-drivers/phpfastcache.php');
 include('cache-drivers/driver.php');
 include('cache-drivers/drivers/apc.php');
-include('cache-drivers/drivers/example.php');
 include('cache-drivers/drivers/files.php');
 include('cache-drivers/drivers/memcache.php');
 include('cache-drivers/drivers/memcached.php');

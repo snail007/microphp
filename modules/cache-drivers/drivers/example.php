@@ -11,7 +11,7 @@
 class phpfastcache_example extends phpFastCache implements phpfastcache_driver  {
 
     function checkdriver() {
-//         return true;
+         return true;
         return false;
     }
 
