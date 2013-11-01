@@ -7,6 +7,11 @@ ver 2.1.13:
     缓存类文件名称命名规范是：
        比如文件名是mycahe.php,那么文件mycahe.php里面的缓存类就是：class phpfastcache_mycahe{......}
        mycahe.php的编写规范请参考：https://github.com/khoaofgod/phpfastcache/tree/Stable-Version-1.x/phpfastcache_v2.1_release/phpfastcache/drivers
+3.phpfastcache增加Redis缓存支持
+4.Redis存储SESSION支持。
+5.Memcache存储SESSION支持。
+6.Mongodb存储SESSION支持。
+7.Mysql存储SESSION支持。
 删除了：
 1.WoniuCache已经被移除，请使用$this->cache代替
 升级提示：
