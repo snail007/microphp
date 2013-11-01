@@ -1,19 +1,19 @@
 ver 2.1.13:
 增加了：
-1.$this->cache为最新的phpfastcache2.1,缓存功能更加强大,而且编写自己的缓存类非常容易。
-2.自定义缓存类说明：
-    $system['cache_drivers'] = array();
-    自定义缓存类文件的路径是$system['cache_drivers']的一个元素，可以有多个自定义缓存类。
-    缓存类文件名称命名规范是：
-       比如文件名是mycahe.php,那么文件mycahe.php里面的缓存类就是：class phpfastcache_mycahe{......}
-       mycahe.php的编写规范请参考：https://github.com/khoaofgod/phpfastcache/tree/Stable-Version-1.x/phpfastcache_v2.1_release/phpfastcache/drivers
-3.phpfastcache增加Redis缓存支持
-4.Redis存储SESSION支持。
-5.Memcache存储SESSION支持。
-6.Mongodb存储SESSION支持。
-7.Mysql存储SESSION支持。
+    1.$this->cache为最新的phpfastcache2.1,缓存功能更加强大,而且编写自己的缓存类非常容易。
+    2.自定义缓存类说明：
+        $system['cache_drivers'] = array();
+        自定义缓存类文件的路径是$system['cache_drivers']的一个元素，可以有多个自定义缓存类。
+        缓存类文件名称命名规范是：
+           比如文件名是mycahe.php,那么文件mycahe.php里面的缓存类就是：class phpfastcache_mycahe{......}
+           mycahe.php的编写规范请参考：https://github.com/khoaofgod/phpfastcache/tree/Stable-Version-1.x/phpfastcache_v2.1_release/phpfastcache/drivers
+    3.phpfastcache增加Redis缓存支持
+    4.Redis存储SESSION支持。
+    5.Memcache存储SESSION支持。
+    6.Mongodb存储SESSION支持。
+    7.Mysql存储SESSION支持。
 删除了：
-1.WoniuCache已经被移除，请使用$this->cache代替
+    1.WoniuCache已经被移除，请使用$this->cache代替
 升级提示：
 1.如果项目中使用了WoniuCache进行缓存，请使用$this->cache代替
 2.在$system中增加如下配置：
