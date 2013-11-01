@@ -89,6 +89,53 @@ $system['cache_config'] = array(
     //  array("new.host.ip",11211,1),
     ),
 );
+/**
+ * session管理自定义配置
+ */
+$system['session_handle'] = array(
+    'handle' => '', //mongodb,mysql
+    'common' => array(
+        'autostart'=>false,
+        'cookie_path' => '/',
+        'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
+        'session_name' => 'PHPSESSID',
+        'lifetime' => 30, // session lifetime in seconds
+    ),
+    'mongodb' => array(
+        'host'=>'127.0.0.1',
+        'port'=>27017,
+        'user' => 'root',
+        'password' => 'local',
+        'database' => 'local', // name of MongoDB database
+        'collection' => 'session', // name of MongoDB collection
+        // persistent related vars
+        'persistent' => false, // persistent connection to DB?
+        'persistentId' => 'MongoSession', // name of persistent connection
+        // whether we're supporting replicaSet
+        'replicaSet' => false,
+    ),
+    /**
+     * mysql表结构
+     *   CREATE TABLE `session_handler_table` (
+            `id` varchar(255) NOT NULL,
+            `data` mediumtext NOT NULL,
+            `timestamp` int(255) NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+     */
+    'mysql' => array(
+        'host' => '10.0.0.251',
+        'port'=>3306,
+        'user' => 'root',
+        'password' => 'snailadmin',
+        'database' => 'test',
+        'table' => 'session_handler_table',
+    ),
+    'memcache'=>array(
+        'host' => '127.0.0.1',
+        'port'=>11211
+    ),
+);
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
@@ -152,6 +199,10 @@ include('cache-drivers/drivers/memcached.php');
 include('cache-drivers/drivers/sqlite.php');
 include('cache-drivers/drivers/wincache.php');
 include('cache-drivers/drivers/xcache.php');
+
+include('session_drivers/WoniuSessionHandle.php');
+include('session_drivers/MysqlSessionHandle.php');
+include('session_drivers/MongodbSessionHandle.php');
 include('WoniuRouter.php');
 include('WoniuLoader.php');
 include('WoniuController.php');

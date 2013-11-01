@@ -26,6 +26,8 @@ class WoniuRouter {
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
             WoniuInput::$router = $methodInfo;
+            //session自定义配置检查
+            self::checkSession();
             $class = new $methodInfo['class']();
             if (method_exists($class, $methodInfo['method'])) {
                 $methodInfo['parameters'] = is_array($methodInfo['parameters']) ? $methodInfo['parameters'] : array();
@@ -137,6 +139,29 @@ class WoniuRouter {
         }
         $pathinfo_query = self::checkRouter($pathinfo_query);
         return $pathinfo_query;
+    }
+
+    public static function checkSession() {
+        global $system;
+        //session自定义配置检测
+        if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
+        ) {
+            $driver = $system['session_handle']['handle'];
+            $config = $system['session_handle'][$system['session_handle']['handle']];
+            switch ($driver) {
+                case 'memcache':
+                    $session_save_path = "tcp://{$config['host']}:{$config['port']}";
+                    ini_set('session.save_handler', 'memcache');
+                    ini_set('session.save_path', $session_save_path);
+                    break;
+
+                default:
+                    $handle = ucfirst($driver) . 'SessionHandle';
+                    $session = new $handle();
+                    $session->start($config);
+                    break;
+            }
+        }
     }
 
     public static function checkRouter($pathinfo_query) {

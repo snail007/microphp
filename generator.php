@@ -37,6 +37,9 @@ $files = array(
     'modules/cache-drivers/drivers/wincache.php',
     'modules/cache-drivers/drivers/xcache.php',
     'modules/cache-drivers/phpfastcache.php',
+    'modules/session_drivers/WoniuSessionHandle.php',
+    'modules/session_drivers/MysqlSessionHandle.php',
+    'modules/session_drivers/MongodbSessionHandle.php',
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php'
 );

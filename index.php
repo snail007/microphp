@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-01 09:32:34
+ * @createdtime       2013-11-01 17:12:29
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -89,6 +89,53 @@ $system['cache_config'] = array(
     //  array("new.host.ip",11211,1),
     ),
 );
+/**
+ * session管理自定义配置
+ */
+$system['session_handle'] = array(
+    'handle' => '', //mongodb,mysql
+    'common' => array(
+        'autostart'=>false,
+        'cookie_path' => '/',
+        'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
+        'session_name' => 'PHPSESSID',
+        'lifetime' => 30, // session lifetime in seconds
+    ),
+    'mongodb' => array(
+        'host'=>'127.0.0.1',
+        'port'=>27017,
+        'user' => 'root',
+        'password' => 'local',
+        'database' => 'local', // name of MongoDB database
+        'collection' => 'session', // name of MongoDB collection
+        // persistent related vars
+        'persistent' => false, // persistent connection to DB?
+        'persistentId' => 'MongoSession', // name of persistent connection
+        // whether we're supporting replicaSet
+        'replicaSet' => false,
+    ),
+    /**
+     * mysql表结构
+     *   CREATE TABLE `session_handler_table` (
+            `id` varchar(255) NOT NULL,
+            `data` mediumtext NOT NULL,
+            `timestamp` int(255) NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+     */
+    'mysql' => array(
+        'host' => '10.0.0.251',
+        'port'=>3306,
+        'user' => 'root',
+        'password' => 'snailadmin',
+        'database' => 'test',
+        'table' => 'session_handler_table',
+    ),
+    'memcache'=>array(
+        'host' => '127.0.0.1',
+        'port'=>11211
+    ),
+);
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
 $woniu_db['active_group'] = 'default';
@@ -135,6 +182,7 @@ $woniu_db['default']['stricton'] = FALSE;
   $woniu_db['default']['stricton'] = FALSE;
  */
 //-------------------------end database config--------------------------
+
 
 
 
