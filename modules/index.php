@@ -44,7 +44,7 @@ $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1'
 );
 /**
- * 缓存配置
+ * ========================缓存配置========================
  */
 $system['cache_drivers'] = array();
 $system['cache_config'] = array(
@@ -53,7 +53,7 @@ $system['cache_config'] = array(
      * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
-    "storage" => "redis",
+    "storage" => "auto",
     /*
      * 默认缓存文件存储的路径
      * 使用绝对全路径，比如： /home/username/cache
@@ -83,12 +83,15 @@ $system['cache_config'] = array(
      */
     "htaccess" => false,
     /*
-     * 所有通过$cache = phpFastCache("memcache")创建的对象使用的Memcache服务器地址;
+     * Memcache服务器地址;
      */
     "server" => array(
-        array("127.0.0.1", 11211, 1),
+        array("192.168.199.25", 11211, 1),
     //  array("new.host.ip",11211,1),
     ),
+    /*
+     * Redis服务器地址;
+     */
     "redis" => array(
         'type'=>'tcp',//sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
         'prefix'=>$_SERVER['HTTP_HOST'],//key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
@@ -102,10 +105,10 @@ $system['cache_config'] = array(
     ),
 );
 /**
- * session管理自定义配置
+ * =======================SESSION管理配置=======================
  */
 $system['session_handle'] = array(
-    'handle' => 'redis', //mongodb,mysql,memcache
+    'handle' => 'redis', //mongodb,mysql,memcache,redis
     'common' => array(
         'autostart' => true,
         'cookie_path' => '/',

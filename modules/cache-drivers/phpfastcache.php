@@ -413,7 +413,6 @@ class phpFastCache {
      */
 
     private function isExistingDriver($class) {
-
         $class = strtolower($class);
         switch ($class) {
             case "files":
@@ -430,8 +429,8 @@ class phpFastCache {
                 return (extension_loaded('wincache') && function_exists("wincache_ucache_set"));
             case "xcache":
                 return (extension_loaded('xcache') && function_exists("xcache_get"));
-            case "files":
-                return TRUE;
+            case "memcache":
+                return (class_exists("memcache"));
             default:
                 global $system;
                 foreach ($system['cache_drivers'] as $filepath) {

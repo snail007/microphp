@@ -35,7 +35,7 @@ class Welcome extends WoniuController {
 //        session_destroy();
 //        var_dump($_SESSION);
         $this->cache->set('aaakey',array('555555fasdfasdf','dafasd'),60);
-        var_dump($this->cache->get('aaakey'));
+        var_dump($this->cache->get('aaakey'),  $this->cache->systemInfo());
 //        $this->cache->clean();
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
