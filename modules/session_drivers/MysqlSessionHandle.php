@@ -150,7 +150,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
      * @return bool
      */
     public function destroy($id) {
-
+        unset($_SESSION);
         $sql = sprintf("DELETE FROM %s WHERE `id` = '%s'", $this->dbTable, $this->dbConnection->escape_string($id));
         return $this->dbConnection->query($sql);
     }

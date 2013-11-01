@@ -191,6 +191,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
      * @return boolean
      */
     public function destroy($session_id) {
+        unset($_SESSION);
         $query['_id'] = $session_id;
         $this->__mongo_collection->remove($query);
         //echo 'destory called'."\n";

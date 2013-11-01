@@ -93,16 +93,16 @@ $system['cache_config'] = array(
  * session管理自定义配置
  */
 $system['session_handle'] = array(
-    'handle' => 'memcache', //mongodb,mysql,memcache
+    'handle' => 'mongodb', //mongodb,mysql,memcache
     'common' => array(
-        'autostart'=>false,
+        'autostart'=>true,
         'cookie_path' => '/',
         'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 30, // session lifetime in seconds
     ),
     'mongodb' => array(
-        'host'=>'127.0.0.1',
+        'host'=>'192.168.199.25',
         'port'=>27017,
         'user' => 'root',
         'password' => 'local',
@@ -120,19 +120,25 @@ $system['session_handle'] = array(
             `id` varchar(255) NOT NULL,
             `data` mediumtext NOT NULL,
             `timestamp` int(255) NOT NULL,
-            PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `id` (`id`,`timestamp`),
+            KEY `timestamp` (`timestamp`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
      */
     'mysql' => array(
-        'host' => '10.0.0.251',
+        'host' => '127.0.0.1',
         'port'=>3306,
         'user' => 'root',
-        'password' => '',
+        'password' => 'admin',
         'database' => 'test',
         'table' => 'session_handler_table',
     ),
+    /**
+     * memcache采用的是php.ini原生的管理机制
+     * 所以lifetime不再起作用
+     */
     'memcache'=>array(
-        'host' => '127.0.0.1',
+        'host' => '192.168.199.25',
         'port'=>11211
     ),
 );
