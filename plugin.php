@@ -11,7 +11,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-02 20:26:27
+ * @createdtime       2013-11-02 20:27:44
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -210,5 +210,5 @@ $system['db']['default']['stricton'] = FALSE;
 
 
 /* End of file index.php */
-include('MicroPHP.php');
+include('MicroPHP.min.php');
 WoniuRouter::setConfig($system);
