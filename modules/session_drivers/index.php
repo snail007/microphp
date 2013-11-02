@@ -5,7 +5,7 @@ $system['session_handle'] = array(
     'common' => array(
         'autostart'=>true,
         'cookie_path' => '/',
-        'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
+        'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 30, // session lifetime in seconds
     ),

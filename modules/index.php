@@ -94,7 +94,7 @@ $system['cache_config'] = array(
      */
     "redis" => array(
         'type'=>'tcp',//sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
-        'prefix'=>$_SERVER['HTTP_HOST'],//key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
+        'prefix'=>@$_SERVER['HTTP_HOST'],//key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
         'sock'=>'',//sock的完整路径
         'host' => '192.168.199.25',
         'port' => 6379,
@@ -112,7 +112,7 @@ $system['session_handle'] = array(
     'common' => array(
         'autostart' => true,//是否自动session_start()
         'cookie_path' => '/',
-        'cookie_domain' => '.' . $_SERVER['HTTP_HOST'],
+        'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 3600, // session lifetime in seconds
     ),
