@@ -23,7 +23,7 @@ class WoniuModel extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];

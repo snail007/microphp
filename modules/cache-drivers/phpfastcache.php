@@ -337,7 +337,7 @@ class phpFastCache {
                 return $namex;
             }
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -411,7 +411,7 @@ class phpFastCache {
                 return true;
             }
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -439,7 +439,7 @@ class phpFastCache {
 
             $this->option['system']['drivers'] = array();
 
-            global $system;
+            $system=  WoniuLoader::$system;
 
             foreach ($this->drivers as $namex) {
                 $class = "phpfastcache_" . $namex;

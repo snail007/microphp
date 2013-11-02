@@ -16,7 +16,7 @@
 if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
-        global $system;
+        $system=  WoniuLoader::$system;
         if(!headers_sent()){
             header('HTTP/1.1 404 NotFound');
         }
@@ -32,7 +32,7 @@ if (!function_exists('trigger404')) {
 if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
-        global $system;
+        $system=  WoniuLoader::$system;
         if(!headers_sent()){
             header('HTTP/1.1 500 Server Error');
         }

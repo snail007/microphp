@@ -25,7 +25,7 @@ class WoniuController extends WoniuLoader {
     }
 
     private function autoload() {
-        global $system;
+        $system=  WoniuLoader::$system;
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
@@ -76,7 +76,7 @@ class WoniuController extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];

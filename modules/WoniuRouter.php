@@ -15,8 +15,8 @@
  */
 class WoniuRouter {
 
-    public static function loadClass() {
-        global $system;
+    public static function loadClass($system) {
+        $system=  WoniuLoader::$system;
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
         //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
@@ -55,7 +55,7 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        global $system;
+        $system=  WoniuLoader::$system;
         $pathinfo_query = self::getQueryStr();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
@@ -115,7 +115,7 @@ class WoniuRouter {
     }
 
     public static function getQueryStr() {
-        global $system;
+        $system=  WoniuLoader::$system;
         //命令行运行检查
         if (WoniuInput::isCli()) {
             global $argv;
@@ -144,7 +144,7 @@ class WoniuRouter {
     }
 
     public static function checkSession() {
-        global $system;
+        $system=  WoniuLoader::$system;
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
         ) {
@@ -157,7 +157,7 @@ class WoniuRouter {
     }
 
     public static function checkRouter($pathinfo_query) {
-        global $system;
+        $system=  WoniuLoader::$system;
         if (is_array($system['route'])) {
             foreach ($system['route'] as $reg => $replace) {
                 if (preg_match($reg, $pathinfo_query)) {
@@ -168,7 +168,9 @@ class WoniuRouter {
         }
         return $pathinfo_query;
     }
-
+    public static function setConfig($system){
+        WoniuLoader::$system=$system;
+    }
 }
 
 /* End of file Router.php */

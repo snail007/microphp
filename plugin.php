@@ -212,4 +212,3 @@ $system['db']['default']['stricton'] = FALSE;
 /* End of file index.php */
 include('MicroPHP.php');
 WoniuRouter::setConfig($system);
-WoniuRouter::loadClass();

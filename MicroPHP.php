@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime         2013-11-02 09:17:02
+ * @createdtime         2013-11-02 20:15:41
  */
  
 //####################modules/WoniuRouter.php####################{
@@ -27,12 +27,12 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 class WoniuRouter {
 
-    public static function loadClass() {
-        global $system;
+    public static function loadClass($system) {
+        $system=  WoniuLoader::$system;
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
         //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
@@ -71,7 +71,7 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        global $system;
+        $system=  WoniuLoader::$system;
         $pathinfo_query = self::getQueryStr();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
@@ -131,7 +131,7 @@ class WoniuRouter {
     }
 
     public static function getQueryStr() {
-        global $system;
+        $system=  WoniuLoader::$system;
         //命令行运行检查
         if (WoniuInput::isCli()) {
             global $argv;
@@ -160,7 +160,7 @@ class WoniuRouter {
     }
 
     public static function checkSession() {
-        global $system;
+        $system=  WoniuLoader::$system;
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
         ) {
@@ -173,7 +173,7 @@ class WoniuRouter {
     }
 
     public static function checkRouter($pathinfo_query) {
-        global $system;
+        $system=  WoniuLoader::$system;
         if (is_array($system['route'])) {
             foreach ($system['route'] as $reg => $replace) {
                 if (preg_match($reg, $pathinfo_query)) {
@@ -184,7 +184,9 @@ class WoniuRouter {
         }
         return $pathinfo_query;
     }
-
+    public static function setConfig($system){
+        WoniuLoader::$system=$system;
+    }
 }
 
 /* End of file Router.php */
@@ -202,7 +204,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -212,16 +214,17 @@ class WoniuLoader {
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
     private $helper_files = array();
     private static $instance, $config = array();
+    public static $system;
 
     public function __construct() {
-        global $system;
+        $system=  WoniuLoader::$system;
         date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
         $this->router = WoniuInput::$router;
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        
+
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {
@@ -231,7 +234,7 @@ class WoniuLoader {
     }
 
     public function registerErrorHandle() {
-        global $system;
+        $system=  WoniuLoader::$system;
         if (!$system['debug']) {
             error_reporting(0);
             set_exception_handler('woniuException');
@@ -254,7 +257,7 @@ class WoniuLoader {
             $db = null;
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
-                global $woniu_db;
+                  $woniu_db=self::$system['db'];
                 $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
             } else {
                 $db = WoniuDB::getInstance($config);
@@ -264,7 +267,7 @@ class WoniuLoader {
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
                 if (!is_object($this->db)) {
-                    global $woniu_db;
+                    $woniu_db=self::$system['db'];
                     $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
                 }
             } else {
@@ -278,7 +281,7 @@ class WoniuLoader {
     }
 
     public function helper($file_name) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
         if (in_array($filename, $this->helper_files)) {
             return;
@@ -301,7 +304,7 @@ class WoniuLoader {
     }
 
     public function lib($file_name, $alias_name = null) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -333,7 +336,7 @@ class WoniuLoader {
     }
 
     public function model($file_name, $alias_name = null) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -370,7 +373,7 @@ class WoniuLoader {
         } elseif (is_array($this->view_vars) && !empty($this->view_vars)) {
             extract($this->view_vars);
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         if (file_exists($view_path)) {
             if ($return) {
@@ -419,7 +422,7 @@ class WoniuLoader {
     }
 
     public static function classAutoloader($clazzName) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
         if (file_exists($library)) {
             include($library);
@@ -434,7 +437,7 @@ class WoniuLoader {
     }
 
     public function view_path($view_name) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }
@@ -612,7 +615,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 class WoniuController extends WoniuLoader {
 
@@ -626,7 +629,7 @@ class WoniuController extends WoniuLoader {
     }
 
     private function autoload() {
-        global $system;
+        $system=  WoniuLoader::$system;
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
@@ -677,7 +680,7 @@ class WoniuController extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
@@ -716,7 +719,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 class WoniuModel extends WoniuLoader {
 
@@ -728,7 +731,7 @@ class WoniuModel extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
@@ -769,7 +772,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 class WoniuDB {
 
@@ -1809,7 +1812,9 @@ class CI_DB_driver {
         } else {
             $msg = $error;
         }
-        global $woniu_db, $system;
+        $system = WoniuLoader::$system;
+        $woniu_db = WoniuLoader::$system['db'];
+
         if ($woniu_db[$woniu_db['active_group']]['db_debug']) {
             header('HTTP/1.1 500 Internal Server Database Error');
             if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
@@ -6923,7 +6928,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -9289,7 +9294,7 @@ class phpFastCache {
                 return $namex;
             }
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -9363,7 +9368,7 @@ class phpFastCache {
                 return true;
             }
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -9391,7 +9396,7 @@ class phpFastCache {
 
             $this->option['system']['drivers'] = array();
 
-            global $system;
+            $system=  WoniuLoader::$system;
 
             foreach ($this->drivers as $namex) {
                 $class = "phpfastcache_" . $namex;
@@ -10218,12 +10223,12 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
-        global $system;
+        $system=  WoniuLoader::$system;
         if(!headers_sent()){
             header('HTTP/1.1 404 NotFound');
         }
@@ -10239,7 +10244,7 @@ if (!function_exists('trigger404')) {
 if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
-        global $system;
+        $system=  WoniuLoader::$system;
         if(!headers_sent()){
             header('HTTP/1.1 500 Server Error');
         }
@@ -10505,7 +10510,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.1.13
- * @createdtime       2013-11-02 09:17:02
+ * @createdtime       2013-11-02 20:15:41
  */
 class WoniuInput {
 
@@ -10554,4 +10559,3 @@ class WoniuInput {
 }
 
 /* End of file WoniuInput.php */
-WoniuRouter::loadClass();

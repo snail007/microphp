@@ -21,16 +21,17 @@ class WoniuLoader {
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
     private $helper_files = array();
     private static $instance, $config = array();
+    public static $system;
 
     public function __construct() {
-        global $system;
+        $system=  WoniuLoader::$system;
         date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
         $this->router = WoniuInput::$router;
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        
+
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {
@@ -40,7 +41,7 @@ class WoniuLoader {
     }
 
     public function registerErrorHandle() {
-        global $system;
+        $system=  WoniuLoader::$system;
         if (!$system['debug']) {
             error_reporting(0);
             set_exception_handler('woniuException');
@@ -63,7 +64,7 @@ class WoniuLoader {
             $db = null;
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
-                global $woniu_db;
+                  $woniu_db=self::$system['db'];
                 $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
             } else {
                 $db = WoniuDB::getInstance($config);
@@ -73,7 +74,7 @@ class WoniuLoader {
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
                 if (!is_object($this->db)) {
-                    global $woniu_db;
+                    $woniu_db=self::$system['db'];
                     $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
                 }
             } else {
@@ -87,7 +88,7 @@ class WoniuLoader {
     }
 
     public function helper($file_name) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
         if (in_array($filename, $this->helper_files)) {
             return;
@@ -110,7 +111,7 @@ class WoniuLoader {
     }
 
     public function lib($file_name, $alias_name = null) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -142,7 +143,7 @@ class WoniuLoader {
     }
 
     public function model($file_name, $alias_name = null) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -179,7 +180,7 @@ class WoniuLoader {
         } elseif (is_array($this->view_vars) && !empty($this->view_vars)) {
             extract($this->view_vars);
         }
-        global $system;
+        $system=  WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         if (file_exists($view_path)) {
             if ($return) {
@@ -228,7 +229,7 @@ class WoniuLoader {
     }
 
     public static function classAutoloader($clazzName) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
         if (file_exists($library)) {
             include($library);
@@ -243,7 +244,7 @@ class WoniuLoader {
     }
 
     public function view_path($view_name) {
-        global $system;
+        $system=  WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }

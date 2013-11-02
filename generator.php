@@ -50,13 +50,15 @@ foreach ($files as $file) {
     $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
 }
 common_replace($core);
-file_put_contents('MicroPHP.php', "<?php\n" . $core . "\nWoniuRouter::loadClass();");
+file_put_contents('MicroPHP.php', "<?php\n" . $core);
 $content = php_strip_whitespace('MicroPHP.php');
 $content = str_replace("class WoniuLoader", "\n /**
  * @property CI_DB_active_record \$db
+ * @property phpFastCache        \$cache
+ * @property WoniuInput          \$input
  **/
  class WoniuLoader", $content);
-file_put_contents('MicroPHP.php', $header . $core . "\nWoniuRouter::loadClass();");
+file_put_contents('MicroPHP.php', $header . $core);
 file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
 $index = file_get_contents('modules/index.php');
@@ -64,26 +66,17 @@ foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
 }
 $index = str_replace("../app", 'application', $index);
-$index = str_replace("WoniuRouter::loadClass();", '', $index);
+$index = str_replace(array("WoniuRouter::setConfig(\$system);","WoniuRouter::loadClass();"), '', $index);
 common_replace($index);
-file_put_contents('index.php', $index . "\ninclude('MicroPHP.php');");
+file_put_contents('index.php', $index . "\ninclude('MicroPHP.php');\nWoniuRouter::setConfig(\$system);\nWoniuRouter::loadClass();");
 
 #ver modify
 file_put_contents('application/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
 file_put_contents('docs/index.html', str_replace('{version}', $ver, file_get_contents('docs/index_ver.html')));
 
 
-
-file_put_contents('MicroPHP.plugin.php', "<?php \n" . $core);
-$content = $index . str_replace("<?php", "\n", php_strip_whitespace('MicroPHP.plugin.php'));
-$content = str_replace("class WoniuLoader", "\n /**
- * @property CI_DB_active_record \$db
- * @property phpFastCache        \$cache
- * @property WoniuInput          \$input
- **/
- class WoniuLoader", $content);
-file_put_contents('MicroPHP.plugin.php', $index . $core);
-file_put_contents('MicroPHP.plugin.min.php', $content);
+$content = $index."\ninclude('MicroPHP.php');\nWoniuRouter::setConfig(\$system);";
+file_put_contents('plugin.php', $content);
 echo 'done';
 
 function common_replace(&$str) {

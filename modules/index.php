@@ -161,48 +161,48 @@ $system['session_handle'] = array(
 );
 //-----------------------end system config--------------------------
 //------------------------database config----------------------------
-$woniu_db['active_group'] = 'default';
+$system['db']['active_group'] = 'default';
 
-$woniu_db['default']['dbdriver'] = "mysql"; #可用的有mysql,mysqli,pdo,sqlite3,配置见下面
-$woniu_db['default']['hostname'] = 'localhost';
-$woniu_db['default']['port'] = '3306';
-$woniu_db['default']['username'] = 'root';
-$woniu_db['default']['password'] = 'admin';
-$woniu_db['default']['database'] = 'test';
-$woniu_db['default']['dbprefix'] = '';
-$woniu_db['default']['pconnect'] = TRUE;
-$woniu_db['default']['db_debug'] = TRUE;
-$woniu_db['default']['char_set'] = 'utf8';
-$woniu_db['default']['dbcollat'] = 'utf8_general_ci';
-$woniu_db['default']['swap_pre'] = '';
-$woniu_db['default']['autoinit'] = TRUE;
-$woniu_db['default']['stricton'] = FALSE;
+$system['db']['default']['dbdriver'] = "mysql"; #可用的有mysql,mysqli,pdo,sqlite3,配置见下面
+$system['db']['default']['hostname'] = 'localhost';
+$system['db']['default']['port'] = '3306';
+$system['db']['default']['username'] = 'root';
+$system['db']['default']['password'] = 'admin';
+$system['db']['default']['database'] = 'test';
+$system['db']['default']['dbprefix'] = '';
+$system['db']['default']['pconnect'] = TRUE;
+$system['db']['default']['db_debug'] = TRUE;
+$system['db']['default']['char_set'] = 'utf8';
+$system['db']['default']['dbcollat'] = 'utf8_general_ci';
+$system['db']['default']['swap_pre'] = '';
+$system['db']['default']['autoinit'] = TRUE;
+$system['db']['default']['stricton'] = FALSE;
 
 
 /*
  * PDO database config demo
  * 1.pdo sqlite3
-  $woniu_db['default']['dbdriver'] = "sqlite3";
-  $woniu_db['default']['database'] = 'sqlite:d:/wwwroot/sdb.db';
-  $woniu_db['default']['dbprefix'] = '';
-  $woniu_db['default']['db_debug'] = TRUE;
-  $woniu_db['default']['char_set'] = 'utf8';
-  $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
-  $woniu_db['default']['swap_pre'] = '';
-  $woniu_db['default']['autoinit'] = TRUE;
-  $woniu_db['default']['stricton'] = FALSE;
+  $system['db']['default']['dbdriver'] = "sqlite3";
+  $system['db']['default']['database'] = 'sqlite:d:/wwwroot/sdb.db';
+  $system['db']['default']['dbprefix'] = '';
+  $system['db']['default']['db_debug'] = TRUE;
+  $system['db']['default']['char_set'] = 'utf8';
+  $system['db']['default']['dbcollat'] = 'utf8_general_ci';
+  $system['db']['default']['swap_pre'] = '';
+  $system['db']['default']['autoinit'] = TRUE;
+  $system['db']['default']['stricton'] = FALSE;
  * 2.pdo mysql:
-  $woniu_db['default']['dbdriver'] = "pdo";
-  $woniu_db['default']['hostname'] = 'mysql:host=localhost;port=3306';
-  $woniu_db['default']['username'] = 'root';
-  $woniu_db['default']['password'] = 'admin';
-  $woniu_db['default']['database'] = 'test';
-  $woniu_db['default']['dbprefix'] = '';
-  $woniu_db['default']['char_set'] = 'utf8';
-  $woniu_db['default']['dbcollat'] = 'utf8_general_ci';
-  $woniu_db['default']['swap_pre'] = '';
-  $woniu_db['default']['autoinit'] = TRUE;
-  $woniu_db['default']['stricton'] = FALSE;
+  $system['db']['default']['dbdriver'] = "pdo";
+  $system['db']['default']['hostname'] = 'mysql:host=localhost;port=3306';
+  $system['db']['default']['username'] = 'root';
+  $system['db']['default']['password'] = 'admin';
+  $system['db']['default']['database'] = 'test';
+  $system['db']['default']['dbprefix'] = '';
+  $system['db']['default']['char_set'] = 'utf8';
+  $system['db']['default']['dbcollat'] = 'utf8_general_ci';
+  $system['db']['default']['swap_pre'] = '';
+  $system['db']['default']['autoinit'] = TRUE;
+  $system['db']['default']['stricton'] = FALSE;
  */
 //-------------------------end database config--------------------------
 
@@ -231,6 +231,7 @@ include('WoniuRouter.php');
 include('WoniuLoader.php');
 include('WoniuController.php');
 include('WoniuModel.php');
+WoniuRouter::setConfig($system);
 WoniuRouter::loadClass();
 
 /* End of file index.php */
