@@ -53,7 +53,7 @@ $system['cache_config'] = array(
      * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
-    "storage" => "auto",
+    "storage" => "redis",
     /*
      * 默认缓存文件存储的路径
      * 使用绝对全路径，比如： /home/username/cache
