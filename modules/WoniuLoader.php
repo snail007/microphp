@@ -12,7 +12,9 @@
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 1.0
  * @createdtime       {createdtime}
- * @property phpfastcache $cache
+ * @property CI_DB_active_record \$db
+ * @property phpFastCache        \$cache
+ * @property WoniuInput          \$input
  */
 class WoniuLoader {
 
@@ -28,14 +30,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        static $included = array();
-        foreach ($system['cache_drivers'] as $filepath) {
-            if (!isset($included[realpath($filepath)])) {
-                include $filepath;
-            } else {
-                $included[realpath($filepath)] = 1;
-            }
-        }
+        
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {

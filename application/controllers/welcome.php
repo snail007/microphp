@@ -30,7 +30,8 @@ class Welcome extends WoniuController {
         $this->helper('config');
         $this->lib('TestLibrary','aaa');
          $this->cache->set('aaakey',array('555555fasdfasdf','dafasd'),60);
-        var_dump($this->cache->get('aaakey'),  $this->cache->systemInfo());
+         $this->cache->set('bbbkey','555555fasdfasdf',60);
+        var_dump($this->cache->get('aaakey'),$this->cache->get('bbbkey'),  $this->cache->systemInfo());
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 

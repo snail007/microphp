@@ -49,9 +49,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 
     function driver_set($keyword, $value = "", $time = 300, $option = array()) {
         $this->connectServer();
-        if (!is_string($value)) {
-            $value = serialize($value);
-        }
+        $value = serialize($value);
         return ($time) ? $this->instant->setex($keyword, $time, $value) : $this->instant->set($keyword, $value);
     }
 
@@ -60,7 +58,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
         // return null if no caching
         // return value if in caching
         if (($data = $this->instant->get($keyword))) {
-            return unserialize($data);
+            return @unserialize($data);
         } else {
             return null;
         }

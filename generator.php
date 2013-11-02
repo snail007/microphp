@@ -56,7 +56,8 @@ $content = str_replace("class WoniuLoader", "\n /**
  * @property CI_DB_active_record \$db
  **/
  class WoniuLoader", $content);
-file_put_contents('MicroPHP.php', str_replace('<?php', $header, $content));
+file_put_contents('MicroPHP.php', $header . $core . "\nWoniuRouter::loadClass();");
+file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
 $index = file_get_contents('modules/index.php');
 foreach ($files as $file) {
@@ -81,7 +82,8 @@ $content = str_replace("class WoniuLoader", "\n /**
  * @property WoniuInput          \$input
  **/
  class WoniuLoader", $content);
-file_put_contents('MicroPHP.plugin.php', $content);
+file_put_contents('MicroPHP.plugin.php', $index . $core);
+file_put_contents('MicroPHP.plugin.min.php', $content);
 echo 'done';
 
 function common_replace(&$str) {
@@ -90,4 +92,3 @@ function common_replace(&$str) {
     $str = str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
 }
-

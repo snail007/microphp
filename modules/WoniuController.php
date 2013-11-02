@@ -50,13 +50,29 @@ class WoniuController extends WoniuLoader {
                 $this->model($val);
             }
         }
+        /**
+         * 如果使用了自定义缓存驱动，加载相应的文件
+         */
+        static $included = array();
+        foreach ($system['cache_drivers'] as $filepath) {
+            $file = pathinfo($filepath, PATHINFO_BASENAME);
+            $namex = str_replace(".php", "", $file);
+            //只include选择的缓存驱动文件
+            if ($namex == $system['cache_config']['storage']) {
+                if (!isset($included[realpath($filepath)])) {
+                    include $filepath;
+                } else {
+                    $included[realpath($filepath)] = 1;
+                }
+            }
+        }
     }
 
     public static function &getInstance() {
         return self::$woniu;
     }
 
-    public static function instance($classname_path=null) {
+    public static function instance($classname_path = null) {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
@@ -81,6 +97,7 @@ class WoniuController extends WoniuLoader {
             trigger404($filepath . ' not found.');
         }
     }
+
 }
 
 /* End of file Controller.php */
