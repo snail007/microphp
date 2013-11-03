@@ -20,8 +20,8 @@ if (!function_exists('trigger404')) {
         if(!headers_sent()){
             header('HTTP/1.1 404 NotFound');
         }
-        if (!empty($system['error_page_404']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_404'])) {
-            include dirname(__FILE__) . '/' . $system['error_page_404'];
+        if (!empty($system['error_page_404']) && file_exists( $system['error_page_404'])) {
+            include $system['error_page_404'];
         } else {
             echo $msg;
         }
@@ -36,8 +36,8 @@ if (!function_exists('trigger500')) {
         if(!headers_sent()){
             header('HTTP/1.1 500 Server Error');
         }
-        if (!empty($system['error_page_50x']) && file_exists(dirname(__FILE__) . '/' . $system['error_page_50x'])) {
-            include dirname(__FILE__) . '/' . $system['error_page_50x'];
+        if (!empty($system['error_page_50x']) && file_exists($system['error_page_50x'])) {
+            include $system['error_page_50x'];
         } else {
             echo $msg;
         }
