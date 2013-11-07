@@ -37,6 +37,7 @@ class phpFastCache_instances {
 
 // main class
 class phpFastCache {
+
     public static $storage = "auto";
     public static $config = array(
         "storage" => "auto",
@@ -287,6 +288,7 @@ class phpFastCache {
     }
 
     function __construct($storage = "", $option = array()) {
+        $this->option = array_merge($this->option, self::$config, $option);
         if (!$this->isExistingDriver($storage) && isset(self::$config['fallback'][$storage])) {
             $storage = self::$config['fallback'][$storage];
         }
@@ -299,8 +301,6 @@ class phpFastCache {
         }
 
         $this->tmp['storage'] = $storage;
-
-        $this->option = array_merge($this->option, self::$config, $option);
 
         if ($storage != "auto" && $storage != "" && $this->isExistingDriver($storage)) {
             $driver = "phpfastcache_" . $storage;
@@ -337,7 +337,7 @@ class phpFastCache {
                 return $namex;
             }
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -407,11 +407,11 @@ class phpFastCache {
             $option['skipError'] = true;
             $_driver = new $clazz($option);
             $_driver->option = $option;
-            if ($_driver->checkdriver()&&$class==$namex) {
+            if ($_driver->checkdriver() && $class == $namex) {
                 return true;
             }
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         foreach ($system['cache_drivers'] as $filepath) {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
@@ -420,11 +420,10 @@ class phpFastCache {
             $option['skipError'] = true;
             $_driver = new $clazz($option);
             $_driver->option = $option;
-            if ($_driver->checkdriver()&&$class==$namex) {
+            if ($_driver->checkdriver() && $class == $namex) {
                 return true;
             }
         }
-        
     }
 
     /*
@@ -439,7 +438,7 @@ class phpFastCache {
 
             $this->option['system']['drivers'] = array();
 
-            $system=  WoniuLoader::$system;
+            $system = WoniuLoader::$system;
 
             foreach ($this->drivers as $namex) {
                 $class = "phpfastcache_" . $namex;
