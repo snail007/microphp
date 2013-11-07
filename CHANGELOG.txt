@@ -14,6 +14,8 @@ ver 2.1.13:
     7.Mysql存储SESSION支持。
 删除了：
     1.WoniuCache已经被移除，请使用$this->cache代替
+优化了：
+    1.缓存文件夹的创建。
 升级提示：
 1.如果项目中使用了WoniuCache进行缓存，请使用$this->cache代替
 2.在$system中增加如下配置：
