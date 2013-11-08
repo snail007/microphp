@@ -106,6 +106,7 @@ class WoniuRouter {
         $router['prefix'] = $system['controller_method_prefix'];
         unset($path[count($path) - 1]);
         $router['capth'] = implode('.', $path);
+        $router['folder']='';
         if (count($path) > 1) {
             unset($path[count($path) - 1]);
             $router['folder'] = implode('.', $path);
