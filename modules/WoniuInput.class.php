@@ -62,6 +62,10 @@ class WoniuInput {
         return php_sapi_name() == 'cli';
     }
 
+    public function is_ajax_request() {
+        return ($this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
+    }
+
 }
 
 /* End of file WoniuInput.php */
