@@ -12,7 +12,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.0
- * @createdtime         2013-11-12 15:04:43
+ * @createdtime         2013-11-12 15:16:18
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -128,8 +128,22 @@ $system['debug'] = TRUE;
  * 默认时区,PRC是中国
  */
 $system['default_timezone'] = 'PRC';
+
 /**
- * 自定义URL路由规则
+ * ---------------------------自定义URL路由规则------------------------
+ * 比如：
+ *   (1).http://localhost/index.php?welcome.index
+ *   (2).http://localhost/index.php/welcome.index
+ * 路由字符串是welcome.index(不包含最前面的?或者/)，路由规则都是针对“路由字符串”的。
+ * 现在定义路由规则：
+ *   $system['route']=array(
+ *        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
+ *   );
+ * 路由规则说明：
+ *  1.路由规则是一个关联数组
+ *  2.数组的key是匹配“路由字符串”的正则表达式，其实就是preg_match的第一个参数。
+ *  3.数组的value是替换后的路由字符串
+ *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1'
@@ -138,7 +152,13 @@ $system['route'] = array(
  * ---------------------缓存配置-----------------------
  */
 /**
- * 自定义缓存驱动文件路径，多个文件路径都放在数组里面即可
+ * 自定义缓存类文件的路径是$system['cache_drivers']的一个元素，
+ * 可以有多个自定义缓存类。
+ * 缓存类文件名称命名规范是：
+ * 比如文件名是mycahe.php,那么文件mycahe.php
+ * 里面的缓存类就是：class phpfastcache_mycahe{......}
+ * mycahe.php的编写规范请参考：
+ * http://git.oschina.net/snail/microphp/blob/development/modules/cache-drivers/drivers/example.php
  */
 $system['cache_drivers'] = array();
 /**
@@ -321,6 +341,7 @@ $system['db']['pdo_msyql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
+
 
 
 
