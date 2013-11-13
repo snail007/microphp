@@ -72,7 +72,6 @@ file_put_contents('index.php', $index . "\ninclude('MicroPHP.min.php');\nWoniuRo
 
 #ver modify
 file_put_contents('application/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
-file_put_contents('docs/index.html', str_replace('{version}', $ver, file_get_contents('docs/index_ver.html')));
 
 
 $content = $index."\ninclude('MicroPHP.min.php');\nWoniuRouter::setConfig(\$system);";
