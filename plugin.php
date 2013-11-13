@@ -348,4 +348,3 @@ $system['db']['pdo_msyql']['stricton'] = FALSE;
 /* End of file index.php */
 include('MicroPHP.min.php');
 WoniuRouter::setConfig($system);
-WoniuRouter::loadClass();
