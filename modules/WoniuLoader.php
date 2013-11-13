@@ -24,7 +24,7 @@ class WoniuLoader {
     public static $system;
 
     public function __construct() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
         $this->router = WoniuInput::$router;
@@ -41,7 +41,7 @@ class WoniuLoader {
     }
 
     public function registerErrorHandle() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         if (!$system['debug']) {
             error_reporting(0);
             set_exception_handler('woniuException');
@@ -64,7 +64,7 @@ class WoniuLoader {
             $db = null;
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
-                  $woniu_db=self::$system['db'];
+                $woniu_db = self::$system['db'];
                 $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
             } else {
                 $db = WoniuDB::getInstance($config);
@@ -74,7 +74,7 @@ class WoniuLoader {
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
                 if (!is_object($this->db)) {
-                    $woniu_db=self::$system['db'];
+                    $woniu_db = self::$system['db'];
                     $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
                 }
             } else {
@@ -88,7 +88,7 @@ class WoniuLoader {
     }
 
     public function helper($file_name) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
         if (in_array($filename, $this->helper_files)) {
             return;
@@ -111,7 +111,7 @@ class WoniuLoader {
     }
 
     public function lib($file_name, $alias_name = null) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -143,7 +143,7 @@ class WoniuLoader {
     }
 
     public function model($file_name, $alias_name = null) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -180,7 +180,7 @@ class WoniuLoader {
         } elseif (is_array($this->view_vars) && !empty($this->view_vars)) {
             extract($this->view_vars);
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         if (file_exists($view_path)) {
             if ($return) {
@@ -229,10 +229,22 @@ class WoniuLoader {
     }
 
     public static function classAutoloader($clazzName) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
         if (file_exists($library)) {
             include($library);
+        } else {
+            $dir = dir($system['library_folder']);
+            while (($file = $dir->read()) !== false) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                $path = $system['library_folder'] . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                if (is_file($path)) {
+                    include($path);
+                    break;
+                }
+            }
         }
     }
 
@@ -244,7 +256,7 @@ class WoniuLoader {
     }
 
     public function view_path($view_name) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }

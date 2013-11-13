@@ -17,6 +17,7 @@ class User extends WoniuModel {
     }
 
     public function sayHello($name) {
+        var_dump((new TestSubLibrary()));
         echo 'hello:' . $name."\n<br/>";
     }
 }
