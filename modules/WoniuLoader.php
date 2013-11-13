@@ -236,11 +236,11 @@ class WoniuLoader {
         } else {
             $dir = dir($system['library_folder']);
             while (($file = $dir->read()) !== false) {
-                if ($file == '.' || $file == '..') {
+                if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
                     continue;
                 }
-                $path = $system['library_folder'] . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-                if (is_file($path)) {
+                $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                if (file_exists($path)) {
                     include($path);
                     break;
                 }
