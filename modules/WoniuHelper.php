@@ -68,7 +68,7 @@ if (!function_exists('woniu_exception_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo format_error($errno, $errstr, $errfile, $errline);
+            echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
         }
     }
 
@@ -91,7 +91,7 @@ if (!function_exists('woniu_error_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo format_error($errno, $errstr, $errfile, $errline);
+            echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
         }
     }
 
@@ -124,7 +124,7 @@ if (!function_exists('woniu_fatal_handler')) {
             }
             if ($system['debug']) {
                 //@ob_clean();
-                echo format_error($errno, $errstr, $errfile, $errline);
+                echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
             }
         }
     }
@@ -161,7 +161,7 @@ if (!function_exists('woniu_db_error_handler')) {
             if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
                 include $system['error_page_db'];
             } else {
-                echo $msg . get_strace(TRUE);
+                echo '<pre>'.$msg . get_strace(TRUE).'</pre>';
             }
             exit;
         }
