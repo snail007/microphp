@@ -16,11 +16,11 @@
 if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
-        $system=  WoniuLoader::$system;
-        if(!headers_sent()){
+        $system = WoniuLoader::$system;
+        if (!headers_sent()) {
             header('HTTP/1.1 404 NotFound');
         }
-        if (!empty($system['error_page_404']) && file_exists( $system['error_page_404'])) {
+        if (!empty($system['error_page_404']) && file_exists($system['error_page_404'])) {
             include $system['error_page_404'];
         } else {
             echo $msg;
@@ -32,8 +32,8 @@ if (!function_exists('trigger404')) {
 if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
-        $system=  WoniuLoader::$system;
-        if(!headers_sent()){
+        $system = WoniuLoader::$system;
+        if (!headers_sent()) {
             header('HTTP/1.1 500 Server Error');
         }
         if (!empty($system['error_page_50x']) && file_exists($system['error_page_50x'])) {
@@ -45,21 +45,61 @@ if (!function_exists('trigger500')) {
     }
 
 }
-if (!function_exists('woniuException')) {
+if (!function_exists('woniu_exception_handler')) {
 
-    function woniuException($exception) {
+    function woniu_exception_handler($exception) {
         $errno = $exception->getCode();
         $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
         $errline = $exception->getLine();
         $errstr = $exception->getMessage();
-        @ob_clean();
-        trigger500(format_error($errno, $errstr, $errfile, $errline));
+        $system = WoniuLoader::$system;
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['exception'];
+
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                } else {
+                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                }
+            }
+        }
+        if ($system['debug']) {
+            //@ob_clean();
+            echo format_error($errno, $errstr, $errfile, $errline);
+        }
     }
 
 }
-if (!function_exists('fatal_handler')) {
+if (!function_exists('woniu_error_handler')) {
 
-    function fatal_handler() {
+    function woniu_error_handler($errno, $errstr, $errfile, $errline) {
+        $system = WoniuLoader::$system;
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['error'];
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                } else {
+                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                }
+            }
+        }
+        if ($system['debug']) {
+            //@ob_clean();
+            echo format_error($errno, $errstr, $errfile, $errline);
+        }
+    }
+
+}
+if (!function_exists('woniu_fatal_handler')) {
+
+    function woniu_fatal_handler() {
+        $system = WoniuLoader::$system;
         $errfile = "unknown file";
         $errstr = "shutdown";
         $errno = E_CORE_ERROR;
@@ -70,24 +110,115 @@ if (!function_exists('fatal_handler')) {
             $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
             $errline = $error["line"];
             $errstr = $error["message"];
-            @ob_clean();
-            trigger500(format_error($errno, $errstr, $errfile, $errline));
+            if ($system['log_error']) {
+                $handle = $system['log_error_handle']['error'];
+                if (!empty($handle)) {
+                    if (is_array($handle)) {
+                        $class = key($handle);
+                        $method = $handle[$class];
+                        $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                    } else {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
+                }
+            }
+            if ($system['debug']) {
+                //@ob_clean();
+                echo format_error($errno, $errstr, $errfile, $errline);
+            }
         }
     }
 
 }
+
+
+if (!function_exists('woniu_db_error_handler')) {
+
+    function woniu_db_error_handler($error) {
+        $msg = '';
+        if (is_array($error)) {
+            foreach ($error as $m) {
+                $msg.=$m . "\n";
+            }
+        } else {
+            $msg = $error;
+        }
+        $system = WoniuLoader::$system;
+        $woniu_db = WoniuLoader::$system['db'];
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['db_error'];
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $class::$method($msg, get_strace(TRUE));
+                } else {
+                    $handle($msg, get_strace(TRUE));
+                }
+            }
+        }
+        if ($woniu_db[$woniu_db['active_group']]['db_debug'] && $system['debug']) {
+            if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
+                include $system['error_page_db'];
+            } else {
+                echo $msg . get_strace(TRUE);
+            }
+            exit;
+        }
+    }
+
+}
+
 if (!function_exists('format_error')) {
 
     function format_error($errno, $errstr, $errfile, $errline) {
-//    $trace = print_r(debug_backtrace(false), true);
-        $content = "<table><tbody>";
-        $content .= "<tr valign='top'><td><b>Error</b></td><td>:" . nl2br($errstr) . "</td></tr>";
-        $content .= "<tr valign='top'><td><b>Errno</b></td><td>:$errno</td></tr>";
-        $content .= "<tr valign='top'><td><b>File</b></td><td>:$errfile</td></tr>";
-        $content .= "<tr valign='top'><td><b>Line</b></td><td>:$errline</td></tr>";
-//    $content .= "<tr valign='top'><td><b>Trace</b></td><td><pre>$trace</pre></td></tr>";
-        $content .= '</tbody></table>';
+        $path = realpath(WoniuLoader::$system['application_folder']);
+        $path.=empty($path) ? '' : '/';
+        $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
+        $trace = get_strace();
+        $content = '<pre>';
+        $content .= "错误信息:" . nl2br($errstr) . "\n";
+        $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
+        $content .= "出错行数:{$errline}\n";
+        $content .= "错误代码:{$errno}\n";
+        $content .= "错误类型:{$array_map[$errno]}\n";
+        if (!empty($trace)) {
+            $content .= "调用信息:{$trace}\n";
+        }
+        $content .= "</pre>";
         return $content;
+    }
+
+}
+
+if (!function_exists('get_strace')) {
+
+    function get_strace($is_db = false) {
+        $trace = debug_backtrace(false);
+        foreach ($trace as $t) {
+            if (!in_array($t['function'], array('display_error', 'woniu_db_error_handler', 'woniu_fatal_handler', 'woniu_error_handler', 'woniu_exception_handler'))) {
+                array_shift($trace);
+            } else {
+                array_shift($trace);
+                break;
+            }
+        }
+        if ($is_db) {
+            array_shift($trace);
+        }
+        array_pop($trace);
+        array_pop($trace);
+        $str = '';
+        $path = realpath(WoniuLoader::$system['application_folder']);
+        $path.=empty($path) ? '' : '/';
+        foreach ($trace as $k => $e) {
+            $file = !empty($e['file']) ? "File:" . str_replace($path, '', $e['file']) . "\n" : '';
+            $line = !empty($e['line']) ? "   Line:{$e['line']}\n" : '';
+            $space = (empty($file) && empty($line) ? '' : '   ');
+            $func = $space . (!empty($e['class']) ? "Function:{$e['class']}{$e['type']}{$e['function']}()\n" : "Function:{$e['function']}()\n");
+            $str.="\n#{$k} {$file}{$line}{$func}";
+        }
+        return $str;
     }
 
 }

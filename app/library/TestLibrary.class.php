@@ -15,5 +15,8 @@ class TestLibrary {
     public function testController(){
         var_dump(WoniuController::getInstance());
     }
+    public static function error_handle($param) {
+        
+    }
 }
  

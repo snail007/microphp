@@ -35,8 +35,12 @@ class Welcome extends WoniuController {
 //        session_destroy();
 //        var_dump($_SESSION);
         $this->cache->set('aaakey',array('555555fasdfasdf','dafasd'),60);
-        var_dump($this->cache->get('aaakey'),  $this->cache->systemInfo());
 //        $this->cache->clean();
+        $this->database();
+        var_dump($this->db->get('xxx'));
+//        echo $a;
+//        throw new Exception('l am a exception.');
+//        echo $a->bcc();
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
@@ -45,6 +49,7 @@ class Welcome extends WoniuController {
     }
 
     public function doAjax($arg=null) {
+        
         $this->ajax_echo(200, 'tip',$arg);
     }
 

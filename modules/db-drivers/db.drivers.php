@@ -1043,26 +1043,7 @@ class CI_DB_driver {
      * @return        string        sends the application/error_db.php template
      */
     function display_error($error = '', $swap = '', $native = FALSE) {
-        $msg = '';
-        if (is_array($error)) {
-            foreach ($error as $m) {
-                $msg.=$m . "</br>";
-            }
-        } else {
-            $msg = $error;
-        }
-        $system = WoniuLoader::$system;
-        $woniu_db = WoniuLoader::$system['db'];
-
-        if ($woniu_db[$woniu_db['active_group']]['db_debug']) {
-            header('HTTP/1.1 500 Internal Server Database Error');
-            if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
-                include $system['error_page_db'];
-            } else {
-                echo $msg;
-            }
-        }
-        exit;
+        woniu_db_error_handler($error, $swap, $native);
     }
 
 // --------------------------------------------------------------------

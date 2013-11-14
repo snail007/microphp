@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * MicroPHP
  *
@@ -120,10 +119,67 @@ $system['controller_method_ucfirst'] = TRUE;
  */
 $system['autoload_db'] = TRUE;
 /**
- * 是否开启调试模式,默认true显示错误信息,
- * 如果为false那么程序所有错误将不显示
+ * 是否开启调试模式
+ * true：显示错误信息,
+ * false：所有错误将不显示
  */
 $system['debug'] = TRUE;
+/**
+ * 是否接管误信息
+ * true：所有错误信息将由系统格式化输出
+ * false：所有错误信息将原样输出
+ */
+$system['error_manage'] = TRUE;
+
+/**
+ * 是否开启错误日志记录
+ * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']，
+ *       同时务必设置自己的错误日志记录处理方法
+ * false：关闭
+ */
+$system['log_error'] = FALSE;
+/**--------------------------------错误日志记录处理配置-----------------------
+ * 错误日志记录处理方法，可以是一个函数名称，
+ * 或是类的静态方法用数组方式array('class_name'=>'method_name')，
+ * 如果是类，把类按着类库的命名方式命名，然后放到类库目录即可;
+ * 留空则不处理。
+ * 系统会传递给error、exception处理方法5个参数：（$errno, $errstr, $errfile, $errline,$strace）
+ * 参数说明：
+ * $errno：错误级别，就是PHP里面的E_NOTICE之类的静态变量，错误级别和具体含义对应关系如下，键是代码，值是代码含义。
+ *         array('0'=>'EXCEPTION',//异常信息
+ *               '1' => 'ERROR',//致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。
+ *               '2' => 'WARNING', //运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。
+ *               '4' => 'PARSE', //编译时语法解析错误。解析错误仅仅由分析器产生。
+ *               '8' => 'NOTICE', //运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。
+ *               '16' => 'CORE_ERROR', //在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。
+ *               '32' => 'CORE_WARNING',//PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。
+ *               '64' => 'COMPILE_ERROR', //致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。
+ *               '128' => 'COMPILE_WARNING', //编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。
+ *               '256' => 'USER_ERROR', //用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '512' => 'USER_WARNING', //用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '1024' => 'USER_NOTICE',//用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '2048' => 'STRICT', //启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。
+ *               '4096' => 'RECOVERABLE_ERROR'//可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。
+ *               '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
+ *               '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *         );
+ *         可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，82048，8192）.
+ * $errstr：具体的错误信息
+ * $errfile：出错的文件完整路径
+ * $errline：出错的行号
+ * $strace： 调用堆栈信息
+ * 系统会传递给db_error处理方法2个参数：（$errmsg,$strace）
+ * 参数说明：
+ * $errmsg：具体的数据库错误信息
+ * $strace：调用堆栈信息
+ */
+$system['log_error_handle'] = array(
+    'error' => array('ErrorHandle' => 'error_handle'),
+    'exception' => array('ErrorHandle' => 'exception_handle'),
+    'db_error' => array('ErrorHandle' => 'db_error_handle'),
+);
+
+
 /**
  * 默认时区,PRC是中国
  */
@@ -292,7 +348,7 @@ $system['db']['active_group'] = 'default';
  * mysql数据库配置示例
  */
 $system['db']['default']['dbdriver'] = "mysql";
-$system['db']['default']['hostname'] = 'localhost';
+$system['db']['default']['hostname'] = '127.0.0.1';
 $system['db']['default']['port'] = '3306';
 $system['db']['default']['username'] = 'root';
 $system['db']['default']['password'] = 'admin';
@@ -341,7 +397,6 @@ $system['db']['pdo_msyql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-
 include('WoniuInput.class.php');
 include('WoniuHelper.php');
 include('db-drivers/db.drivers.php');
