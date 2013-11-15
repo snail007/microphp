@@ -23,12 +23,12 @@ define('WDS', DIRECTORY_SEPARATOR);
  * 当开始一个新项目的时候，可以在配置里面设置为TRUE ，系统就会自动建立文件夹。
  * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
  */
-$system['folder_auto_init']=true;
+$system['folder_auto_init']=FALSE;
 /**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = '../app2';
+$system['application_folder'] = '../app';
 /**
  * 存放控制器文件的文件夹路径名称
  */

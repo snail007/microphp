@@ -59,7 +59,7 @@ if (!function_exists('woniu_exception_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    call_user_func("$class::$method",array($errno, $errstr, $errfile, $errline, get_strace()));
+                    call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
                 } else {
                     $handle($errno, $errstr, $errfile, $errline, get_strace());
                 }
@@ -67,7 +67,7 @@ if (!function_exists('woniu_exception_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
         }
     }
 
@@ -82,7 +82,7 @@ if (!function_exists('woniu_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                    call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
                 } else {
                     $handle($errno, $errstr, $errfile, $errline, get_strace());
                 }
@@ -90,7 +90,7 @@ if (!function_exists('woniu_error_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
         }
     }
 
@@ -115,7 +115,7 @@ if (!function_exists('woniu_fatal_handler')) {
                     if (is_array($handle)) {
                         $class = key($handle);
                         $method = $handle[$class];
-                        $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                        call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
                     } else {
                         $handle($errno, $errstr, $errfile, $errline, get_strace());
                     }
@@ -123,7 +123,7 @@ if (!function_exists('woniu_fatal_handler')) {
             }
             if ($system['debug']) {
                 //@ob_clean();
-                echo '<pre>'.format_error($errno, $errstr, $errfile, $errline).'</pre>';
+                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
             }
         }
     }
@@ -150,7 +150,7 @@ if (!function_exists('woniu_db_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($msg, get_strace(TRUE));
+                    call_user_func("$class::$method", array(get_strace(TRUE)));
                 } else {
                     $handle($msg, get_strace(TRUE));
                 }
@@ -160,7 +160,7 @@ if (!function_exists('woniu_db_error_handler')) {
             if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
                 include $system['error_page_db'];
             } else {
-                echo '<pre>'.$msg . get_strace(TRUE).'</pre>';
+                echo '<pre>' . $msg . get_strace(TRUE) . '</pre>';
             }
             exit;
         }
@@ -175,7 +175,6 @@ if (!function_exists('format_error')) {
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
-        $content = '<pre>';
         $content .= "错误信息:" . nl2br($errstr) . "\n";
         $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
         $content .= "出错行数:{$errline}\n";
@@ -184,7 +183,6 @@ if (!function_exists('format_error')) {
         if (!empty($trace)) {
             $content .= "调用信息:{$trace}\n";
         }
-        $content .= "</pre>";
         return $content;
     }
 
