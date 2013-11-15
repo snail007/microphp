@@ -9,13 +9,18 @@ ver 2.2.1:
 1.插件模式下自动加载helper会导致重复加载报错的问题。
 升级提示：
 1.在$system中增加如下配置：
+/**
+ * 是否自动建立项目文件夹
+ * 当开始一个新项目的时候，可以在配置里面设置为TRUE ，系统就会自动建立文件夹。
+ * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
+ */
 $system['folder_auto_init']=FALSE;
 /**
  * 是否接管误信息
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = TRUE;
+$system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
@@ -23,7 +28,7 @@ $system['error_manage'] = TRUE;
  *       同时务必设置自己的错误日志记录处理方法
  * false：关闭
  */
-$system['log_error'] = TRUE;
+$system['log_error'] = FALSE;
 /* * --------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
  * 提示：
