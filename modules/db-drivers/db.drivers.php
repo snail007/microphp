@@ -129,7 +129,7 @@ class CI_DB_driver {
         if (!$this->conn_id) {
             log_message('error', 'Unable to connect to the database');
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 $this->display_error('db_unable_to_connect');
             }
             return FALSE;
@@ -141,7 +141,7 @@ class CI_DB_driver {
             if (!$this->db_select()) {
                 log_message('error', 'Unable to select database: ' . $this->database);
 
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     $this->display_error('db_unable_to_select', $this->database);
                 }
                 return FALSE;
@@ -172,7 +172,7 @@ class CI_DB_driver {
         if (!$this->_db_set_charset($this->char_set, $this->dbcollat)) {
             log_message('error', 'Unable to set database connection charset: ' . $this->char_set);
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 $this->display_error('db_unable_to_set_charset', $this->char_set);
             }
 
@@ -205,7 +205,7 @@ class CI_DB_driver {
      */
     function version() {
         if (FALSE === ($sql = $this->_version())) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -241,7 +241,7 @@ class CI_DB_driver {
      */
     function query($sql, $binds = FALSE, $return_object = TRUE) {
         if ($sql == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 log_message('error', 'Invalid query: ' . $sql);
                 return $this->display_error('db_invalid_query');
             }
@@ -287,7 +287,7 @@ class CI_DB_driver {
 // This will trigger a rollback if transactions are being used
             $this->_trans_status = FALSE;
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
 // grab the error number and message now, as we might run some
 // additional queries before displaying the error
                 $error_no = $this->_error_number();
@@ -693,7 +693,7 @@ class CI_DB_driver {
         }
 
         if (FALSE === ($sql = $this->_list_tables($constrain_by_prefix))) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -743,14 +743,14 @@ class CI_DB_driver {
         }
 
         if ($table == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_field_param_missing');
             }
             return FALSE;
         }
 
         if (FALSE === ($sql = $this->_list_columns($table))) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -797,7 +797,7 @@ class CI_DB_driver {
      */
     function field_data($table = '') {
         if ($table == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_field_param_missing');
             }
             return FALSE;
@@ -909,7 +909,7 @@ class CI_DB_driver {
         }
 
         if (!function_exists($function)) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -2534,7 +2534,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
 //No valid data array.  Folds in cases where keys and values did not match up
                 return $this->display_error('db_must_use_set');
             }
@@ -2543,7 +2543,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2634,7 +2634,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -2642,7 +2642,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2674,7 +2674,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -2682,7 +2682,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2718,7 +2718,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -2726,7 +2726,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2766,7 +2766,7 @@ class CI_DB_active_record extends CI_DB_driver {
         $this->_merge_cache();
 
         if (is_null($index)) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_index');
             }
 
@@ -2778,7 +2778,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
 
@@ -2787,7 +2787,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2864,7 +2864,7 @@ class CI_DB_active_record extends CI_DB_driver {
     public function empty_table($table = '') {
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2897,7 +2897,7 @@ class CI_DB_active_record extends CI_DB_driver {
     public function truncate($table = '') {
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2934,7 +2934,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -2961,7 +2961,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_where) == 0 && count($this->ar_wherein) == 0 && count($this->ar_like) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_del_must_use_where');
             }
 

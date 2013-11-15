@@ -59,9 +59,13 @@ if (!function_exists('woniu_exception_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    }
                 } else {
-                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
                 }
             }
         }
@@ -82,9 +86,13 @@ if (!function_exists('woniu_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    }
                 } else {
-                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
                 }
             }
         }
@@ -115,9 +123,13 @@ if (!function_exists('woniu_fatal_handler')) {
                     if (is_array($handle)) {
                         $class = key($handle);
                         $method = $handle[$class];
-                        call_user_func("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                        if (function_exists("$class::$method")) {
+                            call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                        }
                     } else {
-                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                        if (function_exists($handle)) {
+                            $handle($errno, $errstr, $errfile, $errline, get_strace());
+                        }
                     }
                 }
             }
@@ -150,9 +162,13 @@ if (!function_exists('woniu_db_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    call_user_func("$class::$method", array(get_strace(TRUE)));
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($msg, get_strace(TRUE)));
+                    }
                 } else {
-                    $handle($msg, get_strace(TRUE));
+                    if (function_exists($handle)) {
+                        $handle($msg, get_strace(TRUE));
+                    }
                 }
             }
         }

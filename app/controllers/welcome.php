@@ -38,7 +38,7 @@ class Welcome extends WoniuController {
 //        $this->cache->clean();
         $this->database();
         var_dump($this->db->get('xxx'));
-//        echo $a;
+        echo $a;
 //        throw new Exception('l am a exception.');
         echo $a->bcc();
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
