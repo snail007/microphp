@@ -63,7 +63,7 @@ class WoniuInput {
     }
 
     public static function is_ajax() {
-        return ($this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
+        return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
     }
 
 }
