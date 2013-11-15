@@ -313,7 +313,7 @@ class phpFastCache {
         $this->option("storage", $storage);
 
         if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
-            $this->option['securityKey'] = "cache.storage." . @$_SERVER['HTTP_HOST'];
+            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
         }
 
 

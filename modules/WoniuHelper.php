@@ -59,8 +59,10 @@ if (!function_exists('woniu_exception_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    if (function_exists("$class::$method")) {
-                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
                     }
                 } else {
                     if (function_exists($handle)) {
@@ -86,8 +88,10 @@ if (!function_exists('woniu_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    if (function_exists("$class::$method")) {
-                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
                     }
                 } else {
                     if (function_exists($handle)) {
@@ -123,8 +127,10 @@ if (!function_exists('woniu_fatal_handler')) {
                     if (is_array($handle)) {
                         $class = key($handle);
                         $method = $handle[$class];
-                        if (function_exists("$class::$method")) {
-                            call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                        $rclass_obj = new ReflectionClass($class);
+                        $rclass_obj = $rclass_obj->newInstanceArgs();
+                        if (method_exists($rclass_obj, $method)) {
+                            $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
                         }
                     } else {
                         if (function_exists($handle)) {
@@ -162,8 +168,10 @@ if (!function_exists('woniu_db_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    if (function_exists("$class::$method")) {
-                        call_user_func_array("$class::$method", array($msg, get_strace(TRUE)));
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($msg, get_strace(TRUE));
                     }
                 } else {
                     if (function_exists($handle)) {

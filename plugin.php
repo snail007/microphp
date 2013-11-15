@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-15 15:50:44
+ * @createdtime         2013-11-15 17:06:17
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -23,12 +23,12 @@ define('WDS', DIRECTORY_SEPARATOR);
  * 当开始一个新项目的时候，可以在配置里面设置为TRUE ，系统就会自动建立文件夹。
  * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
  */
-$system['folder_auto_init']=FALSE;
+$system['folder_auto_init'] = FALSE;
 /**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.').'/'.'application';
+$system['application_folder'] = realpath('.') . '/' . 'application';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -136,7 +136,7 @@ $system['debug'] = TRUE;
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = FALSE;
+$system['error_manage'] = TRUE;
 
 /**
  * 是否开启错误日志记录
@@ -147,8 +147,8 @@ $system['error_manage'] = FALSE;
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
-$system['log_error'] = FALSE;
-/**--------------------------------错误日志记录处理配置-----------------------
+$system['log_error'] = TRUE;
+/* * --------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
  * 提示：
  * 1.如果是类，把类按着类库的命名方式命名，然后放到类库目录即可;
@@ -185,9 +185,9 @@ $system['log_error'] = FALSE;
  * $strace：调用堆栈信息
  */
 $system['log_error_handle'] = array(
-    'error' => '',//array('ErrorHandle' => 'error_handle'),
-    'exception' => '',//array('ErrorHandle' => 'exception_handle'),
-    'db_error' => '',//array('ErrorHandle' => 'db_error_handle')
+    'error' => array('ErrorHandle' => 'error_handle'), //array('ErrorHandle' => 'error_handle'),
+    'exception' => array('ErrorHandle' => 'exception_handle'), //array('ErrorHandle' => 'exception_handle'),
+    'db_error' => array('ErrorHandle' => 'db_error_handle'), //array('ErrorHandle' => 'db_error_handle')
 );
 
 
