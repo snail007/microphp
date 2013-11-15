@@ -143,6 +143,7 @@ if (!function_exists('woniu_fatal_handler')) {
                 //@ob_clean();
                 echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
             }
+            exit;
         }
     }
 
