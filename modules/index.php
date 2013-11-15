@@ -19,10 +19,16 @@ define('WDS', DIRECTORY_SEPARATOR);
  * --------------------系统配置-------------------------
  */
 /**
+ * 是否自动建立项目文件夹
+ * 当开始一个新项目的时候，可以在配置里面设置为TRUE ，系统就会自动建立文件夹。
+ * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
+ */
+$system['folder_auto_init']=true;
+/**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = '../app';
+$system['application_folder'] = '../app2';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -124,6 +130,7 @@ $system['autoload_db'] = TRUE;
  * false：所有错误将不显示
  */
 $system['debug'] = TRUE;
+
 /**
  * 是否接管误信息
  * true：所有错误信息将由系统格式化输出
@@ -137,7 +144,7 @@ $system['error_manage'] = TRUE;
  *       同时务必设置自己的错误日志记录处理方法
  * false：关闭
  */
-$system['log_error'] = FALSE;
+$system['log_error'] = TRUE;
 /**--------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个函数名称，
  * 或是类的静态方法用数组方式array('class_name'=>'method_name')，
@@ -163,7 +170,7 @@ $system['log_error'] = FALSE;
  *               '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
  *               '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
  *         );
- *         可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，82048，8192）.
+ *         可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，8，2048，8192）.
  * $errstr：具体的错误信息
  * $errfile：出错的文件完整路径
  * $errline：出错的行号
@@ -174,9 +181,9 @@ $system['log_error'] = FALSE;
  * $strace：调用堆栈信息
  */
 $system['log_error_handle'] = array(
-    'error' => array('ErrorHandle' => 'error_handle'),
-    'exception' => array('ErrorHandle' => 'exception_handle'),
-    'db_error' => array('ErrorHandle' => 'db_error_handle'),
+    'error' => array('ErrorHandle' => 'error_handle'),//array('ErrorHandle' => 'error_handle'),
+    'exception' => array('ErrorHandle' => 'exception_handle'),//array('ErrorHandle' => 'exception_handle'),
+    'db_error' => array('ErrorHandle' => 'db_error_handle'),//array('ErrorHandle' => 'db_error_handle')
 );
 
 

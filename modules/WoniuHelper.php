@@ -55,12 +55,11 @@ if (!function_exists('woniu_exception_handler')) {
         $system = WoniuLoader::$system;
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['exception'];
-
             if (!empty($handle)) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                    call_user_func("$class::$method",array($errno, $errstr, $errfile, $errline, get_strace()));
                 } else {
                     $handle($errno, $errstr, $errfile, $errline, get_strace());
                 }

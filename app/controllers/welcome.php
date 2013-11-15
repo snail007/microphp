@@ -36,8 +36,8 @@ class Welcome extends WoniuController {
 //        var_dump($_SESSION);
         $this->cache->set('aaakey',array('555555fasdfasdf','dafasd'),60);
 //        $this->cache->clean();
-//        $this->database();
-//        var_dump($this->db->get('xxx'));
+        $this->database();
+        var_dump($this->db->get('xxx'));
 //        echo $a;
 //        throw new Exception('l am a exception.');
         echo $a->bcc();
