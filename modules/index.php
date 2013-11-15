@@ -292,7 +292,7 @@ $system['cache_config'] = array(
  * -----------------------SESSION管理配置---------------------------
  */
 $system['session_handle'] = array(
-    'handle' => '', //支持的管理类型：mongodb,mysql,memcache,redis
+    'handle' => '', //支持的管理类型：mongodb,mysql,memcache,redis。留空则不管理，使用默认
     'common' => array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
