@@ -136,7 +136,7 @@ $system['debug'] = TRUE;
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = TRUE;
+$system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
