@@ -191,6 +191,7 @@ if (!function_exists('format_error')) {
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
+        $content = '';
         $content .= "错误信息:" . nl2br($errstr) . "\n";
         $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
         $content .= "出错行数:{$errline}\n";

@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-15 13:47:04
+ * @createdtime         2013-11-15 15:22:49
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 class WoniuRouter {
 
@@ -224,7 +224,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -649,7 +649,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 class WoniuController extends WoniuLoader {
 
@@ -753,7 +753,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 class WoniuModel extends WoniuLoader {
 
@@ -806,7 +806,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 class WoniuDB {
 
@@ -6943,7 +6943,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10223,7 +10223,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 if (!function_exists('trigger404')) {
 
@@ -10403,6 +10403,7 @@ if (!function_exists('format_error')) {
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
+        $content = '';
         $content .= "错误信息:" . nl2br($errstr) . "\n";
         $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
         $content .= "出错行数:{$errline}\n";
@@ -10654,7 +10655,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 13:47:04
+ * @createdtime       2013-11-15 15:22:49
  */
 class WoniuInput {
 
