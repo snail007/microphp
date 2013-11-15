@@ -19,7 +19,7 @@
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
-    private $helper_files = array();
+    private static $helper_files = array();
     private static $instance, $config = array();
     public static $system;
 
@@ -92,11 +92,11 @@ class WoniuLoader {
     public function helper($file_name) {
         $system = WoniuLoader::$system;
         $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
-        if (in_array($filename, $this->helper_files)) {
+        if (in_array($filename, self::$helper_files)) {
             return;
         }
         if (file_exists($filename)) {
-            $this->helper_files[] = $filename;
+            self::$helper_files[] = $filename;
             //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
             include $filename;

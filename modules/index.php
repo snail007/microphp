@@ -121,9 +121,9 @@ $system['models_file_autoload'] = array();
  */
 $system['controller_method_ucfirst'] = TRUE;
 /**
- * 是否自动连接数据库,默认true
+ * 是否自动连接数据库,默认FALSE
  */
-$system['autoload_db'] = TRUE;
+$system['autoload_db'] = FALSE;
 /**
  * 是否开启调试模式
  * true：显示错误信息,

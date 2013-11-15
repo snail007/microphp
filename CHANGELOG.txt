@@ -1,9 +1,12 @@
 ver 2.2.1:
 增加了：
+1.自动创建项目文件夹功能（$system['folder_auto_init'] = TRUE;），可以手动开启或关闭。
 1.灵活的错误控制。
 2.是否自动建立项目文件夹。当开始一个新项目的时候，以前要一个个手动建立文件夹，
   现在可以在配置里面设置$system['folder_init']=TRUE;设置为TRUE 即可，系统就会自动建立文件夹。
   在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在提高性能。
+修复了:
+1.插件模式下自动加载helper会导致重复加载报错的问题。
 升级提示：
 1.在$system中增加如下配置：
 $system['folder_auto_init']=FALSE;
@@ -22,11 +25,12 @@ $system['error_manage'] = TRUE;
  */
 $system['log_error'] = TRUE;
 /* * --------------------------------错误日志记录处理配置-----------------------
- * 错误日志记录处理方法，可以是一个函数名称，
- * 或是类的静态方法用数组方式array('class_name'=>'method_name')，
- * 如果是类，把类按着类库的命名方式命名，然后放到类库目录即可;
- * 留空则不处理。
- * 系统会传递给error、exception处理方法5个参数：（$errno, $errstr, $errfile, $errline,$strace）
+ * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
+ * 提示：
+ * 1.如果是类，把类按着类库的命名方式命名，然后放到类库目录即可;
+ * 2.如果是函数，把函数放到一个helper文件里面，然后在$system['helper_file_autoload']自动加载的helper文件里面填写上这个helper文件即可。
+ * 3.留空则不处理。
+ * 4.系统会传递给error、exception处理方法5个参数：（$errno, $errstr, $errfile, $errline,$strace）
  * 参数说明：
  * $errno：错误级别，就是PHP里面的E_NOTICE之类的静态变量，错误级别和具体含义对应关系如下，键是代码，值是代码含义。
  *         array('0'=>'EXCEPTION',//异常信息

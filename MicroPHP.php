@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.0
- * @createdtime         2013-11-14 23:03:21
+ * @createdtime         2013-11-15 13:46:45
  */
  
 
@@ -29,12 +29,12 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 class WoniuRouter {
 
     public static function loadClass() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
         //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
@@ -73,7 +73,7 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $pathinfo_query = self::getQueryStr();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
@@ -124,7 +124,7 @@ class WoniuRouter {
         $router['prefix'] = $system['controller_method_prefix'];
         unset($path[count($path) - 1]);
         $router['capth'] = implode('.', $path);
-        $router['folder']='';
+        $router['folder'] = '';
         if (count($path) > 1) {
             unset($path[count($path) - 1]);
             $router['folder'] = implode('.', $path);
@@ -134,7 +134,7 @@ class WoniuRouter {
     }
 
     public static function getQueryStr() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         //命令行运行检查
         if (WoniuInput::isCli()) {
             global $argv;
@@ -163,7 +163,7 @@ class WoniuRouter {
     }
 
     public static function checkSession() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
         ) {
@@ -176,7 +176,7 @@ class WoniuRouter {
     }
 
     public static function checkRouter($pathinfo_query) {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         if (is_array($system['route'])) {
             foreach ($system['route'] as $reg => $replace) {
                 if (preg_match($reg, $pathinfo_query)) {
@@ -187,9 +187,26 @@ class WoniuRouter {
         }
         return $pathinfo_query;
     }
-    public static function setConfig($system){
-        WoniuLoader::$system=$system;
+
+    public static function setConfig($system) {
+        WoniuLoader::$system = $system;
+        self::folderAutoInit();
     }
+
+    public static function folderAutoInit() {
+        if (WoniuLoader::$system['folder_auto_init']) {
+            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder');
+            foreach (WoniuLoader::$system as $key => $value) {
+                if (in_array($key, $folder)) {
+                    if (!is_dir($value)) {
+                        mkdir($value, 0755, true);
+                        chmod($value, 0755);
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 /* End of file Router.php */
@@ -207,7 +224,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -215,7 +232,7 @@ class WoniuRouter {
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
-    private $helper_files = array();
+    private static $helper_files = array();
     private static $instance, $config = array();
     public static $system;
 
@@ -288,11 +305,11 @@ class WoniuLoader {
     public function helper($file_name) {
         $system = WoniuLoader::$system;
         $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
-        if (in_array($filename, $this->helper_files)) {
+        if (in_array($filename, self::$helper_files)) {
             return;
         }
         if (file_exists($filename)) {
-            $this->helper_files[] = $filename;
+            self::$helper_files[] = $filename;
             //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
             include $filename;
@@ -632,7 +649,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 class WoniuController extends WoniuLoader {
 
@@ -736,7 +753,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 class WoniuModel extends WoniuLoader {
 
@@ -789,7 +806,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 class WoniuDB {
 
@@ -907,7 +924,7 @@ class CI_DB_driver {
         if (!$this->conn_id) {
             log_message('error', 'Unable to connect to the database');
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 $this->display_error('db_unable_to_connect');
             }
             return FALSE;
@@ -919,7 +936,7 @@ class CI_DB_driver {
             if (!$this->db_select()) {
                 log_message('error', 'Unable to select database: ' . $this->database);
 
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     $this->display_error('db_unable_to_select', $this->database);
                 }
                 return FALSE;
@@ -950,7 +967,7 @@ class CI_DB_driver {
         if (!$this->_db_set_charset($this->char_set, $this->dbcollat)) {
             log_message('error', 'Unable to set database connection charset: ' . $this->char_set);
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 $this->display_error('db_unable_to_set_charset', $this->char_set);
             }
 
@@ -983,7 +1000,7 @@ class CI_DB_driver {
      */
     function version() {
         if (FALSE === ($sql = $this->_version())) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -1019,7 +1036,7 @@ class CI_DB_driver {
      */
     function query($sql, $binds = FALSE, $return_object = TRUE) {
         if ($sql == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 log_message('error', 'Invalid query: ' . $sql);
                 return $this->display_error('db_invalid_query');
             }
@@ -1065,7 +1082,7 @@ class CI_DB_driver {
 // This will trigger a rollback if transactions are being used
             $this->_trans_status = FALSE;
 
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
 // grab the error number and message now, as we might run some
 // additional queries before displaying the error
                 $error_no = $this->_error_number();
@@ -1471,7 +1488,7 @@ class CI_DB_driver {
         }
 
         if (FALSE === ($sql = $this->_list_tables($constrain_by_prefix))) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -1521,14 +1538,14 @@ class CI_DB_driver {
         }
 
         if ($table == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_field_param_missing');
             }
             return FALSE;
         }
 
         if (FALSE === ($sql = $this->_list_columns($table))) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -1575,7 +1592,7 @@ class CI_DB_driver {
      */
     function field_data($table = '') {
         if ($table == '') {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_field_param_missing');
             }
             return FALSE;
@@ -1687,7 +1704,7 @@ class CI_DB_driver {
         }
 
         if (!function_exists($function)) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_unsupported_function');
             }
             return FALSE;
@@ -3312,7 +3329,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
 //No valid data array.  Folds in cases where keys and values did not match up
                 return $this->display_error('db_must_use_set');
             }
@@ -3321,7 +3338,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3412,7 +3429,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -3420,7 +3437,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3452,7 +3469,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -3460,7 +3477,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3496,7 +3513,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
             return FALSE;
@@ -3504,7 +3521,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3544,7 +3561,7 @@ class CI_DB_active_record extends CI_DB_driver {
         $this->_merge_cache();
 
         if (is_null($index)) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_index');
             }
 
@@ -3556,7 +3573,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_set) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_set');
             }
 
@@ -3565,7 +3582,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3642,7 +3659,7 @@ class CI_DB_active_record extends CI_DB_driver {
     public function empty_table($table = '') {
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3675,7 +3692,7 @@ class CI_DB_active_record extends CI_DB_driver {
     public function truncate($table = '') {
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3712,7 +3729,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
-                if ($this->db_debug) {
+                if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                     return $this->display_error('db_must_set_table');
                 }
                 return FALSE;
@@ -3739,7 +3756,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
 
         if (count($this->ar_where) == 0 && count($this->ar_wherein) == 0 && count($this->ar_like) == 0) {
-            if ($this->db_debug) {
+            if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_del_must_use_where');
             }
 
@@ -6926,7 +6943,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10206,7 +10223,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 if (!function_exists('trigger404')) {
 
@@ -10250,20 +10267,23 @@ if (!function_exists('woniu_exception_handler')) {
         $system = WoniuLoader::$system;
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['exception'];
-
             if (!empty($handle)) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    }
                 } else {
-                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
                 }
             }
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo format_error($errno, $errstr, $errfile, $errline);
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
         }
     }
 
@@ -10278,15 +10298,19 @@ if (!function_exists('woniu_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                    }
                 } else {
-                    $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
                 }
             }
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo format_error($errno, $errstr, $errfile, $errline);
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
         }
     }
 
@@ -10311,15 +10335,19 @@ if (!function_exists('woniu_fatal_handler')) {
                     if (is_array($handle)) {
                         $class = key($handle);
                         $method = $handle[$class];
-                        $class::$method($errno, $errstr, $errfile, $errline, get_strace());
+                        if (function_exists("$class::$method")) {
+                            call_user_func_array("$class::$method", array($errno, $errstr, $errfile, $errline, get_strace()));
+                        }
                     } else {
-                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                        if (function_exists($handle)) {
+                            $handle($errno, $errstr, $errfile, $errline, get_strace());
+                        }
                     }
                 }
             }
             if ($system['debug']) {
                 //@ob_clean();
-                echo format_error($errno, $errstr, $errfile, $errline);
+                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
             }
         }
     }
@@ -10346,9 +10374,13 @@ if (!function_exists('woniu_db_error_handler')) {
                 if (is_array($handle)) {
                     $class = key($handle);
                     $method = $handle[$class];
-                    $class::$method($msg, get_strace(TRUE));
+                    if (function_exists("$class::$method")) {
+                        call_user_func_array("$class::$method", array($msg, get_strace(TRUE)));
+                    }
                 } else {
-                    $handle($msg, get_strace(TRUE));
+                    if (function_exists($handle)) {
+                        $handle($msg, get_strace(TRUE));
+                    }
                 }
             }
         }
@@ -10356,7 +10388,7 @@ if (!function_exists('woniu_db_error_handler')) {
             if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
                 include $system['error_page_db'];
             } else {
-                echo $msg . get_strace(TRUE);
+                echo '<pre>' . $msg . get_strace(TRUE) . '</pre>';
             }
             exit;
         }
@@ -10371,7 +10403,6 @@ if (!function_exists('format_error')) {
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
-        $content = '<pre>';
         $content .= "错误信息:" . nl2br($errstr) . "\n";
         $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
         $content .= "出错行数:{$errline}\n";
@@ -10380,7 +10411,6 @@ if (!function_exists('format_error')) {
         if (!empty($trace)) {
             $content .= "调用信息:{$trace}\n";
         }
-        $content .= "</pre>";
         return $content;
     }
 
@@ -10624,7 +10654,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.0
- * @createdtime       2013-11-14 23:03:21
+ * @createdtime       2013-11-15 13:46:45
  */
 class WoniuInput {
 
