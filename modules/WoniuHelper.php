@@ -81,7 +81,20 @@ if (!function_exists('woniu_exception_handler')) {
 }
 if (!function_exists('woniu_error_handler')) {
 
+    /**
+     * 非致命错误处理函数。
+     * 该函数会接受所有类型的错误，应该过滤掉致命错误
+     * @param type $errno
+     * @param type $errstr
+     * @param type $errfile
+     * @param type $errline
+     * @return type
+     */
     function woniu_error_handler($errno, $errstr, $errfile, $errline) {
+        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
+        if (in_array($errno, $fatal_err)) {
+            return;
+        }
         $system = WoniuLoader::$system;
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['error'];
@@ -110,6 +123,15 @@ if (!function_exists('woniu_error_handler')) {
 }
 if (!function_exists('woniu_fatal_handler')) {
 
+    /**
+     * 致命错误处理函数。
+     * 该函数会接受所有类型的错误，应该只处理致命错误
+     * @param type $errno
+     * @param type $errstr
+     * @param type $errfile
+     * @param type $errline
+     * @return type
+     */
     function woniu_fatal_handler() {
         $system = WoniuLoader::$system;
         $errfile = "unknown file";
@@ -117,7 +139,7 @@ if (!function_exists('woniu_fatal_handler')) {
         $errno = E_CORE_ERROR;
         $errline = 0;
         $error = error_get_last();
-        $fatal_err=array(E_ERROR,E_USER_ERROR,E_COMPILE_ERROR,E_CORE_ERROR,E_PARSE,E_RECOVERABLE_ERROR);
+        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
         if ($error !== NULL && isset($error["type"]) && in_array($error["type"], $fatal_err)) {
             $errno = $error["type"];
             $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
