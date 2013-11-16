@@ -1,4 +1,19 @@
 <?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		CodeIgniter
+ * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
+ * @license		http://codeigniter.com/user_guide/license.html
+ * @author		EllisLab Dev Team
+ * @link		http://codeigniter.com
+ * @since		Version 2.1.2
+ * @filesource
+ */
+
+// ------------------------------------------------------------------------
 
 /**
  * PDO Database Adapter Class
@@ -13,7 +28,7 @@
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_driver extends CI_DB{
+class CI_DB_pdo_driver extends CI_DB {
 
 	var $dbdriver = 'pdo';
 
@@ -143,7 +158,7 @@ class CI_DB_pdo_driver extends CI_DB{
 	 * @param	string
 	 * @return	resource
 	 */
-	function _db_set_charset($charset, $collation)
+	function db_set_charset($charset, $collation)
 	{
 		// @todo - add support if needed
 		return TRUE;
@@ -794,7 +809,23 @@ class CI_DB_pdo_driver extends CI_DB{
 
 
 /* End of file pdo_driver.php */
+/* Location: ./system/database/drivers/pdo/pdo_driver.php */
+ 
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		CodeIgniter
+ * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
+ * @license		http://codeigniter.com/user_guide/license.html
+ * @author		EllisLab Dev Team
+ * @link		http://codeigniter.com
+ * @since		Version 2.1.2
+ * @filesource
+ */
 
+// ------------------------------------------------------------------------
 
 /**
  * PDO Result Class
@@ -961,3 +992,4 @@ class CI_DB_pdo_result extends CI_DB_result {
 
 
 /* End of file pdo_result.php */
+/* Location: ./system/database/drivers/pdo/pdo_result.php */
