@@ -142,7 +142,7 @@ if (!function_exists('woniu_fatal_handler')) {
         $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
         if ($error !== NULL && isset($error["type"]) && in_array($error["type"], $fatal_err)) {
             $errno = $error["type"];
-            $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
+            $errfile = $error["file"];
             $errline = $error["line"];
             $errstr = $error["message"];
             if ($system['log_error']) {
