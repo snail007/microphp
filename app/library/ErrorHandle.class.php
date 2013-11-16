@@ -19,7 +19,7 @@ class ErrorHandle {
     private static $max_log_size = 300; //KB
 
     public static function fixContent($content) {
-        $content = 'URL:' . self::getUrl() . "\nis_ajax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH'])&&$_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest' ? 'true' : 'false') . ""
+        $content = 'URL:' . self::getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH'])&&$_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest' ? 'true' : 'false') . ""
                 . "\nIP:" . $_SERVER['REMOTE_ADDR']
                 . "\n".(!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE) : '') ."". $content;
         return date('Y-m-d H:i:s') . ' ' . $content . "\n";
