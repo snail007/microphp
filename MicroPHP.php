@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-15 22:56:06
+ * @createdtime         2013-11-16 14:59:48
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 class WoniuRouter {
 
@@ -224,7 +224,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -255,11 +255,12 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        if($system['debug']){
+        if ($system['debug']) {
             error_reporting(E_ALL);
-        }
-        if ($system['error_manage']||$system['log_error']) {
+        } else {
             error_reporting(0);
+        }
+        if ($system['error_manage'] || $system['log_error']) {
             set_exception_handler('woniu_exception_handler');
             set_error_handler('woniu_error_handler');
             register_shutdown_function('woniu_fatal_handler');
@@ -649,7 +650,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 class WoniuController extends WoniuLoader {
 
@@ -753,7 +754,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 class WoniuModel extends WoniuLoader {
 
@@ -806,7 +807,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 class WoniuDB {
 
@@ -6943,7 +6944,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10223,7 +10224,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 if (!function_exists('trigger404')) {
 
@@ -10329,7 +10330,8 @@ if (!function_exists('woniu_fatal_handler')) {
         $errno = E_CORE_ERROR;
         $errline = 0;
         $error = error_get_last();
-        if ($error !== NULL && isset($error["type"]) && ($error["type"] === E_ERROR || ($error['type'] === E_USER_ERROR))) {
+        $fatal_err=array(E_ERROR,E_USER_ERROR,E_COMPILE_ERROR,E_CORE_ERROR,E_PARSE,E_RECOVERABLE_ERROR);
+        if ($error !== NULL && isset($error["type"]) && in_array($error["type"], $fatal_err)) {
             $errno = $error["type"];
             $errfile = pathinfo($error["file"], PATHINFO_FILENAME);
             $errline = $error["line"];
@@ -10665,7 +10667,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-15 22:56:06
+ * @createdtime       2013-11-16 14:59:49
  */
 class WoniuInput {
 

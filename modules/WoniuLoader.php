@@ -42,11 +42,12 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        if($system['debug']){
+        if ($system['debug']) {
             error_reporting(E_ALL);
-        }
-        if ($system['error_manage']||$system['log_error']) {
+        } else {
             error_reporting(0);
+        }
+        if ($system['error_manage'] || $system['log_error']) {
             set_exception_handler('woniu_exception_handler');
             set_error_handler('woniu_error_handler');
             register_shutdown_function('woniu_fatal_handler');
