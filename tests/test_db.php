@@ -6,6 +6,7 @@ require_once('simpletest/autorun.php');
  * MicroPHP数据库测试案例
  */
 
+
 /**
  * MicroPHP
  *
@@ -34,7 +35,7 @@ class Test_db extends UnitTestCase {
 
     public function tearDown() {
         $this->db->simple_query('drop table ' . $this->db_table);
-        @unlink('test.sqlite3');
+        //@unlink('test.sqlite3');
     }
 
     public function testMysql() {
@@ -76,7 +77,7 @@ class Test_db extends UnitTestCase {
             $data[] = array('id' => '3', 'name' => 'microphp_user03');
             $data[] = array('id' => '4', 'name' => 'microphp_user04');
             $data[] = array('id' => '4', 'name' => 'microphp_user05');
-            $this->assertTrue($this->db->simple_query($sql), "[{$type}]");
+            $this->assertTrue($this->db->simple_query($sql), "[{$type}] create table ");
             if ('sqlite3' == $type) {
                 foreach ($data as $row) {
                     $this->assertTrue($this->db->insert($this->db_table, $row), "[{$type}] insert ");
@@ -87,4 +88,9 @@ class Test_db extends UnitTestCase {
         }
     }
 
+}
+
+if (!defined('IN_ALL_TESTS')) {
+    $test = &new Test_db();
+    $test->run(new HtmlReporter());
 }
