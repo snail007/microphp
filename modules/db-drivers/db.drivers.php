@@ -17,10 +17,10 @@ class WoniuDB {
 
     private static $conns = array();
 
-    public static function getInstance($config) {
+    public static function getInstance($config, $force_new_conn = false) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        if (!isset(self::$conns[$hash])) {
+        if ($force_new_conn||!isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
         if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {

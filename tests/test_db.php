@@ -38,9 +38,10 @@ class Test_db extends UnitTestCase {
 
     public function testMysql() {
         global $system;
-        foreach (array('mysql', 'mysqli', 'pdo_msyql', 'sqlite3') as $db_cfg_group) {
+        foreach (array('mysql', 'mysqli', 'pdo_mysql', 'sqlite3') as $db_cfg_group) {
+            $system['db']['active_group'] = $db_cfg_group;
             WoniuRouter::setConfig($system);
-            $this->createTable($system['db'][$db_cfg_group], $db_cfg_group);
+            $this->createTable();
             $this->curd($db_cfg_group);
             $this->db->simple_query('drop table ' . $this->db_table);
             if ($db_cfg_group == 'sqlite3') {
@@ -68,10 +69,15 @@ class Test_db extends UnitTestCase {
                 ), 3, "[{$type}]" . '查询数据:%s');
     }
 
-    public function createTable($cfg, $type) {
+    public function createTable() {
         $instance = WoniuLoader::instance();
-        $instance->database($cfg);
+        $type = WoniuLoader::$system['db']['active_group'];
+        $instance->database(null, false, true);
         $this->db = $instance->db;
+        if ($type == 'pdo_mysql') {
+            $type = 'pdo';
+        }
+        $this->assertIsA($this->db, "CI_DB_{$type}_driver");
         if (!$this->db->table_exists($this->db_table)) {
             $sql = 'create table ' . $this->db_table . ' (id int(11),name varchar(15))';
             $data[] = array('id' => '1', 'name' => 'microphp_user01');

@@ -62,26 +62,26 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL, $is_return = false) {
+    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
         if ($is_return) {
             $db = null;
             //没有传递配置，使用默认配置
-            if (!is_array($config)) {
+            if ($force_new_conn || !is_array($config)) {
                 $woniu_db = self::$system['db'];
-                $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
+                $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
             } else {
-                $db = WoniuDB::getInstance($config);
+                $db = WoniuDB::getInstance($config, $force_new_conn);
             }
             return $db;
         } else {
             //没有传递配置，使用默认配置
             if (!is_array($config)) {
-                if (!is_object($this->db)) {
+                if ($force_new_conn || !is_object($this->db)) {
                     $woniu_db = self::$system['db'];
-                    $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']]);
+                    $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
                 }
             } else {
-                $this->db = WoniuDB::getInstance($config);
+                $this->db = WoniuDB::getInstance($config, $force_new_conn);
             }
         }
     }

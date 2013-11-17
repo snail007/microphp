@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -12,11 +13,7 @@
  * @since		Version 2.2.1
  * @createdtime         2013-11-16 20:55:06
  */
- 
-
-
 //####################modules/WoniuRouter.php####################{
-
 
 /**
  * MicroPHP
@@ -211,7 +208,6 @@ class WoniuRouter {
 
 /* End of file Router.php */
 //####################modules/WoniuLoader.php####################{
-
 
 /**
  * MicroPHP
@@ -638,7 +634,6 @@ class WoniuLibLoader {
 /* End of file Loader.php */
 //####################modules/WoniuController.php####################{
 
-
 /**
  * MicroPHP
  *
@@ -664,7 +659,7 @@ class WoniuController extends WoniuLoader {
     }
 
     private function autoload() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
@@ -715,7 +710,7 @@ class WoniuController extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
@@ -742,7 +737,6 @@ class WoniuController extends WoniuLoader {
 /* End of file Controller.php */
 //####################modules/WoniuModel.php####################{
 
-
 /**
  * MicroPHP
  *
@@ -760,13 +754,13 @@ class WoniuModel extends WoniuLoader {
 
     private static $instance;
 
-    public static function instance($classname_path=null) {
+    public static function instance($classname_path = null) {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
@@ -774,7 +768,7 @@ class WoniuModel extends WoniuLoader {
         if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
             return WoniuModelLoader::$model_files[$alias_name];
         }
-        
+
         if (file_exists($filepath)) {
             //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
             //如此一来就能满足两种模式
@@ -795,7 +789,6 @@ class WoniuModel extends WoniuLoader {
 /* End of file Model.php */
 //####################modules/db-drivers/db.drivers.php####################{
 
-
 /**
  * MicroPHP
  *
@@ -813,10 +806,10 @@ class WoniuDB {
 
     private static $conns = array();
 
-    public static function getInstance($config) {
+    public static function getInstance($config, $force_new = false) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        if (!isset(self::$conns[$hash])) {
+        if (!isset(self::$conns[$hash]) || $force_new) {
             self::$conns[$hash] = new $class($config);
         }
         if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {
@@ -4187,7 +4180,6 @@ function log_message($level, $msg) {/* just suppress logging */
 
 //####################modules/db-drivers/mysql.driver.php####################{
 
-
 /**
  * MySQL Database Adapter Class
  *
@@ -4201,7 +4193,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @author                ExpressionEngine Dev Team
  * @link                http://codeigniter.com/user_guide/database/
  */
-class CI_DB_mysql_driver extends CI_DB{
+class CI_DB_mysql_driver extends CI_DB {
 
     var $dbdriver = 'mysql';
 // The character used for escaping
@@ -5030,7 +5022,6 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @since		Version 2.2.1
  * @filesource
  */
-
 // ------------------------------------------------------------------------
 
 /**
@@ -5048,747 +5039,666 @@ class CI_DB_mysql_result extends CI_DB_result {
  */
 class CI_DB_mysqli_driver extends CI_DB {
 
-	var $dbdriver = 'mysqli';
-
-	// The character used for escaping
-	var $_escape_char = '`';
-
-	// clause and character used for LIKE escape sequences - not used in MySQL
-	var $_like_escape_str = '';
-	var $_like_escape_chr = '';
-
-	/**
-	 * The syntax to count rows is slightly different across different
-	 * database engines, so this string appears in each driver and is
-	 * used for the count_all() and count_all_results() functions.
-	 */
-	var $_count_string = "SELECT COUNT(*) AS ";
-	var $_random_keyword = ' RAND()'; // database specific random keyword
-
-	/**
-	 * Whether to use the MySQL "delete hack" which allows the number
-	 * of affected rows to be shown. Uses a preg_replace when enabled,
-	 * adding a bit more processing to all queries.
-	 */
-	var $delete_hack = TRUE;
-
-	// whether SET NAMES must be used to set the character set
-	var $use_set_names;
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Non-persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_connect()
-	{
-		if ($this->port != '')
-		{
-			return @mysqli_connect($this->hostname, $this->username, $this->password, $this->database, $this->port);
-		}
-		else
-		{
-			return @mysqli_connect($this->hostname, $this->username, $this->password, $this->database);
-		}
-
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_pconnect()
-	{
-		return $this->db_connect();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Reconnect
-	 *
-	 * Keep / reestablish the db connection if no queries have been
-	 * sent for a length of time exceeding the server's idle timeout
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	function reconnect()
-	{
-		if (mysqli_ping($this->conn_id) === FALSE)
-		{
-			$this->conn_id = FALSE;
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Select the database
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_select()
-	{
-		return @mysqli_select_db($this->conn_id, $this->database);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Set client character set
-	 *
-	 * @access	private
-	 * @param	string
-	 * @param	string
-	 * @return	resource
-	 */
-	function _db_set_charset($charset, $collation)
-	{
-		if ( ! isset($this->use_set_names))
-		{
-			// mysqli_set_charset() requires MySQL >= 5.0.7, use SET NAMES as fallback
-			$this->use_set_names = (version_compare(mysqli_get_server_info($this->conn_id), '5.0.7', '>=')) ? FALSE : TRUE;
-		}
-
-		if ($this->use_set_names === TRUE)
-		{
-			return @mysqli_query($this->conn_id, "SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'");
-		}
-		else
-		{
-			return @mysqli_set_charset($this->conn_id, $charset);
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Version number query string
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	function _version()
-	{
-		return "SELECT version() AS ver";
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Execute the query
-	 *
-	 * @access	private called by the base class
-	 * @param	string	an SQL query
-	 * @return	resource
-	 */
-	function _execute($sql)
-	{
-		$sql = $this->_prep_query($sql);
-		$result = @mysqli_query($this->conn_id, $sql);
-		return $result;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Prep the query
-	 *
-	 * If needed, each database adapter can prep the query string
-	 *
-	 * @access	private called by execute()
-	 * @param	string	an SQL query
-	 * @return	string
-	 */
-	function _prep_query($sql)
-	{
-		// "DELETE FROM TABLE" returns 0 affected rows This hack modifies
-		// the query so that it returns the number of affected rows
-		if ($this->delete_hack === TRUE)
-		{
-			if (preg_match('/^\s*DELETE\s+FROM\s+(\S+)\s*$/i', $sql))
-			{
-				$sql = preg_replace("/^\s*DELETE\s+FROM\s+(\S+)\s*$/", "DELETE FROM \\1 WHERE 1=1", $sql);
-			}
-		}
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Begin Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_begin($test_mode = FALSE)
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		// Reset the transaction failure flag.
-		// If the $test_mode flag is set to TRUE transactions will be rolled back
-		// even if the queries produce a successful result.
-		$this->_trans_failure = ($test_mode === TRUE) ? TRUE : FALSE;
-
-		$this->simple_query('SET AUTOCOMMIT=0');
-		$this->simple_query('START TRANSACTION'); // can also be BEGIN or BEGIN WORK
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Commit Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_commit()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$this->simple_query('COMMIT');
-		$this->simple_query('SET AUTOCOMMIT=1');
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Rollback Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_rollback()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$this->simple_query('ROLLBACK');
-		$this->simple_query('SET AUTOCOMMIT=1');
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape String
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	bool	whether or not the string will be used in a LIKE condition
-	 * @return	string
-	 */
-	function escape_str($str, $like = FALSE)
-	{
-		if (is_array($str))
-		{
-			foreach ($str as $key => $val)
-			{
-				$str[$key] = $this->escape_str($val, $like);
-			}
-
-			return $str;
-		}
-
-		if (function_exists('mysqli_real_escape_string') AND is_object($this->conn_id))
-		{
-			$str = mysqli_real_escape_string($this->conn_id, $str);
-		}
-		elseif (function_exists('mysql_escape_string'))
-		{
-			$str = mysql_escape_string($str);
-		}
-		else
-		{
-			$str = addslashes($str);
-		}
-
-		// escape LIKE condition wildcards
-		if ($like === TRUE)
-		{
-			$str = str_replace(array('%', '_'), array('\\%', '\\_'), $str);
-		}
-
-		return $str;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Affected Rows
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function affected_rows()
-	{
-		return @mysqli_affected_rows($this->conn_id);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert ID
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function insert_id()
-	{
-		return @mysqli_insert_id($this->conn_id);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * "Count All" query
-	 *
-	 * Generates a platform-specific query string that counts all records in
-	 * the specified database
-	 *
-	 * @access	public
-	 * @param	string
-	 * @return	string
-	 */
-	function count_all($table = '')
-	{
-		if ($table == '')
-		{
-			return 0;
-		}
-
-		$query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
-
-		if ($query->num_rows() == 0)
-		{
-			return 0;
-		}
-
-		$row = $query->row();
-		$this->_reset_select();
-		return (int) $row->numrows;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * List table query
-	 *
-	 * Generates a platform-specific query string so that the table names can be fetched
-	 *
-	 * @access	private
-	 * @param	boolean
-	 * @return	string
-	 */
-	function _list_tables($prefix_limit = FALSE)
-	{
-		$sql = "SHOW TABLES FROM ".$this->_escape_char.$this->database.$this->_escape_char;
-
-		if ($prefix_limit !== FALSE AND $this->dbprefix != '')
-		{
-			$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%'";
-		}
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Show column query
-	 *
-	 * Generates a platform-specific query string so that the column names can be fetched
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _list_columns($table = '')
-	{
-		return "SHOW COLUMNS FROM ".$this->_protect_identifiers($table, TRUE, NULL, FALSE);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Field data query
-	 *
-	 * Generates a platform-specific query so that the column data can be retrieved
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	object
-	 */
-	function _field_data($table)
-	{
-		return "DESCRIBE ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message string
-	 *
-	 * @access	private
-	 * @return	string
-	 */
-	function _error_message()
-	{
-		return mysqli_error($this->conn_id);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message number
-	 *
-	 * @access	private
-	 * @return	integer
-	 */
-	function _error_number()
-	{
-		return mysqli_errno($this->conn_id);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape the SQL Identifiers
-	 *
-	 * This function escapes column and table names
-	 *
-	 * @access	private
-	 * @param	string
-	 * @return	string
-	 */
-	function _escape_identifiers($item)
-	{
-		if ($this->_escape_char == '')
-		{
-			return $item;
-		}
-
-		foreach ($this->_reserved_identifiers as $id)
-		{
-			if (strpos($item, '.'.$id) !== FALSE)
-			{
-				$str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
-
-				// remove duplicates if the user already included the escape
-				return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-			}
-		}
-
-		if (strpos($item, '.') !== FALSE)
-		{
-			$str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
-		}
-		else
-		{
-			$str = $this->_escape_char.$item.$this->_escape_char;
-		}
-
-		// remove duplicates if the user already included the escape
-		return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * From Tables
-	 *
-	 * This function implicitly groups FROM tables so there is no confusion
-	 * about operator precedence in harmony with SQL standards
-	 *
-	 * @access	public
-	 * @param	type
-	 * @return	type
-	 */
-	function _from_tables($tables)
-	{
-		if ( ! is_array($tables))
-		{
-			$tables = array($tables);
-		}
-
-		return '('.implode(', ', $tables).')';
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the insert keys
-	 * @param	array	the insert values
-	 * @return	string
-	 */
-	function _insert($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES (".implode(', ', $values).")";
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert_batch statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the insert keys
-	 * @param	array	the insert values
-	 * @return	string
-	 */
-	function _insert_batch($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES ".implode(', ', $values);
-	}
-
-	// --------------------------------------------------------------------
-
-
-	/**
-	 * Replace statement
-	 *
-	 * Generates a platform-specific replace string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the insert keys
-	 * @param	array	the insert values
-	 * @return	string
-	 */
-	function _replace($table, $keys, $values)
-	{
-		return "REPLACE INTO ".$table." (".implode(', ', $keys).") VALUES (".implode(', ', $values).")";
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update statement
-	 *
-	 * Generates a platform-specific update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @param	array	the orderby clause
-	 * @param	array	the limit clause
-	 * @return	string
-	 */
-	function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
-	{
-		foreach ($values as $key => $val)
-		{
-			$valstr[] = $key." = ".$val;
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		$orderby = (count($orderby) >= 1)?' ORDER BY '.implode(", ", $orderby):'';
-
-		$sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
-
-		$sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
-
-		$sql .= $orderby.$limit;
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update_Batch statement
-	 *
-	 * Generates a platform-specific batch update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @return	string
-	 */
-	function _update_batch($table, $values, $index, $where = NULL)
-	{
-		$ids = array();
-		$where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
-
-		foreach ($values as $key => $val)
-		{
-			$ids[] = $val[$index];
-
-			foreach (array_keys($val) as $field)
-			{
-				if ($field != $index)
-				{
-					$final[$field][] =  'WHEN '.$index.' = '.$val[$index].' THEN '.$val[$field];
-				}
-			}
-		}
-
-		$sql = "UPDATE ".$table." SET ";
-		$cases = '';
-
-		foreach ($final as $k => $v)
-		{
-			$cases .= $k.' = CASE '."\n";
-			foreach ($v as $row)
-			{
-				$cases .= $row."\n";
-			}
-
-			$cases .= 'ELSE '.$k.' END, ';
-		}
-
-		$sql .= substr($cases, 0, -2);
-
-		$sql .= ' WHERE '.$where.$index.' IN ('.implode(',', $ids).')';
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Truncate statement
-	 *
-	 * Generates a platform-specific truncate string from the supplied data
-	 * If the database does not support the truncate() command
-	 * This function maps to "DELETE FROM table"
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _truncate($table)
-	{
-		return "TRUNCATE ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Delete statement
-	 *
-	 * Generates a platform-specific delete string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the where clause
-	 * @param	string	the limit clause
-	 * @return	string
-	 */
-	function _delete($table, $where = array(), $like = array(), $limit = FALSE)
-	{
-		$conditions = '';
-
-		if (count($where) > 0 OR count($like) > 0)
-		{
-			$conditions = "\nWHERE ";
-			$conditions .= implode("\n", $this->ar_where);
-
-			if (count($where) > 0 && count($like) > 0)
-			{
-				$conditions .= " AND ";
-			}
-			$conditions .= implode("\n", $like);
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		return "DELETE FROM ".$table.$conditions.$limit;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Limit string
-	 *
-	 * Generates a platform-specific LIMIT clause
-	 *
-	 * @access	public
-	 * @param	string	the sql query string
-	 * @param	integer	the number of rows to limit the query to
-	 * @param	integer	the offset value
-	 * @return	string
-	 */
-	function _limit($sql, $limit, $offset)
-	{
-		$sql .= "LIMIT ".$limit;
-
-		if ($offset > 0)
-		{
-			$sql .= " OFFSET ".$offset;
-		}
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Close DB Connection
-	 *
-	 * @access	public
-	 * @param	resource
-	 * @return	void
-	 */
-	function _close($conn_id)
-	{
-		@mysqli_close($conn_id);
-	}
-
+    var $dbdriver = 'mysqli';
+    // The character used for escaping
+    var $_escape_char = '`';
+    // clause and character used for LIKE escape sequences - not used in MySQL
+    var $_like_escape_str = '';
+    var $_like_escape_chr = '';
+
+    /**
+     * The syntax to count rows is slightly different across different
+     * database engines, so this string appears in each driver and is
+     * used for the count_all() and count_all_results() functions.
+     */
+    var $_count_string = "SELECT COUNT(*) AS ";
+    var $_random_keyword = ' RAND()'; // database specific random keyword
+
+    /**
+     * Whether to use the MySQL "delete hack" which allows the number
+     * of affected rows to be shown. Uses a preg_replace when enabled,
+     * adding a bit more processing to all queries.
+     */
+    var $delete_hack = TRUE;
+    // whether SET NAMES must be used to set the character set
+    var $use_set_names;
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Non-persistent database connection
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_connect() {
+        if ($this->port != '') {
+            return @mysqli_connect($this->hostname, $this->username, $this->password, $this->database, $this->port);
+        } else {
+            return @mysqli_connect($this->hostname, $this->username, $this->password, $this->database);
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Persistent database connection
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_pconnect() {
+        return $this->db_connect();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Reconnect
+     *
+     * Keep / reestablish the db connection if no queries have been
+     * sent for a length of time exceeding the server's idle timeout
+     *
+     * @access	public
+     * @return	void
+     */
+    function reconnect() {
+        if (mysqli_ping($this->conn_id) === FALSE) {
+            $this->conn_id = FALSE;
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Select the database
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_select() {
+        return @mysqli_select_db($this->conn_id, $this->database);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Set client character set
+     *
+     * @access	private
+     * @param	string
+     * @param	string
+     * @return	resource
+     */
+    function _db_set_charset($charset, $collation) {
+        if (!isset($this->use_set_names)) {
+            // mysqli_set_charset() requires MySQL >= 5.0.7, use SET NAMES as fallback
+            $this->use_set_names = (version_compare(mysqli_get_server_info($this->conn_id), '5.0.7', '>=')) ? FALSE : TRUE;
+        }
+
+        if ($this->use_set_names === TRUE) {
+            return @mysqli_query($this->conn_id, "SET NAMES '" . $this->escape_str($charset) . "' COLLATE '" . $this->escape_str($collation) . "'");
+        } else {
+            return @mysqli_set_charset($this->conn_id, $charset);
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Version number query string
+     *
+     * @access	public
+     * @return	string
+     */
+    function _version() {
+        return "SELECT version() AS ver";
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Execute the query
+     *
+     * @access	private called by the base class
+     * @param	string	an SQL query
+     * @return	resource
+     */
+    function _execute($sql) {
+        $sql = $this->_prep_query($sql);
+        $result = @mysqli_query($this->conn_id, $sql);
+        return $result;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Prep the query
+     *
+     * If needed, each database adapter can prep the query string
+     *
+     * @access	private called by execute()
+     * @param	string	an SQL query
+     * @return	string
+     */
+    function _prep_query($sql) {
+        // "DELETE FROM TABLE" returns 0 affected rows This hack modifies
+        // the query so that it returns the number of affected rows
+        if ($this->delete_hack === TRUE) {
+            if (preg_match('/^\s*DELETE\s+FROM\s+(\S+)\s*$/i', $sql)) {
+                $sql = preg_replace("/^\s*DELETE\s+FROM\s+(\S+)\s*$/", "DELETE FROM \\1 WHERE 1=1", $sql);
+            }
+        }
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Begin Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_begin($test_mode = FALSE) {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        // Reset the transaction failure flag.
+        // If the $test_mode flag is set to TRUE transactions will be rolled back
+        // even if the queries produce a successful result.
+        $this->_trans_failure = ($test_mode === TRUE) ? TRUE : FALSE;
+
+        $this->simple_query('SET AUTOCOMMIT=0');
+        $this->simple_query('START TRANSACTION'); // can also be BEGIN or BEGIN WORK
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Commit Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_commit() {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        $this->simple_query('COMMIT');
+        $this->simple_query('SET AUTOCOMMIT=1');
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Rollback Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_rollback() {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        $this->simple_query('ROLLBACK');
+        $this->simple_query('SET AUTOCOMMIT=1');
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Escape String
+     *
+     * @access	public
+     * @param	string
+     * @param	bool	whether or not the string will be used in a LIKE condition
+     * @return	string
+     */
+    function escape_str($str, $like = FALSE) {
+        if (is_array($str)) {
+            foreach ($str as $key => $val) {
+                $str[$key] = $this->escape_str($val, $like);
+            }
+
+            return $str;
+        }
+
+        if (function_exists('mysqli_real_escape_string') AND is_object($this->conn_id)) {
+            $str = mysqli_real_escape_string($this->conn_id, $str);
+        } elseif (function_exists('mysql_escape_string')) {
+            $str = mysql_escape_string($str);
+        } else {
+            $str = addslashes($str);
+        }
+
+        // escape LIKE condition wildcards
+        if ($like === TRUE) {
+            $str = str_replace(array('%', '_'), array('\\%', '\\_'), $str);
+        }
+
+        return $str;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Affected Rows
+     *
+     * @access	public
+     * @return	integer
+     */
+    function affected_rows() {
+        return @mysqli_affected_rows($this->conn_id);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert ID
+     *
+     * @access	public
+     * @return	integer
+     */
+    function insert_id() {
+        return @mysqli_insert_id($this->conn_id);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * "Count All" query
+     *
+     * Generates a platform-specific query string that counts all records in
+     * the specified database
+     *
+     * @access	public
+     * @param	string
+     * @return	string
+     */
+    function count_all($table = '') {
+        if ($table == '') {
+            return 0;
+        }
+
+        $query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
+
+        if ($query->num_rows() == 0) {
+            return 0;
+        }
+
+        $row = $query->row();
+        $this->_reset_select();
+        return (int) $row->numrows;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * List table query
+     *
+     * Generates a platform-specific query string so that the table names can be fetched
+     *
+     * @access	private
+     * @param	boolean
+     * @return	string
+     */
+    function _list_tables($prefix_limit = FALSE) {
+        $sql = "SHOW TABLES FROM " . $this->_escape_char . $this->database . $this->_escape_char;
+
+        if ($prefix_limit !== FALSE AND $this->dbprefix != '') {
+            $sql .= " LIKE '" . $this->escape_like_str($this->dbprefix) . "%'";
+        }
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Show column query
+     *
+     * Generates a platform-specific query string so that the column names can be fetched
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _list_columns($table = '') {
+        return "SHOW COLUMNS FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Field data query
+     *
+     * Generates a platform-specific query so that the column data can be retrieved
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	object
+     */
+    function _field_data($table) {
+        return "DESCRIBE " . $table;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * The error message string
+     *
+     * @access	private
+     * @return	string
+     */
+    function _error_message() {
+        return mysqli_error($this->conn_id);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * The error message number
+     *
+     * @access	private
+     * @return	integer
+     */
+    function _error_number() {
+        return mysqli_errno($this->conn_id);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Escape the SQL Identifiers
+     *
+     * This function escapes column and table names
+     *
+     * @access	private
+     * @param	string
+     * @return	string
+     */
+    function _escape_identifiers($item) {
+        if ($this->_escape_char == '') {
+            return $item;
+        }
+
+        foreach ($this->_reserved_identifiers as $id) {
+            if (strpos($item, '.' . $id) !== FALSE) {
+                $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.', $item);
+
+                // remove duplicates if the user already included the escape
+                return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
+            }
+        }
+
+        if (strpos($item, '.') !== FALSE) {
+            $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.' . $this->_escape_char, $item) . $this->_escape_char;
+        } else {
+            $str = $this->_escape_char . $item . $this->_escape_char;
+        }
+
+        // remove duplicates if the user already included the escape
+        return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * From Tables
+     *
+     * This function implicitly groups FROM tables so there is no confusion
+     * about operator precedence in harmony with SQL standards
+     *
+     * @access	public
+     * @param	type
+     * @return	type
+     */
+    function _from_tables($tables) {
+        if (!is_array($tables)) {
+            $tables = array($tables);
+        }
+
+        return '(' . implode(', ', $tables) . ')';
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert statement
+     *
+     * Generates a platform-specific insert string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the insert keys
+     * @param	array	the insert values
+     * @return	string
+     */
+    function _insert($table, $keys, $values) {
+        return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert_batch statement
+     *
+     * Generates a platform-specific insert string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the insert keys
+     * @param	array	the insert values
+     * @return	string
+     */
+    function _insert_batch($table, $keys, $values) {
+        return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES " . implode(', ', $values);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Replace statement
+     *
+     * Generates a platform-specific replace string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the insert keys
+     * @param	array	the insert values
+     * @return	string
+     */
+    function _replace($table, $keys, $values) {
+        return "REPLACE INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Update statement
+     *
+     * Generates a platform-specific update string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the update data
+     * @param	array	the where clause
+     * @param	array	the orderby clause
+     * @param	array	the limit clause
+     * @return	string
+     */
+    function _update($table, $values, $where, $orderby = array(), $limit = FALSE) {
+        foreach ($values as $key => $val) {
+            $valstr[] = $key . " = " . $val;
+        }
+
+        $limit = (!$limit) ? '' : ' LIMIT ' . $limit;
+
+        $orderby = (count($orderby) >= 1) ? ' ORDER BY ' . implode(", ", $orderby) : '';
+
+        $sql = "UPDATE " . $table . " SET " . implode(', ', $valstr);
+
+        $sql .= ($where != '' AND count($where) >= 1) ? " WHERE " . implode(" ", $where) : '';
+
+        $sql .= $orderby . $limit;
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Update_Batch statement
+     *
+     * Generates a platform-specific batch update string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the update data
+     * @param	array	the where clause
+     * @return	string
+     */
+    function _update_batch($table, $values, $index, $where = NULL) {
+        $ids = array();
+        $where = ($where != '' AND count($where) >= 1) ? implode(" ", $where) . ' AND ' : '';
+
+        foreach ($values as $key => $val) {
+            $ids[] = $val[$index];
+
+            foreach (array_keys($val) as $field) {
+                if ($field != $index) {
+                    $final[$field][] = 'WHEN ' . $index . ' = ' . $val[$index] . ' THEN ' . $val[$field];
+                }
+            }
+        }
+
+        $sql = "UPDATE " . $table . " SET ";
+        $cases = '';
+
+        foreach ($final as $k => $v) {
+            $cases .= $k . ' = CASE ' . "\n";
+            foreach ($v as $row) {
+                $cases .= $row . "\n";
+            }
+
+            $cases .= 'ELSE ' . $k . ' END, ';
+        }
+
+        $sql .= substr($cases, 0, -2);
+
+        $sql .= ' WHERE ' . $where . $index . ' IN (' . implode(',', $ids) . ')';
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Truncate statement
+     *
+     * Generates a platform-specific truncate string from the supplied data
+     * If the database does not support the truncate() command
+     * This function maps to "DELETE FROM table"
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _truncate($table) {
+        return "TRUNCATE " . $table;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete statement
+     *
+     * Generates a platform-specific delete string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the where clause
+     * @param	string	the limit clause
+     * @return	string
+     */
+    function _delete($table, $where = array(), $like = array(), $limit = FALSE) {
+        $conditions = '';
+
+        if (count($where) > 0 OR count($like) > 0) {
+            $conditions = "\nWHERE ";
+            $conditions .= implode("\n", $this->ar_where);
+
+            if (count($where) > 0 && count($like) > 0) {
+                $conditions .= " AND ";
+            }
+            $conditions .= implode("\n", $like);
+        }
+
+        $limit = (!$limit) ? '' : ' LIMIT ' . $limit;
+
+        return "DELETE FROM " . $table . $conditions . $limit;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Limit string
+     *
+     * Generates a platform-specific LIMIT clause
+     *
+     * @access	public
+     * @param	string	the sql query string
+     * @param	integer	the number of rows to limit the query to
+     * @param	integer	the offset value
+     * @return	string
+     */
+    function _limit($sql, $limit, $offset) {
+        $sql .= "LIMIT " . $limit;
+
+        if ($offset > 0) {
+            $sql .= " OFFSET " . $offset;
+        }
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Close DB Connection
+     *
+     * @access	public
+     * @param	resource
+     * @return	void
+     */
+    function _close($conn_id) {
+        @mysqli_close($conn_id);
+    }
 
 }
-
 
 /* End of file mysqli_driver.php */
 /* Location: ./system/database/drivers/mysqli/mysqli_driver.php */
@@ -5806,7 +5716,6 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @since		Version 2.2.1
  * @filesource
  */
-
 // ------------------------------------------------------------------------
 
 /**
@@ -5820,154 +5729,141 @@ class CI_DB_mysqli_driver extends CI_DB {
  */
 class CI_DB_mysqli_result extends CI_DB_result {
 
-	/**
-	 * Number of rows in the result set
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function num_rows()
-	{
-		return @mysqli_num_rows($this->result_id);
-	}
+    /**
+     * Number of rows in the result set
+     *
+     * @access	public
+     * @return	integer
+     */
+    function num_rows() {
+        return @mysqli_num_rows($this->result_id);
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Number of fields in the result set
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function num_fields()
-	{
-		return @mysqli_num_fields($this->result_id);
-	}
+    /**
+     * Number of fields in the result set
+     *
+     * @access	public
+     * @return	integer
+     */
+    function num_fields() {
+        return @mysqli_num_fields($this->result_id);
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Fetch Field Names
-	 *
-	 * Generates an array of column names
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function list_fields()
-	{
-		$field_names = array();
-		while ($field = mysqli_fetch_field($this->result_id))
-		{
-			$field_names[] = $field->name;
-		}
+    /**
+     * Fetch Field Names
+     *
+     * Generates an array of column names
+     *
+     * @access	public
+     * @return	array
+     */
+    function list_fields() {
+        $field_names = array();
+        while ($field = mysqli_fetch_field($this->result_id)) {
+            $field_names[] = $field->name;
+        }
 
-		return $field_names;
-	}
+        return $field_names;
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Field data
-	 *
-	 * Generates an array of objects containing field meta-data
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function field_data()
-	{
-		$retval = array();
-		while ($field = mysqli_fetch_object($this->result_id))
-		{
-			preg_match('/([a-zA-Z]+)(\(\d+\))?/', $field->Type, $matches);
+    /**
+     * Field data
+     *
+     * Generates an array of objects containing field meta-data
+     *
+     * @access	public
+     * @return	array
+     */
+    function field_data() {
+        $retval = array();
+        while ($field = mysqli_fetch_object($this->result_id)) {
+            preg_match('/([a-zA-Z]+)(\(\d+\))?/', $field->Type, $matches);
 
-			$type = (array_key_exists(1, $matches)) ? $matches[1] : NULL;
-			$length = (array_key_exists(2, $matches)) ? preg_replace('/[^\d]/', '', $matches[2]) : NULL;
+            $type = (array_key_exists(1, $matches)) ? $matches[1] : NULL;
+            $length = (array_key_exists(2, $matches)) ? preg_replace('/[^\d]/', '', $matches[2]) : NULL;
 
-			$F				= new stdClass();
-			$F->name		= $field->Field;
-			$F->type		= $type;
-			$F->default		= $field->Default;
-			$F->max_length	= $length;
-			$F->primary_key = ( $field->Key == 'PRI' ? 1 : 0 );
+            $F = new stdClass();
+            $F->name = $field->Field;
+            $F->type = $type;
+            $F->default = $field->Default;
+            $F->max_length = $length;
+            $F->primary_key = ( $field->Key == 'PRI' ? 1 : 0 );
 
-			$retval[] = $F;
-		}
+            $retval[] = $F;
+        }
 
-		return $retval;
-	}
-	
-	// --------------------------------------------------------------------
+        return $retval;
+    }
 
-	/**
-	 * Free the result
-	 *
-	 * @return	null
-	 */
-	function free_result()
-	{
-		if (is_object($this->result_id))
-		{
-			mysqli_free_result($this->result_id);
-			$this->result_id = FALSE;
-		}
-	}
+    // --------------------------------------------------------------------
 
-	// --------------------------------------------------------------------
+    /**
+     * Free the result
+     *
+     * @return	null
+     */
+    function free_result() {
+        if (is_object($this->result_id)) {
+            mysqli_free_result($this->result_id);
+            $this->result_id = FALSE;
+        }
+    }
 
-	/**
-	 * Data Seek
-	 *
-	 * Moves the internal pointer to the desired offset.  We call
-	 * this internally before fetching results to make sure the
-	 * result set starts at zero
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _data_seek($n = 0)
-	{
-		return mysqli_data_seek($this->result_id, $n);
-	}
+    // --------------------------------------------------------------------
 
-	// --------------------------------------------------------------------
+    /**
+     * Data Seek
+     *
+     * Moves the internal pointer to the desired offset.  We call
+     * this internally before fetching results to make sure the
+     * result set starts at zero
+     *
+     * @access	private
+     * @return	array
+     */
+    function _data_seek($n = 0) {
+        return mysqli_data_seek($this->result_id, $n);
+    }
 
-	/**
-	 * Result - associative array
-	 *
-	 * Returns the result set as an array
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _fetch_assoc()
-	{
-		return mysqli_fetch_assoc($this->result_id);
-	}
+    // --------------------------------------------------------------------
 
-	// --------------------------------------------------------------------
+    /**
+     * Result - associative array
+     *
+     * Returns the result set as an array
+     *
+     * @access	private
+     * @return	array
+     */
+    function _fetch_assoc() {
+        return mysqli_fetch_assoc($this->result_id);
+    }
 
-	/**
-	 * Result - object
-	 *
-	 * Returns the result set as an object
-	 *
-	 * @access	private
-	 * @return	object
-	 */
-	function _fetch_object()
-	{
-		return mysqli_fetch_object($this->result_id);
-	}
+    // --------------------------------------------------------------------
+
+    /**
+     * Result - object
+     *
+     * Returns the result set as an object
+     *
+     * @access	private
+     * @return	object
+     */
+    function _fetch_object() {
+        return mysqli_fetch_object($this->result_id);
+    }
 
 }
-
 
 /* End of file mysqli_result.php */
 /* Location: ./system/database/drivers/mysqli/mysqli_result.php */
 //####################modules/db-drivers/pdo.driver.php####################{
-
 
 /**
  * PDO Database Adapter Class
@@ -5982,788 +5878,694 @@ class CI_DB_mysqli_result extends CI_DB_result {
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_driver extends CI_DB{
-
-	var $dbdriver = 'pdo';
-
-	// the character used to excape - not necessary for PDO
-	var $_escape_char = '';
-	var $_like_escape_str;
-	var $_like_escape_chr;
-	
-
-	/**
-	 * The syntax to count rows is slightly different across different
-	 * database engines, so this string appears in each driver and is
-	 * used for the count_all() and count_all_results() functions.
-	 */
-	var $_count_string = "SELECT COUNT(*) AS ";
-	var $_random_keyword;
-	
-	var $options = array();
-
-	function __construct($params)
-	{
-		parent::__construct($params);
-
-		// clause and character used for LIKE escape sequences
-		if (strpos($this->hostname, 'mysql') !== FALSE)
-		{
-			$this->_like_escape_str = '';
-			$this->_like_escape_chr = '';
-
-			//Prior to this version, the charset can't be set in the dsn
-			if(is_php('5.3.6'))
-			{
-				$this->hostname .= ";charset={$this->char_set}";
-			}
-
-			//Set the charset with the connection options
-			$this->options['PDO::MYSQL_ATTR_INIT_COMMAND'] = "SET NAMES {$this->char_set}";
-		}
-		elseif (strpos($this->hostname, 'odbc') !== FALSE)
-		{
-			$this->_like_escape_str = " {escape '%s'} ";
-			$this->_like_escape_chr = '!';
-		}
-		else
-		{
-			$this->_like_escape_str = " ESCAPE '%s' ";
-			$this->_like_escape_chr = '!';
-		}
-
-		empty($this->database) OR $this->hostname .= ';dbname='.$this->database;
-
-		$this->trans_enabled = FALSE;
-
-		$this->_random_keyword = ' RND('.time().')'; // database specific random keyword
-	}
-
-	/**
-	 * Non-persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_connect()
-	{
-		$this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
-
-		return new PDO($this->hostname, $this->username, $this->password, $this->options);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Persistent database connection
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_pconnect()
-	{
-		$this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
-		$this->options['PDO::ATTR_PERSISTENT'] = TRUE;
-	
-		return new PDO($this->hostname, $this->username, $this->password, $this->options);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Reconnect
-	 *
-	 * Keep / reestablish the db connection if no queries have been
-	 * sent for a length of time exceeding the server's idle timeout
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	function reconnect()
-	{
-		if ($this->db->db_debug)
-		{
-			return $this->db->display_error('db_unsuported_feature');
-		}
-		return FALSE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Select the database
-	 *
-	 * @access	private called by the base class
-	 * @return	resource
-	 */
-	function db_select()
-	{
-		// Not needed for PDO
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Set client character set
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	string
-	 * @return	resource
-	 */
-	function _db_set_charset($charset, $collation)
-	{
-		// @todo - add support if needed
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Version number query string
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	function _version()
-	{
-		return $this->conn_id->getAttribute(PDO::ATTR_CLIENT_VERSION);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Execute the query
-	 *
-	 * @access	private called by the base class
-	 * @param	string	an SQL query
-	 * @return	object
-	 */
-	function _execute($sql)
-	{
-		$sql = $this->_prep_query($sql);
-		$result_id = $this->conn_id->prepare($sql);
-		$result_id->execute();
-		
-		if (is_object($result_id))
-		{
-			if (is_numeric(stripos($sql, 'SELECT')))
-			{
-				$this->affect_rows = count($result_id->fetchAll());
-				$result_id->execute();
-			}
-			else
-			{
-				$this->affect_rows = $result_id->rowCount();
-			}
-		}
-		else
-		{
-			$this->affect_rows = 0;
-		}
-		
-		return $result_id;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Prep the query
-	 *
-	 * If needed, each database adapter can prep the query string
-	 *
-	 * @access	private called by execute()
-	 * @param	string	an SQL query
-	 * @return	string
-	 */
-	function _prep_query($sql)
-	{
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Begin Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_begin($test_mode = FALSE)
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		// Reset the transaction failure flag.
-		// If the $test_mode flag is set to TRUE transactions will be rolled back
-		// even if the queries produce a successful result.
-		$this->_trans_failure = (bool) ($test_mode === TRUE);
-
-		return $this->conn_id->beginTransaction();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Commit Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_commit()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$ret = $this->conn->commit();
-		return $ret;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Rollback Transaction
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	function trans_rollback()
-	{
-		if ( ! $this->trans_enabled)
-		{
-			return TRUE;
-		}
-
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ($this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		$ret = $this->conn_id->rollBack();
-		return $ret;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape String
-	 *
-	 * @access	public
-	 * @param	string
-	 * @param	bool	whether or not the string will be used in a LIKE condition
-	 * @return	string
-	 */
-	function escape_str($str, $like = FALSE)
-	{
-		if (is_array($str))
-		{
-			foreach ($str as $key => $val)
-			{
-				$str[$key] = $this->escape_str($val, $like);
-			}
-
-			return $str;
-		}
-		
-		//Escape the string
-		$str = $this->conn_id->quote($str);
-		
-		//If there are duplicated quotes, trim them away
-		if (strpos($str, "'") === 0)
-		{
-			$str = substr($str, 1, -1);
-		}
-		
-		// escape LIKE condition wildcards
-		if ($like === TRUE)
-		{
-			$str = str_replace(	array('%', '_', $this->_like_escape_chr),
-								array($this->_like_escape_chr.'%', $this->_like_escape_chr.'_', $this->_like_escape_chr.$this->_like_escape_chr),
-								$str);
-		}
-
-		return $str;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Affected Rows
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function affected_rows()
-	{
-		return $this->affect_rows;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert ID
-	 * 
-	 * @access	public
-	 * @return	integer
-	 */
-	function insert_id($name=NULL)
-	{
-		//Convenience method for postgres insertid
-		if (strpos($this->hostname, 'pgsql') !== FALSE)
-		{
-			$v = $this->_version();
-
-			$table	= func_num_args() > 0 ? func_get_arg(0) : NULL;
-
-			if ($table == NULL && $v >= '8.1')
-			{
-				$sql='SELECT LASTVAL() as ins_id';
-			}
-			$query = $this->query($sql);
-			$row = $query->row();
-			return $row->ins_id;
-		}
-		else
-		{
-			return $this->conn_id->lastInsertId($name);
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * "Count All" query
-	 *
-	 * Generates a platform-specific query string that counts all records in
-	 * the specified database
-	 *
-	 * @access	public
-	 * @param	string
-	 * @return	string
-	 */
-	function count_all($table = '')
-	{
-		if ($table == '')
-		{
-			return 0;
-		}
-
-		$query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
-
-		if ($query->num_rows() == 0)
-		{
-			return 0;
-		}
-
-		$row = $query->row();
-		$this->_reset_select();
-		return (int) $row->numrows;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Show table query
-	 *
-	 * Generates a platform-specific query string so that the table names can be fetched
-	 *
-	 * @access	private
-	 * @param	boolean
-	 * @return	string
-	 */
-	function _list_tables($prefix_limit = FALSE)
-	{
-		$sql = "SHOW TABLES FROM `".$this->database."`";
-
-		if ($prefix_limit !== FALSE AND $this->dbprefix != '')
-		{
-			//$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%' ".sprintf($this->_like_escape_str, $this->_like_escape_chr);
-			return FALSE; // not currently supported
-		}
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Show column query
-	 *
-	 * Generates a platform-specific query string so that the column names can be fetched
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _list_columns($table = '')
-	{
-		return "SHOW COLUMNS FROM ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Field data query
-	 *
-	 * Generates a platform-specific query so that the column data can be retrieved
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	object
-	 */
-	function _field_data($table)
-	{
-		return "SELECT TOP 1 FROM ".$table;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message string
-	 *
-	 * @access	private
-	 * @return	string
-	 */
-	function _error_message()
-	{
-		$error_array = $this->conn_id->errorInfo();
-		return $error_array[2];
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * The error message number
-	 *
-	 * @access	private
-	 * @return	integer
-	 */
-	function _error_number()
-	{
-		return $this->conn_id->errorCode();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Escape the SQL Identifiers
-	 *
-	 * This function escapes column and table names
-	 *
-	 * @access	private
-	 * @param	string
-	 * @return	string
-	 */
-	function _escape_identifiers($item)
-	{
-		if ($this->_escape_char == '')
-		{
-			return $item;
-		}
-
-		foreach ($this->_reserved_identifiers as $id)
-		{
-			if (strpos($item, '.'.$id) !== FALSE)
-			{
-				$str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
-
-				// remove duplicates if the user already included the escape
-				return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-			}
-		}
-
-		if (strpos($item, '.') !== FALSE)
-		{
-			$str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
-			
-		}
-		else
-		{
-			$str = $this->_escape_char.$item.$this->_escape_char;
-		}
-
-		// remove duplicates if the user already included the escape
-		return preg_replace('/['.$this->_escape_char.']+/', $this->_escape_char, $str);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * From Tables
-	 *
-	 * This function implicitly groups FROM tables so there is no confusion
-	 * about operator precedence in harmony with SQL standards
-	 *
-	 * @access	public
-	 * @param	type
-	 * @return	type
-	 */
-	function _from_tables($tables)
-	{
-		if ( ! is_array($tables))
-		{
-			$tables = array($tables);
-		}
-
-		return (count($tables) == 1) ? $tables[0] : '('.implode(', ', $tables).')';
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the insert keys
-	 * @param	array	the insert values
-	 * @return	string
-	 */
-	function _insert($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES (".implode(', ', $values).")";
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert_batch statement
-	 *
-	 * Generates a platform-specific insert string from the supplied data
-	 *
-	 * @access  public
-	 * @param   string  the table name
-	 * @param   array   the insert keys
-	 * @param   array   the insert values
-	 * @return  string
-	 */
-	function _insert_batch($table, $keys, $values)
-	{
-		return "INSERT INTO ".$table." (".implode(', ', $keys).") VALUES ".implode(', ', $values);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update statement
-	 *
-	 * Generates a platform-specific update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @param	array	the orderby clause
-	 * @param	array	the limit clause
-	 * @return	string
-	 */
-	function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
-	{
-		foreach ($values as $key => $val)
-		{
-			$valstr[] = $key." = ".$val;
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		$orderby = (count($orderby) >= 1)?' ORDER BY '.implode(", ", $orderby):'';
-
-		$sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
-
-		$sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
-
-		$sql .= $orderby.$limit;
-
-		return $sql;
-	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Update_Batch statement
-	 *
-	 * Generates a platform-specific batch update string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the update data
-	 * @param	array	the where clause
-	 * @return	string
-	 */
-	function _update_batch($table, $values, $index, $where = NULL)
-	{
-		$ids = array();
-		$where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
-
-		foreach ($values as $key => $val)
-		{
-			$ids[] = $val[$index];
-
-			foreach (array_keys($val) as $field)
-			{
-				if ($field != $index)
-				{
-					$final[$field][] =  'WHEN '.$index.' = '.$val[$index].' THEN '.$val[$field];
-				}
-			}
-		}
-
-		$sql = "UPDATE ".$table." SET ";
-		$cases = '';
-
-		foreach ($final as $k => $v)
-		{
-			$cases .= $k.' = CASE '."\n";
-			foreach ($v as $row)
-			{
-				$cases .= $row."\n";
-			}
-
-			$cases .= 'ELSE '.$k.' END, ';
-		}
-
-		$sql .= substr($cases, 0, -2);
-
-		$sql .= ' WHERE '.$where.$index.' IN ('.implode(',', $ids).')';
-
-		return $sql;
-	}
-
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Truncate statement
-	 *
-	 * Generates a platform-specific truncate string from the supplied data
-	 * If the database does not support the truncate() command
-	 * This function maps to "DELETE FROM table"
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @return	string
-	 */
-	function _truncate($table)
-	{
-		return $this->_delete($table);
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Delete statement
-	 *
-	 * Generates a platform-specific delete string from the supplied data
-	 *
-	 * @access	public
-	 * @param	string	the table name
-	 * @param	array	the where clause
-	 * @param	string	the limit clause
-	 * @return	string
-	 */
-	function _delete($table, $where = array(), $like = array(), $limit = FALSE)
-	{
-		$conditions = '';
-
-		if (count($where) > 0 OR count($like) > 0)
-		{
-			$conditions = "\nWHERE ";
-			$conditions .= implode("\n", $this->ar_where);
-
-			if (count($where) > 0 && count($like) > 0)
-			{
-				$conditions .= " AND ";
-			}
-			$conditions .= implode("\n", $like);
-		}
-
-		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
-
-		return "DELETE FROM ".$table.$conditions.$limit;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Limit string
-	 *
-	 * Generates a platform-specific LIMIT clause
-	 *
-	 * @access	public
-	 * @param	string	the sql query string
-	 * @param	integer	the number of rows to limit the query to
-	 * @param	integer	the offset value
-	 * @return	string
-	 */
-	function _limit($sql, $limit, $offset)
-	{
-		if (strpos($this->hostname, 'cubrid') !== FALSE || strpos($this->hostname, 'sqlite') !== FALSE)
-		{
-			if ($offset == 0)
-			{
-				$offset = '';
-			}
-			else
-			{
-				$offset .= ", ";
-			}
-
-			return $sql."LIMIT ".$offset.$limit;
-		}
-		else
-		{
-			$sql .= "LIMIT ".$limit;
-
-			if ($offset > 0)
-			{
-				$sql .= " OFFSET ".$offset;
-			}
-			
-			return $sql;
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Close DB Connection
-	 *
-	 * @access	public
-	 * @param	resource
-	 * @return	void
-	 */
-	function _close($conn_id)
-	{
-		$this->conn_id = null;
-	}
-
+class CI_DB_pdo_driver extends CI_DB {
+
+    var $dbdriver = 'pdo';
+    // the character used to excape - not necessary for PDO
+    var $_escape_char = '';
+    var $_like_escape_str;
+    var $_like_escape_chr;
+
+    /**
+     * The syntax to count rows is slightly different across different
+     * database engines, so this string appears in each driver and is
+     * used for the count_all() and count_all_results() functions.
+     */
+    var $_count_string = "SELECT COUNT(*) AS ";
+    var $_random_keyword;
+    var $options = array();
+
+    function __construct($params) {
+        parent::__construct($params);
+
+        // clause and character used for LIKE escape sequences
+        if (strpos($this->hostname, 'mysql') !== FALSE) {
+            $this->_like_escape_str = '';
+            $this->_like_escape_chr = '';
+
+            //Prior to this version, the charset can't be set in the dsn
+            if (is_php('5.3.6')) {
+                $this->hostname .= ";charset={$this->char_set}";
+            }
+
+            //Set the charset with the connection options
+            $this->options['PDO::MYSQL_ATTR_INIT_COMMAND'] = "SET NAMES {$this->char_set}";
+        } elseif (strpos($this->hostname, 'odbc') !== FALSE) {
+            $this->_like_escape_str = " {escape '%s'} ";
+            $this->_like_escape_chr = '!';
+        } else {
+            $this->_like_escape_str = " ESCAPE '%s' ";
+            $this->_like_escape_chr = '!';
+        }
+
+        empty($this->database) OR $this->hostname .= ';dbname=' . $this->database;
+
+        $this->trans_enabled = FALSE;
+
+        $this->_random_keyword = ' RND(' . time() . ')'; // database specific random keyword
+    }
+
+    /**
+     * Non-persistent database connection
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_connect() {
+        $this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
+
+        return new PDO($this->hostname, $this->username, $this->password, $this->options);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Persistent database connection
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_pconnect() {
+        $this->options['PDO::ATTR_ERRMODE'] = PDO::ERRMODE_SILENT;
+        $this->options['PDO::ATTR_PERSISTENT'] = TRUE;
+
+        return new PDO($this->hostname, $this->username, $this->password, $this->options);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Reconnect
+     *
+     * Keep / reestablish the db connection if no queries have been
+     * sent for a length of time exceeding the server's idle timeout
+     *
+     * @access	public
+     * @return	void
+     */
+    function reconnect() {
+        if ($this->db->db_debug) {
+            return $this->db->display_error('db_unsuported_feature');
+        }
+        return FALSE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Select the database
+     *
+     * @access	private called by the base class
+     * @return	resource
+     */
+    function db_select() {
+        // Not needed for PDO
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Set client character set
+     *
+     * @access	public
+     * @param	string
+     * @param	string
+     * @return	resource
+     */
+    function _db_set_charset($charset, $collation) {
+        // @todo - add support if needed
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Version number query string
+     *
+     * @access	public
+     * @return	string
+     */
+    function _version() {
+        return $this->conn_id->getAttribute(PDO::ATTR_CLIENT_VERSION);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Execute the query
+     *
+     * @access	private called by the base class
+     * @param	string	an SQL query
+     * @return	object
+     */
+    function _execute($sql) {
+        $sql = $this->_prep_query($sql);
+        $result_id = $this->conn_id->prepare($sql);
+        $result_id->execute();
+
+        if (is_object($result_id)) {
+            if (is_numeric(stripos($sql, 'SELECT'))) {
+                $this->affect_rows = count($result_id->fetchAll());
+                $result_id->execute();
+            } else {
+                $this->affect_rows = $result_id->rowCount();
+            }
+        } else {
+            $this->affect_rows = 0;
+        }
+
+        return $result_id;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Prep the query
+     *
+     * If needed, each database adapter can prep the query string
+     *
+     * @access	private called by execute()
+     * @param	string	an SQL query
+     * @return	string
+     */
+    function _prep_query($sql) {
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Begin Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_begin($test_mode = FALSE) {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        // Reset the transaction failure flag.
+        // If the $test_mode flag is set to TRUE transactions will be rolled back
+        // even if the queries produce a successful result.
+        $this->_trans_failure = (bool) ($test_mode === TRUE);
+
+        return $this->conn_id->beginTransaction();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Commit Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_commit() {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        $ret = $this->conn->commit();
+        return $ret;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Rollback Transaction
+     *
+     * @access	public
+     * @return	bool
+     */
+    function trans_rollback() {
+        if (!$this->trans_enabled) {
+            return TRUE;
+        }
+
+        // When transactions are nested we only begin/commit/rollback the outermost ones
+        if ($this->_trans_depth > 0) {
+            return TRUE;
+        }
+
+        $ret = $this->conn_id->rollBack();
+        return $ret;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Escape String
+     *
+     * @access	public
+     * @param	string
+     * @param	bool	whether or not the string will be used in a LIKE condition
+     * @return	string
+     */
+    function escape_str($str, $like = FALSE) {
+        if (is_array($str)) {
+            foreach ($str as $key => $val) {
+                $str[$key] = $this->escape_str($val, $like);
+            }
+
+            return $str;
+        }
+
+        //Escape the string
+        $str = $this->conn_id->quote($str);
+
+        //If there are duplicated quotes, trim them away
+        if (strpos($str, "'") === 0) {
+            $str = substr($str, 1, -1);
+        }
+
+        // escape LIKE condition wildcards
+        if ($like === TRUE) {
+            $str = str_replace(array('%', '_', $this->_like_escape_chr), array($this->_like_escape_chr . '%', $this->_like_escape_chr . '_', $this->_like_escape_chr . $this->_like_escape_chr), $str);
+        }
+
+        return $str;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Affected Rows
+     *
+     * @access	public
+     * @return	integer
+     */
+    function affected_rows() {
+        return $this->affect_rows;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert ID
+     * 
+     * @access	public
+     * @return	integer
+     */
+    function insert_id($name = NULL) {
+        //Convenience method for postgres insertid
+        if (strpos($this->hostname, 'pgsql') !== FALSE) {
+            $v = $this->_version();
+
+            $table = func_num_args() > 0 ? func_get_arg(0) : NULL;
+
+            if ($table == NULL && $v >= '8.1') {
+                $sql = 'SELECT LASTVAL() as ins_id';
+            }
+            $query = $this->query($sql);
+            $row = $query->row();
+            return $row->ins_id;
+        } else {
+            return $this->conn_id->lastInsertId($name);
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * "Count All" query
+     *
+     * Generates a platform-specific query string that counts all records in
+     * the specified database
+     *
+     * @access	public
+     * @param	string
+     * @return	string
+     */
+    function count_all($table = '') {
+        if ($table == '') {
+            return 0;
+        }
+
+        $query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
+
+        if ($query->num_rows() == 0) {
+            return 0;
+        }
+
+        $row = $query->row();
+        $this->_reset_select();
+        return (int) $row->numrows;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Show table query
+     *
+     * Generates a platform-specific query string so that the table names can be fetched
+     *
+     * @access	private
+     * @param	boolean
+     * @return	string
+     */
+    function _list_tables($prefix_limit = FALSE) {
+        $sql = "SHOW TABLES FROM `" . $this->database . "`";
+
+        if ($prefix_limit !== FALSE AND $this->dbprefix != '') {
+            //$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%' ".sprintf($this->_like_escape_str, $this->_like_escape_chr);
+            return FALSE; // not currently supported
+        }
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Show column query
+     *
+     * Generates a platform-specific query string so that the column names can be fetched
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _list_columns($table = '') {
+        return "SHOW COLUMNS FROM " . $table;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Field data query
+     *
+     * Generates a platform-specific query so that the column data can be retrieved
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	object
+     */
+    function _field_data($table) {
+        return "SELECT TOP 1 FROM " . $table;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * The error message string
+     *
+     * @access	private
+     * @return	string
+     */
+    function _error_message() {
+        $error_array = $this->conn_id->errorInfo();
+        return $error_array[2];
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * The error message number
+     *
+     * @access	private
+     * @return	integer
+     */
+    function _error_number() {
+        return $this->conn_id->errorCode();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Escape the SQL Identifiers
+     *
+     * This function escapes column and table names
+     *
+     * @access	private
+     * @param	string
+     * @return	string
+     */
+    function _escape_identifiers($item) {
+        if ($this->_escape_char == '') {
+            return $item;
+        }
+
+        foreach ($this->_reserved_identifiers as $id) {
+            if (strpos($item, '.' . $id) !== FALSE) {
+                $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.', $item);
+
+                // remove duplicates if the user already included the escape
+                return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
+            }
+        }
+
+        if (strpos($item, '.') !== FALSE) {
+            $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.' . $this->_escape_char, $item) . $this->_escape_char;
+        } else {
+            $str = $this->_escape_char . $item . $this->_escape_char;
+        }
+
+        // remove duplicates if the user already included the escape
+        return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * From Tables
+     *
+     * This function implicitly groups FROM tables so there is no confusion
+     * about operator precedence in harmony with SQL standards
+     *
+     * @access	public
+     * @param	type
+     * @return	type
+     */
+    function _from_tables($tables) {
+        if (!is_array($tables)) {
+            $tables = array($tables);
+        }
+
+        return (count($tables) == 1) ? $tables[0] : '(' . implode(', ', $tables) . ')';
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert statement
+     *
+     * Generates a platform-specific insert string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the insert keys
+     * @param	array	the insert values
+     * @return	string
+     */
+    function _insert($table, $keys, $values) {
+        return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Insert_batch statement
+     *
+     * Generates a platform-specific insert string from the supplied data
+     *
+     * @access  public
+     * @param   string  the table name
+     * @param   array   the insert keys
+     * @param   array   the insert values
+     * @return  string
+     */
+    function _insert_batch($table, $keys, $values) {
+        return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES " . implode(', ', $values);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Update statement
+     *
+     * Generates a platform-specific update string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the update data
+     * @param	array	the where clause
+     * @param	array	the orderby clause
+     * @param	array	the limit clause
+     * @return	string
+     */
+    function _update($table, $values, $where, $orderby = array(), $limit = FALSE) {
+        foreach ($values as $key => $val) {
+            $valstr[] = $key . " = " . $val;
+        }
+
+        $limit = (!$limit) ? '' : ' LIMIT ' . $limit;
+
+        $orderby = (count($orderby) >= 1) ? ' ORDER BY ' . implode(", ", $orderby) : '';
+
+        $sql = "UPDATE " . $table . " SET " . implode(', ', $valstr);
+
+        $sql .= ($where != '' AND count($where) >= 1) ? " WHERE " . implode(" ", $where) : '';
+
+        $sql .= $orderby . $limit;
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Update_Batch statement
+     *
+     * Generates a platform-specific batch update string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the update data
+     * @param	array	the where clause
+     * @return	string
+     */
+    function _update_batch($table, $values, $index, $where = NULL) {
+        $ids = array();
+        $where = ($where != '' AND count($where) >= 1) ? implode(" ", $where) . ' AND ' : '';
+
+        foreach ($values as $key => $val) {
+            $ids[] = $val[$index];
+
+            foreach (array_keys($val) as $field) {
+                if ($field != $index) {
+                    $final[$field][] = 'WHEN ' . $index . ' = ' . $val[$index] . ' THEN ' . $val[$field];
+                }
+            }
+        }
+
+        $sql = "UPDATE " . $table . " SET ";
+        $cases = '';
+
+        foreach ($final as $k => $v) {
+            $cases .= $k . ' = CASE ' . "\n";
+            foreach ($v as $row) {
+                $cases .= $row . "\n";
+            }
+
+            $cases .= 'ELSE ' . $k . ' END, ';
+        }
+
+        $sql .= substr($cases, 0, -2);
+
+        $sql .= ' WHERE ' . $where . $index . ' IN (' . implode(',', $ids) . ')';
+
+        return $sql;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Truncate statement
+     *
+     * Generates a platform-specific truncate string from the supplied data
+     * If the database does not support the truncate() command
+     * This function maps to "DELETE FROM table"
+     *
+     * @access	public
+     * @param	string	the table name
+     * @return	string
+     */
+    function _truncate($table) {
+        return $this->_delete($table);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete statement
+     *
+     * Generates a platform-specific delete string from the supplied data
+     *
+     * @access	public
+     * @param	string	the table name
+     * @param	array	the where clause
+     * @param	string	the limit clause
+     * @return	string
+     */
+    function _delete($table, $where = array(), $like = array(), $limit = FALSE) {
+        $conditions = '';
+
+        if (count($where) > 0 OR count($like) > 0) {
+            $conditions = "\nWHERE ";
+            $conditions .= implode("\n", $this->ar_where);
+
+            if (count($where) > 0 && count($like) > 0) {
+                $conditions .= " AND ";
+            }
+            $conditions .= implode("\n", $like);
+        }
+
+        $limit = (!$limit) ? '' : ' LIMIT ' . $limit;
+
+        return "DELETE FROM " . $table . $conditions . $limit;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Limit string
+     *
+     * Generates a platform-specific LIMIT clause
+     *
+     * @access	public
+     * @param	string	the sql query string
+     * @param	integer	the number of rows to limit the query to
+     * @param	integer	the offset value
+     * @return	string
+     */
+    function _limit($sql, $limit, $offset) {
+        if (strpos($this->hostname, 'cubrid') !== FALSE || strpos($this->hostname, 'sqlite') !== FALSE) {
+            if ($offset == 0) {
+                $offset = '';
+            } else {
+                $offset .= ", ";
+            }
+
+            return $sql . "LIMIT " . $offset . $limit;
+        } else {
+            $sql .= "LIMIT " . $limit;
+
+            if ($offset > 0) {
+                $sql .= " OFFSET " . $offset;
+            }
+
+            return $sql;
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Close DB Connection
+     *
+     * @access	public
+     * @param	resource
+     * @return	void
+     */
+    function _close($conn_id) {
+        $this->conn_id = null;
+    }
 
 }
 
-
-
 /* End of file pdo_driver.php */
-
 
 /**
  * PDO Result Class
@@ -6776,158 +6578,139 @@ class CI_DB_pdo_driver extends CI_DB{
  */
 class CI_DB_pdo_result extends CI_DB_result {
 
-	public $num_rows;
+    public $num_rows;
 
-	/**
-	 * Number of rows in the result set
-	 *
-	 * @return	int
-	 */
-	public function num_rows()
-	{
-		if (is_int($this->num_rows))
-		{
-			return $this->num_rows;
-		}
-		elseif (($this->num_rows = $this->result_id->rowCount()) > 0)
-		{
-			return $this->num_rows;
-		}
+    /**
+     * Number of rows in the result set
+     *
+     * @return	int
+     */
+    public function num_rows() {
+        if (is_int($this->num_rows)) {
+            return $this->num_rows;
+        } elseif (($this->num_rows = $this->result_id->rowCount()) > 0) {
+            return $this->num_rows;
+        }
 
-		$this->num_rows = count($this->result_id->fetchAll());
-		$this->result_id->execute();
-		return $this->num_rows;
-	}
+        $this->num_rows = count($this->result_id->fetchAll());
+        $this->result_id->execute();
+        return $this->num_rows;
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Number of fields in the result set
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
-	function num_fields()
-	{
-		return $this->result_id->columnCount();
-	}
+    /**
+     * Number of fields in the result set
+     *
+     * @access	public
+     * @return	integer
+     */
+    function num_fields() {
+        return $this->result_id->columnCount();
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Fetch Field Names
-	 *
-	 * Generates an array of column names
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function list_fields()
-	{
-		if ($this->db->db_debug)
-		{
-			return $this->db->display_error('db_unsuported_feature');
-		}
-		return FALSE;
-	}
+    /**
+     * Fetch Field Names
+     *
+     * Generates an array of column names
+     *
+     * @access	public
+     * @return	array
+     */
+    function list_fields() {
+        if ($this->db->db_debug) {
+            return $this->db->display_error('db_unsuported_feature');
+        }
+        return FALSE;
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Field data
-	 *
-	 * Generates an array of objects containing field meta-data
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function field_data()
-	{
-		$data = array();
-	
-		try
-		{
-			for($i = 0; $i < $this->num_fields(); $i++)
-			{
-				$data[] = $this->result_id->getColumnMeta($i);
-			}
-			
-			return $data;
-		}
-		catch (Exception $e)
-		{
-			if ($this->db->db_debug)
-			{
-				return $this->db->display_error('db_unsuported_feature');
-			}
-			return FALSE;
-		}
-	}
+    /**
+     * Field data
+     *
+     * Generates an array of objects containing field meta-data
+     *
+     * @access	public
+     * @return	array
+     */
+    function field_data() {
+        $data = array();
 
-	// --------------------------------------------------------------------
+        try {
+            for ($i = 0; $i < $this->num_fields(); $i++) {
+                $data[] = $this->result_id->getColumnMeta($i);
+            }
 
-	/**
-	 * Free the result
-	 *
-	 * @return	null
-	 */
-	function free_result()
-	{
-		if (is_object($this->result_id))
-		{
-			$this->result_id = FALSE;
-		}
-	}
+            return $data;
+        } catch (Exception $e) {
+            if ($this->db->db_debug) {
+                return $this->db->display_error('db_unsuported_feature');
+            }
+            return FALSE;
+        }
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Data Seek
-	 *
-	 * Moves the internal pointer to the desired offset.  We call
-	 * this internally before fetching results to make sure the
-	 * result set starts at zero
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _data_seek($n = 0)
-	{
-		return FALSE;
-	}
+    /**
+     * Free the result
+     *
+     * @return	null
+     */
+    function free_result() {
+        if (is_object($this->result_id)) {
+            $this->result_id = FALSE;
+        }
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Result - associative array
-	 *
-	 * Returns the result set as an array
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _fetch_assoc()
-	{
-		return $this->result_id->fetch(PDO::FETCH_ASSOC);
-	}
+    /**
+     * Data Seek
+     *
+     * Moves the internal pointer to the desired offset.  We call
+     * this internally before fetching results to make sure the
+     * result set starts at zero
+     *
+     * @access	private
+     * @return	array
+     */
+    function _data_seek($n = 0) {
+        return FALSE;
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Result - object
-	 *
-	 * Returns the result set as an object
-	 *
-	 * @access	private
-	 * @return	object
-	 */
-	function _fetch_object()
-	{	
-		return $this->result_id->fetchObject();
-	}
+    /**
+     * Result - associative array
+     *
+     * Returns the result set as an array
+     *
+     * @access	private
+     * @return	array
+     */
+    function _fetch_assoc() {
+        return $this->result_id->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Result - object
+     *
+     * Returns the result set as an object
+     *
+     * @access	private
+     * @return	object
+     */
+    function _fetch_object() {
+        return $this->result_id->fetchObject();
+    }
 
 }
-
 
 /* End of file pdo_result.php */
 //####################modules/db-drivers/sqlite3.driver.php####################{
@@ -7790,46 +7573,48 @@ interface phpfastcache_driver {
     /*
      * Check if this Cache driver is available for server or not
      */
-     function __construct($option = array());
 
-     function checkdriver();
+    function __construct($option = array());
+
+    function checkdriver();
 
     /*
      * SET
      * set a obj to cache
      */
-     function driver_set($keyword, $value = "", $time = 300, $option = array() );
+
+    function driver_set($keyword, $value = "", $time = 300, $option = array());
 
     /*
      * GET
      * return null or value of cache
      */
-     function driver_get($keyword, $option = array());
+
+    function driver_get($keyword, $option = array());
 
     /*
      * Stats
      * Show stats of caching
      * Return array ("info","size","data")
      */
-     function driver_stats($option = array());
+
+    function driver_stats($option = array());
 
     /*
      * Delete
      * Delete a cache
      */
-     function driver_delete($keyword, $option = array());
+
+    function driver_delete($keyword, $option = array());
 
     /*
      * clean
      * Clean up whole cache
      */
-     function driver_clean($option = array());
 
-
-
-
-
+    function driver_clean($option = array());
 }
+
 //####################modules/cache-drivers/drivers/apc.php####################{
 
 
@@ -7841,10 +7626,10 @@ interface phpfastcache_driver {
 
 
 class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
+
     function checkdriver() {
         // Check apc
-        if(extension_loaded('apc') && ini_get('apc.enabled'))
-        {
+        if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return true;
         } else {
             return false;
@@ -7853,28 +7638,27 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            return apc_add($keyword,$value,$time);
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return apc_add($keyword, $value, $time);
         } else {
-            return apc_store($keyword,$value,$time);
+            return apc_store($keyword, $value, $time);
         }
     }
 
     function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
-        $data = apc_fetch($keyword,$bo);
-        if($bo === false) {
+        $data = apc_fetch($keyword, $bo);
+        if ($bo === false) {
             return null;
         }
         return $data;
-
     }
 
     function driver_delete($keyword, $option = array()) {
@@ -7884,14 +7668,14 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     function driver_stats($option = array()) {
         $res = array(
             "info" => "",
-            "size"  => "",
-            "data"  =>  "",
+            "size" => "",
+            "data" => "",
         );
 
         try {
             $res['data'] = apc_cache_info("user");
-        } catch(Exception $e) {
-            $res['data'] =  array();
+        } catch (Exception $e) {
+            $res['data'] = array();
         }
 
         return $res;
@@ -7903,18 +7687,15 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     }
 
     function driver_isExisting($keyword) {
-        if(apc_exists($keyword)) {
+        if (apc_exists($keyword)) {
             return true;
         } else {
             return false;
         }
     }
 
-
-
-
-
 }
+
 //####################modules/cache-drivers/drivers/files.php####################{
 
 /*
@@ -7923,13 +7704,13 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
+class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 
     function checkdriver() {
-        if(is_writable($this->getPath())) {
+        if (is_writable($this->getPath())) {
             return true;
         } else {
-
+            
         }
         return false;
     }
@@ -7937,82 +7718,78 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     /*
      * Init Cache Path
      */
+
     function __construct($option = array()) {
 
         $this->setOption($option);
         $this->getPath();
 
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
-
     }
 
     /*
      * Return $FILE FULL PATH
      */
+
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
         $code = md5($keyword);
-        $folder = substr($code,0,2);
-        $path = $path."/".$folder;
+        $folder = substr($code, 0, 2);
+        $path = $path . "/" . $folder;
         /*
          * Skip Create Sub Folders;
          */
-        if($skip == false) {
-            if(!file_exists($path)) {
-                if(!@mkdir($path,0777)) {
-                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+        if ($skip == false) {
+            if (!file_exists($path)) {
+                if (!@mkdir($path, 0777)) {
+                    throw new Exception("PLEASE CHMOD " . $this->getPath() . " - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
-
-            } elseif(!is_writeable($path)) {
-                @chmod($path,0777);
+            } elseif (!is_writeable($path)) {
+                @chmod($path, 0777);
             }
         }
 
-        $file_path = $path."/".$code.".txt";
+        $file_path = $path . "/" . $code . ".txt";
         return $file_path;
     }
 
-
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
         $file_path = $this->getFilePath($keyword);
-      //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
+        //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
         $toWrite = true;
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
-            if($this->isExpired($old)) {
+            if ($this->isExpired($old)) {
                 $toWrite = true;
             }
         }
 
-        if($toWrite == true) {
-                $f = fopen($file_path,"w+");
-                fwrite($f,$data);
-                fclose($f);
+        if ($toWrite == true) {
+            $f = fopen($file_path, "w+");
+            fwrite($f, $data);
+            fclose($f);
         }
     }
-
-
-
 
     function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
+        if (!file_exists($file_path)) {
             return null;
         }
 
         $content = $this->readfile($file_path);
         $object = $this->decode($content);
-        if($this->isExpired($object)) {
+        if ($this->isExpired($object)) {
             @unlink($file_path);
             $this->auto_clean_expired();
             return null;
@@ -8022,8 +7799,8 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
 
     function driver_delete($keyword, $option = array()) {
-        $file_path = $this->getFilePath($keyword,true);
-        if(@unlink($file_path)) {
+        $file_path = $this->getFilePath($keyword, true);
+        if (@unlink($file_path)) {
             return true;
         } else {
             return false;
@@ -8033,35 +7810,36 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     /*
      * Return total cache size + auto removed expired files
      */
+
     function driver_stats($option = array()) {
         $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  "",
+            "info" => "",
+            "size" => "",
+            "data" => "",
         );
 
         $path = $this->getPath();
         $dir = @opendir($path);
-        if(!$dir) {
-            throw new Exception("Can't read PATH:".$path,94);
+        if (!$dir) {
+            throw new Exception("Can't read PATH:" . $path, 94);
         }
 
         $total = 0;
         $removed = 0;
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
                 // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
+                $subdir = @opendir($path . "/" . $file);
+                if (!$subdir) {
+                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != "." && $f != "..") {
+                        $file_path = $path . "/" . $file . "/" . $f;
                         $size = filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
-                        if($this->isExpired($object)) {
+                        if ($this->isExpired($object)) {
                             unlink($file_path);
                             $removed = $removed + $size;
                         }
@@ -8069,21 +7847,21 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                     }
                 } // end read subdir
             } // end if
-       } // end while
+        } // end while
 
-       $res['size']  = $total - $removed;
-       $res['info'] = array(
-                "Total" => $total,
-                "Removed"   => $removed,
-                "Current"   => $res['size'],
-       );
-       return $res;
+        $res['size'] = $total - $removed;
+        $res['info'] = array(
+            "Total" => $total,
+            "Removed" => $removed,
+            "Current" => $res['size'],
+        );
+        return $res;
     }
 
     function auto_clean_expired() {
         $autoclean = $this->get("keyword_clean_up_driver_files");
-        if($autoclean == null) {
-            $this->set("keyword_clean_up_driver_files",3600*24);
+        if ($autoclean == null) {
+            $this->set("keyword_clean_up_driver_files", 3600 * 24);
             $res = $this->stats();
         }
     }
@@ -8092,39 +7870,36 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
         $path = $this->getPath();
         $dir = @opendir($path);
-        if(!$dir) {
-            throw new Exception("Can't read PATH:".$path,94);
+        if (!$dir) {
+            throw new Exception("Can't read PATH:" . $path, 94);
         }
 
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
                 // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
+                $subdir = @opendir($path . "/" . $file);
+                if (!$subdir) {
+                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != "." && $f != "..") {
+                        $file_path = $path . "/" . $file . "/" . $f;
                         unlink($file_path);
                     }
                 } // end read subdir
             } // end if
         } // end while
-
-
     }
 
-
     function driver_isExisting($keyword) {
-        $file_path = $this->getFilePath($keyword,true);
-        if(!file_exists($file_path)) {
+        $file_path = $this->getFilePath($keyword, true);
+        if (!file_exists($file_path)) {
             return false;
         } else {
             // check expired or not
             $value = $this->get($keyword);
-            if($value == null) {
+            if ($value == null) {
                 return false;
             } else {
                 return true;
@@ -8134,17 +7909,15 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
     function isExpired($object) {
 
-        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+        if (isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
             return true;
         } else {
             return false;
         }
     }
 
-
-
-
 }
+
 //####################modules/cache-drivers/drivers/memcache.php####################{
 
 
@@ -8162,7 +7935,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     function checkdriver() {
         // Check memcache
-        if(function_exists("memcache_connect")) {
+        if (function_exists("memcache_connect")) {
             return true;
         }
         return false;
@@ -8170,7 +7943,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
         if ($this->checkdriver() && !is_object($this->instant)) {
@@ -8180,31 +7953,28 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     function connectServer() {
         $server = $this->option['server'];
-        if(count($server) < 1) {
+        if (count($server) < 1) {
             $server = array(
-                array("127.0.0.1",11211),
+                array("127.0.0.1", 11211),
             );
         }
 
-        foreach($server as $s) {
-            $name = $s[0]."_".$s[1];
-            if(!isset($this->checked[$name])) {
-                $this->instant->addserver($s[0],$s[1]);
+        foreach ($server as $s) {
+            $name = $s[0] . "_" . $s[1];
+            if (!isset($this->checked[$name])) {
+                $this->instant->addserver($s[0], $s[1]);
                 $this->checked[$name] = 1;
             }
-
         }
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
         $this->connectServer();
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            return $this->instant->add($keyword, $value, false, $time );
-
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return $this->instant->add($keyword, $value, false, $time);
         } else {
-            return $this->instant->set($keyword, $value, false, $time );
+            return $this->instant->set($keyword, $value, false, $time);
         }
-
     }
 
     function driver_get($keyword, $option = array()) {
@@ -8212,7 +7982,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
         // return null if no caching
         // return value if in caching
         $x = $this->instant->get($keyword);
-        if($x == false) {
+        if ($x == false) {
             return null;
         } else {
             return $x;
@@ -8221,19 +7991,18 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 
     function driver_delete($keyword, $option = array()) {
         $this->connectServer();
-         $this->instant->delete($keyword);
+        $this->instant->delete($keyword);
     }
 
     function driver_stats($option = array()) {
         $this->connectServer();
         $res = array(
-            "info"  => "",
-            "size"  =>  "",
-            "data"  => $this->instant->getStats(),
+            "info" => "",
+            "size" => "",
+            "data" => $this->instant->getStats(),
         );
 
         return $res;
-
     }
 
     function driver_clean($option = array()) {
@@ -8244,16 +8013,15 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
     function driver_isExisting($keyword) {
         $this->connectServer();
         $x = $this->get($keyword);
-        if($x == null) {
+        if ($x == null) {
             return false;
         } else {
             return true;
         }
     }
 
-
-
 }
+
 //####################modules/cache-drivers/drivers/memcached.php####################{
 
 
@@ -8362,6 +8130,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
     }
 
 }
+
 //####################modules/cache-drivers/drivers/sqlite.php####################{
 
 
@@ -8704,11 +8473,10 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver  {
+class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver {
 
     function checkdriver() {
-        if(extension_loaded('wincache') && function_exists("wincache_ucache_set"))
-        {
+        if (extension_loaded('wincache') && function_exists("wincache_ucache_set")) {
             return true;
         }
         return false;
@@ -8716,14 +8484,13 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
-
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
             return wincache_ucache_add($keyword, $value, $time);
         } else {
             return wincache_ucache_set($keyword, $value, $time);
@@ -8734,9 +8501,9 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         // return null if no caching
         // return value if in caching
 
-        $x = wincache_ucache_get($keyword,$suc);
+        $x = wincache_ucache_get($keyword, $suc);
 
-        if($suc == false) {
+        if ($suc == false) {
             return null;
         } else {
             return $x;
@@ -8749,9 +8516,9 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 
     function driver_stats($option = array()) {
         $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  wincache_scache_info(),
+            "info" => "",
+            "size" => "",
+            "data" => wincache_scache_info(),
         );
         return $res;
     }
@@ -8762,16 +8529,15 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
     }
 
     function driver_isExisting($keyword) {
-        if(wincache_ucache_exists($keyword)) {
+        if (wincache_ucache_exists($keyword)) {
             return true;
         } else {
             return false;
         }
     }
 
-
-
 }
+
 //####################modules/cache-drivers/drivers/xcache.php####################{
 
 
@@ -8781,34 +8547,31 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
+class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver {
 
     function checkdriver() {
         // Check xcache
-        if(extension_loaded('xcache') && function_exists("xcache_get"))
-        {
-           return true;
+        if (extension_loaded('xcache') && function_exists("xcache_get")) {
+            return true;
         }
         return false;
-
     }
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
-
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            if(!$this->isExisting($keyword)) {
-                return xcache_set($keyword,$value,$time);
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            if (!$this->isExisting($keyword)) {
+                return xcache_set($keyword, $value, $time);
             }
         } else {
-            return xcache_set($keyword,$value,$time);
+            return xcache_set($keyword, $value, $time);
         }
         return false;
     }
@@ -8817,7 +8580,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
         // return null if no caching
         // return value if in caching
         $data = xcache_get($keyword);
-        if($data === false || $data == "") {
+        if ($data === false || $data == "") {
             return null;
         }
         return $data;
@@ -8829,14 +8592,14 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 
     function driver_stats($option = array()) {
         $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  "",
+            "info" => "",
+            "size" => "",
+            "data" => "",
         );
 
         try {
-            $res['data'] = xcache_list(XC_TYPE_VAR,100);
-        } catch(Exception $e) {
+            $res['data'] = xcache_list(XC_TYPE_VAR, 100);
+        } catch (Exception $e) {
             $res['data'] = array();
         }
         return $res;
@@ -8844,23 +8607,22 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 
     function driver_clean($option = array()) {
         $cnt = xcache_count(XC_TYPE_VAR);
-        for ($i=0; $i < $cnt; $i++) {
+        for ($i = 0; $i < $cnt; $i++) {
             xcache_clear_cache(XC_TYPE_VAR, $i);
         }
         return true;
     }
 
     function driver_isExisting($keyword) {
-        if(xcache_isset($keyword)) {
+        if (xcache_isset($keyword)) {
             return true;
         } else {
             return false;
         }
     }
 
-
-
 }
+
 //####################modules/cache-drivers/drivers/redis.php####################{
 
 
@@ -9272,7 +9034,7 @@ class phpFastCache {
         $this->option("storage", $storage);
 
         if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
-            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
+            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
         }
 
 
@@ -9587,14 +9349,13 @@ allow from 127.0.0.1";
 
 //####################modules/session_drivers/WoniuSessionHandle.php####################{
 
-
 /**
  *
  * @author pm
  */
 interface WoniuSessionHandle {
-    
-    public function start($config=array());
+
+    public function start($config = array());
 
     /**
      * Open the session
@@ -9639,7 +9400,7 @@ interface WoniuSessionHandle {
      * @usage execution rate 1/100
      *        (session.gc_probability/session.gc_divisor)
      */
-    public function gc($max=0);
+    public function gc($max = 0);
 }
 
 //####################modules/session_drivers/MysqlSessionHandle.php####################{
@@ -9818,7 +9579,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
 }
 
 //class
-
 //####################modules/session_drivers/MongodbSessionHandle.php####################{
 
 
@@ -10059,11 +9819,11 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
      * @access  public
      * @param   array   $config
      */
-    public function start($config = array()) { 
+    public function start($config = array()) {
         $session_save_path = $config['memcache'];
         ini_set('session.save_handler', 'memcache');
         ini_set('session.save_path', $session_save_path);
-        
+
         // set some important session vars
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
@@ -10089,7 +9849,7 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         session_name($config['common']['session_name']);
 
         register_shutdown_function('session_write_close');
-        
+
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
             session_start();
@@ -10150,7 +9910,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
         $session_save_path = $config['redis'];
         ini_set('session.save_handler', 'redis');
         ini_set('session.save_path', $session_save_path);
-        
+
         // set some important session vars
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
@@ -10176,8 +9936,8 @@ class RedisSessionHandle implements WoniuSessionHandle {
         session_name($config['common']['session_name']);
 
         register_shutdown_function('session_write_close');
-        
-        
+
+
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
             session_start();
@@ -10669,7 +10429,7 @@ if (!function_exists('mergeRs')) {
 
 }
 /* End of file Helper.php */
- 
+
 //####################modules/WoniuInput.class.php####################{
 
 

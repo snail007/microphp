@@ -403,18 +403,18 @@ $system['db']['sqlite3']['stricton'] = FALSE;
  * PDO mysql数据库配置示例，hostname 其实就是pdo的dsn部分，
  * 如果连接其它数据库按着pdo的dsn写法连接即可
  */
-$system['db']['pdo_msyql']['dbdriver'] = "pdo";
-$system['db']['pdo_msyql']['hostname'] = 'mysql:host=127.0.0.1;port=3306';
-$system['db']['pdo_msyql']['username'] = 'root';
-$system['db']['pdo_msyql']['password'] = 'admin';
-$system['db']['pdo_msyql']['database'] = 'test';
-$system['db']['pdo_msyql']['dbprefix'] = '';
-$system['db']['pdo_msyql']['db_debug'] = TRUE;
-$system['db']['pdo_msyql']['char_set'] = 'utf8';
-$system['db']['pdo_msyql']['dbcollat'] = 'utf8_general_ci';
-$system['db']['pdo_msyql']['swap_pre'] = '';
-$system['db']['pdo_msyql']['autoinit'] = TRUE;
-$system['db']['pdo_msyql']['stricton'] = FALSE;
+$system['db']['pdo_mysql']['dbdriver'] = "pdo";
+$system['db']['pdo_mysql']['hostname'] = 'mysql:host=127.0.0.1;port=3306';
+$system['db']['pdo_mysql']['username'] = 'root';
+$system['db']['pdo_mysql']['password'] = 'admin';
+$system['db']['pdo_mysql']['database'] = 'test';
+$system['db']['pdo_mysql']['dbprefix'] = '';
+$system['db']['pdo_mysql']['db_debug'] = TRUE;
+$system['db']['pdo_mysql']['char_set'] = 'utf8';
+$system['db']['pdo_mysql']['dbcollat'] = 'utf8_general_ci';
+$system['db']['pdo_mysql']['swap_pre'] = '';
+$system['db']['pdo_mysql']['autoinit'] = TRUE;
+$system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
