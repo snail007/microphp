@@ -34,6 +34,7 @@ class Test_db extends UnitTestCase {
 
     public function tearDown() {
         $this->db->simple_query('drop table ' . $this->db_table);
+        @unlink('test.sqlite3');
     }
 
     public function testMysql() {
