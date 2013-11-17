@@ -6,7 +6,6 @@ require_once('simpletest/autorun.php');
  * MicroPHP数据库测试案例
  */
 
-
 /**
  * MicroPHP
  *
@@ -34,8 +33,7 @@ class Test_db extends UnitTestCase {
     }
 
     public function tearDown() {
-        $this->db->simple_query('drop table ' . $this->db_table);
-        //@unlink('test.sqlite3');
+        
     }
 
     public function testMysql() {
@@ -44,6 +42,10 @@ class Test_db extends UnitTestCase {
             WoniuRouter::setConfig($system);
             $this->createTable($system['db'][$db_cfg_group], $db_cfg_group);
             $this->curd($db_cfg_group);
+            $this->db->simple_query('drop table ' . $this->db_table);
+            if ($db_cfg_group == 'sqlite3') {
+                @unlink('test.sqlite3');
+            }
         }
     }
 
@@ -88,9 +90,4 @@ class Test_db extends UnitTestCase {
         }
     }
 
-}
-
-if (!defined('IN_ALL_TESTS')) {
-    $test = &new Test_db();
-    $test->run(new HtmlReporter());
 }
