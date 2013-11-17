@@ -61,7 +61,7 @@ $content = str_replace("class WoniuLoader", "\n /**
 file_put_contents('MicroPHP.php', $header ."\n\n". $core);
 file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
-$index = file_get_contents('modules/index.php');
+$index = file_get_contents('modules/plugin.php');
 foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
 }
