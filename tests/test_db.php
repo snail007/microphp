@@ -36,7 +36,7 @@ class Test_db extends UnitTestCase {
         
     }
 
-    public function testMysql() {
+    public function testDBDrivers() {
         global $system;
         foreach (array('mysql', 'mysqli', 'pdo_mysql', 'sqlite3') as $db_cfg_group) {
             $system['db']['active_group'] = $db_cfg_group;
