@@ -368,6 +368,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function insert_id() {
         return @$this->conn_id->lastInsertId();
     }
+            
 
     // --------------------------------------------------------------------
 

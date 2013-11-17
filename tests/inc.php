@@ -1,22 +1,13 @@
 <?php
 
+require '../modules/plugin.php';
+define('TEST_ROOT', dirname(__FILE__));
+//为了正确显示中文，修改simpletest/reporter.php 31行：
+//function __construct($character_set = 'ISO-8859-1')
+//修改为：function __construct($character_set = 'UTF-8')
+
 /**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		http://git.oschina.net/snail/microphp
- * @since		Version 1.0
- * @createdtime         {createdtime}
- */
-define('IN_WONIU_APP', TRUE);
-define('WDS', DIRECTORY_SEPARATOR);
-/**
- * --------------------系统配置-------------------------
+ * --------------------测试case系统配置-------------------------
  */
 /**
  * 是否自动建立项目文件夹
@@ -28,7 +19,7 @@ $system['folder_auto_init'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . '../app';
+$system['application_folder'] = realpath(dirname(__FILE__)) . '/../' . 'app';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -136,7 +127,7 @@ $system['debug'] = TRUE;
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = TRUE;
+$system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
@@ -147,7 +138,7 @@ $system['error_manage'] = TRUE;
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
-$system['log_error'] = TRUE;
+$system['log_error'] = FALSE;
 /* * --------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
  * 提示：
@@ -350,7 +341,7 @@ $system['session_handle'] = array(
  * 默认使用的数据库组名称，名称就是下面的$system['db'][$key]里面的$key，
  * 可以自定义多个数据库组，然后根据不同的环境选择不同的组作为默认数据库连接信息
  */
-$system['db']['active_group'] = 'default';
+$system['db']['active_group'] = 'mysql';
 
 /**
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
@@ -358,20 +349,38 @@ $system['db']['active_group'] = 'default';
 /**
  * mysql数据库配置示例
  */
-$system['db']['default']['dbdriver'] = "mysql";
-$system['db']['default']['hostname'] = '10.0.0.251';
-$system['db']['default']['port'] = '3306';
-$system['db']['default']['username'] = 'root';
-$system['db']['default']['password'] = 'snailadmin';
-$system['db']['default']['database'] = 'test';
-$system['db']['default']['dbprefix'] = '';
-$system['db']['default']['pconnect'] = TRUE;
-$system['db']['default']['db_debug'] = TRUE;
-$system['db']['default']['char_set'] = 'utf8';
-$system['db']['default']['dbcollat'] = 'utf8_general_ci';
-$system['db']['default']['swap_pre'] = '';
-$system['db']['default']['autoinit'] = TRUE;
-$system['db']['default']['stricton'] = FALSE;
+$system['db']['mysql']['dbdriver'] = "mysql";
+$system['db']['mysql']['hostname'] = '127.0.0.1';
+$system['db']['mysql']['port'] = '3306';
+$system['db']['mysql']['username'] = 'root';
+$system['db']['mysql']['password'] = 'admin';
+$system['db']['mysql']['database'] = 'test';
+$system['db']['mysql']['dbprefix'] = '';
+$system['db']['mysql']['pconnect'] = TRUE;
+$system['db']['mysql']['db_debug'] = TRUE;
+$system['db']['mysql']['char_set'] = 'utf8';
+$system['db']['mysql']['dbcollat'] = 'utf8_general_ci';
+$system['db']['mysql']['swap_pre'] = '';
+$system['db']['mysql']['autoinit'] = TRUE;
+$system['db']['mysql']['stricton'] = FALSE;
+
+/**
+ * mysqli数据库配置示例
+ */
+$system['db']['mysqli']['dbdriver'] = "mysqli";
+$system['db']['mysqli']['hostname'] = '127.0.0.1';
+$system['db']['mysqli']['port'] = '3306';
+$system['db']['mysqli']['username'] = 'root';
+$system['db']['mysqli']['password'] = 'admin';
+$system['db']['mysqli']['database'] = 'test';
+$system['db']['mysqli']['dbprefix'] = '';
+$system['db']['mysqli']['pconnect'] = TRUE;
+$system['db']['mysqli']['db_debug'] = TRUE;
+$system['db']['mysqli']['char_set'] = 'utf8';
+$system['db']['mysqli']['dbcollat'] = 'utf8_general_ci';
+$system['db']['mysqli']['swap_pre'] = '';
+$system['db']['mysqli']['autoinit'] = TRUE;
+$system['db']['mysqli']['stricton'] = FALSE;
 
 
 /*
@@ -382,7 +391,7 @@ $system['db']['default']['stricton'] = FALSE;
  * sqlite3数据库配置示例
  */
 $system['db']['sqlite3']['dbdriver'] = "sqlite3";
-$system['db']['sqlite3']['database'] = 'sqlite:d:/wwwroot/sdb.db';
+$system['db']['sqlite3']['database'] = 'sqlite:' . TEST_ROOT . '/test.sqlite3';
 $system['db']['sqlite3']['dbprefix'] = '';
 $system['db']['sqlite3']['db_debug'] = TRUE;
 $system['db']['sqlite3']['char_set'] = 'utf8';
@@ -395,7 +404,7 @@ $system['db']['sqlite3']['stricton'] = FALSE;
  * 如果连接其它数据库按着pdo的dsn写法连接即可
  */
 $system['db']['pdo_msyql']['dbdriver'] = "pdo";
-$system['db']['pdo_msyql']['hostname'] = 'mysql:host=localhost;port=3306';
+$system['db']['pdo_msyql']['hostname'] = 'mysql:host=127.0.0.1;port=3306';
 $system['db']['pdo_msyql']['username'] = 'root';
 $system['db']['pdo_msyql']['password'] = 'admin';
 $system['db']['pdo_msyql']['database'] = 'test';
@@ -409,32 +418,4 @@ $system['db']['pdo_msyql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-include('WoniuInput.class.php');
-include('WoniuHelper.php');
-include('db-drivers/db.drivers.php');
-include('db-drivers/mysql.driver.php');
-include('db-drivers/mysqli.driver.php');
-include('db-drivers/pdo.driver.php');
-include('db-drivers/sqlite3.driver.php');
-include('cache-drivers/phpfastcache.php');
-include('cache-drivers/driver.php');
-include('cache-drivers/drivers/apc.php');
-include('cache-drivers/drivers/files.php');
-include('cache-drivers/drivers/memcache.php');
-include('cache-drivers/drivers/memcached.php');
-include('cache-drivers/drivers/sqlite.php');
-include('cache-drivers/drivers/wincache.php');
-include('cache-drivers/drivers/xcache.php');
-include('cache-drivers/drivers/redis.php');
-include('session_drivers/WoniuSessionHandle.php');
-include('session_drivers/MysqlSessionHandle.php');
-include('session_drivers/MongodbSessionHandle.php');
-include('session_drivers/MemcacheSessionHandle.php');
-include('session_drivers/RedisSessionHandle.php');
-include('WoniuRouter.php');
-include('WoniuLoader.php');
-include('WoniuController.php');
-include('WoniuModel.php');
 WoniuRouter::setConfig($system);
-
-/* End of file index.php */
