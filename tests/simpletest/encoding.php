@@ -37,7 +37,10 @@ class SimpleEncodedPair {
      *    @access public
      */
     function asRequest() {
-        return urlencode($this->key) . '=' . urlencode($this->value);
+        if($this->value){
+            return $this->key . '=' . urlencode($this->value);
+        }
+        return $this->key;
     }
 
     /**

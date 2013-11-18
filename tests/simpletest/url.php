@@ -67,6 +67,7 @@ class SimpleUrl {
             }
         }
         $this->path = $this->chompPath($url);
+                
         $this->request = $this->parseRequest($this->chompRequest($url));
         $this->fragment = (strncmp($url, "#", 1) == 0 ? substr($url, 1) : false);
         $this->target = false;

@@ -11,6 +11,13 @@ ver 2.2.1:
   增加了$force_new_conn参数，该参数为true时每次都使用指定的数据库配置重新连接数据库，使用生成新的数据库实例。
 修复了:
 1.插件模式下自动加载helper会导致重复加载报错的问题。
+2.pathinfo模式路由中不能有?,$_GET是空，需要手动解析get变量到$_GET中
+  比如：index.php/route.index/xxx/ddd/&flag=microphp
+  doIndex($p1=null,$p2=null){
+      $flag=$this->input->get('flag');
+  }
+  可以通过&flag=microphp的形式传递get变量。
+
 优化了:
 1.WouniuInput->is_ajax(),修改为static;
 升级提示：
