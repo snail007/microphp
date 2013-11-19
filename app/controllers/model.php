@@ -36,8 +36,9 @@
  */
 class Model extends WoniuController {
     public function doMixLoader(){
-        $this->model('UserModel','user');
-        
+        $this->model('test/SubUserModel','user');
+        $this->model->user->test();
+        $this->model->SubUserModel->test();
         WoniuModel::instance('UserModel')->model('UserModel')->test();
         echo "okay";
     }
