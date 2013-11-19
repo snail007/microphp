@@ -100,7 +100,7 @@ class WoniuLoader {
             self::$helper_files[] = $filename;
             //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
-            include $filename;
+            self::includeOnce($filename);
             $vars = get_defined_vars();
             $all_vars = array_keys($vars);
             foreach ($all_vars as $key) {
@@ -134,7 +134,7 @@ class WoniuLoader {
             }
         }
         if (file_exists($filepath)) {
-            include $filepath;
+            self::includeOnce($filepath);
             if (class_exists($classname)) {
                 return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
             } else {
@@ -165,7 +165,7 @@ class WoniuLoader {
             }
         }
         if (file_exists($filepath)) {
-            include $filepath;
+            self::includeOnce($filepath);
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
@@ -235,7 +235,7 @@ class WoniuLoader {
         $system = WoniuLoader::$system;
         $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
         if (file_exists($library)) {
-            include($library);
+            self::includeOnce($library);
         } else {
             $dir = dir($system['library_folder']);
             while (($file = $dir->read()) !== false) {
@@ -244,7 +244,7 @@ class WoniuLoader {
                 }
                 $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
                 if (file_exists($path)) {
-                    include($path);
+                    self::includeOnce($path);
                     break;
                 }
             }
@@ -400,8 +400,15 @@ class WoniuLoader {
         return NULL;
     }
 
+    public static function includeOnce($file_path) {
+        static $files = array();
+        $key = md5(sha1_file($file_path));
+        if (!isset($files[$key])) {
+            include $file_path;
+            $files[$key]=1;
+        }
+    }
 }
-
 class WoniuModelLoader {
 
     public static $model_files = array();

@@ -25,7 +25,7 @@ class WoniuController extends WoniuLoader {
     }
 
     private function autoload() {
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
@@ -60,7 +60,7 @@ class WoniuController extends WoniuLoader {
             //只include选择的缓存驱动文件
             if ($namex == $system['cache_config']['storage']) {
                 if (!isset($included[realpath($filepath)])) {
-                    include $filepath;
+                    WoniuLoader::includeOnce($filepath);
                 } else {
                     $included[realpath($filepath)] = 1;
                 }
@@ -76,7 +76,7 @@ class WoniuController extends WoniuLoader {
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
@@ -87,7 +87,7 @@ class WoniuController extends WoniuLoader {
         }
         if (file_exists($filepath)) {
             WoniuLoader::classAutoloadRegister();
-            include $filepath;
+            WoniuLoader::includeOnce($filepath);
             if (class_exists($classname)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {

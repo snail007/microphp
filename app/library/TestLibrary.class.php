@@ -10,12 +10,8 @@
  *
  * @author Administrator
  */
-class TestLibrary {
-    public static $txt='fuck';
-    public function testController(){
-        var_dump(WoniuController::getInstance());
-    }
-    public static function error_handle($param) {
+class TestLibrary { 
+    public function test(){
         
     }
 }

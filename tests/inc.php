@@ -419,3 +419,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  * -------------------------数据库配置结束--------------------------
  */
 WoniuRouter::setConfig($system);
+
+function getReqURL($route, $index = 'index.php?') {
+    return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/modules/' . $index . $route;
+}
