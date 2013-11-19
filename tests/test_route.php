@@ -47,59 +47,48 @@ require_once('simpletest/autorun.php');
  */
 class Test_route extends WebTestCase {
 
-    private $url_prefix;
-
-    public function __construct($label = false) {
-        parent::__construct($label);
-        $this->url_prefix = 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/';
-    }
-
-    public function getReqURL($route, $index = 'indexfortest.php?') {
-        return $this->url_prefix . $index . $route;
-    }
-
     public function testArgs() {
-        $this->get($this->getReqURL('route.index/hello', 'indexfortest.php?'));
+        $this->get(getReqURL('route.index/hello', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:hello');
     }
 
     public function testArgsNull() {
-        $this->get($this->getReqURL('route.index/', 'indexfortest.php?'));
+        $this->get(getReqURL('route.index/', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:');
     }
 
     public function testArgsGet() {
-        $this->get($this->getReqURL('route.index/&flag=microphp', 'indexfortest.php?'));
+        $this->get(getReqURL('route.index/&flag=microphp', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:microphp');
     }
 
     public function testPathInfoArgs() {
-        $this->get($this->getReqURL('route.index/microphp', 'indexfortest.php/'));
+        $this->get(getReqURL('route.index/microphp', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:microphp');
     }
 
     public function testPathInfoArgsNull() {
-        $this->get($this->getReqURL('route.index/', 'indexfortest.php/'));
+        $this->get(getReqURL('route.index/', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:');
     }
 
     public function testPathInfoArgsGet() {
-        $this->get($this->getReqURL('route.index/xxx/ccc?flag=中文', 'indexfortest.php/'));
+        $this->get(getReqURL('route.index/xxx/ccc?flag=中文', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
     }
 
     /**
      * 自定义路由规则下，路由测试
      * 自定义路由为：
-     *    "|router\\.([^&]+).*$|u"=>"route.index/$1"
+     *    "|router\\.([^&]+).*$|u"=>"route.index/$1_rewrite"
      */
     public function testArgsRoute() {
         //pathinfo模式，测试get变量
-        $this->get($this->getReqURL('router.xxx/ccc?flag=中文', 'indexfortest.php/'));
-        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
+        $this->get(getReqURL('router.xxx/ccc?flag=中文', 'indexfortest.php/'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc_rewrite中文');
         //一般查询模式，测试get变量
-        $this->get($this->getReqURL('router.xxx/ccc&flag=中文', 'indexfortest.php?'));
-        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
+        $this->get(getReqURL('router.xxx/ccc&flag=中文', 'indexfortest.php?'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc_rewrite中文');
     }
 
 }

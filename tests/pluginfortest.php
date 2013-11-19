@@ -205,7 +205,7 @@ $system['default_timezone'] = 'PRC';
  */
 $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
-    "|router\\.([^&]+).*$|u"=>"route.index/$1"
+    "|router\\.([^&]+).*$|u"=>"route.index/$1_rewrite"
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -421,6 +421,6 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  */
 WoniuRouter::setConfig($system);
 
-function getReqURL($route, $index = 'index.php?') {
-    return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/modules/' . $index . $route;
+function getReqURL($route, $index = 'indexfortest.php?') {
+    return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/' . $index . $route;
 }
