@@ -205,7 +205,7 @@ $system['default_timezone'] = 'PRC';
  */
 $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
-    "/router\\.(.*)/"=>"route.index/$1"
+    "|router\\.([^&]+).*$|u"=>"route.index/$1"
 );
 /**
  * ---------------------缓存配置-----------------------

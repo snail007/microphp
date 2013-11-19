@@ -87,16 +87,19 @@ class Test_route extends WebTestCase {
         $this->get($this->getReqURL('route.index/xxx/ccc?flag=中文', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
     }
-    
+
+    /**
+     * 自定义路由规则下，路由测试
+     * 自定义路由为：
+     *    "|router\\.([^&]+).*$|u"=>"route.index/$1"
+     */
     public function testArgsRoute() {
-        global $system;
-        $system['route']=array(
-            
-        );
-        WoniuRouter::setConfig($system);
+        //pathinfo模式，测试get变量
         $this->get($this->getReqURL('router.xxx/ccc?flag=中文', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
+        //一般查询模式，测试get变量
         $this->get($this->getReqURL('router.xxx/ccc&flag=中文', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
     }
+
 }
