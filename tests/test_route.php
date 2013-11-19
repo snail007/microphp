@@ -1,6 +1,6 @@
 <?php
 
-require_once 'inc.php';
+require_once 'pluginfortest.php';
 require_once('simpletest/web_tester.php');
 require_once('simpletest/autorun.php');
 /**
@@ -51,41 +51,52 @@ class Test_route extends WebTestCase {
 
     public function __construct($label = false) {
         parent::__construct($label);
-        $this->url_prefix = 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/modules/';
+        $this->url_prefix = 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/';
     }
 
-    public function getReqURL($route, $index = 'index.php?') {
+    public function getReqURL($route, $index = 'indexfortest.php?') {
         return $this->url_prefix . $index . $route;
     }
 
     public function testArgs() {
-        $this->get($this->getReqURL('route.index/hello', 'index.php?'));
+        $this->get($this->getReqURL('route.index/hello', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:hello');
     }
 
     public function testArgsNull() {
-        $this->get($this->getReqURL('route.index/', 'index.php?'));
+        $this->get($this->getReqURL('route.index/', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:');
     }
 
     public function testArgsGet() {
-        $this->get($this->getReqURL('route.index/&flag=microphp', 'index.php?'));
+        $this->get($this->getReqURL('route.index/&flag=microphp', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:microphp');
     }
 
     public function testPathInfoArgs() {
-        $this->get($this->getReqURL('route.index/microphp', 'index.php/'));
+        $this->get($this->getReqURL('route.index/microphp', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:microphp');
     }
 
     public function testPathInfoArgsNull() {
-        $this->get($this->getReqURL('route.index/', 'index.php/'));
+        $this->get($this->getReqURL('route.index/', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:');
     }
 
     public function testPathInfoArgsGet() {
-        $this->get($this->getReqURL('route.index/xxx/ccc?flag=中文', 'index.php/'));
+        $this->get($this->getReqURL('route.index/xxx/ccc?flag=中文', 'indexfortest.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
     }
-
+    
+    public function testArgsRoute() {
+        global $system;
+        $system['route']=array(
+            
+        );
+        WoniuRouter::setConfig($system);
+        $this->get($this->getReqURL('router.xxx/ccc?flag=中文', 'indexfortest.php/'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
+        $this->get($this->getReqURL('router.xxx/ccc&flag=中文', 'indexfortest.php?'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
+    }
 }

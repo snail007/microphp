@@ -213,7 +213,7 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-    "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1'
+    "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
 );
 /**
  * ---------------------缓存配置-----------------------

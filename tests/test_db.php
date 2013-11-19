@@ -1,6 +1,6 @@
 <?php
 
-require_once 'inc.php';
+require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 /**
  * MicroPHP数据库测试案例

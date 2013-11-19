@@ -1,5 +1,5 @@
 <?php
-require_once 'inc.php';
+require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 define('IN_ALL_TESTS', true);
 
