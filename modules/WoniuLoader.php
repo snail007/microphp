@@ -402,7 +402,7 @@ class WoniuLoader {
 
     public static function includeOnce($file_path) {
         static $files = array();
-        $key = md5(sha1_file($file_path));
+        $key = md5(realpath($file_path));
         if (!isset($files[$key])) {
             include $file_path;
             $files[$key]=1;
