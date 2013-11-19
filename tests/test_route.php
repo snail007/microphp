@@ -84,7 +84,7 @@ class Test_route extends WebTestCase {
     }
 
     public function testPathInfoArgsGet() {
-        $this->get($this->getReqURL('route.index/xxx/ccc&flag=中文', 'index.php/'));
+        $this->get($this->getReqURL('route.index/xxx/ccc?flag=中文', 'index.php/'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:xxxccc中文');
     }
 
