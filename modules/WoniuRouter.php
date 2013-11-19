@@ -73,6 +73,19 @@ class WoniuRouter {
         //去掉查询字符串中的类方法部分，只留下参数
         $pathinfo_query = str_replace($class_method, '', $pathinfo_query);
         $pathinfo_query_parameters = explode("&", $pathinfo_query);
+        //pathinfo模式路由中不能有?,$_GET是空，需要手动解析get变量到$_GET中
+        if (empty($_GET)) {
+            $get_str_arr = array();
+            //循环合法的xx=xx的get字符串
+            foreach ($pathinfo_query_parameters as $key => $value) {
+                if (is_int(stripos($value, '='))) {
+                    $get_str_arr[] = urldecode($value);
+                }
+            }
+            if (!empty($get_str_arr)) {
+                parse_str(implode('&', $get_str_arr), $_GET);
+            }
+        }
         $pathinfo_query_parameters_str = !empty($pathinfo_query_parameters[0]) ? $pathinfo_query_parameters[0] : '';
         //去掉参数开头的/，只留下参数
         $pathinfo_query_parameters_str && $pathinfo_query_parameters_str{0} === '/' ? $pathinfo_query_parameters_str = substr($pathinfo_query_parameters_str, 1) : '';
