@@ -395,7 +395,7 @@ class CI_DB_driver {
     function load_rdriver() {
         $driver = 'CI_DB_' . $this->dbdriver . '_result';
 
-        if (!class_exists($driver)) {
+        if (!class_exists($driver,FALSE)) {
             include_once(BASEPATH . 'database/DB_result.php');
             include_once(BASEPATH . 'database/drivers/' . $this->dbdriver . '/' . $this->dbdriver . '_result.php');
         }
@@ -1002,11 +1002,11 @@ class CI_DB_driver {
      * @return        void
      */
     function _cache_init() {
-        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache')) {
+        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache',FALSE)) {
             return TRUE;
         }
 
-        if (!class_exists('CI_DB_Cache')) {
+        if (!class_exists('CI_DB_Cache',FALSE)) {
             if (!@include(BASEPATH . 'database/DB_cache.php')) {
                 return $this->cache_off();
             }

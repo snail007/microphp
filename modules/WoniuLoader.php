@@ -100,7 +100,8 @@ class WoniuLoader {
             self::$helper_files[] = $filename;
             //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
-            self::includeOnce($filename);
+            $before_vars[]='before_vars';
+            include($filename);
             $vars = get_defined_vars();
             $all_vars = array_keys($vars);
             foreach ($all_vars as $key) {
@@ -135,7 +136,7 @@ class WoniuLoader {
         }
         if (file_exists($filepath)) {
             self::includeOnce($filepath);
-            if (class_exists($classname)) {
+            if (class_exists($classname,FALSE)) {
                 return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
             } else {
                 trigger404('Library Class:' . $classname . ' not found.');
@@ -166,7 +167,7 @@ class WoniuLoader {
         }
         if (file_exists($filepath)) {
             self::includeOnce($filepath);
-            if (class_exists($classname)) {
+            if (class_exists($classname,FALSE)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
@@ -255,6 +256,8 @@ class WoniuLoader {
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         self::classAutoloadRegister();
+        //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
+        WoniuController::instance();
         return empty(self::$instance) ? self::$instance = new self() : self::$instance;
     }
 

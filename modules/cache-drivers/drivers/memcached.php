@@ -11,7 +11,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
     var $instant;
 
     function checkdriver() {
-        if (class_exists("Memcached")) {
+        if (class_exists("Memcached",FALSE)) {
             return true;
         }
         return false;

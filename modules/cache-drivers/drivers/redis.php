@@ -12,7 +12,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 
     function checkdriver() {
         // Check memcache
-        if (class_exists("redis")) {
+        if (class_exists("redis",FALSE)) {
             return true;
         }
         return false;

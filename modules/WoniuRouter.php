@@ -100,12 +100,13 @@ class WoniuRouter {
         $path = explode('.', $origin_class_method);
         $router['mpath'] = $origin_class_method;
         $router['m'] = $path[count($path) - 1];
+        $router['c']='';
         if (count($path) > 1) {
             $router['c'] = $path[count($path) - 2];
         }
         $router['prefix'] = $system['controller_method_prefix'];
         unset($path[count($path) - 1]);
-        $router['capth'] = implode('.', $path);
+        $router['cpath'] = empty($path)?'':implode('.', $path);
         $router['folder'] = '';
         if (count($path) > 1) {
             unset($path[count($path) - 1]);
@@ -168,6 +169,7 @@ class WoniuRouter {
     }
 
     public static function setConfig($system) {
+        $system['application_folder'] = realpath($system['application_folder']);
         WoniuLoader::$system = $system;
         self::folderAutoInit();
     }

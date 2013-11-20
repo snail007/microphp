@@ -39,7 +39,7 @@ class WoniuModel extends WoniuLoader {
             if(!class_exists($filepath, FALSE)){
                 WoniuLoader::includeOnce($filepath);
             }
-            if (class_exists($classname)) {
+            if (class_exists($classname,FALSE)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
