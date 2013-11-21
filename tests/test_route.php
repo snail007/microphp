@@ -48,6 +48,7 @@ require_once('simpletest/autorun.php');
 class Test_route extends WebTestCase {
 
     public function testArgs() {
+        echo "<div>".WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6))."</div>";
         $this->get(getReqURL('route.index/hello', 'indexfortest.php?'));
         $this->assertEqual($this->getBrowser()->getContent(), 'hello:hello');
     }
