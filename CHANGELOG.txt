@@ -19,7 +19,9 @@ ver 2.2.1:
   可以通过?flag=microphp的形式传递get变量。
   自定义路由模式时注意，这时候“路由字符串”是route.index/xxx/ddd/&flag=microphp，即?会被&替换。
 3.插件模式下WoniuLoader::instance()，自动加载无效的问题。
-
+4.如果使用WoniuRouter::setConfig()使配置发生变化，WoniuLoader::instance(),WoniuModel::instance(),WoniuController::instance()
+  使用的还是变化之前的配置和不会触发配置中的自动加载的问题。
+  
 优化了:
 1.WouniuInput->is_ajax(),修改为static;
 升级提示：

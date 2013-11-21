@@ -46,8 +46,13 @@ class Test_model extends UnitTestCase {
         global $system;
         $system['helper_file_autoload'] = array('function');
         $system['library_file_autoload'] = array('TestLibrary');
-        $system['models_file_autoload'] = array('test/SubUserModel', 'UserModel',array('UserModel'=>'user2'));
+        $system['models_file_autoload'] = array('test/SubUserModel', 'UserModel', array('UserModel' => 'user2'));
         WoniuRouter::setConfig($system);
+    }
+
+    public function tearDown() {
+        global $default;
+        WoniuRouter::setConfig($default);
     }
 
     public function testModelLoader() {
@@ -58,12 +63,12 @@ class Test_model extends UnitTestCase {
         $this->assertIsA(WoniuModel::instance('test/SubUserModel'), 'SubUserModel');
         $this->assertIsA(WoniuModel::instance('test/SubUserModel')->test(), 'UserModel');
         WoniuLoader::instance()->model('UserModel', 'user');
-        $this->assertReference(WoniuLoader::instance()->model->user,WoniuLoader::instance()->model->UserModel);
-        $this->assertReference(WoniuLoader::instance()->model->user,WoniuModel::instance('UserModel'));
+        $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->UserModel);
+        $this->assertReference(WoniuLoader::instance()->model->user, WoniuModel::instance('UserModel'));
         WoniuLoader::instance()->model('test/SubUserModel', 'subuser');
-        $this->assertReference(WoniuLoader::instance()->model->subuser,WoniuLoader::instance()->model->SubUserModel);
-        $this->assertReference(WoniuLoader::instance()->model->subuser,WoniuModel::instance('SubUserModel'));
-        $this->assertReference(WoniuLoader::instance()->model->user,WoniuLoader::instance()->model->user2);
+        $this->assertReference(WoniuLoader::instance()->model->subuser, WoniuLoader::instance()->model->SubUserModel);
+        $this->assertReference(WoniuLoader::instance()->model->subuser, WoniuModel::instance('SubUserModel'));
+        $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->user2);
         $browser = new SimpleBrowser();
         $browser->get(getReqURL('?model.mixLoader'));
         $this->assertEqual($browser->getContent(), 'okay');

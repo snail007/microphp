@@ -33,6 +33,25 @@ class Test_db extends UnitTestCase {
     }
 
     public function tearDown() {
+        global $default;
+        WoniuRouter::setConfig($default);
+    }
+
+    public function testDatabaseLoader() {
+        $this->assertTrue(is_object(WoniuLoader::instance()->database(null, TRUE)));
+        $this->assertSame(WoniuLoader::instance()->database(null, TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql'], TRUE));
+        $this->assertTrue(is_object(WoniuLoader::instance()->database(null, TRUE)));
+        $this->assertNotEqual(WoniuLoader::instance()->database(null, TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysqli'], TRUE));
+        $this->assertTrue(is_object(WoniuLoader::instance()->database(WoniuLoader::$system['db']['sqlite3'], TRUE)));
+        $this->assertNotEqual(WoniuLoader::instance()->database(WoniuLoader::$system['db']['sqlite3'], TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql'], TRUE));
+        $db=WoniuLoader::instance()->database();
+        $this->assertIsA($db, 'CI_DB_mysql_driver');
+        $db1=WoniuLoader::instance()->database(NULL, TRUE);
+        $db2=WoniuLoader::instance()->database(NULL, TRUE,TRUE);
+        $this->assertClone(WoniuLoader::instance()->database(NULL, TRUE), $db1);
+        $this->assertClone($db2, $db1);
+        $this->assertReference(WoniuLoader::instance()->database(), $db);
+        $this->assertClone($db, WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql']));
         
     }
 

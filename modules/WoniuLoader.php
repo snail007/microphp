@@ -78,10 +78,11 @@ class WoniuLoader {
             if (!is_array($config)) {
                 if ($force_new_conn || !is_object($this->db)) {
                     $woniu_db = self::$system['db'];
-                    $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
+                    return $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
                 }
+                return $this->db;
             } else {
-                $this->db = WoniuDB::getInstance($config, $force_new_conn);
+                return $this->db = WoniuDB::getInstance($config, $force_new_conn);
             }
         }
     }
@@ -100,7 +101,7 @@ class WoniuLoader {
             self::$helper_files[] = $filename;
             //包含文件，并把文件里面的变量放入$this->config
             $before_vars = array_keys(get_defined_vars());
-            $before_vars[]='before_vars';
+            $before_vars[] = 'before_vars';
             include($filename);
             $vars = get_defined_vars();
             $all_vars = array_keys($vars);
@@ -136,7 +137,7 @@ class WoniuLoader {
         }
         if (file_exists($filepath)) {
             self::includeOnce($filepath);
-            if (class_exists($classname,FALSE)) {
+            if (class_exists($classname, FALSE)) {
                 return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
             } else {
                 trigger404('Library Class:' . $classname . ' not found.');
@@ -167,7 +168,7 @@ class WoniuLoader {
         }
         if (file_exists($filepath)) {
             self::includeOnce($filepath);
-            if (class_exists($classname,FALSE)) {
+            if (class_exists($classname, FALSE)) {
                 return WoniuModelLoader::$model_files[$alias_name] = new $classname();
             } else {
                 trigger404('Model Class:' . $classname . ' not found.');
@@ -408,10 +409,12 @@ class WoniuLoader {
         $key = md5(realpath($file_path));
         if (!isset($files[$key])) {
             include $file_path;
-            $files[$key]=1;
+            $files[$key] = 1;
         }
     }
+
 }
+
 class WoniuModelLoader {
 
     public static $model_files = array();

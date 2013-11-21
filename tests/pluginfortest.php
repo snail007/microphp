@@ -205,7 +205,7 @@ $system['default_timezone'] = 'PRC';
  */
 $system['route'] = array(
     "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
-    "|router\\.([^&]+).*$|u"=>"route.index/$1_rewrite"
+    "|router\\.([^&]+).*$|u" => "route.index/$1_rewrite"
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -351,7 +351,7 @@ $system['db']['active_group'] = 'mysql';
  * mysql数据库配置示例
  */
 $system['db']['mysql']['dbdriver'] = "mysql";
-$system['db']['mysql']['hostname'] = '127.0.0.1';
+$system['db']['mysql']['hostname'] = 'db.server.com';
 $system['db']['mysql']['port'] = '3306';
 $system['db']['mysql']['username'] = 'root';
 $system['db']['mysql']['password'] = 'admin';
@@ -369,7 +369,7 @@ $system['db']['mysql']['stricton'] = FALSE;
  * mysqli数据库配置示例
  */
 $system['db']['mysqli']['dbdriver'] = "mysqli";
-$system['db']['mysqli']['hostname'] = '127.0.0.1';
+$system['db']['mysqli']['hostname'] = 'db.server.com';
 $system['db']['mysqli']['port'] = '3306';
 $system['db']['mysqli']['username'] = 'root';
 $system['db']['mysqli']['password'] = 'admin';
@@ -405,7 +405,7 @@ $system['db']['sqlite3']['stricton'] = FALSE;
  * 如果连接其它数据库按着pdo的dsn写法连接即可
  */
 $system['db']['pdo_mysql']['dbdriver'] = "pdo";
-$system['db']['pdo_mysql']['hostname'] = 'mysql:host=127.0.0.1;port=3306';
+$system['db']['pdo_mysql']['hostname'] = 'mysql:host=db.server.com;port=3306';
 $system['db']['pdo_mysql']['username'] = 'root';
 $system['db']['pdo_mysql']['password'] = 'admin';
 $system['db']['pdo_mysql']['database'] = 'test';
@@ -419,6 +419,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
+$default=$system;
 WoniuRouter::setConfig($system);
 
 function getReqURL($route, $index = 'indexfortest.php?') {

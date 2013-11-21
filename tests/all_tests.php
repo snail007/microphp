@@ -1,4 +1,5 @@
 <?php
+
 require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 define('IN_ALL_TESTS', true);
@@ -16,15 +17,18 @@ define('IN_ALL_TESTS', true);
  * @since                  Version 1.0
  * @createdtime            2013-11-17 17:53:59
  */
-class AllTests extends TestSuite{
-    public function AllTests(){
+class AllTests extends TestSuite {
+
+    public function AllTests() {
+        $ignore_list = array();
         $this->TestSuite('All tests');
-        $dir=dir(TEST_ROOT);
+        $dir = dir(TEST_ROOT);
         while ($file = $dir->read()) {
-            if(stripos($file, 'test_')===0){
+            if (!in_array($file, $ignore_list) && stripos($file, 'test_') === 0) {
                 $this->addFile($file);
             }
         }
         $dir->close();
     }
+
 }
