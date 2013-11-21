@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-21 14:53:21
+ * @createdtime         2013-11-21 21:47:18
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -536,9 +536,11 @@ class WoniuLoader {
      * @param type $page  当前是第几页
      * @param type $pagesize 每页多少
      * @param type $url    url是什么，url里面的{page}会被替换成页码
+     * @param array $order 分页条的组成，是一个数组，可以按着1-6的序号，选择分页条组成部分和每个部分的顺序
      * @return type  String
+     * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url) {
+    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6)) {
         $a_num = 10;
         $first = ' 首页 ';
         $last = ' 尾页 ';
@@ -575,7 +577,21 @@ class WoniuLoader {
         $info = " 第{$curpage}/{$pages}页 ";
         $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         $total = "共{$total}条";
-        return $total . ' ' . $info . ' ' . $prefix . $body . $subfix . '&nbsp;' . $go;
+        $pagination = array(
+            $total,
+            $info,
+            $prefix,
+            $body,
+            $subfix,
+            $go
+        );
+        $output = array();
+        foreach ($order as $key) {
+            if (isset($pagination[$key - 1])) {
+                $output[] = $pagination[$key - 1];
+            }
+        }
+        return implode("&nbsp;", $output);
     }
 
     /**
@@ -662,7 +678,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 class WoniuController extends WoniuLoader {
 
@@ -774,7 +790,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 class WoniuModel extends WoniuLoader {
 
@@ -829,7 +845,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 class WoniuDB {
 
@@ -6966,7 +6982,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10247,7 +10263,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 if (!function_exists('trigger404')) {
 
@@ -10712,7 +10728,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-21 14:53:21
+ * @createdtime       2013-11-21 21:47:18
  */
 class WoniuInput {
 
