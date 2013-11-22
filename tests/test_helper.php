@@ -1,8 +1,9 @@
 <?php
 require_once 'pluginfortest.php';
+//require_once('simpletest/web_tester.php');
 require_once('simpletest/autorun.php');
 /*
- * Copyright 2013 pm.
+ * Copyright 2013 snail.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,33 +28,27 @@ require_once('simpletest/autorun.php');
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @createdtime         2013-11-22 9:48:33
+ * @createdtime         2013-11-22 10:05:38
  */
-
 /**
- * Description of test_library
+ * Description of empty
  *
  * @author pm
  */
-class Test_library extends UnitTestCase{
-    public function testLibLoader() {
-        $this->assertFalse(class_exists('TestLibrary',FALSE));
+class Test_helper extends UnitTestCase {
+    public function testHelper(){
         $woniu=  WoniuLoader::instance();
-        $this->assertIsA(new TestLibrary(), 'TestLibrary');
-        $lib=$woniu->lib('sub/SubLib');
-        $lib2=$woniu->lib('sub/SubLib','SubLib2');
-        $lib3=$woniu->lib->SubLib2;
-        $lib4=$woniu->lib->SubLib;
-        $this->assertIsA($lib, 'SubLib');
-        $this->assertIsA($lib2, 'SubLib');
-        $this->assertIsA($lib3, 'SubLib');
-        $this->assertIsA($lib4, 'SubLib');
-        $this->assertReference($lib2, $lib);
-        $this->assertReference($lib3, $lib2);
-        $this->assertReference($lib4, $lib3);
-        $this->assertTrue($lib->test());
-        $woniu->lib('TestLibrary','tl');
-        $this->assertIsA($woniu->lib->tl, 'TestLibrary');
-        $this->assertReference($woniu->lib('TestLibrary','tl'), $woniu->lib->tl);
+        $woniu->helper('config');
+        $this->assertEqual($woniu->config('product'), 'microphp');
+        $this->assertEqual($woniu->config('host'), '127.0.0.1');
+        $woniu->setConfig('host','localhost');
+        $this->assertEqual($woniu->config('host'), 'localhost');
+        $this->assertEqual($woniu->config('db','user'), 'root');
+        $this->assertEqual($woniu->config('db','pass'), 'admin');
+        $db=$woniu->config('db');
+        $db['user']='admin_user';
+        $this->assertIsA($db, 'Array');
+        $woniu->setConfig('db',$db);
+        $this->assertEqual($woniu->config('db','user'), 'admin_user');
     }
 }
