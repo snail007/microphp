@@ -44,8 +44,6 @@ class Test_model extends UnitTestCase {
 
     public function setUp() {
         global $system;
-        $system['helper_file_autoload'] = array('function');
-        $system['library_file_autoload'] = array('TestLibrary');
         $system['models_file_autoload'] = array('test/SubUserModel', 'UserModel', array('UserModel' => 'user2'));
         WoniuRouter::setConfig($system);
     }

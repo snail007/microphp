@@ -1,7 +1,7 @@
 <?php
 
 function testFunction($param) {
-    echo $param;
+    return $param;
 }
 
 function errorHandle() {

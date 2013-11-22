@@ -50,5 +50,6 @@ class Test_helper extends UnitTestCase {
         $this->assertIsA($db, 'Array');
         $woniu->setConfig('db',$db);
         $this->assertEqual($woniu->config('db','user'), 'admin_user');
+        $this->assertTrue($woniu::$system['debug']);
     }
 }
