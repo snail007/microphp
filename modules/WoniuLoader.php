@@ -268,9 +268,13 @@ class WoniuLoader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '', $is_exit = true) {
+    public function ajax_echo($code, $tip = '', $data = '',$jsonp_callback=null, $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        echo $str;
+        if(!empty($jsonp_callback)){
+            echo $jsonp_callback."($str)";
+        }else{
+            echo $str;
+        }
         if ($is_exit) {
             exit();
         }
