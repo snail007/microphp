@@ -50,12 +50,22 @@ class Test_cache extends UnitTestCase {
             if ($driver != 'auto') {
                 $this->assertTrue(in_array($woniu->cache->option('storage'), array($driver, 'files')));
             }
-            echo $driver . "=>" . $woniu->cache->option('storage') . "<br/>";
+            if (!defined('IN_ALL_TESTS')) {
+                echo $driver . "=>" . $woniu->cache->option('storage') . "<br/>";
+            }
             $woniu->cache->set('test', 1, 1);
             $this->assertEqual($woniu->cache->get('test'), 1);
             if ($woniu->cache->option('storage') != 'apc') {
                 sleep(1);
                 $this->assertFalse($woniu->cache->get('test'));
+            }
+            $woniu->cache->set('test2', 10, 1);
+            $woniu->cache->set('test3', 10, 1);
+            $woniu->cache->delete('test2');
+            $this->assertFalse($woniu->cache->get('test2'));
+            if ($woniu->cache->option('storage') != 'sqlite') {
+                $woniu->cache->clean();
+                $this->assertFalse($woniu->cache->get('test3'));
             }
         }
     }
