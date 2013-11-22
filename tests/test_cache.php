@@ -40,7 +40,6 @@ require_once('simpletest/autorun.php');
 class Test_cache extends UnitTestCase {
 
     public function testAuto() {
-        @session_start();
         global $system;
         foreach (explode(",", 'auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache') as $driver) {
             $system['cache_config']['storage'] = $driver;
