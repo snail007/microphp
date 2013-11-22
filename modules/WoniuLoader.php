@@ -122,7 +122,7 @@ class WoniuLoader {
             $classname = basename($file_name);
         }
         if (!$alias_name) {
-            $alias_name = strtolower($classname);
+            $alias_name = $classname;
         }
         $filepath = $system['library_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
 
@@ -131,7 +131,7 @@ class WoniuLoader {
         } else {
             foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
                 if (strtolower(get_class($obj)) === strtolower($classname)) {
-                    return WoniuLibLoader::$lib_files[$aname];
+                    return WoniuLibLoader::$lib_files[$alias_name] = WoniuLibLoader::$lib_files[$aname];
                 }
             }
         }
@@ -446,7 +446,7 @@ class WoniuLibLoader {
     public static $lib_files = array();
 
     function __get($classname) {
-        return isset(self::$lib_files[strtolower($classname)]) ? self::$lib_files[strtolower($classname)] : null;
+        return isset(self::$lib_files[$classname]) ? self::$lib_files[$classname] : null;
     }
 
 }
