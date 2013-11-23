@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-22 16:17:41
+ * @createdtime         2013-11-23 15:06:10
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -28,7 +28,7 @@ $system['folder_auto_init'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . 'application';
+$system['application_folder'] = realpath('.') . '/' . 'applicationlication';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -101,7 +101,7 @@ $system['helper_file_subfix'] = '.php';
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
-$system['helper_file_autoload'] = array('function');
+$system['helper_file_autoload'] = array();
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,

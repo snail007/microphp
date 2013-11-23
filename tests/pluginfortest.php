@@ -262,7 +262,7 @@ $system['cache_config'] = array(
      * Memcache服务器地址;
      */
     "server" => array(
-        array("127.0.0.1", 11211, 1),
+        array("test.server.com", 11211, 1),
     //  array("new.host.ip",11211,1),
     ),
     /*
@@ -272,7 +272,7 @@ $system['cache_config'] = array(
         'type' => 'tcp', //sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
         'prefix' => @$_SERVER['HTTP_HOST'], //key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
         'sock' => '', //sock的完整路径
-        'host' => '192.168.199.25',
+        'host' => 'test.server.com',
         'port' => 6379,
         'password' => NULL, //密码，如果没有,保持null
         'timeout' => 0, //0意味着没有超时限制，单位秒
@@ -293,7 +293,7 @@ $system['session_handle'] = array(
         'lifetime' => 3600, // session lifetime in seconds
     ),
     'mongodb' => array(
-        'host' => '192.168.199.25',
+        'host' => 'test.server.com',
         'port' => 27017,
         'user' => 'root',
         'password' => 'local',
@@ -317,7 +317,7 @@ $system['session_handle'] = array(
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
      */
     'mysql' => array(
-        'host' => '127.0.0.1',
+        'host' => 'test.server.com',
         'port' => 3306,
         'user' => 'root',
         'password' => 'admin',
@@ -328,12 +328,12 @@ $system['session_handle'] = array(
      * memcache采用的是session.save_handler管理机制
      * 需要php安装memcache拓展支持
      */
-    'memcache' => "tcp://192.168.199.25:11211",
+    'memcache' => "tcp://test.server.com5:11211",
     /**
      * redis采用的是session.save_handler管理机制
      * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
      */
-    'redis' => "tcp://192.168.199.25:6379",
+    'redis' => "tcp://test.server.com:6379",
 );
 /**
  * ------------------------数据库配置----------------------------

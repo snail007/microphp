@@ -20,12 +20,18 @@ define('IN_ALL_TESTS', true);
 class AllTests extends TestSuite {
 
     public function AllTests() {
-        $ignore_list = array();
+        $ignore_list = array('test_cache.php');
         $this->TestSuite('All tests');
         $dir = dir(TEST_ROOT);
         while ($file = $dir->read()) {
-            if (!in_array($file, $ignore_list) && stripos($file, 'test_') === 0) {
-                $this->addFile($file);
+            if ( stripos($file, 'test_') === 0) {
+                if(!in_array($file, $ignore_list) ){
+                    echo "<b style='color:darkgreen'>$file</b><br/>";
+                    $this->addFile($file);
+                }else{
+                    echo "ignore:$file<br/>";
+                }
+                
             }
         }
         $dir->close();

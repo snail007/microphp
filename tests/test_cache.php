@@ -54,8 +54,8 @@ class Test_cache extends UnitTestCase {
             }
             $woniu->cache->set('test', 1, 1);
             $this->assertEqual($woniu->cache->get('test'), 1);
+            sleep(2);
             if ($woniu->cache->option('storage') != 'apc') {
-                sleep(1);
                 $this->assertFalse($woniu->cache->get('test'));
             }
             $woniu->cache->set('test2', 10, 1);
