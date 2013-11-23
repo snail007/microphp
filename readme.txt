@@ -4,8 +4,6 @@
 3.MicroPHP.min.php是压缩版本，建议生产环境替代MicroPHP.php。
 4.plugin.php是插件模式要被包含的文件，插件模式要保证plugin.php和MicroPHP.min.php在一起，或者修改plugin.php最后的包含MicroPHP.min.php的路径。
 5.docs/quick-start.html是一个简单的快速入门教程
-6.empty里面是建议的项目目录结构
-7.test.php是插件模式的简单演示，详细的插件使用说明请参考官网介绍。
-8.application是一个简单的项目结构
+6.application是一个简单的项目结构
 
 官方首页：http://microphp.us/
