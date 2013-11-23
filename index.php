@@ -101,7 +101,7 @@ $system['helper_file_subfix'] = '.php';
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
-$system['helper_file_autoload'] = array('function');
+$system['helper_file_autoload'] = array();
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
