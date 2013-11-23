@@ -74,15 +74,7 @@ class WoniuController extends WoniuLoader {
 
     public static function instance($classname_path = null) {
         if (empty($classname_path)) {
-            if(empty(self::$instance)){
-                return self::$instance = new self();
-            }else{
-                //如果配置发生变化，这里new一个对象，触发一次自动加载
-                $obj=new self();
-                //释放对象
-                unset($obj);
-                return self::$instance;
-            }
+            return self::$instance=new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);

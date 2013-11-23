@@ -1,8 +1,9 @@
 <?php
 require_once 'pluginfortest.php';
+//require_once('simpletest/web_tester.php');
 require_once('simpletest/autorun.php');
 /*
- * Copyright 2013 pm.
+ * Copyright 2013 snail.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,23 +28,28 @@ require_once('simpletest/autorun.php');
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @createdtime         2013-11-21 11:22:04
+ * @createdtime         2013-11-22 10:05:38
  */
-
 /**
- * Description of test_instance
+ * Description of empty
  *
  * @author pm
  */
-class Test_instance extends UnitTestCase {
-
-    public function testInstance() {
-        $this->assertEqual(WoniuLoader::instance(), WoniuLoader::instance());
-        $this->assertEqual(WoniuController::instance(), WoniuController::instance());
-        $this->assertEqual(WoniuModel::instance(), WoniuModel::instance());
-        $this->assertReference(WoniuController::instance('route'), WoniuController::instance('route'));
-        $this->assertReference(WoniuModel::instance('UserModel'), WoniuModel::instance('UserModel'));
-        
+class Test_helper extends UnitTestCase {
+    public function testHelper(){
+        $woniu=  WoniuLoader::instance();
+        $woniu->helper('config');
+        $this->assertEqual($woniu->config('product'), 'microphp');
+        $this->assertEqual($woniu->config('host'), '127.0.0.1');
+        $woniu->setConfig('host','localhost');
+        $this->assertEqual($woniu->config('host'), 'localhost');
+        $this->assertEqual($woniu->config('db','user'), 'root');
+        $this->assertEqual($woniu->config('db','pass'), 'admin');
+        $db=$woniu->config('db');
+        $db['user']='admin_user';
+        $this->assertIsA($db, 'Array');
+        $woniu->setConfig('db',$db);
+        $this->assertEqual($woniu->config('db','user'), 'admin_user');
+        $this->assertTrue($woniu::$system['debug']);
     }
-
 }

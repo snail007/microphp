@@ -27,23 +27,33 @@ require_once('simpletest/autorun.php');
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @createdtime         2013-11-21 11:22:04
+ * @createdtime         2013-11-22 9:48:33
  */
 
 /**
- * Description of test_instance
+ * Description of test_library
  *
  * @author pm
  */
-class Test_instance extends UnitTestCase {
-
-    public function testInstance() {
-        $this->assertEqual(WoniuLoader::instance(), WoniuLoader::instance());
-        $this->assertEqual(WoniuController::instance(), WoniuController::instance());
-        $this->assertEqual(WoniuModel::instance(), WoniuModel::instance());
-        $this->assertReference(WoniuController::instance('route'), WoniuController::instance('route'));
-        $this->assertReference(WoniuModel::instance('UserModel'), WoniuModel::instance('UserModel'));
-        
+class Test_library extends UnitTestCase{
+    public function testLibLoader() {
+        $this->assertFalse(class_exists('TestLibrary',FALSE));
+        $woniu=  WoniuLoader::instance();
+        $this->assertIsA(new TestLibrary(), 'TestLibrary');
+        $lib=$woniu->lib('sub/SubLib');
+        $lib2=$woniu->lib('sub/SubLib','SubLib2');
+        $lib3=$woniu->lib->SubLib2;
+        $lib4=$woniu->lib->SubLib;
+        $this->assertIsA($lib, 'SubLib');
+        $this->assertIsA($lib2, 'SubLib');
+        $this->assertIsA($lib3, 'SubLib');
+        $this->assertIsA($lib4, 'SubLib');
+        $this->assertReference($lib2, $lib);
+        $this->assertReference($lib3, $lib2);
+        $this->assertReference($lib4, $lib3);
+        $this->assertTrue($lib->test());
+        $woniu->lib('TestLibrary','tl');
+        $this->assertIsA($woniu->lib->tl, 'TestLibrary');
+        $this->assertReference($woniu->lib('TestLibrary','tl'), $woniu->lib->tl);
     }
-
 }

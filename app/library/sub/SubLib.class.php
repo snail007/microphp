@@ -1,6 +1,5 @@
 <?php
-require_once 'pluginfortest.php';
-require_once('simpletest/autorun.php');
+
 /*
  * Copyright 2013 pm.
  *
@@ -27,23 +26,18 @@ require_once('simpletest/autorun.php');
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @createdtime         2013-11-21 11:22:04
+ * @createdtime         2013-11-22 9:57:11
  */
 
 /**
- * Description of test_instance
+ * Description of SubLib
  *
  * @author pm
  */
-class Test_instance extends UnitTestCase {
-
-    public function testInstance() {
-        $this->assertEqual(WoniuLoader::instance(), WoniuLoader::instance());
-        $this->assertEqual(WoniuController::instance(), WoniuController::instance());
-        $this->assertEqual(WoniuModel::instance(), WoniuModel::instance());
-        $this->assertReference(WoniuController::instance('route'), WoniuController::instance('route'));
-        $this->assertReference(WoniuModel::instance('UserModel'), WoniuModel::instance('UserModel'));
-        
+class SubLib {
+    public function test(){
+        $instance= WoniuController::getInstance() ;
+        $instance->lib('sub/SubLib');
+        return is_a($instance->lib->SubLib, 'SubLib');
     }
-
 }
