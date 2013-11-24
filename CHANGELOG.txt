@@ -26,8 +26,6 @@ ver 2.2.1:
   修改为：
   $this->ajax_echo($code, $tip = '', $data = '', $jsonp_callback=null,$is_exit = true)
   以支持jsonp输出。
-
-
 优化了:
 1.WouniuInput->is_ajax(),修改为static;
 升级提示：
