@@ -85,6 +85,8 @@ $system['log_error'] = FALSE;
  * 参数说明：
  * $errmsg：具体的数据库错误信息
  * $strace：调用堆栈信息
+ * 一个错误处理类参考：
+ ＊ http://git.oschina.net/snail/microphp/blob/development/tests/app/library/ErrorHandle.class.php
  */
 $system['log_error_handle'] = array(
     'error' => '', //array('ErrorHandle' => 'error_handle'),
