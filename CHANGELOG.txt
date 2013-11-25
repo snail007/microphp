@@ -90,7 +90,7 @@ $system['log_error_handle'] = array(
     'error' => '', //array('ErrorHandle' => 'error_handle'),
     'exception' => '', //array('ErrorHandle' => 'exception_handle'),
     'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
-);w
+);
 
 
 ver 2.2.0:
