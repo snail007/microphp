@@ -183,11 +183,13 @@ $system['log_error'] = TRUE;
  * 参数说明：
  * $errmsg：具体的数据库错误信息
  * $strace：调用堆栈信息
+ * 错误控制类参考：
+ * http://git.oschina.net/snail/microphp/blob/development/tests/app/library/ErrorHandle.class.php
  */
 $system['log_error_handle'] = array(
-    'error' => array('ErrorHandle' => 'error_handle'), //array('ErrorHandle' => 'error_handle'),
-    'exception' => array('ErrorHandle' => 'exception_handle'), //array('ErrorHandle' => 'exception_handle'),
-    'db_error' => array('ErrorHandle' => 'db_error_handle'), //array('ErrorHandle' => 'db_error_handle')
+    'error' => '', //array('ErrorHandle' => 'error_handle'),
+    'exception' => '', //array('ErrorHandle' => 'exception_handle'),
+    'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
 );
 
 
