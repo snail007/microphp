@@ -65,7 +65,7 @@ $index = file_get_contents('modules/plugin.php');
 foreach ($files as $file) {
     $index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
 }
-$index = str_replace("../app", 'application', $index);
+$index = str_replace("../application", 'application', $index);
 $index = str_replace(array("WoniuRouter::setConfig(\$system);","WoniuRouter::loadClass();"), '', $index);
 common_replace($index);
 file_put_contents('index.php', $index . "\ninclude('MicroPHP.min.php');\nWoniuRouter::setConfig(\$system);\nWoniuRouter::loadClass();");
