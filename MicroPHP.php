@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-25 22:12:41
+ * @createdtime         2013-11-27 19:13:17
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -451,15 +451,17 @@ class WoniuLoader {
         if (file_exists($library)) {
             self::includeOnce($library);
         } else {
-            $dir = dir($system['library_folder']);
-            while (($file = $dir->read()) !== false) {
-                if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
-                    continue;
-                }
-                $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-                if (file_exists($path)) {
-                    self::includeOnce($path);
-                    break;
+            if (is_dir($system['library_folder'])) {
+                $dir = dir($system['library_folder']);
+                while (($file = $dir->read()) !== false) {
+                    if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
+                        continue;
+                    }
+                    $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                    if (file_exists($path)) {
+                        self::includeOnce($path);
+                        break;
+                    }
                 }
             }
         }
@@ -480,11 +482,11 @@ class WoniuLoader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '',$jsonp_callback=null, $is_exit = true) {
+    public function ajax_echo($code, $tip = '', $data = '', $jsonp_callback = null, $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        if(!empty($jsonp_callback)){
-            echo $jsonp_callback."($str)";
-        }else{
+        if (!empty($jsonp_callback)) {
+            echo $jsonp_callback . "($str)";
+        } else {
             echo $str;
         }
         if ($is_exit) {
@@ -682,7 +684,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 class WoniuController extends WoniuLoader {
 
@@ -786,7 +788,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 class WoniuModel extends WoniuLoader {
 
@@ -841,7 +843,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 class WoniuDB {
 
@@ -6978,7 +6980,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10259,7 +10261,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 if (!function_exists('trigger404')) {
 
@@ -10724,7 +10726,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-11-25 22:12:41
+ * @createdtime       2013-11-27 19:13:17
  */
 class WoniuInput {
 
