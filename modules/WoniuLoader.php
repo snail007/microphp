@@ -239,15 +239,17 @@ class WoniuLoader {
         if (file_exists($library)) {
             self::includeOnce($library);
         } else {
-            $dir = dir($system['library_folder']);
-            while (($file = $dir->read()) !== false) {
-                if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
-                    continue;
-                }
-                $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-                if (file_exists($path)) {
-                    self::includeOnce($path);
-                    break;
+            if (is_dir($system['library_folder'])) {
+                $dir = dir($system['library_folder']);
+                while (($file = $dir->read()) !== false) {
+                    if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
+                        continue;
+                    }
+                    $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                    if (file_exists($path)) {
+                        self::includeOnce($path);
+                        break;
+                    }
                 }
             }
         }
@@ -268,11 +270,11 @@ class WoniuLoader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '',$jsonp_callback=null, $is_exit = true) {
+    public function ajax_echo($code, $tip = '', $data = '', $jsonp_callback = null, $is_exit = true) {
         $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
-        if(!empty($jsonp_callback)){
-            echo $jsonp_callback."($str)";
-        }else{
+        if (!empty($jsonp_callback)) {
+            echo $jsonp_callback . "($str)";
+        } else {
             echo $str;
         }
         if ($is_exit) {
