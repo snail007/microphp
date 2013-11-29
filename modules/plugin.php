@@ -136,7 +136,7 @@ $system['debug'] = TRUE;
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = TRUE;
+$system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
@@ -147,7 +147,7 @@ $system['error_manage'] = TRUE;
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
-$system['log_error'] = TRUE;
+$system['log_error'] = FALSE;
 /* * --------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
  * 提示：

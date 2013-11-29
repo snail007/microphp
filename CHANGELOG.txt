@@ -2,7 +2,8 @@
 var 2.2.2
 修复了:
 1.library文件夹不存在的时候报错的问题。
-
+2.sqlite3驱动报Strict错Creating default object from empty value
+  line:832：$back = new stdClass();
 ver 2.2.1:[2013-11-25]
 增加了：
 1.自动创建项目文件夹功能（$system['folder_auto_init'] = TRUE;），可以手动开启或关闭。

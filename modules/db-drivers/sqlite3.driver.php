@@ -829,7 +829,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
             $i = $this->pdo_index;
             $this->pdo_index++;
             if (isset($this->pdo_results[$i])) {
-                $back = '';
+                $back = new stdClass();
                 foreach ($this->pdo_results[$i] as $key => $val) {
                     $back->$key = $val;
                 }
