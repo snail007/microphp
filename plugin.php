@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-11-28 21:03:20
+ * @createdtime         2013-11-29 23:08:00
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -364,7 +364,7 @@ $system['db']['default']['dbdriver'] = "mysql";
 $system['db']['default']['hostname'] = '10.0.0.251';
 $system['db']['default']['port'] = '3306';
 $system['db']['default']['username'] = 'root';
-$system['db']['default']['password'] = 'snailadmin';
+$system['db']['default']['password'] = 'admin';
 $system['db']['default']['database'] = 'test';
 $system['db']['default']['dbprefix'] = '';
 $system['db']['default']['pconnect'] = TRUE;
