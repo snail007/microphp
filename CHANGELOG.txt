@@ -1,9 +1,17 @@
 
 var 2.2.2
+增加了：
+1.下列方法增加了xss过滤参数$xss_clean，当$xss_clean为true时，会对数据进行xss过滤。
+$this->input->get_post($key=null,$default=null,$xss_clean=false);
+$this->input->get($key=null,$default=null,$xss_clean=false);
+$this->input->post($key=null,$default=null,$xss_clean=false);
+$this->input->cookie($key=null,$default=null,$xss_clean=false);
 修复了:
 1.library文件夹不存在的时候报错的问题。
 2.sqlite3驱动报Strict错Creating default object from empty value
   line:832：$back = new stdClass();
+
+
 ver 2.2.1:[2013-11-25]
 增加了：
 1.自动创建项目文件夹功能（$system['folder_auto_init'] = TRUE;），可以手动开启或关闭。
