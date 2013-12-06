@@ -32,12 +32,6 @@
 class Woniu_debuger extends WoniuController {
 
     public function doIndex() {
-//        $clazz = 'test/SubUserModel';
-//        var_dump($this->getModelMethods($clazz));
-//        $clazz = 'home/testHook';
-//        var_dump($this->getControllerMethods($clazz));
-//        $clazz = 'woniu_debuger';
-//        var_dump($this->getControllerMethods($clazz));
         $controllers=$this->getControllers();
         $models=$this->getModels();
         $c_sub_fix = self::$system['controller_file_subfix'];
