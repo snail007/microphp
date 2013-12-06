@@ -30,7 +30,47 @@
  * @createdtime            2013-12-6 19:43:33
  */
 class Woniu_debuger extends WoniuController {
-    public function doIndex(){
+
+    public function doIndex() {
+        $clazz = 'test/SubUserModel';
+        var_dump($this->getModelMethods($clazz));
+        $clazz = 'home/testHook';
+        var_dump($this->getControllerMethods($clazz));
+        $clazz = 'woniu_debuger';
+        var_dump($this->getControllerMethods($clazz));
         $this->view('woniu_debuger');
     }
+
+    public function getControllerMethods($clazz) {
+        if(!class_exists(basename($clazz))){
+            WoniuController::instance($clazz);
+        }
+        $clazz=  basename($clazz);
+        $class = new ReflectionClass($clazz);
+        $all_methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $methods = array();
+        $prefix=self::$system['controller_method_prefix'];
+        foreach ($all_methods as $method) {
+            if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct' && stripos($method->name, $prefix) === 0) {
+                $methods[] = $method->name;
+            }
+        }
+        return $methods;
+    }
+    public function getModelMethods($clazz) {
+        if(!class_exists(basename($clazz))){
+            WoniuModel::instance($clazz);
+        }
+        $clazz=  basename($clazz);
+        $class = new ReflectionClass($clazz);
+        $all_methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $methods = array();
+        foreach ($all_methods as $method) {
+            if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct') {
+                $methods[] = $method->name;
+            }
+        }
+        return $methods;
+    }
+
 }
