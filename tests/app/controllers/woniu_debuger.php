@@ -38,14 +38,35 @@ class Woniu_debuger extends WoniuController {
 //        var_dump($this->getControllerMethods($clazz));
 //        $clazz = 'woniu_debuger';
 //        var_dump($this->getControllerMethods($clazz));
-        var_dump($this->getControllers(), $this->getControllers());
-        $this->view('woniu_debuger');
+        $controllers=$this->getControllers();
+        $models=$this->getModels();
+        $c_sub_fix = self::$system['controller_file_subfix'];
+        $c=array();
+        foreach ($controllers as $cl) {
+            $c[$cl.$c_sub_fix]=  $this->getControllerMethods($cl);
+        }
+        $m=array();
+        foreach ($models as $md) {
+            $m[$md]=  $this->getModelMethods($md);
+        }
+        $data['c']=$c;
+        $data['m']=$m;
+        $this->view('woniu_debuger',$data);
     }
 
     public function getControllers() {
         $path = self::$system['controller_folder'];
         $sub_fix = self::$system['controller_file_subfix'];
+        $res = $this->scan($path);
+        foreach ($res as &$p) {
+            $p = str_replace(array($path . '/', $sub_fix), '', $p);
+        }
+        return array_diff($res,array('woniu_debuger'));
+    }
 
+    public function getModels() {
+        $path = self::$system['model_folder'];
+        $sub_fix = self::$system['model_file_subfix'];
         $res = $this->scan($path);
         foreach ($res as &$p) {
             $p = str_replace(array($path . '/', $sub_fix), '', $p);
@@ -56,16 +77,16 @@ class Woniu_debuger extends WoniuController {
     public function scan($path) {
         $controllers = array();
         $files = array_diff(scandir($path), array('.', '..'));
-        $reach_last=false;
+        $reach_last = false;
         foreach ($files as $p) {
-            if($reach_last==$p){
-                $reach_last=true;
+            if ($reach_last == $p) {
+                $reach_last = true;
             }
             $p = $path . '/' . $p;
             if (is_file($p)) {
                 $controllers[] = $p;
             } else {
-                $controllers=  array_merge($controllers,$this->scan($p));
+                $controllers = array_merge($controllers, $this->scan($p));
             }
         }
         return $controllers;

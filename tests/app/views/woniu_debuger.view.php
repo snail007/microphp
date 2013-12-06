@@ -42,6 +42,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             }
         </style>
         <script>
+            var controllers=<?php echo json_encode($c)?>;
+            var models=<?php echo json_encode($m)?>;
         $(function(){
             $('#type').change(function(){
                 $('.cm').hide();
@@ -59,12 +61,14 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 <option value="model">模型</option>
             </select>
             <select id="controller" class="cm" >
-                <option value="controller">控制器</option>
-                <option value="model">控制器</option>
+                <?php foreach (array_keys($c) as $c) {?>
+                <option value="<?php echo $c;?>"><?php echo $c;?></option>
+                <?php }?>
             </select>
             <select id="model"  class="cm" style="display:none;">
-                <option value="controller">模型</option>
-                <option value="model">模型</option>
+                <?php foreach (array_keys($m) as $m) {?>
+                <option value="<?php echo $m;?>"><?php echo $m;?></option>
+                <?php }?>
             </select>
             
             <span class="font">方法：</span>
