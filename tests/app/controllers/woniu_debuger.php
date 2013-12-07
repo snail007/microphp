@@ -58,12 +58,8 @@ class Woniu_debuger extends WoniuController {
         $m=new ReflectionMethod(basename($model),$method);
         $output=$m->invokeArgs($obj, $args);
         if(!is_null($output)){
-            echo $model.'->'.$method." 返回:\n";
             var_dump($output);
-        }else{
-            echo $model.'->'.$method." 返回:\nNULL";
         }
-        
     }
 
     public function getControllers() {

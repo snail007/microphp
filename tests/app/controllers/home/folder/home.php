@@ -26,6 +26,7 @@ class Home extends WoniuController {
     public function doIndex($name = '') {
 //        WoniuCache::set('aaa', array(1,2,3,4,5,6));
 //        var_dump(WoniuCache::get('aaa'));
+        sleep(1);
         var_dump($this->router);
         exit();
         WoniuController::instance('home.TestHook')->doTest();

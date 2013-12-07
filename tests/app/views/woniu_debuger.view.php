@@ -73,8 +73,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 border: gray solid thin;
                 width: 300px;
                 height:33px;
-                vertical-align: baseline; 
-                display: inline-block
             }
             .remove{
                 cursor: pointer;
@@ -94,6 +92,9 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             }
             body{
                 padding-bottom: 100px;
+            }
+            #request_url{
+                
             }
         </style>
         <script>
@@ -155,9 +156,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                     var table=$(this).parent().parent().find('.parameters');
                     table.append(html);
             });
-            $('#sender_form').ajaxForm(function(data){
-                  output(data);
-            });
+            $('#sender_form').ajaxForm({
+                success:output,
+                error:output
+            }); 
             $('#send').click(function(){
                 $('#po tr').each(function(){
                     var key=$(this).find('.key').val();
@@ -167,9 +169,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 var $form=$('#sender_form');
                 $form.attr('action',action);
                 start_time=new Date().getTime();
+                $('#request_url').html($('#method_type').val().toUpperCase()+' : '+action);
+                $(this).text('loading...').attr('disabled',true);
                 $form.submit();
             });
-            
         });
         function getUrl(){
             var parameters=[];
@@ -230,10 +233,21 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                   return html;
             }
         }
-        function output(data){
-            var useTime=(new Date().getTime()-start_time)+'ms';
-            var html=data;
+        function output(data,t,x){
+            console.log(data);
+            console.log(t);
+            console.log(x);
+            var html=typeof(data)=='object'?data.responseText:data;
+            var code=typeof(data)=='object'?data.status:x.status;
+            var color='color:'+(code!=200?'red':'darkgreen');
+            var useTime=(new Date().getTime()-start_time);
+            var seconds=Math.floor(useTime/1000);
+            var ms=(useTime-seconds*1000);
+            var timeInfo='时间 : <b>'+(seconds?seconds+'s':'')+(ms?(seconds?',':'')+ms+'ms':'')+'</b>\n';
+            var satusInfo='状态 : <b style="'+color+'">'+code+"</b>";
+            $('#request_time').html(timeInfo+satusInfo);
             $('#output').val(html);
+            $('#send').text('发送').attr('disabled',false);
         }
         </script>
     </head>
@@ -248,7 +262,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                     <input  type="radio" name="selecter" value="model"/>模型
                 </label>
                 <button id="send2">发送</button>
-                <span style="display:inline-block;float: right;width:200px;">
+                <span style="display:inline-block;float: right;width:260px;">
                     <select id="method_type">
                         <option value="get">GET</option>
                         <option value="post">POST</option>
@@ -291,6 +305,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             </form>
             <fieldset>
                 <legend class="font">返回数据:</legend>
+                <div>
+                    <div id="request_url"></div>
+                    <p id="request_time"></p>
+                </div>
                 <textarea id="output"></textarea>
             </fieldset>
         </div>

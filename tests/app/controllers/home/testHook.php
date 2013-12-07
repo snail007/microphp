@@ -19,9 +19,27 @@
  * @filesource
  */
 class TestHook extends ControllerHook{
-    public function doTest() {
-        $this->printHook();
-    }
+    public function doTestA() {
+        if(empty($_SERVER['HTTP_IF_NONE_MATCH'])){
+            //第一次请求
+            //
+            //.....投票处理代码.......
+            //
+            
+            header('Etag: vote_yes');
+            echo '投票成功';
+        }elseif($_SERVER['HTTP_IF_NONE_MATCH']=='vote_yes'){
+            //第二次请求，设置为重复投票标志
+            header('Etag: vote_okay');
+            echo '已经投票!';
+        }elseif($_SERVER['HTTP_IF_NONE_MATCH']=='vote_okay'){
+            //第三次及以后的请求直接使用第二次的内容。
+            header('HTTP/1.1 304 NotModify');
+        }else{
+            //非法的etag
+        }
+        //$this->printHook();
+    } 
 }
 
 /* End of file testHook.php */
