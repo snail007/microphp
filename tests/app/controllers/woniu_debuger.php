@@ -113,6 +113,7 @@ class Woniu_debuger extends WoniuController {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct' && stripos($method->name, $prefix) === 0) {
                 $_m['name']=$method->name;
                 $m=new ReflectionMethod($clazz, $method->name);
+                $_m['min_count']=$m->getNumberOfRequiredParameters();
                 $args=$m->getParameters();
                 $_args=array();
                 foreach ($args as $a) {
@@ -137,6 +138,7 @@ class Woniu_debuger extends WoniuController {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct') {
                 $_m['name'] = $method->name;
                 $m=new ReflectionMethod($clazz, $method->name);
+                $_m['min_count']=$m->getNumberOfRequiredParameters();
                 $args=$m->getParameters();
                 $_args=array();
                 foreach ($args as $a) {
