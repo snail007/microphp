@@ -234,9 +234,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             }
         }
         function output(data,t,x){
-            console.log(data);
-            console.log(t);
-            console.log(x);
             var html=typeof(data)=='object'?data.responseText:data;
             var code=typeof(data)=='object'?data.status:x.status;
             var color='color:'+(code!=200?'red':'darkgreen');
