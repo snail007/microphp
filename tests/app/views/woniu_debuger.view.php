@@ -45,6 +45,11 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 font-size: 1.5em;
                 padding:5px 10px;
             }
+            #send2{
+                font-size: 1.5em;
+                padding:5px 10px;
+                visibility: hidden;
+            }
             #content{
                 width: 900px;
                 margin: 0 auto;
@@ -77,18 +82,34 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             .td{
                 vertical-align: middle;
             }
+            #output{
+                padding:5px;
+                width:99%;
+                height:300px;
+                border:none;
+                resize: none;
+            }
+            fieldset{
+                border: gray solid thin;
+            }
+            body{
+                padding-bottom: 100px;
+            }
         </style>
         <script>
+            var start_time=0;
+            var entrance='<?php echo pathinfo($this->input->server('SCRIPT_FILENAME'),PATHINFO_BASENAME);?>';
+            var c_prepfix='<?php echo self::$system['controller_method_prefix'];?>';
             var controllers=<?php echo json_encode($c)?>;
             var models=<?php echo json_encode($m)?>;
         $(function(){
             $('#nav input[name="selecter"]').click(function(){
                 $('.cm').removeClass('current').hide();
                 $("#"+$(this).val()).addClass('current').show();
-                $('#method').html(getOptions($(this).val(),$("#"+$(this).val()).val()));
+                $('#method').html(getOptions($(this).val(),$("#"+$(this).val()).val().replace(/\./g,'/')));
             });
             $('.cm').change(function(){
-                $('#method').html(getOptions($(this).attr('id'),$(this).val()));
+                $('#method').html(getOptions($(this).attr('id'),$(this).val().replace(/\./g,'/')));
             });
             $('#nav input[name="selecter"]').eq(0).click();
             $('body').on('change','.ptype',function(){
@@ -132,15 +153,21 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                         <td class="val_w">'+(is_p?'':'<textarea class="val"></textarea>')+'</td>\
                         </tr>';
                     var table=$(this).parent().parent().find('.parameters');
-                    console.log(table);
                     table.append(html);
+            });
+            $('#sender_form').ajaxForm(function(data){
+                  output(data);
             });
             $('#send').click(function(){
                 $('#po tr').each(function(){
                     var key=$(this).find('.key').val();
                     $(this).find('.val').attr('name',key);
                 });
-                console.log(getUrl());
+                var action=getUrl();
+                var $form=$('#sender_form');
+                $form.attr('action',action);
+                start_time=new Date().getTime();
+                $form.submit();
             });
             
         });
@@ -163,7 +190,24 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             });
             var p_str=parameters.join('/');
             var g_str=gets.join('&');
-            var url=p_str+(g_str?'&'+g_str:'');
+            var parameters_str=p_str+(g_str?'&'+g_str:'');
+            
+            var type=$('#nav input:checked').val();
+            var clazz=$('.current').val();
+            var method=$('#method').val();
+            var url=entrance;
+            if(type=='controller'){
+                if(method){
+                    method=method.replace(c_prepfix,'');
+                    method=method.substring(0,1).toLowerCase()+method.substring(1);
+                    url+='?'+clazz+'.'+method;
+                }
+                if(parameters_str){
+                    url+='/'+parameters_str;
+                }
+            }else{
+               url+='?woniu_debuger.modelLoader/'+parameters_str+'&debuger_model='+clazz+'&debuger_method='+method;
+            }
             return url;
         }
         function getOptions(type,clazz){
@@ -173,7 +217,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                   if(!options){return '';}
                   var html='';
                   for(var i=0;i<options.length;i++){
-                      html+='<option value="'+options[i]+'">'+options[i]+'</option>';
+                      html+='<option value="'+options[i].name+'">'+options[i].name+options[i].args+'</option>';
                   }
                   return html;
             }else{
@@ -181,10 +225,15 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                   if(!options){return '';}
                   var html='';
                   for(var i=0;i<options.length;i++){
-                      html+='<option value="'+options[i]+'">'+options[i]+'</option>';
+                      html+='<option value="'+options[i].name+'">'+options[i].name+options[i].args+'</option>';
                   }
                   return html;
             }
+        }
+        function output(data){
+            var useTime=(new Date().getTime()-start_time)+'ms';
+            var html=data;
+            $('#output').val(html);
         }
         </script>
     </head>
@@ -198,11 +247,20 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 <label class="font">
                     <input  type="radio" name="selecter" value="model"/>模型
                 </label>
+                <button id="send2">发送</button>
+                <span style="display:inline-block;float: right;width:200px;">
+                    <select id="method_type">
+                        <option value="get">GET</option>
+                        <option value="post">POST</option>
+                    </select>
+                    <button id="send">发送</button>
+                </span>
             </div>
+            <br style="clear:both;"/>
             <span class="font">Class:</span>
             <select id="controller" class="cm" >
                 <?php foreach (array_keys($c) as $c) {?>
-                <option value="<?php echo $c;?>"><?php echo $c;?></option>
+                <option value="<?php echo str_replace('/', '.', $c);?>"><?php echo str_replace('/', '.', $c);?></option>
                 <?php }?>
             </select>
             
@@ -213,15 +271,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             </select>
             <span class="font">Method:</span>
             <select id="method" ></select>
-            
-            <select id="method_type">
-                <option value="get">GET</option>
-                <option value="post">POST</option>
-            </select>
-            <button id="send">发送</button>
-            
+             
             <div class="panel" id="p" style="padding:10px;">
                 <span class="font">方法参数：<span class="add">+</span></span>
+                
                 <table class="parameters">
                     
                 </table>
@@ -230,12 +283,16 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 <span class="font">GET参数：<span class="add">+</span></span>
                 <table class="parameters"></table>
             </div>
-            <form id="sender_form" enctype="" action="" method="get" style="display:none;">
+            <form id="sender_form" name="sender_form" enctype="application/x-www-form-urlencoded" action="" method="get" style="display:none;">
                 <div class="panel" id="po" style="padding:10px;">
                 <span class="font">POST参数：<span class="add">+</span></span>
                 <table class="parameters"></table>
                 </div>
             </form>
+            <fieldset>
+                <legend class="font">返回数据:</legend>
+                <textarea id="output"></textarea>
+            </fieldset>
         </div>
     </body>
 </html>

@@ -34,18 +34,36 @@ class Woniu_debuger extends WoniuController {
     public function doIndex() {
         $controllers=$this->getControllers();
         $models=$this->getModels();
-        $c_sub_fix = self::$system['controller_file_subfix'];
         $c=array();
         foreach ($controllers as $cl) {
-            $c[$cl.$c_sub_fix]=  $this->getControllerMethods($cl);
+            $c[$cl]=  $this->getControllerMethods($cl);
         }
         $m=array();
         foreach ($models as $md) {
             $m[$md]=  $this->getModelMethods($md);
         }
+        ksort($c);
+        ksort($m);
         $data['c']=$c;
         $data['m']=$m;
         $this->view('woniu_debuger',$data);
+    }
+    public function doModelLoader(){
+        $args=  func_get_args();
+        $model= $this->input->get('debuger_model');
+        $method=$this->input->get('debuger_method');
+        unset($_GET['debuger_model']);
+        unset($_GET['debuger_method']);
+        $obj=$this->model($model);
+        $m=new ReflectionMethod(basename($model),$method);
+        $output=$m->invokeArgs($obj, $args);
+        if(!is_null($output)){
+            echo $model.'->'.$method." 返回:\n";
+            var_dump($output);
+        }else{
+            echo $model.'->'.$method." 返回:\nNULL";
+        }
+        
     }
 
     public function getControllers() {
@@ -97,10 +115,18 @@ class Woniu_debuger extends WoniuController {
         $prefix = self::$system['controller_method_prefix'];
         foreach ($all_methods as $method) {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct' && stripos($method->name, $prefix) === 0) {
-                $methods[] = $method->name;
+                $_m['name']=$method->name;
+                $m=new ReflectionMethod($clazz, $method->name);
+                $args=$m->getParameters();
+                $_args=array();
+                foreach ($args as $a) {
+                    $_args[]='$'.$a->name;
+                }
+                $_m['args']=  '('.implode(',', $_args).')';
+                $methods[]=$_m;
             }
         }
-        return $methods;
+        return sortRs($methods, 'name');
     }
 
     public function getModelMethods($clazz) {
@@ -113,10 +139,18 @@ class Woniu_debuger extends WoniuController {
         $methods = array();
         foreach ($all_methods as $method) {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct') {
-                $methods[] = $method->name;
+                $_m['name'] = $method->name;
+                $m=new ReflectionMethod($clazz, $method->name);
+                $args=$m->getParameters();
+                $_args=array();
+                foreach ($args as $a) {
+                    $_args[]='$'.$a->name;
+                }
+                $_m['args']=  '('.implode(',', $_args).')';
+                $methods[] = $_m;
             }
         }
-        return $methods;
+        return sortRs($methods, 'name');
     }
 
 }

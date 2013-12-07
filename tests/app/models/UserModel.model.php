@@ -17,5 +17,7 @@ class UserModel extends WoniuModel {
         $this->model('test/SubUserModel');
         return $this->model('test/SubUserModel','subUser');
     }
-
+    public function plus($a,$b){
+        return $a+$b;
+    }
 }
