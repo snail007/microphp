@@ -45,38 +45,73 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             var controllers=<?php echo json_encode($c)?>;
             var models=<?php echo json_encode($m)?>;
         $(function(){
-            $('#type').change(function(){
+            $('#nav input[name="selecter"]').click(function(){
                 $('.cm').hide();
                 $("#"+$(this).val()).show();
+                console.log($(this).val());
+                console.log($("#"+$(this).val()).val());
+                $('#method').html(getOptions($(this).val(),$("#"+$(this).val()).val()));
+            });
+            $('.cm').change(function(){
+                $('#method').html(getOptions($(this).attr('id'),$(this).val()));
             });
         });
+        function getOptions(type,clazz){
+            var options;
+            if('controller'==type){
+                  options= controllers[clazz];
+                  if(!options){return '';}
+                  var html='';
+                  for(var i=0;i<options.length;i++){
+                      html+='<option value="'+options[i]+'">'+options[i]+'</option>';
+                  }
+                  return html;
+            }else{
+                  options= models[clazz];
+                  if(!options){return '';}
+                  var html='';
+                  for(var i=0;i<options.length;i++){
+                      html+='<option value="'+options[i]+'">'+options[i]+'</option>';
+                  }
+                  return html;
+            }
+        }
         </script>
     </head>
     <body>
         <div id="content">
             <h1>MicroPHP调试工具</h1>
-            <span class="font">类型：</span>
-            <select id="type">
-                <option value="controller">控制器</option>
-                <option value="model">模型</option>
-            </select>
+            <div style="padding:10px;" id="nav">
+                <label  class="font">
+                    <input type="radio" name="selecter" value="controller" checked="checked" />控制器
+                </label>
+                <label class="font">
+                    <input  type="radio" name="selecter" value="model"/>模型
+                </label>
+            </div>
+            
             <select id="controller" class="cm" >
                 <?php foreach (array_keys($c) as $c) {?>
                 <option value="<?php echo $c;?>"><?php echo $c;?></option>
                 <?php }?>
             </select>
+            
             <select id="model"  class="cm" style="display:none;">
                 <?php foreach (array_keys($m) as $m) {?>
                 <option value="<?php echo $m;?>"><?php echo $m;?></option>
                 <?php }?>
             </select>
             
-            <span class="font">方法：</span>
-            <select id="method">
-                <option value="get">GET</option>
-                <option value="post">POST</option>
-            </select>
-            <button id="send">发送</button>
+            <select id="method" ></select>
+            
+            <div id="sender">
+                <span class="font">方法：</span>
+                <select id="method">
+                    <option value="get">GET</option>
+                    <option value="post">POST</option>
+                </select>
+                <button id="send">发送</button>
+            </div>
         </div>
     </body>
 </html>
