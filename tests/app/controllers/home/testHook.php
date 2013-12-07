@@ -37,6 +37,8 @@ class TestHook extends ControllerHook{
             header('HTTP/1.1 304 NotModify');
         }else{
             //非法的etag
+            //直接使用第二次的内容。
+            header('HTTP/1.1 304 NotModify');
         }
         //$this->printHook();
     } 
