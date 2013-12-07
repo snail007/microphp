@@ -135,7 +135,37 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                     console.log(table);
                     table.append(html);
             });
+            $('#send').click(function(){
+                $('#po tr').each(function(){
+                    var key=$(this).find('.key').val();
+                    $(this).find('.val').attr('name',key);
+                });
+                console.log(getUrl());
+            });
+            
         });
+        function getUrl(){
+            var parameters=[];
+            var gets=[];
+            $('#p .key').each(function(){
+                var val=$(this).val();
+                if(val){
+                    parameters.push(encodeURIComponent(val));
+                }
+            });
+            $('#g tr').each(function(){
+                var key=$(this).find('.key').val();
+                var val=$(this).find('.val').val();
+                var kv=key+'='+encodeURIComponent(val);
+                if(key){
+                    gets.push(kv);
+                }
+            });
+            var p_str=parameters.join('/');
+            var g_str=gets.join('&');
+            var url=p_str+(g_str?'&'+g_str:'');
+            return url;
+        }
         function getOptions(type,clazz){
             var options;
             if('controller'==type){
@@ -190,7 +220,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             </select>
             <button id="send">发送</button>
             
-            
             <div class="panel" id="p" style="padding:10px;">
                 <span class="font">方法参数：<span class="add">+</span></span>
                 <table class="parameters">
@@ -205,7 +234,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 <div class="panel" id="po" style="padding:10px;">
                 <span class="font">POST参数：<span class="add">+</span></span>
                 <table class="parameters"></table>
-            </div>
+                </div>
             </form>
         </div>
     </body>
