@@ -93,11 +93,13 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             $('#nav input[name="selecter"]').eq(0).click();
             $('body').on('change','.ptype',function(){
                 var text='<textarea class="val"></textarea>';
-                var file='<input type="file"/>';
+                var file='<input class="val" type="file"/>';
                 var $td=$(this).parent().parent().find('.val_w');
                 if($(this).val()=='file'){
                     $td.html(file);
+                    $('#sender_form').attr('enctype','multipart-form-data');
                 }else{
+                    $('#sender_form').attr('enctype','application/x-www-form-urlencoded');
                     $td.html(text);
                 }
             });
@@ -108,6 +110,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                     $('#sender_form').show();
                 }
                 $('#po .parameters').html('');
+                $('#sender_form').attr('method',$(this).val());
             });
             $('body').on('click','.remove',function(){
                 $(this).parent().parent().remove();
@@ -198,7 +201,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 <span class="font">GET参数：<span class="add">+</span></span>
                 <table class="parameters"></table>
             </div>
-            <form id="sender_form" enctype="multipart-form-data" action="" method="" style="display:none;">
+            <form id="sender_form" enctype="" action="" method="get" style="display:none;">
                 <div class="panel" id="po" style="padding:10px;">
                 <span class="font">POST参数：<span class="add">+</span></span>
                 <table class="parameters"></table>
