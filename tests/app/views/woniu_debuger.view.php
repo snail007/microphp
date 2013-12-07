@@ -181,8 +181,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 var count=$(this).find('option:selected').attr('count');
                 var tr_len=$('#p tr').length;
                 var $add=$('#p .add');
-                console.log(count);
-                console.log(tr_len);
                 if(tr_len<count){
                     for(var i=0;i<count-tr_len;i++){
                         $add.click();
