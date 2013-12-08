@@ -60,11 +60,9 @@ class WoniuDebuger {
         if (count($this->times) >= 2) {
             $str_arr = array();
             for ($i = 1; $i < count($this->times); $i++) {
-                $str_arr[] = "{$i}. {$this->times[$i-1]['flag']}->{$this->times[$i]['flag']} : "
+                $str_arr[] = "{$i}. {$this->times[$i - 1]['flag']}->{$this->times[$i]['flag']} : "
                         . $this->formatTime($this->times[$i]['time'] - $this->times[$i - 1]['time']);
             }
-            $this->reset();
-
             return implode(($is_br ? '<br/>' : "\n"), $str_arr);
         }
         return '';
@@ -79,7 +77,12 @@ class WoniuDebuger {
     }
 
     public function showToFile($filename = null) {
-        $this->writeLog($this->getOutput(), $filename);
+        $content = $this->getOutput();
+        $content = $content = "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
+                . "\nIP:" . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')
+                . "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE)."\n" : '') . "TimeInfo:\n" . $content;
+        $content = date('Y-m-d H:i:s') . $content . "\n\n";
+        $this->writeLog($content, $filename);
     }
 
     private function writeLog($content, $filename = null) {
@@ -113,6 +116,10 @@ class WoniuDebuger {
     private function getMillisecond() {
         list($s1, $s2) = explode(' ', microtime());
         return (float) sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
+    }
+
+    private function getUrl() {
+        return (empty($_SERVER['REQUEST_METHOD'])?'URL':  strtoupper($_SERVER['REQUEST_METHOD'])).':http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
     }
 
 }
