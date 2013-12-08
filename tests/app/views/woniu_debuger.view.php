@@ -166,6 +166,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 error:output
             }); 
             $('#send').click(function(){
+                $('#cls').click();
                 $('#po tr').each(function(){
                     var key=$(this).find('.key').val();
                     $(this).find('.val').attr('name',key);
@@ -187,6 +188,11 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                         $add.click();
                     }
                 }
+            });
+            $('#cls').click(function(){
+                $('#request_url').html('');
+                $('#request_time').html('');
+                $('#output').val('');
             });
         });
         function getUrl(){
@@ -316,7 +322,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 </div>
             </form>
             <fieldset>
-                <legend class="font">返回数据:</legend>
+                <legend class="font">返回数据:<a style="font-size:12px;font-weight: normal;" href="javascript:void(0);" id="cls">清空</a></legend>
                 <div>
                     <div id="request_url"></div>
                     <p id="request_time"></p>
