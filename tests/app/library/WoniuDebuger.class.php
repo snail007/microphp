@@ -44,18 +44,34 @@ class WoniuDebuger {
         $this->maxLogFileSize = $maxLogFileSize;
     }
 
-    public function getLogFile() {
-        return $this->logFile;
-    }
-
+    /**
+     * 设置日志文件路径
+     * @param type $logFile
+     */
     public function setLogFile($logFile) {
         $this->logFile = $logFile;
     }
 
+    /**
+     * 清空所有mark的时间点，用于重新开始测试
+     */
+    public function reset() {
+        $this->times = array();
+    }
+
+    /**
+     * 设置一个时间标记点
+     * @param type $flag
+     */
     public function mark($flag) {
         $this->times[] = array('flag' => $flag, 'time' => $this->getMillisecond());
     }
 
+    /**
+     * 获取格式化过的时间信息内容
+     * @param type $is_br 换行符是否使用&lt;br/&gt;
+     * @return string
+     */
     public function getOutput($is_br = false) {
         if (count($this->times) >= 2) {
             $str_arr = array();
@@ -68,6 +84,10 @@ class WoniuDebuger {
         return '';
     }
 
+    /**
+     * 显示格式化过的时间信息
+     * @param type $is_html 是否使用html格式输出，true:html false:纯文本
+     */
     public function show($is_html = false) {
         if ($is_html) {
             echo "<pre>" . $this->getOutput(true) . "</pre>";
@@ -76,11 +96,15 @@ class WoniuDebuger {
         }
     }
 
+    /**
+     * 把格式化过的时间信息写到日志文件
+     * @param type $filename 文件路径
+     */
     public function showToFile($filename = null) {
         $content = $this->getOutput();
         $content = $content = "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
                 . "\nIP:" . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')
-                . "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE)."\n" : '') . "TimeInfo:\n" . $content;
+                . "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE) . "\n" : '') . "TimeInfo:\n" . $content;
         $content = date('Y-m-d H:i:s') . $content . "\n\n";
         $this->writeLog($content, $filename);
     }
@@ -108,10 +132,6 @@ class WoniuDebuger {
         return $timeInfo;
     }
 
-    public function reset() {
-        $this->times = array();
-    }
-
     //取得当前时间的毫秒
     private function getMillisecond() {
         list($s1, $s2) = explode(' ', microtime());
@@ -119,7 +139,7 @@ class WoniuDebuger {
     }
 
     private function getUrl() {
-        return (empty($_SERVER['REQUEST_METHOD'])?'URL':  strtoupper($_SERVER['REQUEST_METHOD'])).':http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
+        return (empty($_SERVER['REQUEST_METHOD']) ? 'URL' : strtoupper($_SERVER['REQUEST_METHOD'])) . ':http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
     }
 
 }
