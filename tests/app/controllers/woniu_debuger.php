@@ -105,7 +105,7 @@ class Woniu_debuger extends WoniuController {
         foreach ($res as &$p) {
             $p = str_replace(array($path . '/', $sub_fix), '', $p);
         }
-        return array_diff($res, array('woniu_debuger'));
+        return array_diff($res, array(lcfirst(get_class($this))));
     }
 
     public function getModels() {
