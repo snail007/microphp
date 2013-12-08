@@ -265,7 +265,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
     </head>
     <body>
         <div id="content">
-            <h1>MicroPHP调试工具</h1>
+            <h1>MicroPHP调试工具<a style="font-size:12px;font-weight: normal;" href="?<?php echo $this->router['cpath'];?>.logout">退出</a></h1>
             <div style="padding:10px;" id="nav">
                 <label  class="font">
                     <input type="radio" name="selecter" value="controller" checked="checked" />控制器

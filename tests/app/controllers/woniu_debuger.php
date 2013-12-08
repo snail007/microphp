@@ -30,34 +30,70 @@
  * @createdtime            2013-12-6 19:43:33
  */
 class Woniu_debuger extends WoniuController {
-    private $view_path='woniu_debuger';
-    public function doIndex() {
-        $controllers=$this->getControllers();
-        $models=$this->getModels();
-        $c=array();
-        foreach ($controllers as $cl) {
-            $c[$cl]=  $this->getControllerMethods($cl);
+
+    private $view_path = 'woniu_debuger';
+    /**
+     * 访问密码
+     * @var type 
+     */
+    private $password = 'snail';
+    /**
+     * IP白名单，只有在数组中的IP才能访问，如果白名单为空则允许所有IP访问
+     * @var type 
+     */
+    private $ip_white_list=array(
+        '127.0.0.1'
+    );
+    public function __construct() {
+        parent::__construct();
+        @session_start();
+        if(!empty($this->ip_white_list)&&!in_array($this->input->server('remote_addr'), $this->ip_white_list)){
+            exit();
         }
-        $m=array();
+        if (empty($_SESSION['debuger'])&&$this->input->post('p') == $this->password) {
+            $_SESSION['debuger'] = true;
+        } elseif (empty($_SESSION['debuger'])) {
+            
+            $html='<form action="?'.$this->router['cpath'].'.index" method="post">'
+                    . 'Password:<input name="p" style="width:80px;" type="password"/>'
+                    . '</form>';
+            exit($html);
+        }
+    }
+
+    public function doLogout() {
+        unset($_SESSION['debuger']);
+        $this->redirect('?'.$this->router['cpath'].'.index');
+    }
+
+    public function doIndex() {
+        $controllers = $this->getControllers();
+        $models = $this->getModels();
+        $c = array();
+        foreach ($controllers as $cl) {
+            $c[$cl] = $this->getControllerMethods($cl);
+        }
+        $m = array();
         foreach ($models as $md) {
-            $m[$md]=  $this->getModelMethods($md);
+            $m[$md] = $this->getModelMethods($md);
         }
         ksort($c);
         ksort($m);
-        $data['c']=$c;
-        $data['m']=$m;
-        $this->view($this->view_path,$data);
+        $data['c'] = $c;
+        $data['m'] = $m;
+        $this->view($this->view_path, $data);
     }
-    public function doModelLoader(){
-        $args=  func_get_args();
-        $model= $this->input->get('debuger_model');
-        $method=$this->input->get('debuger_method');
+
+    public function doModelLoader() {
+        $args = func_get_args();
+        $model = $this->input->get('debuger_model');
+        $method = $this->input->get('debuger_method');
         unset($_GET['debuger_model']);
         unset($_GET['debuger_method']);
-        $obj=$this->model($model);
-        $m=new ReflectionMethod(basename($model),$method);
-        $output=$m->invokeArgs($obj, $args);
-        if(!is_null($output)){
+        $obj = $this->model($model);
+        $m = new ReflectionMethod(basename($model), $method);
+        $output = $m->invokeArgs($obj, $args);
+        if (!is_null($output)) {
             var_dump($output);
         }
     }
@@ -69,7 +105,7 @@ class Woniu_debuger extends WoniuController {
         foreach ($res as &$p) {
             $p = str_replace(array($path . '/', $sub_fix), '', $p);
         }
-        return array_diff($res,array('woniu_debuger'));
+        return array_diff($res, array('woniu_debuger'));
     }
 
     public function getModels() {
@@ -111,16 +147,16 @@ class Woniu_debuger extends WoniuController {
         $prefix = self::$system['controller_method_prefix'];
         foreach ($all_methods as $method) {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct' && stripos($method->name, $prefix) === 0) {
-                $_m['name']=$method->name;
-                $m=new ReflectionMethod($clazz, $method->name);
-                $_m['min_count']=$m->getNumberOfRequiredParameters();
-                $args=$m->getParameters();
-                $_args=array();
+                $_m['name'] = $method->name;
+                $m = new ReflectionMethod($clazz, $method->name);
+                $_m['min_count'] = $m->getNumberOfRequiredParameters();
+                $args = $m->getParameters();
+                $_args = array();
                 foreach ($args as $a) {
-                    $_args[]='$'.$a->name;
+                    $_args[] = '$' . $a->name;
                 }
-                $_m['args']=  '('.implode(',', $_args).')';
-                $methods[]=$_m;
+                $_m['args'] = '(' . implode(',', $_args) . ')';
+                $methods[] = $_m;
             }
         }
         return sortRs($methods, 'name');
@@ -137,14 +173,14 @@ class Woniu_debuger extends WoniuController {
         foreach ($all_methods as $method) {
             if (strtolower($method->class) == strtolower($clazz) && $method->name != '__construct') {
                 $_m['name'] = $method->name;
-                $m=new ReflectionMethod($clazz, $method->name);
-                $_m['min_count']=$m->getNumberOfRequiredParameters();
-                $args=$m->getParameters();
-                $_args=array();
+                $m = new ReflectionMethod($clazz, $method->name);
+                $_m['min_count'] = $m->getNumberOfRequiredParameters();
+                $args = $m->getParameters();
+                $_args = array();
                 foreach ($args as $a) {
-                    $_args[]='$'.$a->name;
+                    $_args[] = '$' . $a->name;
                 }
-                $_m['args']=  '('.implode(',', $_args).')';
+                $_m['args'] = '(' . implode(',', $_args) . ')';
                 $methods[] = $_m;
             }
         }
