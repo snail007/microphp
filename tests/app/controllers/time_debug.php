@@ -34,6 +34,7 @@ class Time_debug extends WoniuController {
         $debug=new WoniuDebuger();
         $debug->mark('t1');
         sleep(1);
+        $this->database();
         $debug->mark('t2');
         $debug->show($is_html);
     }

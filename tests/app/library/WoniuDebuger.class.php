@@ -60,7 +60,7 @@ class WoniuDebuger {
         if (count($this->times) >= 2) {
             $str_arr = array();
             for ($i = 1; $i < count($this->times); $i++) {
-                $str_arr[] = "{$i}. {$this->times[$i]['flag']}->{$this->times[$i - 1]['flag']} : "
+                $str_arr[] = "{$i}. {$this->times[$i-1]['flag']}->{$this->times[$i]['flag']} : "
                         . $this->formatTime($this->times[$i]['time'] - $this->times[$i - 1]['time']);
             }
             $this->reset();
