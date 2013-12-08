@@ -46,4 +46,7 @@ class View extends WoniuController{
         $data['msg']='lude';
         $this->view('view',$data);
     }
+    public function doTest(){
+        var_dump($this->router);
+    }
 }

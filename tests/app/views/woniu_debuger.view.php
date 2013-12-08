@@ -98,6 +98,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             }
         </style>
         <script>
+            var cpath='<?php echo $this->router['cpath']?>';
             var start_time=0;
             var entrance='<?php echo pathinfo($this->input->server('SCRIPT_FILENAME'),PATHINFO_BASENAME);?>';
             var c_prepfix='<?php echo self::$system['controller_method_prefix'];?>';
@@ -223,7 +224,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                     url+='/'+parameters_str;
                 }
             }else{
-               url+='?woniu_debuger.modelLoader/'+parameters_str+'&debuger_model='+clazz+'&debuger_method='+method;
+               url+='?'+cpath+'.modelLoader/'+parameters_str+'&debuger_model='+clazz+'&debuger_method='+method;
             }
             return url;
         }

@@ -30,7 +30,7 @@
  * @createdtime            2013-12-6 19:43:33
  */
 class Woniu_debuger extends WoniuController {
-
+    private $view_path='woniu_debuger';
     public function doIndex() {
         $controllers=$this->getControllers();
         $models=$this->getModels();
@@ -46,7 +46,7 @@ class Woniu_debuger extends WoniuController {
         ksort($m);
         $data['c']=$c;
         $data['m']=$m;
-        $this->view('woniu_debuger',$data);
+        $this->view($this->view_path,$data);
     }
     public function doModelLoader(){
         $args=  func_get_args();
