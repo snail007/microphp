@@ -98,7 +98,8 @@ $system['library_file_subfix'] = '.class.php';
  */
 $system['helper_file_subfix'] = '.php';
 /**
- * 自定义Loader，用于拓展框架核心功能
+ * 自定义Loader，用于拓展框架核心功能,
+ * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
  * 这里是自定义Loader类文件的完整路径
  * 自定义Loader文件名称和类名称必须是：
  * 文件名称：类名.class.php

@@ -254,20 +254,28 @@ class WoniuLoader {
     }
 
     /**
-     * 检测用户是否自定义了Loader
-     * 该方法在本类定义后立即调用，依赖外部变量：$system['my_loader']
-     * 因此如果用户要自定义Loader，应该在入口文件中，包含核心文件之前定义该变量
-     * 插件模式也是如此。
-     * $system['my_loader']是自定义Loader的完整路径
-     * 关于自定义Loader写法，详细信息请看手册
-     * @global type $system
+     * 自定义Loader，用于拓展框架核心功能,
+     * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
+     * 这里是自定义Loader类文件的完整路径
+     * 自定义Loader文件名称和类名称必须是：
+     * 文件名称：类名.class.php
+     * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
+     * 注意：
+     * 1.自定义Loader必须继承WoniuLoader。
+     * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
+     * class MyLoader extends WoniuLoader {
+     *      public function __construct() {
+     *          parent::__construct();
+     *      }
+     *  } 
+     * 3.如果无需自定义Loader，留空即可。
      */
     public static function checkUserLoader() {
         global $system;
         if (!class_exists('WoniuLoaderPlus', FALSE)) {
             if (!empty($system['my_loader'])) {
                 self::includeOnce($system['my_loader']);
-                $clazz=  basename($system['my_loader'], '.class.php');
+                $clazz = basename($system['my_loader'], '.class.php');
                 if (class_exists($clazz, FALSE)) {
                     eval('class WoniuLoaderPlus extends MyLoader{}');
                 } else {
