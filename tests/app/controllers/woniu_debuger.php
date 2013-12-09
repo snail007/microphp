@@ -36,24 +36,36 @@ class Woniu_debuger extends WoniuController {
      * 访问密码
      * @var type 
      */
-    private $password = 'snail';
+    private $password = 'dev_wenda';
     /**
      * IP白名单，只有在数组中的IP才能访问，如果白名单为空则允许所有IP访问
      * @var type 
      */
     private $ip_white_list=array(
-        '127.0.0.1'
+        '127.0.0.1',
+        '10.0.0.253',
+        '10.0.0.159',
+        '119.253.60.2'
     );
+    /**
+     * 控制器文件夹和模型文件夹里面忽略的文件
+     * @var type 
+     */
+    private $ingore_files=array(
+        'index.html','.htaccess'
+    );
+    
     public function __construct() {
         parent::__construct();
-        @session_start();
+        if(!isset($_SESSION)){
+            session_start();
+        }
         if(!empty($this->ip_white_list)&&!in_array($this->input->server('remote_addr'), $this->ip_white_list)){
             exit();
         }
         if (empty($_SESSION['debuger'])&&$this->input->post('p') == $this->password) {
             $_SESSION['debuger'] = true;
         } elseif (empty($_SESSION['debuger'])) {
-            
             $html='<form action="?'.$this->router['cpath'].'.index" method="post">'
                     . 'Password:<input name="p" style="width:80px;" type="password"/>'
                     . '</form>';
@@ -69,21 +81,19 @@ class Woniu_debuger extends WoniuController {
     public function doIndex() {
         $controllers = $this->getControllers();
         $models = $this->getModels();
-        $c = array();
-        foreach ($controllers as $cl) {
-            $c[$cl] = $this->getControllerMethods($cl);
-        }
-        $m = array();
-        foreach ($models as $md) {
-            $m[$md] = $this->getModelMethods($md);
-        }
-        ksort($c);
-        ksort($m);
-        $data['c'] = $c;
-        $data['m'] = $m;
+        sort($controllers);
+        sort($models);
+        $data['c'] = $controllers;
+        $data['m'] = $models;
         $this->view($this->view_path, $data);
     }
-
+    public function doGetMethods($type=NULL) {
+        if($type=='controller'){
+            $this->ajax_echo(200,null,$this->getControllerMethods($this->input->post('clazz')));
+        }else{
+            $this->ajax_echo(200,null,$this->getModelMethods($this->input->post('clazz')));
+        }
+    }
     public function doModelLoader() {
         $args = func_get_args();
         $model = $this->input->get('debuger_model');
@@ -99,23 +109,29 @@ class Woniu_debuger extends WoniuController {
     }
 
     public function getControllers() {
-        $path = self::$system['controller_folder'];
+        $path = realpath(self::$system['controller_folder']);
         $sub_fix = self::$system['controller_file_subfix'];
         $res = $this->scan($path);
+        $ret=array();
         foreach ($res as &$p) {
-            $p = str_replace(array($path . '/', $sub_fix), '', $p);
+            if(!in_array(basename($p), $this->ingore_files)){
+                 $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
+            }
         }
-        return array_diff($res, array(lcfirst(get_class($this))));
+        return array_diff($ret, array(lcfirst(get_class($this))));
     }
 
     public function getModels() {
-        $path = self::$system['model_folder'];
+        $path = realpath(self::$system['model_folder']);
         $sub_fix = self::$system['model_file_subfix'];
         $res = $this->scan($path);
+        $ret=array();
         foreach ($res as &$p) {
-            $p = str_replace(array($path . '/', $sub_fix), '', $p);
+            if(!in_array(basename($p), $this->ingore_files)){
+                 $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
+            }
         }
-        return $res;
+        return $ret;
     }
 
     public function scan($path) {
@@ -128,7 +144,7 @@ class Woniu_debuger extends WoniuController {
             }
             $p = $path . '/' . $p;
             if (is_file($p)) {
-                $controllers[] = $p;
+                $controllers[] = realpath($p);
             } else {
                 $controllers = array_merge($controllers, $this->scan($p));
             }
