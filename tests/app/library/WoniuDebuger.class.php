@@ -127,7 +127,7 @@ class WoniuDebuger {
         $useTime = $milliseconds;
         $seconds = floor($useTime / 1000);
         $ms = ($useTime - $seconds * 1000);
-        $timeInfo = ($seconds ? $seconds . 's' : '') . ($ms ? ($seconds ? ',' : '') . $ms . 'ms' : '');
+        $timeInfo = ($seconds ? $seconds . 's' : '') . ($ms ? ($seconds ? ',' : '') . $ms . 'ms' : ($seconds ? '' : '0ms'));
 
         return $timeInfo;
     }
