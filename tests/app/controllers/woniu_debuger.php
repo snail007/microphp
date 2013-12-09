@@ -115,7 +115,7 @@ class Woniu_debuger extends WoniuController {
         $res = $this->scan($path);
         $ret=array();
         foreach ($res as &$p) {
-            if(stripos($p, '.')!==0&&!in_array(basename($p), $this->ingore_files)){
+            if(stripos(basename($p), '.')!==0&&!in_array(basename($p), $this->ingore_files)){
                  $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
             }
         }
@@ -128,7 +128,7 @@ class Woniu_debuger extends WoniuController {
         $res = $this->scan($path);
         $ret=array();
         foreach ($res as &$p) {
-            if(stripos($p, '.')!==0&&!in_array(basename($p), $this->ingore_files)){
+            if(stripos(basename($p), '.')!==0&&!in_array(basename($p), $this->ingore_files)){
                  $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
             }
         }
