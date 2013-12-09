@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-12-09 12:23:23
+ * @createdtime         2013-12-09 22:34:29
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -97,6 +97,24 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php'
  */
 $system['helper_file_subfix'] = '.php';
+/**
+ * 自定义Loader，用于拓展框架核心功能,
+ * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
+ * 这里是自定义Loader类文件的完整路径
+ * 自定义Loader文件名称和类名称必须是：
+ * 文件名称：类名.class.php
+ * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
+ * 注意：
+ * 1.自定义Loader必须继承WoniuLoader。
+ * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
+ * class MyLoader extends WoniuLoader {
+ *      public function __construct() {
+ *          parent::__construct();
+ *      }
+ *  } 
+ * 3.如果无需自定义Loader，留空即可。
+ */
+$system['my_loader']='';
 /**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
