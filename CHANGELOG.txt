@@ -6,7 +6,7 @@ $this->input->get_post($key=null,$default=null,$xss_clean=false);
 $this->input->get($key=null,$default=null,$xss_clean=false);
 $this->input->post($key=null,$default=null,$xss_clean=false);
 $this->input->cookie($key=null,$default=null,$xss_clean=false);
-2.增加了$system['my_loader']自定义Loader,方便用户拓展框架核心。
+2.增加了$system['my_loader']自定义Loader,方便用户在底层拓展框架核心。
 详细说明如下：
 /**
  * 自定义Loader，用于拓展框架核心功能,
