@@ -49,10 +49,11 @@ class Woniu_debuger extends WoniuController {
     );
     /**
      * 控制器文件夹和模型文件夹里面忽略的文件
+     * 点开头的文件会自动忽略，比如：.htaccess
      * @var type 
      */
     private $ingore_files=array(
-        'index.html','.htaccess'
+        'index.html'
     );
     
     public function __construct() {
@@ -114,7 +115,7 @@ class Woniu_debuger extends WoniuController {
         $res = $this->scan($path);
         $ret=array();
         foreach ($res as &$p) {
-            if(!in_array(basename($p), $this->ingore_files)){
+            if(stripos($p, '.')!==0&&!in_array(basename($p), $this->ingore_files)){
                  $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
             }
         }
@@ -127,7 +128,7 @@ class Woniu_debuger extends WoniuController {
         $res = $this->scan($path);
         $ret=array();
         foreach ($res as &$p) {
-            if(!in_array(basename($p), $this->ingore_files)){
+            if(stripos($p, '.')!==0&&!in_array(basename($p), $this->ingore_files)){
                  $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
             }
         }

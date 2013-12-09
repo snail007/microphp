@@ -108,13 +108,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             $('#nav input[name="selecter"]').click(function(){
                 $('.cm').removeClass('current').hide();
                 $("#"+$(this).val()).addClass('current').show();
-                $('#method')
-                        .html(getOptions($(this).val(),$("#"+$(this).val()).val().replace(/\./g,'/')))
-                        .change();
+                getOptions($(this).val(),$("#"+$(this).val()).val().replace(/\./g,'/'));
             });
             $('.cm').change(function(){
-                $('#method').html(getOptions($(this).attr('id'),$(this).val().replace(/\./g,'/')))
-                            .change();
+                getOptions($(this).attr('id'),$(this).val().replace(/\./g,'/'));
             });
             $('#nav input[name="selecter"]').eq(0).click();
             $('#method').change();
@@ -235,24 +232,16 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
             return url;
         }
         function getOptions(type,clazz){
-            var options;
-            if('controller'==type){
-                  options= controllers[clazz];
-                  if(!options){return '';}
-                  var html='';
-                  for(var i=0;i<options.length;i++){
-                      html+='<option count="'+options[i].min_count+'" value="'+options[i].name+'">'+options[i].name+options[i].args+'</option>';
-                  }
-                  return html;
-            }else{
-                  options= models[clazz];
-                  if(!options){return '';}
-                  var html='';
-                  for(var i=0;i<options.length;i++){
-                      html+='<option count="'+options[i].min_count+'" value="'+options[i].name+'">'+options[i].name+options[i].args+'</option>';
-                  }
-                  return html;
-            }
+            $('#method').html('');
+            var url='?'+cpath+'.getMethods/'+type;
+            $.post(url,{clazz:clazz},function(data){
+                var options=data.data;
+                var html;
+                for(var i=0;i<options.length;i++){
+                  html+='<option count="'+options[i].min_count+'" value="'+options[i].name+'">'+options[i].name+options[i].args+'</option>';
+                }
+                $('#method').html(html).change();
+            },'json');
         }
         function output(data,t,x){
             var html=typeof(data)=='object'?data.responseText:data;
@@ -289,20 +278,23 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 </span>
             </div>
             <br style="clear:both;"/>
-            <span class="font">Class:</span>
+            <span class="font">Class　:</span>
             <select id="controller" class="cm" >
-                <?php foreach (array_keys($c) as $c) {?>
+                <?php foreach ($c as $c) {?>
                 <option value="<?php echo str_replace('/', '.', $c);?>"><?php echo str_replace('/', '.', $c);?></option>
                 <?php }?>
             </select>
             
             <select id="model"  class="cm" style="display:none;">
-                <?php foreach (array_keys($m) as $m) {?>
+                <?php foreach ($m as $m) {?>
                 <option value="<?php echo $m;?>"><?php echo $m;?></option>
                 <?php }?>
             </select>
-            <span class="font">Method:</span>
-            <select id="method" ></select>
+            
+            <div>
+                <span class="font">Method:</span>
+                <select id="method" ></select>
+            </div>
              
             <div class="panel" id="p" style="padding:10px;">
                 <span class="font">方法参数：<span class="add">+</span></span>
