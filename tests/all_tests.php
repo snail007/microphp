@@ -20,7 +20,6 @@ define('IN_ALL_TESTS', true);
 class AllTests extends TestSuite {
 
     public function AllTests() {
-        echo WoniuInput::xss_clean('javascript<script>alert("");</script><a onclick="alert(\"\");"/>xxxx</a>javascript');
         $ignore_list = array('test_cache.php','test_xss.php');
         $this->TestSuite('All tests');
         $dir = dir(TEST_ROOT);
