@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-12-09 10:16:14
+ * @createdtime         2013-12-09 12:23:23
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -684,7 +684,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 class WoniuController extends WoniuLoader {
 
@@ -754,15 +754,15 @@ class WoniuController extends WoniuLoader {
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
         $alias_name = strtolower($classname);
-
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
+        static $loadedClasses=array();
+        if (in_array($alias_name, array_keys($loadedClasses))) {
+            return $loadedClasses[$alias_name];
         }
         if (file_exists($filepath)) {
             WoniuLoader::classAutoloadRegister();
             WoniuLoader::includeOnce($filepath);
             if (class_exists($classname,FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                return $loadedClasses[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');
             }
@@ -788,7 +788,7 @@ class WoniuController extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 class WoniuModel extends WoniuLoader {
 
@@ -843,7 +843,7 @@ class WoniuModel extends WoniuLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 class WoniuDB {
 
@@ -6980,7 +6980,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10261,7 +10261,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 if (!function_exists('trigger404')) {
 
@@ -10726,7 +10726,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 10:16:14
+ * @createdtime       2013-12-09 12:23:23
  */
 class WoniuInput {
 
