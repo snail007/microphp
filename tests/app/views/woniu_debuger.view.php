@@ -304,12 +304,12 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                 </table>
             </div>
             <div class="panel" id="g" style="padding:10px;">
-                <span class="font">GET参数：<span class="add">+</span></span>
+                <span class="font">GET参数&nbsp;&nbsp;：<span class="add">+</span></span>
                 <table class="parameters"></table>
             </div>
             <form id="sender_form" name="sender_form" enctype="application/x-www-form-urlencoded" action="" method="get" style="display:none;">
                 <div class="panel" id="po" style="padding:10px;">
-                <span class="font">POST参数：<span class="add">+</span></span>
+                <span class="font">POST参数&nbsp;&nbsp;：<span class="add">+</span></span>
                 <table class="parameters"></table>
                 </div>
             </form>
