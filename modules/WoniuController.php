@@ -81,15 +81,15 @@ class WoniuController extends WoniuLoader {
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
         $alias_name = strtolower($classname);
-
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
+        static $loadedClasses=array();
+        if (in_array($alias_name, array_keys($loadedClasses))) {
+            return $loadedClasses[$alias_name];
         }
         if (file_exists($filepath)) {
             WoniuLoader::classAutoloadRegister();
             WoniuLoader::includeOnce($filepath);
             if (class_exists($classname,FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                return $loadedClasses[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');
             }
