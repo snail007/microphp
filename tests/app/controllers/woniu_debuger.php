@@ -36,16 +36,13 @@ class Woniu_debuger extends WoniuController {
      * 访问密码
      * @var type 
      */
-    private $password = 'dev_wenda';
+    private $password = 'snail';
     /**
      * IP白名单，只有在数组中的IP才能访问，如果白名单为空则允许所有IP访问
      * @var type 
      */
     private $ip_white_list=array(
         '127.0.0.1',
-        '10.0.0.253',
-        '10.0.0.159',
-        '119.253.60.2'
     );
     /**
      * 控制器文件夹和模型文件夹里面忽略的文件
