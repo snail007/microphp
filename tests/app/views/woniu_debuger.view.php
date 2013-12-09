@@ -192,6 +192,7 @@ var JSON;if(!JSON){JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(type
             });
             $('#cls').click(function(){
                 $('.output').hide();
+                $('input[value="text"]').click();
                 $('#request_url').html('');
                 $('#request_time').html('');
                 setIframeContent('output_html_iframe','');
