@@ -13,7 +13,7 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
-class WoniuModel extends WoniuLoader {
+class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 

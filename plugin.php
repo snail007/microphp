@@ -98,6 +98,10 @@ $system['library_file_subfix'] = '.class.php';
  */
 $system['helper_file_subfix'] = '.php';
 /**
+ * 
+ */
+$system['my_loader']='';
+/**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */

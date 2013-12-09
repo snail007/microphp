@@ -1,6 +1,20 @@
 <?php
 
-require '../modules/plugin.php';
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link		http://git.oschina.net/snail/microphp
+ * @since		Version 1.0
+ * @createdtime         {createdtime}
+ */
+define('IN_WONIU_APP', TRUE);
+define('WDS', DIRECTORY_SEPARATOR);
 define('TEST_ROOT', dirname(__FILE__));
 //为了正确显示中文，修改simpletest/reporter.php 31行：
 //function __construct($character_set = 'ISO-8859-1')
@@ -88,6 +102,23 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php'
  */
 $system['helper_file_subfix'] = '.php';
+/**
+ * 自定义Loader，用于拓展框架核心功能
+ * 这里是自定义Loader类文件的完整路径
+ * 自定义Loader文件名称和类名称必须是：
+ * 文件名称：类名.class.php
+ * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
+ * 注意：
+ * 1.自定义Loader必须继承WoniuLoader。
+ * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
+ * class MyLoader extends WoniuLoader {
+ *      public function __construct() {
+ *          parent::__construct();
+ *      }
+ *  } 
+ * 3.如果无需自定义Loader，留空即可。
+ */
+$system['my_loader']=$system['library_folder'].'/MyLoader.class.php';
 /**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
@@ -420,7 +451,34 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  * -------------------------数据库配置结束--------------------------
  */
 $default=$system;
+include('../modules/WoniuInput.class.php');
+include('../modules/WoniuHelper.php');
+include('../modules/db-drivers/db.drivers.php');
+include('../modules/db-drivers/mysql.driver.php');
+include('../modules/db-drivers/mysqli.driver.php');
+include('../modules/db-drivers/pdo.driver.php');
+include('../modules/db-drivers/sqlite3.driver.php');
+include('../modules/cache-drivers/phpfastcache.php');
+include('../modules/cache-drivers/driver.php');
+include('../modules/cache-drivers/drivers/apc.php');
+include('../modules/cache-drivers/drivers/files.php');
+include('../modules/cache-drivers/drivers/memcache.php');
+include('../modules/cache-drivers/drivers/memcached.php');
+include('../modules/cache-drivers/drivers/sqlite.php');
+include('../modules/cache-drivers/drivers/wincache.php');
+include('../modules/cache-drivers/drivers/xcache.php');
+include('../modules/cache-drivers/drivers/redis.php');
+include('../modules/session_drivers/WoniuSessionHandle.php');
+include('../modules/session_drivers/MysqlSessionHandle.php');
+include('../modules/session_drivers/MongodbSessionHandle.php');
+include('../modules/session_drivers/MemcacheSessionHandle.php');
+include('../modules/session_drivers/RedisSessionHandle.php');
+include('../modules/WoniuRouter.php');
+include('../modules/WoniuLoader.php');
+include('../modules/WoniuController.php');
+include('../modules/WoniuModel.php');
 WoniuRouter::setConfig($system);
+
 
 function getReqURL($route, $index = 'indexfortest.php?') {
     return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/' . $index . $route;

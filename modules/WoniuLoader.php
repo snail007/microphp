@@ -204,8 +204,6 @@ class WoniuLoader {
     }
 
     public static function classAutoloadRegister() {
-        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-        //如此一来就能满足两种模式
         $found = false;
         $__autoload_found = false;
         $auto_functions = spl_autoload_functions();
@@ -251,6 +249,32 @@ class WoniuLoader {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 检测用户是否自定义了Loader
+     * 该方法在本类定义后立即调用，依赖外部变量：$system['my_loader']
+     * 因此如果用户要自定义Loader，应该在入口文件中，包含核心文件之前定义该变量
+     * 插件模式也是如此。
+     * $system['my_loader']是自定义Loader的完整路径
+     * 关于自定义Loader写法，详细信息请看手册
+     * @global type $system
+     */
+    public static function checkUserLoader() {
+        global $system;
+        if (!class_exists('WoniuLoaderPlus', FALSE)) {
+            if (!empty($system['my_loader'])) {
+                self::includeOnce($system['my_loader']);
+                $clazz=  basename($system['my_loader'], '.class.php');
+                if (class_exists($clazz, FALSE)) {
+                    eval('class WoniuLoaderPlus extends MyLoader{}');
+                } else {
+                    eval('class WoniuLoaderPlus extends WoniuLoader{}');
+                }
+            } else {
+                eval('class WoniuLoaderPlus extends WoniuLoader{}');
             }
         }
     }
@@ -436,6 +460,8 @@ class WoniuLoader {
     }
 
 }
+
+WoniuLoader::checkUserLoader();
 
 class WoniuModelLoader {
 
