@@ -805,7 +805,7 @@ class CI_DB_pdo_driver extends CI_DB{
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_result extends CI_DB_result {
+class CI_DB_pdo_result extends Woniu_DB_result {
 
 	public $num_rows;
 

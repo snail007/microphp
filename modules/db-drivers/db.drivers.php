@@ -31,9 +31,12 @@ class WoniuDB {
     }
 
 }
+class Woniu_DB_result extends CI_DB_result{
+    
+}
 /**
  * CI_DB_mysql_driver -> CI_DB -> CI_DB_active_record -> CI_DB_driver
- * CI_DB_mysql_result ->  CI_DB_result
+ * CI_DB_mysql_result -> Woniu_DB_result -> CI_DB_result
  */
 
 class CI_DB extends CI_DB_active_record {
