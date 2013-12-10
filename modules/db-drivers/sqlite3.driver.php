@@ -715,7 +715,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
  * @author		Dready
  * @link			http://dready.jexiste.fr/dotclear/
  */
-class CI_DB_sqlite3_result extends Woniu_DB_result {
+class CI_DB_sqlite3_result extends CI_DB_result {
 
     var $pdo_results = '';
     var $pdo_index = 0;

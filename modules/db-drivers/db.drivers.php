@@ -20,7 +20,7 @@ class WoniuDB {
     public static function getInstance($config, $force_new_conn = false) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        if ($force_new_conn||!isset(self::$conns[$hash])) {
+        if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
         if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {
@@ -31,14 +31,12 @@ class WoniuDB {
     }
 
 }
-class Woniu_DB_result extends CI_DB_result{
-    
-}
+
+
 /**
  * CI_DB_mysql_driver -> CI_DB -> CI_DB_active_record -> CI_DB_driver
  * CI_DB_mysql_result -> Woniu_DB_result -> CI_DB_result
  */
-
 class CI_DB extends CI_DB_active_record {
     
 }
@@ -402,7 +400,7 @@ class CI_DB_driver {
     function load_rdriver() {
         $driver = 'CI_DB_' . $this->dbdriver . '_result';
 
-        if (!class_exists($driver,FALSE)) {
+        if (!class_exists($driver, FALSE)) {
             include_once(BASEPATH . 'database/DB_result.php');
             include_once(BASEPATH . 'database/drivers/' . $this->dbdriver . '/' . $this->dbdriver . '_result.php');
         }
@@ -1009,11 +1007,11 @@ class CI_DB_driver {
      * @return        void
      */
     function _cache_init() {
-        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache',FALSE)) {
+        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache', FALSE)) {
             return TRUE;
         }
 
-        if (!class_exists('CI_DB_Cache',FALSE)) {
+        if (!class_exists('CI_DB_Cache', FALSE)) {
             if (!@include(BASEPATH . 'database/DB_cache.php')) {
                 return $this->cache_off();
             }
