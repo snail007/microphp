@@ -1302,7 +1302,11 @@ class CI_DB_result {
             $object = new $class_name();
 
             foreach ($row as $key => $value) {
-                $object->$key = $value;
+                if(method_exists($object, 'set_'.$key)){
+                    $object->{'set_'.$key}($value);
+                }else{
+                    $object->$key = $value;
+                }
             }
 
             $result_object[] = $object;

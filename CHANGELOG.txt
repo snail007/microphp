@@ -26,6 +26,23 @@ $this->input->cookie($key=null,$default=null,$xss_clean=false);
  * 3.如果无需自定义Loader，留空即可。
  */
 $system['my_loader']=$system['library_folder'].'/MyLoader.class.php';
+优化了：
+1.数据库驱动的custom_result_object方法，增加了set_XXX的支持，
+使得$this->db->get('table')->result($Bean_Class_Name= 'object');
+$this->db->get('table')->row($n = 0, $Bean_Class_Name = 'object');
+支持Bean类$Bean_Class_Name中的set_XXX()属性。$Bean_Class_Name Bean类要提供字段的setter和getter，
+格式是：set_字段名称($val)，get_字段名称(),字段名称区分大小写。
+一个标准的Bean类实例：
+假设这个Bean类对应表user，user表有一个字段id。
+class UserBean{
+     private $id;
+     public function get_id(){
+        reutrn $this->id;
+     }
+     public function set_id($val){
+        reutrn $this->id=$val;
+     }
+}
 
 修复了:
 1.library文件夹不存在的时候报错的问题。
