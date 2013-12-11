@@ -439,18 +439,23 @@ class WoniuLoader {
 
     public function checkData(Array $rule, Array $data) {
         foreach ($rule as $col => $val) {
-            if ($val['rule']) {
-                #有规则但是没有数据，就补上空数据，然后进行验证
-                if (!isset($data[$col])) {
-                    $data[$col] = '';
-                }
-                #函数验证
-                if (strpos($val['rule'], '/') === FALSE) {
-                    return $this->{$val['rule']}($data[$col], $data);
-                } else {
-                    #正则表达式验证
-                    if (!preg_match($val['rule'], $data[$col])) {
-                        return $val['msg'];
+            if (isset($val['rule'])) {
+                $val = array($val);
+            }
+            foreach ($val as $_rule) {
+                if (!empty($_rule['rule'])) {
+                    #有规则但是没有数据，就补上空数据，然后进行验证
+                    if (!isset($data[$col])) {
+                        $data[$col] = '';
+                    }
+                    #函数验证
+                    if (strpos($_rule['rule'], '/') === FALSE) {
+                        return $this->{$_rule['rule']}($data[$col], $data);
+                    } else {
+                        #正则表达式验证
+                        if (!preg_match($_rule['rule'], $data[$col])) {
+                            return $_rule['msg'];
+                        }
                     }
                 }
             }
