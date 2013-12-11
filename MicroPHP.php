@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-12-09 22:34:29
+ * @createdtime         2013-12-11 22:21:33
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -651,18 +651,23 @@ class WoniuLoader {
 
     public function checkData(Array $rule, Array $data) {
         foreach ($rule as $col => $val) {
-            if ($val['rule']) {
-                #有规则但是没有数据，就补上空数据，然后进行验证
-                if (!isset($data[$col])) {
-                    $data[$col] = '';
-                }
-                #函数验证
-                if (strpos($val['rule'], '/') === FALSE) {
-                    return $this->{$val['rule']}($data[$col], $data);
-                } else {
-                    #正则表达式验证
-                    if (!preg_match($val['rule'], $data[$col])) {
-                        return $val['msg'];
+            if (isset($val['rule'])) {
+                $val = array($val);
+            }
+            foreach ($val as $_rule) {
+                if (!empty($_rule['rule'])) {
+                    #有规则但是没有数据，就补上空数据，然后进行验证
+                    if (!isset($data[$col])) {
+                        $data[$col] = '';
+                    }
+                    #函数验证
+                    if (strpos($_rule['rule'], '/') === FALSE) {
+                        return $this->{$_rule['rule']}($data[$col], $data);
+                    } else {
+                        #正则表达式验证
+                        if (!preg_match($_rule['rule'], $data[$col])) {
+                            return $_rule['msg'];
+                        }
                     }
                 }
             }
@@ -718,7 +723,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -824,7 +829,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -879,7 +884,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 class WoniuDB {
 
@@ -888,7 +893,7 @@ class WoniuDB {
     public static function getInstance($config, $force_new_conn = false) {
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
-        if ($force_new_conn||!isset(self::$conns[$hash])) {
+        if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
         if ($config['dbdriver'] == 'pdo' && strpos($config['hostname'], 'mysql') !== FALSE) {
@@ -900,6 +905,11 @@ class WoniuDB {
 
 }
 
+
+/**
+ * CI_DB_mysql_driver -> CI_DB -> CI_DB_active_record -> CI_DB_driver
+ * CI_DB_mysql_result -> Woniu_DB_result -> CI_DB_result
+ */
 class CI_DB extends CI_DB_active_record {
     
 }
@@ -1263,7 +1273,7 @@ class CI_DB_driver {
     function load_rdriver() {
         $driver = 'CI_DB_' . $this->dbdriver . '_result';
 
-        if (!class_exists($driver,FALSE)) {
+        if (!class_exists($driver, FALSE)) {
             include_once(BASEPATH . 'database/DB_result.php');
             include_once(BASEPATH . 'database/drivers/' . $this->dbdriver . '/' . $this->dbdriver . '_result.php');
         }
@@ -1870,11 +1880,11 @@ class CI_DB_driver {
      * @return        void
      */
     function _cache_init() {
-        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache',FALSE)) {
+        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache', FALSE)) {
             return TRUE;
         }
 
-        if (!class_exists('CI_DB_Cache',FALSE)) {
+        if (!class_exists('CI_DB_Cache', FALSE)) {
             if (!@include(BASEPATH . 'database/DB_cache.php')) {
                 return $this->cache_off();
             }
@@ -2165,7 +2175,11 @@ class CI_DB_result {
             $object = new $class_name();
 
             foreach ($row as $key => $value) {
-                $object->$key = $value;
+                if(method_exists($object, 'set_'.$key)){
+                    $object->{'set_'.$key}($value);
+                }else{
+                    $object->$key = $value;
+                }
             }
 
             $result_object[] = $object;
@@ -7016,7 +7030,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10297,7 +10311,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 if (!function_exists('trigger404')) {
 
@@ -10762,7 +10776,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-09 22:34:29
+ * @createdtime       2013-12-11 22:21:33
  */
 class WoniuInput {
 
@@ -10815,19 +10829,15 @@ class WoniuInput {
     public static function is_ajax() {
         return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
     }
- 
 
     public static function xss_clean($val) {
-        // remove all non-printable characters. CR(0a) and LF(0b)
-        // and TAB(9) are allowed
+        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
         // this prevents some character re-spacing such as <java\0script>
-        // note that you have to handle splits with \n, \r,
-        // and \t later since they *are* allowed in some inputs
+        // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
         $val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
 
-        // straight replacements, the user should never need these
-        // since they're normal characters
-        // this prevents like ![](@avascript:alert()
+        // straight replacements, the user should never need these since they're normal characters
+        // this prevents like <IMG SRC=@avascript:alert('XSS')>
         $search = 'abcdefghijklmnopqrstuvwxyz';
         $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $search .= '1234567890!@#$%^&*()';
@@ -10838,12 +10848,12 @@ class WoniuInput {
             // @ @ search for the hex values
             $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
             // @ @ 0{0,7} matches '0' zero to seven times
-            $val = preg_replace('/(�{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
+            $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
         }
 
         // now the only remaining whitespace attacks are \t, \n, and \r
-        $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
-        $ra2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+        $ra1 = array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
+        $ra2 = array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
         $ra = array_merge($ra1, $ra2);
 
         $found = true; // keep replacing as long as the previous round replaced something
@@ -10856,16 +10866,14 @@ class WoniuInput {
                         $pattern .= '(';
                         $pattern .= '(&#[xX]0{0,8}([9ab]);)';
                         $pattern .= '|';
-                        $pattern .= '|(�{0,8}([9|10|13]);)';
+                        $pattern .= '|(&#0{0,8}([9|10|13]);)';
                         $pattern .= ')*';
                     }
                     $pattern .= $ra[$i][$j];
                 }
                 $pattern .= '/i';
-                $replacement = substr($ra[$i], 0, 2) . 'x' . substr($ra[$i], 2);
-                // add in <> to nerf the tag
-                $val = preg_replace($pattern, $replacement, $val);
-                // filter out the hex tags
+                $replacement = substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
+                $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
                 if ($val_before == $val) {
                     // no replacements were made, so exit the loop
                     $found = false;
