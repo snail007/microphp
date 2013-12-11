@@ -48,7 +48,8 @@ class UserBean{
 1.library文件夹不存在的时候报错的问题。
 2.sqlite3驱动报Strict错Creating default object from empty value
   line:832：$back = new stdClass();
-
+升级提示：
+1.在$system里面增加配置：$system['my_loader']='';即可。
 
 ver 2.2.1:[2013-11-25]
 增加了：
