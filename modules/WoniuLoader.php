@@ -437,7 +437,10 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array $data) {
+    public function checkData(Array $rule, Array $data = NULL) {
+        if (is_null($data)) {
+            $data = $this->input->post();
+        }
         foreach ($rule as $col => $val) {
             if (isset($val['rule'])) {
                 $val = array($val);
@@ -448,19 +451,44 @@ class WoniuLoader {
                     if (!isset($data[$col])) {
                         $data[$col] = '';
                     }
-                    #函数验证
-                    if (strpos($_rule['rule'], '/') === FALSE) {
-                        return $this->{$_rule['rule']}($data[$col], $data);
-                    } else {
-                        #正则表达式验证
-                        if (!preg_match($_rule['rule'], $data[$col])) {
-                            return $_rule['msg'];
-                        }
+                    if (!$this->checkRule($_rule['rule'], $data[$col], $data)) {
+                        return $_rule['msg'];
                     }
                 }
             }
         }
         return NULL;
+    }
+
+    private function checkRule($_rule, $val, $data) {
+        $matches = array();
+        preg_match('|([^\[]+)(?:\[(.*)\])?|', $_rule, $matches);
+        $_rule = isset($matches[1]) ? $matches[1] : '';
+        $args = isset($matches[2]) ? explode(',', $matches[2]) : array();
+        switch ($_rule) {
+            case 'required':
+                return !empty($val);
+            case 'equal':
+                return isset($args[0]) ? $val && ($val == $data[$args[0]]) : false;
+            case 'min_len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
+            case 'max_len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') <= intval($args[0])) : false;
+            case 'range_len':
+                return count($args) == 2 ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) && (mb_strlen($val, 'UTF-8') <= intval($args[1])) : false;
+            default:
+                return false;
+        }
+        return false;
+//        #函数验证
+//        if (strpos($_rule['rule'], '/') === FALSE) {
+//            return $this->{$_rule['rule']}($data[$col], $data);
+//        } else {
+//            #正则表达式验证
+//            if (!preg_match($_rule['rule'], $data[$col])) {
+//                return $_rule['msg'];
+//            }
+//        }
     }
 
     public static function includeOnce($file_path) {
