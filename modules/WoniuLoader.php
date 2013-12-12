@@ -476,7 +476,42 @@ class WoniuLoader {
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') <= intval($args[0])) : false;
             case 'range_len':
                 return count($args) == 2 ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) && (mb_strlen($val, 'UTF-8') <= intval($args[1])) : false;
+            case 'len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') == intval($args[0])) : false;
+            case 'min':
+                return isset($args[0]) && is_numeric($val) ? $val >= $args[0] : false;
+            case 'max':
+                return isset($args[0]) && is_numeric($val) ? $val <= $args[0] : false;
+            case 'range':
+                return (count($args) == 2) && is_numeric($val) ? $val >= $args[0] && $val <= $args[1] : false;
+            case 'alpha':#纯字母
+                return !preg_match('/[^A-Za-z]+/', $val);
+            case 'alpha_num':#纯字母和数字
+                return !preg_match('/[^A-Za-z0-9]+/', $val);
+            case 'alpha_dash':#纯字母和数字
+                return !preg_match('/[^A-Za-z0-9_-]+/', $val);
+            case 'alpha_start':#以字母开头
+                return preg_match('/^[A-Za-z]+/', $val);
+            case 'num':#纯数字
+                return !preg_match('/[^0-9]+/', $val);
+            case 'int':#整数
+                return preg_match('/^[-+]?[1-9]\d*$/', $val);
+            case 'float':#小数
+                return preg_match('/^([1-9]\d*|0)\.\d+$/', $val);
+            case 'numeric':#数字-1，1.2，+3，4e5
+                return is_numeric($val);
+            case 'natural':#自然数0，1，2，3，12，333
+                return preg_match('/^([1-9]\d*|0)$/', $val);
+            case 'natural_no_zero':#自然数不包含0
+                return preg_match('/^[1-9]\d*$/', $val);
+            case 'reg':#正则表达式验证,reg[/^[\]]$/]
+                return isset($args[0]) ? preg_match($args[0], $val) : false;
             default:
+                if (method_exists($this, $_rule)) {
+                    return call_user_func_array(array($this, $_rule), $args);
+                } elseif (function_exists($_rule)) {
+                    return call_user_func_array($_rule, $args);
+                }
                 return false;
         }
         return false;
