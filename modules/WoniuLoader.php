@@ -437,7 +437,7 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array $data = NULL) {
+    public function checkData(Array $rule, Array &$data = NULL) {
         if (is_null($data)) {
             $data = $this->input->post();
         }
@@ -453,6 +453,30 @@ class WoniuLoader {
                     }
                     if (!$this->checkRule($_rule['rule'], $data[$col], $data)) {
                         return $_rule['msg'];
+                    }
+                    $_r = $_rule['rule'];
+                    $matches = array();
+                    preg_match('|([^\[]+)(?:\[(.*)\])?|', $_r, $matches);
+                    $_r = isset($matches[1]) ? $matches[1] : '';
+                    $args = isset($matches[2]) ? explode(',', $matches[2]) : array();
+                    if ($_r == 'set') {
+                        $_args = array($data[$col]);
+                        foreach ($args as $func) {
+                            if (stripos($func, '::')) {
+                                $_func = explode('::', $func);
+                                $class = $_func[0];
+                                $method = $_func[1];
+                                $rclass_obj = new ReflectionClass($class);
+                                $rclass_obj = $rclass_obj->newInstanceArgs();
+                                if (method_exists($rclass_obj, $method)) {
+                                    $data[$col] = $rclass_obj->{$method}($data[$col], $data);
+                                }
+                            } elseif (method_exists($this, $func)) {
+                                $data[$col] = call_user_func_array(array($this, $func), $_args);
+                            } elseif (function_exists($func)) {
+                                $data[$col] = call_user_func_array($func, $_args);
+                            }
+                        }
                     }
                 }
             }
@@ -507,23 +531,15 @@ class WoniuLoader {
             case 'reg':#正则表达式验证,reg[/^[\]]$/]
                 return isset($args[0]) ? preg_match($args[0], $val) : false;
             default:
+                $_args = array_merge(array($val, $data), $args);
                 if (method_exists($this, $_rule)) {
-                    return call_user_func_array(array($this, $_rule), $args);
+                    return call_user_func_array(array($this, $_rule), $_args);
                 } elseif (function_exists($_rule)) {
-                    return call_user_func_array($_rule, $args);
+                    return call_user_func_array($_rule, $_args);
                 }
                 return false;
         }
         return false;
-//        #函数验证
-//        if (strpos($_rule['rule'], '/') === FALSE) {
-//            return $this->{$_rule['rule']}($data[$col], $data);
-//        } else {
-//            #正则表达式验证
-//            if (!preg_match($_rule['rule'], $data[$col])) {
-//                return $_rule['msg'];
-//            }
-//        }
     }
 
     public static function includeOnce($file_path) {

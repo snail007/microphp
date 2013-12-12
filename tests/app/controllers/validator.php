@@ -37,10 +37,13 @@ class Validator extends WoniuController{
                 'msg'=>'validator fail.'
             )
         );
-        if(is_null($msg=$this->checkData($rules,$this->input->post()))){
+        $data=$this->input->post();
+        var_dump($data);
+        if(is_null($msg=$this->checkData($rules,$data))){
             echo 'validator okay.';
         }else{
             echo $msg;
         }
+        var_dump($data);
     }
 }
