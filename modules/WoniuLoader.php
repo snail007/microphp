@@ -478,8 +478,8 @@ class WoniuLoader {
                     $_r = $matches[1];
                     $args = $matches[2];
                     if ($_r == $type) {
-                        $_v=$return_data[$col];
-                        $_args=array($_v, $return_data);
+                        $_v = $return_data[$col];
+                        $_args = array($_v, $return_data);
                         foreach ($args as $func) {
                             if (function_exists($func)) {
                                 $reflection = new ReflectionFunction($func);
@@ -490,7 +490,7 @@ class WoniuLoader {
                             }
                             $_v = $this->callFunc($func, $_args);
                         }
-                        $return_data[$col]=$_v;
+                        $return_data[$col] = $_v;
                     }
                 }
             }
@@ -604,6 +604,12 @@ class WoniuLoader {
                   U	正则表达式的特点：就是比较“贪婪”，使用该模式修正符可以取消贪婪模式
                  */
                 return isset($args[0]) ? preg_match($args[0], $val) : false;
+            /**
+             * set set_post不参与验证，返回true跳过
+             */
+            case 'set':
+            case 'set_post':
+                return true;
             default:
                 $_args = array_merge(array($val, $data), $args);
                 $matches = $this->getCheckRuleInfo($_rule);
