@@ -437,85 +437,124 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array &$data = NULL) {
+    public function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
         if (is_null($data)) {
             $data = $this->input->post();
         }
+        $return_data = $data;
+        $this->checkSetData('set', $rule, $return_data);
         foreach ($rule as $col => $val) {
-            if (isset($val['rule'])) {
-                $val = array($val);
-            }
-            foreach ($val as $_rule) {
-                if (!empty($_rule['rule'])) {
+            foreach ($val as $_rule => $msg) {
+                if (!empty($_rule)) {
                     #有规则但是没有数据，就补上空数据，然后进行验证
-                    if (!isset($data[$col])) {
-                        $data[$col] = '';
+                    if (!isset($return_data[$col])) {
+                        $return_data[$col] = '';
                     }
-                    if (!$this->checkRule($_rule['rule'], $data[$col], $data)) {
-                        return $_rule['msg'];
+                    $matches = $this->getCheckRuleInfo($_rule);
+                    $_r = $matches[1];
+                    $args = $matches[2];
+                    if ($_r == 'set' || $_r == 'set_post') {
+                        continue;
                     }
-                    $_r = $_rule['rule'];
-                    $matches = array();
-                    preg_match('|([^\[]+)(?:\[(.*)\])?|', $_r, $matches);
-                    $_r = isset($matches[1]) ? $matches[1] : '';
-                    $args = isset($matches[2]) ? explode(',', $matches[2]) : array();
-                    if ($_r == 'set') {
-                        $_args = array($data[$col]);
+                    if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
+                        return $msg;
+                    }
+                }
+            }
+        }
+        $this->checkSetData('set_post', $rule, $return_data);
+        return NULL;
+    }
+
+    private function checkSetData($type, Array $rule, &$return_data = NULL) {
+        foreach ($rule as $col => $val) {
+            foreach (array_keys($val) as $_rule) {
+                if (!empty($_rule)) {
+                    #有规则但是没有数据，就补上空数据，然后进行验证
+                    if (!isset($return_data[$col])) {
+                        $return_data[$col] = '';
+                    }
+                    $matches = $this->getCheckRuleInfo($_rule);
+                    $_r = $matches[1];
+                    $args = $matches[2];
+                    if ($_r == $type) {
+                        $_args = array_merge(array($return_data[$col], $return_data), $args);
                         foreach ($args as $func) {
-                            if (stripos($func, '::')) {
-                                $_func = explode('::', $func);
-                                $class = $_func[0];
-                                $method = $_func[1];
-                                $rclass_obj = new ReflectionClass($class);
-                                $rclass_obj = $rclass_obj->newInstanceArgs();
-                                if (method_exists($rclass_obj, $method)) {
-                                    $data[$col] = $rclass_obj->{$method}($data[$col]);
+                            if (function_exists($func)) {
+                                $reflection = new ReflectionFunction($func);
+                                //如果是系统函数
+                                if ($reflection->isInternal()) {
+                                    $_args = isset($_args[0]) ? array($_args[0]) : array();
                                 }
-                            } elseif (method_exists($this, $func)) {
-                                $data[$col] = call_user_func_array(array($this, $func), $_args);
-                            } elseif (function_exists($func)) {
-                                $data[$col] = call_user_func_array($func, $_args);
                             }
+                            $return_data[$col] = $this->callFunc($func, $args);
                         }
                     }
                 }
             }
         }
-        return NULL;
     }
 
-    private function checkSetData() {
-        
+    private function getCheckRuleInfo($_rule) {
+        $matches = array();
+        preg_match('|([^\[]+)(?:\[(.*)\])?|', $_rule, $matches);
+        $matches[1] = isset($matches[1]) ? $matches[1] : '';
+        $matches[2] = isset($matches[2]) ? explode(',', $matches[2]) : array();
+        return $matches;
     }
 
-    private function callFunc($func, $args) {
+    /**
+     * 调用一个方法或者函数(无论方法是静态还是动态，是私有还是保护还是公有的都可以调用)
+     * 所有示例：
+     * 1.调用类的静态方法
+     * $ret=$this->callFunc('UserModel::encodePassword', $args);
+     * 2.调用类的方法
+     * $ret=$this->callFunc(array('UserModel','checkPassword), $args);
+     * 3.调用用户自定义方法
+     * $ret=$this->callFunc('cleanJs', $args);
+     * 4.调用系统函数
+     * $ret=$this->callFunc('var_dump', $args);
+     * @param type $func
+     * @param type $args
+     * @return boolean
+     */
+    public function callFunc($func, $args) {
         if (stripos($func, '::')) {
             $_func = explode('::', $func);
-            $class = $_func[0];
-            $method = $_func[1];
-            $rclass_obj = new ReflectionClass($class);
-            $rclass_obj = $rclass_obj->newInstanceArgs();
-            if (method_exists($rclass_obj, $method)) {
-                return call_user_func_array(array($rclass_obj, $method), $args);
-            }
-        } elseif (method_exists($this, $func)) {
-            return call_user_func_array(array($this, $func), $args);
+            return $this->callMethod($_func, $args);
         } elseif (function_exists($func)) {
             return call_user_func_array($func, $args);
         }
-        return false;
+        return null;
+    }
+
+    private function callMethod($_func, $args) {
+        $class = $_func[0];
+        $method = $_func[1];
+        if (is_object($class)) {
+            $class = new ReflectionClass(get_class($class));
+        } else {
+            $class = new ReflectionClass($class);
+        }
+        $obj = $class->newInstanceArgs();
+        $method = $class->getMethod($method);
+        $method->setAccessible(true);
+        return $method->invokeArgs($obj, $args);
     }
 
     private function checkRule($_rule, $val, $data) {
         $matches = array();
-        preg_match('|([^\[]+)(?:\[(.*)\])?|', $_rule, $matches);
+        preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
         $_rule = isset($matches[1]) ? $matches[1] : '';
-        $args = isset($matches[2]) ? explode(',', $matches[2]) : array();
+        $split = !empty($matches[3]) ? $matches[3] : ',';
+        $args = isset($matches[2]) ? explode($split, $matches[2]) : array();
         switch ($_rule) {
             case 'required':
                 return !empty($val);
+            case 'mathch':
+                return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
             case 'equal':
-                return isset($args[0]) ? $val && ($val == $data[$args[0]]) : false;
+                return isset($args[0]) ? $val && ($val == $args[0]) : false;
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -534,14 +573,14 @@ class WoniuLoader {
                 return !preg_match('/[^A-Za-z]+/', $val);
             case 'alpha_num':#纯字母和数字
                 return !preg_match('/[^A-Za-z0-9]+/', $val);
-            case 'alpha_dash':#纯字母和数字
+            case 'alpha_dash':#纯字母和数字和下划线和-
                 return !preg_match('/[^A-Za-z0-9_-]+/', $val);
             case 'alpha_start':#以字母开头
                 return preg_match('/^[A-Za-z]+/', $val);
             case 'num':#纯数字
                 return !preg_match('/[^0-9]+/', $val);
             case 'int':#整数
-                return preg_match('/^[-+]?[1-9]\d*$/', $val);
+                return preg_match('/^([-+]?[1-9]\d*|0)$/', $val);
             case 'float':#小数
                 return preg_match('/^([1-9]\d*|0)\.\d+$/', $val);
             case 'numeric':#数字-1，1.2，+3，4e5
@@ -550,16 +589,32 @@ class WoniuLoader {
                 return preg_match('/^([1-9]\d*|0)$/', $val);
             case 'natural_no_zero':#自然数不包含0
                 return preg_match('/^[1-9]\d*$/', $val);
-            case 'reg':#正则表达式验证,reg[/^[\]]$/]
+            case 'reg':#正则表达式验证,reg[/^[\]]$/i]
+                /**
+                 * 模式修正符说明:
+                  i	表示在和模式进行匹配进不区分大小写
+                  m	将模式视为多行，使用^和$表示任何一行都可以以正则表达式开始或结束
+                  s	如果没有使用这个模式修正符号，元字符中的"."默认不能表示换行符号,将字符串视为单行
+                  x	表示模式中的空白忽略不计
+                  e	正则表达式必须使用在preg_replace替换字符串的函数中时才可以使用(讲这个函数时再说)
+                  A	以模式字符串开头，相当于元字符^
+                  Z	以模式字符串结尾，相当于元字符$
+                  U	正则表达式的特点：就是比较“贪婪”，使用该模式修正符可以取消贪婪模式
+                 */
                 return isset($args[0]) ? preg_match($args[0], $val) : false;
             default:
                 $_args = array_merge(array($val, $data), $args);
-                if (method_exists($this, $_rule)) {
-                    return call_user_func_array(array($this, $_rule), $_args);
-                } elseif (function_exists($_rule)) {
-                    return call_user_func_array($_rule, $_args);
+                $matches = $this->getCheckRuleInfo($_rule);
+                $func = $matches[1];
+                $args = $matches[2];
+                if (function_exists($func)) {
+                    $reflection = new ReflectionFunction($func);
+                    //如果是系统函数
+                    if ($reflection->isInternal()) {
+                        $_args = isset($_args[0]) ? array($_args[0]) : array();
+                    }
                 }
-                return $this->callFunc($_rule, $val);
+                return $this->callFunc($_rule, $_args);
         }
         return false;
     }
