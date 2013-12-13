@@ -39,6 +39,61 @@ require_once('simpletest/autorun.php');
  */
 class Test_validator extends UnitTestCase {
 
+    public function testForm() {
+        $WN = WoniuLoader::instance();
+        $_POST['user'] = 'snail';
+        $_POST['password'] = '123456';
+        $rule = array(
+            'user' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'len[5,16]' => '用户名长度5-16',
+            ),
+            'password' => array(
+                'len[6,16]' => '密码长度6-16',
+                'set_post[sha1,md5]' => '',
+            )
+        );
+        $data = array();
+        $this->assertNull($WN->checkData($rule, $_POST, $data));
+        $this->assertEqual($data['password'], md5(sha1('123456')));
+
+        $_POST['user'] = '0snai';
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名必须是字母开头');
+
+        $_POST['user'] = 'asnai=';
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名必须是数字、字母、下划线和-组成');
+
+        $_POST['user'] = 'snai';
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名长度5-16');
+
+        $_POST['user'] = 'snai    ';
+        $rule = array(
+            'user' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'len[5,16]' => '用户名长度5-16',
+                'set[trim]' => '',
+            ),
+        );
+        $data = array();
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名长度5-16');
+        $this->assertEqual('snai', $data['user']);
+
+
+        $_POST['user'] = '123456    ';
+        $rule = array(
+            'password' => array(
+                'len[6,16]' => '密码长度6-16',
+                'set[trim]' => '',
+                'set_post[sha1,md5]' => '',
+            )
+        );
+        $data = array();
+        $this->assertNull($WN->checkData($rule, $_POST, $data));
+        $this->assertEqual($data['password'], md5(sha1('123456')));
+    }
+
     public function testValidator() {
         $WN = WoniuLoader::instance();
         $this->assertNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => 'x')));

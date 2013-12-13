@@ -478,17 +478,19 @@ class WoniuLoader {
                     $_r = $matches[1];
                     $args = $matches[2];
                     if ($_r == $type) {
-                        $_args = array_merge(array($return_data[$col], $return_data), $args);
+                        $_v=$return_data[$col];
+                        $_args=array($_v, $return_data);
                         foreach ($args as $func) {
                             if (function_exists($func)) {
                                 $reflection = new ReflectionFunction($func);
                                 //如果是系统函数
                                 if ($reflection->isInternal()) {
-                                    $_args = isset($_args[0]) ? array($_args[0]) : array();
+                                    $_args = array($_v);
                                 }
                             }
-                            $return_data[$col] = $this->callFunc($func, $args);
+                            $_v = $this->callFunc($func, $_args);
                         }
+                        $return_data[$col]=$_v;
                     }
                 }
             }
