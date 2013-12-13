@@ -499,9 +499,10 @@ class WoniuLoader {
 
     private function getCheckRuleInfo($_rule) {
         $matches = array();
-        preg_match('|([^\[]+)(?:\[(.*)\])?|', $_rule, $matches);
+        preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
         $matches[1] = isset($matches[1]) ? $matches[1] : '';
-        $matches[2] = isset($matches[2]) ? explode(',', $matches[2]) : array();
+        $matches[3] = !empty($matches[3]) ? $matches[3] : ',';
+        $matches[2] = isset($matches[2]) ? explode($matches[3], $matches[2]) : array();
         return $matches;
     }
 
@@ -545,11 +546,9 @@ class WoniuLoader {
     }
 
     private function checkRule($_rule, $val, $data) {
-        $matches = array();
-        preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
-        $_rule = isset($matches[1]) ? $matches[1] : '';
-        $split = !empty($matches[3]) ? $matches[3] : ',';
-        $args = isset($matches[2]) ? explode($split, $matches[2]) : array();
+        $matches = $this->getCheckRuleInfo($_rule);
+        $_rule = $matches[1];
+        $args = $matches[2];
         switch ($_rule) {
             case 'required':
                 return !empty($val);
