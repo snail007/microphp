@@ -469,7 +469,7 @@ class WoniuLoader {
                                 $rclass_obj = new ReflectionClass($class);
                                 $rclass_obj = $rclass_obj->newInstanceArgs();
                                 if (method_exists($rclass_obj, $method)) {
-                                    $data[$col] = $rclass_obj->{$method}($data[$col], $data);
+                                    $data[$col] = $rclass_obj->{$method}($data[$col]);
                                 }
                             } elseif (method_exists($this, $func)) {
                                 $data[$col] = call_user_func_array(array($this, $func), $_args);
@@ -482,6 +482,28 @@ class WoniuLoader {
             }
         }
         return NULL;
+    }
+
+    private function checkSetData() {
+        
+    }
+
+    private function callFunc($func, $args) {
+        if (stripos($func, '::')) {
+            $_func = explode('::', $func);
+            $class = $_func[0];
+            $method = $_func[1];
+            $rclass_obj = new ReflectionClass($class);
+            $rclass_obj = $rclass_obj->newInstanceArgs();
+            if (method_exists($rclass_obj, $method)) {
+                return call_user_func_array(array($rclass_obj, $method), $args);
+            }
+        } elseif (method_exists($this, $func)) {
+            return call_user_func_array(array($this, $func), $args);
+        } elseif (function_exists($func)) {
+            return call_user_func_array($func, $args);
+        }
+        return false;
     }
 
     private function checkRule($_rule, $val, $data) {
@@ -537,7 +559,7 @@ class WoniuLoader {
                 } elseif (function_exists($_rule)) {
                     return call_user_func_array($_rule, $_args);
                 }
-                return false;
+                return $this->callFunc($_rule, $val);
         }
         return false;
     }
