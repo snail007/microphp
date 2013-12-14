@@ -169,6 +169,8 @@ class Test_validator extends UnitTestCase {
         $this->assertNotNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'x')));
         $this->assertNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => '')));
+        $this->assertNull($WN->checkData(array('check' => array('enum[1,a,b]' => 'check只能是1,a,b之一')), array('check' => 'b')));
+        $this->assertNotNull($WN->checkData(array('check' => array('enum[1,a,b]' => 'check只能是1,a,b之一')), array('check' => 'xxx')));
         $this->assertNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在，不能添加')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在,不能修改')), array('check' => 'admin')));
         $this->assertNull($WN->checkData(array('check' => array('unique[users.uname,user_id:1]' => 'admin已经存在,不能修改')), array('check' => 'admin')));

@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-12-14 15:13:20
+ * @createdtime         2013-12-14 15:41:21
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -717,7 +717,7 @@ class WoniuLoader {
         if ($matches[1] != 'reg') {
             $matches[2] = isset($matches[2]) ? explode($matches[3], $matches[2]) : array();
         } else {
-            $matches[2] = isset($matches[2]) ? $matches[2] : array();
+            $matches[2] = isset($matches[2]) ? array($matches[2]) : array();
         }
         return $matches;
     }
@@ -772,6 +772,8 @@ class WoniuLoader {
                 return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
             case 'equal':
                 return isset($args[0]) ? $val && ($val == $args[0]) : false;
+            case 'enum':
+                return in_array($val, $args);
             case 'unique':#比如unique[user.name] , unique[user.name,id:1]
                 if (!$val || !count($args)) {
                     return false;
@@ -840,7 +842,7 @@ class WoniuLoader {
                   Z	以模式字符串结尾，相当于元字符$
                   U	正则表达式的特点：就是比较“贪婪”，使用该模式修正符可以取消贪婪模式
                  */
-                return isset($args[0]) ? preg_match($args[0], $val) : false;
+                return !empty($args[0]) ? preg_match($args[0], $val) : false;
             /**
              * set set_post不参与验证，返回true跳过
              * 
@@ -924,7 +926,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1030,7 +1032,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1085,7 +1087,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 class WoniuDB {
 
@@ -7231,7 +7233,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10512,7 +10514,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 if (!function_exists('trigger404')) {
 
@@ -10977,7 +10979,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-14 15:13:20
+ * @createdtime       2013-12-14 15:41:21
  */
 class WoniuInput {
 
