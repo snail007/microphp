@@ -241,6 +241,7 @@ class Test_validator extends UnitTestCase {
         $this->assertNull($WN->checkData(array('check' => array('reg[/^[\]]$/]' => 'check必须是自然数')), array('check' => ']')));
         $this->assertNull($WN->checkData(array('check' => array('reg[/^A$/i]' => 'check必须是a或者A')), array('check' => 'a')));
         $this->assertNotNull($WN->checkData(array('check' => array('reg[/^[\]]$/]' => 'check必须是自然数')), array('check' => 'x')));
+        $this->assertNotNull($WN->checkData(array('check' => array('reg[/^[1-9]{1,}$/]' => 'check必须是自然数')), array('check' => 'x')));
 
         /**
          * 参数默认分割符是逗号, 可以改变这个符号，通过在]后面指定即可。下面的例子使用#分割参数

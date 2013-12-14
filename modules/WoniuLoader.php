@@ -502,7 +502,11 @@ class WoniuLoader {
         preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
         $matches[1] = isset($matches[1]) ? $matches[1] : '';
         $matches[3] = !empty($matches[3]) ? $matches[3] : ',';
-        $matches[2] = isset($matches[2]) ? explode($matches[3], $matches[2]) : array();
+        if ($matches[1] != 'reg') {
+            $matches[2] = isset($matches[2]) ? explode($matches[3], $matches[2]) : array();
+        } else {
+            $matches[2] = isset($matches[2]) ? $matches[2] : '';
+        }
         return $matches;
     }
 
@@ -624,7 +628,7 @@ class WoniuLoader {
                   Z	以模式字符串结尾，相当于元字符$
                   U	正则表达式的特点：就是比较“贪婪”，使用该模式修正符可以取消贪婪模式
                  */
-                return isset($args[0]) ? preg_match($args[0], $val) : false;
+                return !empty($args) ? preg_match($args, $val) : false;
             /**
              * set set_post不参与验证，返回true跳过
              * 

@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime         2013-12-11 22:21:33
+ * @createdtime         2013-12-14 15:13:20
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -649,30 +649,231 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array $data) {
+    public function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
+        if (is_null($data)) {
+            $data = $this->input->post();
+        }
+        $return_data = $data;
+        $this->checkSetData('set', $rule, $return_data);
         foreach ($rule as $col => $val) {
-            if (isset($val['rule'])) {
-                $val = array($val);
-            }
-            foreach ($val as $_rule) {
-                if (!empty($_rule['rule'])) {
+            foreach ($val as $_rule => $msg) {
+                if (!empty($_rule)) {
                     #有规则但是没有数据，就补上空数据，然后进行验证
-                    if (!isset($data[$col])) {
-                        $data[$col] = '';
+                    if (!isset($return_data[$col])) {
+                        $return_data[$col] = '';
                     }
-                    #函数验证
-                    if (strpos($_rule['rule'], '/') === FALSE) {
-                        return $this->{$_rule['rule']}($data[$col], $data);
-                    } else {
-                        #正则表达式验证
-                        if (!preg_match($_rule['rule'], $data[$col])) {
-                            return $_rule['msg'];
-                        }
+                    $matches = $this->getCheckRuleInfo($_rule);
+                    $_r = $matches[1];
+                    $args = $matches[2];
+                    if ($_r == 'set' || $_r == 'set_post') {
+                        continue;
+                    }
+                    if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
+                        return $msg;
                     }
                 }
             }
         }
+        $this->checkSetData('set_post', $rule, $return_data);
         return NULL;
+    }
+
+    private function checkSetData($type, Array $rule, &$return_data = NULL) {
+        foreach ($rule as $col => $val) {
+            foreach (array_keys($val) as $_rule) {
+                if (!empty($_rule)) {
+                    #有规则但是没有数据，就补上空数据，然后进行验证
+                    if (!isset($return_data[$col])) {
+                        $return_data[$col] = '';
+                    }
+                    $matches = $this->getCheckRuleInfo($_rule);
+                    $_r = $matches[1];
+                    $args = $matches[2];
+                    if ($_r == $type) {
+                        $_v = $return_data[$col];
+                        $_args = array($_v, $return_data);
+                        foreach ($args as $func) {
+                            if (function_exists($func)) {
+                                $reflection = new ReflectionFunction($func);
+                                //如果是系统函数
+                                if ($reflection->isInternal()) {
+                                    $_args = array($_v);
+                                }
+                            }
+                            $_v = $this->callFunc($func, $_args);
+                        }
+                        $return_data[$col] = $_v;
+                    }
+                }
+            }
+        }
+    }
+
+    private function getCheckRuleInfo($_rule) {
+        $matches = array();
+        preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
+        $matches[1] = isset($matches[1]) ? $matches[1] : '';
+        $matches[3] = !empty($matches[3]) ? $matches[3] : ',';
+        if ($matches[1] != 'reg') {
+            $matches[2] = isset($matches[2]) ? explode($matches[3], $matches[2]) : array();
+        } else {
+            $matches[2] = isset($matches[2]) ? $matches[2] : array();
+        }
+        return $matches;
+    }
+
+    /**
+     * 调用一个方法或者函数(无论方法是静态还是动态，是私有还是保护还是公有的都可以调用)
+     * 所有示例：
+     * 1.调用类的静态方法
+     * $ret=$this->callFunc('UserModel::encodePassword', $args);
+     * 2.调用类的方法
+     * $ret=$this->callFunc(array('UserModel','checkPassword), $args);
+     * 3.调用用户自定义方法
+     * $ret=$this->callFunc('cleanJs', $args);
+     * 4.调用系统函数
+     * $ret=$this->callFunc('var_dump', $args);
+     * @param type $func
+     * @param type $args
+     * @return boolean
+     */
+    public function callFunc($func, $args) {
+        if (is_array($func) || function_exists($func)) {
+            return call_user_func_array($func, $args);
+        } elseif (stripos($func, '::')) {
+            $_func = explode('::', $func);
+            return $this->callMethod($_func, $args);
+        }
+        return null;
+    }
+
+    private function callMethod($_func, $args) {
+        $class = $_func[0];
+        $method = $_func[1];
+        if (is_object($class)) {
+            $class = new ReflectionClass(get_class($class));
+        } else {
+            $class = new ReflectionClass($class);
+        }
+        $obj = $class->newInstanceArgs();
+        $method = $class->getMethod($method);
+        $method->setAccessible(true);
+        return $method->invokeArgs($obj, $args);
+    }
+
+    private function checkRule($_rule, $val, $data) {
+        $matches = $this->getCheckRuleInfo($_rule);
+        $_rule = $matches[1];
+        $args = $matches[2];
+        switch ($_rule) {
+            case 'required':
+                return !empty($val);
+            case 'mathch':
+                return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
+            case 'equal':
+                return isset($args[0]) ? $val && ($val == $args[0]) : false;
+            case 'unique':#比如unique[user.name] , unique[user.name,id:1]
+                if (!$val || !count($args)) {
+                    return false;
+                }
+                $_info = explode('.', $args[0]);
+                if (count($_info) != 2) {
+                    return false;
+                }
+                $table = $_info[0];
+                $col = $_info[1];
+                if (isset($args[1])) {
+                    $_id_info = explode(':', $args[1]);
+                    if (count($_id_info) != 2) {
+                        return false;
+                    }
+                    $id_col = $_id_info[0];
+                    $id = $_id_info[1];
+                    $where = array($col => $val, "$id_col <>" => $id);
+                } else {
+                    $where = array($col => $val);
+                }
+                return !$this->db->where($where)->from($table)->count_all_results();
+            case 'min_len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
+            case 'max_len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') <= intval($args[0])) : false;
+            case 'range_len':
+                return count($args) == 2 ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) && (mb_strlen($val, 'UTF-8') <= intval($args[1])) : false;
+            case 'len':
+                return isset($args[0]) ? (mb_strlen($val, 'UTF-8') == intval($args[0])) : false;
+            case 'min':
+                return isset($args[0]) && is_numeric($val) ? $val >= $args[0] : false;
+            case 'max':
+                return isset($args[0]) && is_numeric($val) ? $val <= $args[0] : false;
+            case 'range':
+                return (count($args) == 2) && is_numeric($val) ? $val >= $args[0] && $val <= $args[1] : false;
+            case 'alpha':#纯字母
+                return !preg_match('/[^A-Za-z]+/', $val);
+            case 'alpha_num':#纯字母和数字
+                return !preg_match('/[^A-Za-z0-9]+/', $val);
+            case 'alpha_dash':#纯字母和数字和下划线和-
+                return !preg_match('/[^A-Za-z0-9_-]+/', $val);
+            case 'alpha_start':#以字母开头
+                return preg_match('/^[A-Za-z]+/', $val);
+            case 'num':#纯数字
+                return !preg_match('/[^0-9]+/', $val);
+            case 'int':#整数
+                return preg_match('/^([-+]?[1-9]\d*|0)$/', $val);
+            case 'float':#小数
+                return preg_match('/^([1-9]\d*|0)\.\d+$/', $val);
+            case 'numeric':#数字-1，1.2，+3，4e5
+                return is_numeric($val);
+            case 'natural':#自然数0，1，2，3，12，333
+                return preg_match('/^([1-9]\d*|0)$/', $val);
+            case 'natural_no_zero':#自然数不包含0
+                return preg_match('/^[1-9]\d*$/', $val);
+            case 'reg':#正则表达式验证,reg[/^[\]]$/i]
+                /**
+                 * 模式修正符说明:
+                  i	表示在和模式进行匹配进不区分大小写
+                  m	将模式视为多行，使用^和$表示任何一行都可以以正则表达式开始或结束
+                  s	如果没有使用这个模式修正符号，元字符中的"."默认不能表示换行符号,将字符串视为单行
+                  x	表示模式中的空白忽略不计
+                  e	正则表达式必须使用在preg_replace替换字符串的函数中时才可以使用(讲这个函数时再说)
+                  A	以模式字符串开头，相当于元字符^
+                  Z	以模式字符串结尾，相当于元字符$
+                  U	正则表达式的特点：就是比较“贪婪”，使用该模式修正符可以取消贪婪模式
+                 */
+                return isset($args[0]) ? preg_match($args[0], $val) : false;
+            /**
+             * set set_post不参与验证，返回true跳过
+             * 
+             * 说明：
+             * set用于设置在验证数据前对数据进行处理的函数或者方法
+             * set_post用于设置在验证数据后对数据进行处理的函数或者方法
+             * 如果设置了set，数据在验证的时候验证的是处理过的数据
+             * 如果设置了set_post，可以通过第三个参数$data接收数据：$this->checkData($rule, $_POST, $data)，$data是验证通过并经过set_post处理后的数据
+             * set和set_post后面是一个或者多个函数或者方法，多个逗号分割
+             * 注意：
+             * 1.无论是函数或者方法都必须有一个字符串返回
+             * 2.如果是系统函数，系统会传递当前值给系统函数，因此系统函数必须是至少接受一个字符串参数，比如md5，trim
+             * 3.如果是自定义的函数，系统会传递当前值和全部数据给自定义的函数，因此自定义函数可以接收两个参数第一个是值，第二个是全部数据$data
+             * 4.如果是类的方法写法是：类名称::方法名 （方法静态动态都可以，public，private，都可以）
+             */
+            case 'set':
+            case 'set_post':
+                return true;
+            default:
+                $_args = array_merge(array($val, $data), $args);
+                $matches = $this->getCheckRuleInfo($_rule);
+                $func = $matches[1];
+                $args = $matches[2];
+                if (function_exists($func)) {
+                    $reflection = new ReflectionFunction($func);
+                    //如果是系统函数
+                    if ($reflection->isInternal()) {
+                        $_args = isset($_args[0]) ? array($_args[0]) : array();
+                    }
+                }
+                return $this->callFunc($_rule, $_args);
+        }
+        return false;
     }
 
     public static function includeOnce($file_path) {
@@ -723,7 +924,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -829,7 +1030,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -884,7 +1085,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 class WoniuDB {
 
@@ -7030,7 +7231,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10311,7 +10512,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 if (!function_exists('trigger404')) {
 
@@ -10776,7 +10977,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.1
- * @createdtime       2013-12-11 22:21:33
+ * @createdtime       2013-12-14 15:13:20
  */
 class WoniuInput {
 
