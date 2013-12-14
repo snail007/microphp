@@ -558,7 +558,7 @@ class WoniuLoader {
         switch ($_rule) {
             case 'required':
                 return !empty($val);
-            case 'mathch':
+            case 'match':
                 return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
             case 'equal':
                 return isset($args[0]) ? $val && ($val == $args[0]) : false;

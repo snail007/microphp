@@ -163,10 +163,10 @@ class Test_validator extends UnitTestCase {
         $WN->database();
         $this->assertNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => 'x')));
         $this->assertNotNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => '')));
-        $this->assertNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'check', 'check2' => 'check')));
-        $this->assertNotNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => '', 'check2' => '')));
-        $this->assertNotNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'x', 'check2' => 'check')));
-        $this->assertNotNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'x')));
+        $this->assertNull($WN->checkData(array('check' => array('match[check2]' => 'check值不匹配check2值')), array('check' => 'check', 'check2' => 'check')));
+        $this->assertNotNull($WN->checkData(array('check' => array('match[check2]' => 'check值不匹配check2值')), array('check' => '', 'check2' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('match[check2]' => 'check值不匹配check2值')), array('check' => 'x', 'check2' => 'check')));
+        $this->assertNotNull($WN->checkData(array('check' => array('match[check2]' => 'check值不匹配check2值')), array('check' => 'x')));
         $this->assertNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => '')));
         $this->assertNull($WN->checkData(array('check' => array('enum[1,a,b]' => 'check只能是1,a,b之一')), array('check' => 'b')));

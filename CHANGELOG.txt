@@ -26,6 +26,8 @@ $this->input->cookie($key=null,$default=null,$xss_clean=false);
  * 3.如果无需自定义Loader，留空即可。
  */
 $system['my_loader']=$system['library_folder'].'/MyLoader.class.php';
+3.灵活的表单验证
+
 优化了：
 1.数据库驱动的custom_result_object方法，增加了set_XXX的支持，
 使得$this->db->get('table')->result($Bean_Class_Name= 'object');
