@@ -229,6 +229,107 @@ class Test_validator extends UnitTestCase {
         $this->assertNull($WN->checkData(array('check' => array('natural_no_zero' => 'check必须是非零自然数')), array('check' => '1')));
         $this->assertNotNull($WN->checkData(array('check' => array('natural_no_zero' => 'check必须是非零自然数')), array('check' => '0')));
         $this->assertNotNull($WN->checkData(array('check' => array('natural_no_zero' => 'check必须是非零自然数')), array('check' => '-1')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('email' => 'check必须是一个邮箱')), array('check' => 'a@a.com')));
+        $this->assertNotNull($WN->checkData(array('check' => array('email' => 'check必须是一个邮箱')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('email' => 'check必须是一个邮箱')), array('check' => 'aa.com')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('email[true]' => 'check必须是一个邮箱')), array('check' => 'a@a.com')));
+        $this->assertNull($WN->checkData(array('check' => array('email[true]' => 'check必须是一个邮箱')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('email[true]' => 'check必须是一个邮箱')), array('check' => 'aa.com')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('url' => 'check必须是网址')), array('check' => 'http://a.com/xxx')));
+        $this->assertNull($WN->checkData(array('check' => array('url' => 'check必须是网址')), array('check' => 'https://a.com/yyy&kkkk')));
+        $this->assertNotNull($WN->checkData(array('check' => array('url' => 'check必须是网址')), array('check' => 'aa.com')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('url[true]' => 'check必须是网址')), array('check' => 'http://a.com/xxx')));
+        $this->assertNull($WN->checkData(array('check' => array('url[true]' => 'check必须是网址')), array('check' => 'https://a.com/yyy&kkkk')));
+        $this->assertNull($WN->checkData(array('check' => array('url[true]' => 'check必须是网址')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('url[true]' => 'check必须是网址')), array('check' => 'aa.com')));
+        
+        
+        $this->assertNull($WN->checkData(array('check' => array('qq' => 'check必须是一个QQ号')), array('check' => '12345')));
+        $this->assertNotNull($WN->checkData(array('check' => array('qq' => 'check必须是一个QQ号')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('qq' => 'check必须是一个QQ号')), array('check' => '312312a')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('qq[true]' => 'check必须是一个QQ号')), array('check' => '12345')));
+        $this->assertNull($WN->checkData(array('check' => array('qq[true]' => 'check必须是一个QQ号')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('qq[true]' => 'check必须是一个QQ号')), array('check' => '312312a')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('phone' => 'check必须是一个电话号，包含区号')), array('check' => '010-59876744')));
+        $this->assertNotNull($WN->checkData(array('check' => array('phone' => 'check必须是一个电话号，包含区号')), array('check' => '0105987674')));
+        $this->assertNotNull($WN->checkData(array('check' => array('phone' => 'check必须是一个电话号，包含区号')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('phone[true]' => 'check必须是一个电话号，包含区号')), array('check' => '0105-9876744')));
+        $this->assertNotNull($WN->checkData(array('check' => array('phone[true]' => 'check必须是一个电话号，包含区号')), array('check' => '0105987674')));
+        $this->assertNull($WN->checkData(array('check' => array('phone[true]' => 'check必须是一个电话号，包含区号')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('mobile' => 'check必须是一个手机号')), array('check' => '13709876567')));
+        $this->assertNotNull($WN->checkData(array('check' => array('mobile' => 'check必须是一个手机号')), array('check' => '11709876567')));
+        $this->assertNotNull($WN->checkData(array('check' => array('mobile' => 'check必须是一个手机号')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('mobile[true]' => 'check必须是一个手机号')), array('check' => '13709876567')));
+        $this->assertNotNull($WN->checkData(array('check' => array('mobile[true]' => 'check必须是一个手机号')), array('check' => '11709876567')));
+        $this->assertNull($WN->checkData(array('check' => array('mobile[true]' => 'check必须是一个手机号')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('zipcode' => 'check必须是一个邮编号')), array('check' => '464300')));
+        $this->assertNotNull($WN->checkData(array('check' => array('zipcode' => 'check必须是一个邮编号')), array('check' => '4643000')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('idcard' => 'check必须是一个身份证号')), array('check' => '130527197801166974')));
+        $this->assertNotNull($WN->checkData(array('check' => array('idcard' => 'check必须是一个身份证号')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('idcard' => 'check必须是一个身份证号')), array('check' => '13052719780116697')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('idcard[true]' => 'check必须是一个身份证号')), array('check' => '130527197801166974')));
+        $this->assertNull($WN->checkData(array('check' => array('idcard[true]' => 'check必须是一个身份证号')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('idcard[true]' => 'check必须是一个身份证号')), array('check' => '13052719780116697')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('ip' => 'check必须是一个IP')), array('check' => '127.0.0.1')));
+        $this->assertNotNull($WN->checkData(array('check' => array('ip' => 'check必须是一个IP')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('ip' => 'check必须是一个IP')), array('check' => '127.0.0.256')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('ip[true]' => 'check必须是一个IP')), array('check' => '127.0.0.1')));
+        $this->assertNull($WN->checkData(array('check' => array('ip[true]' => 'check必须是一个IP')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('ip[true]' => 'check必须是一个IP')), array('check' => '127.0.0.256')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('chs' => 'check必须是纯汉字')), array('check' => '必须是纯汉字')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false]' => 'check必须是纯汉字')), array('check' => 'a')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[true]' => 'check必须是纯汉字')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[true]' => 'check必须是纯汉字')), array('check' => 'a')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[true]' => 'check必须是纯汉字')), array('check' => '汉字')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[false,2,]' => 'check必须是至少2个纯汉字')), array('check' => '必须')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false,2,]' => 'check必须是至少2个纯汉字')), array('check' => '须')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false,2,]' => 'check必须是至少2个纯汉字')), array('check' => '')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[false,2]' => 'check必须是2个纯汉字')), array('check' => '必须')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false,2]' => 'check必须是2个纯汉字')), array('check' => '必')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false,2]' => 'check必须是2个纯汉字')), array('check' => '必必须')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[false,2,3]' => 'check必须是2-3个纯汉字')), array('check' => '必必须')));
+        $this->assertNull($WN->checkData(array('check' => array('chs[true,2,3]' => 'check必须是2-3个纯汉字')), array('check' => '')));
+        $this->assertNotNull($WN->checkData(array('check' => array('chs[false,2,3]' => 'check必须是2-3个纯汉字')), array('check' => '必')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('date' => 'check日期格式错误')), array('check' => '2012-12-12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('date' => 'check日期格式错误')), array('check' => '2012-13-12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('date' => 'check日期格式错误')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('date[true]' => 'check日期格式错误')), array('check' => '2012-12-12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('date[true]' => 'check日期格式错误')), array('check' => '2012-13-12')));
+        $this->assertNull($WN->checkData(array('check' => array('date[true]' => 'check日期格式错误')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('time' => 'check日期格式错误')), array('check' => '12:12:10')));
+        $this->assertNotNull($WN->checkData(array('check' => array('time' => 'check日期格式错误')), array('check' => '24:12:1')));
+        $this->assertNotNull($WN->checkData(array('check' => array('time' => 'check日期格式错误')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('time[true]' => 'check日期格式错误')), array('check' => '12:12:12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('time[true]' => 'check日期格式错误')), array('check' => '24:12:12')));
+        $this->assertNull($WN->checkData(array('check' => array('time[true]' => 'check日期格式错误')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('datetime' => 'check日期格式错误')), array('check' => '2012-12-12 12:12:12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('datetime' => 'check日期格式错误')), array('check' => '2012-12-12 24:12:1')));
+        $this->assertNotNull($WN->checkData(array('check' => array('datetime' => 'check日期格式错误')), array('check' => '')));
+        
+        $this->assertNull($WN->checkData(array('check' => array('datetime[true]' => 'check日期格式错误')), array('check' => '2012-12-12 12:12:12')));
+        $this->assertNotNull($WN->checkData(array('check' => array('datetime[true]' => 'check日期格式错误')), array('check' => '2012-12-12 24:12:12')));
+        $this->assertNull($WN->checkData(array('check' => array('datetime[true]' => 'check日期格式错误')), array('check' => '')));
+        
         /**
          * 模式修正符说明:
           i	表示在和模式进行匹配进不区分大小写

@@ -620,6 +620,45 @@ class WoniuLoader {
                 return preg_match('/^([1-9]\d*|0)$/', $val);
             case 'natural_no_zero':#自然数不包含0
                 return preg_match('/^[1-9]\d*$/', $val);
+            case 'email':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $val) : $args[0];
+            case 'url':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/', $val) : $args[0];
+            case 'qq':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[1-9][0-9]{4,}$/', $val) : $args[0];
+            case 'phone':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(?:\d{3}-?\d{8}|\d{4}-?\d{7})$/', $val) : $args[0];
+            case 'mobile':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/', $val) : $args[0];
+            case 'zipcode':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[1-9]\d{5}(?!\d)$/', $val) : $args[0];
+            case 'idcard':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/', $val) : $args[0];
+            case 'ip':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $val) : $args[0];
+            case 'chs':
+                $count=  implode(',', array_slice($args, 1,2));
+                $count=  empty($count)?'1,':$count;
+                $can_empty=  isset($args[0])&&$args[0]=='true';
+                return !empty($val)?preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val):$can_empty;
+            case 'date':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/', $val) : $args[0];
+            case 'time':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', $val) : $args[0];
+            case 'datetime':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', $val) : $args[0];
+
             case 'reg':#正则表达式验证,reg[/^[\]]$/i]
                 /**
                  * 模式修正符说明:
