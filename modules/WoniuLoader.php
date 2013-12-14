@@ -526,7 +526,9 @@ class WoniuLoader {
      * @return boolean
      */
     public function callFunc($func, $args) {
-        if (is_array($func) || function_exists($func)) {
+        if (is_array($func)) {
+            return $this->callMethod($func, $args);
+        } elseif (function_exists($func)) {
             return call_user_func_array($func, $args);
         } elseif (stripos($func, '::')) {
             $_func = explode('::', $func);
