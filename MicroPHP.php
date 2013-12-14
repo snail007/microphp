@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.1
- * @createdtime         2013-12-14 17:03:29
+ * @since		Version 2.2.2
+ * @createdtime         2013-12-15 01:42:28
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 class WoniuRouter {
 
@@ -222,8 +222,8 @@ class WoniuRouter {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -770,7 +770,7 @@ class WoniuLoader {
         switch ($_rule) {
             case 'required':
                 return !empty($val);
-            case 'mathch':
+            case 'match':
                 return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
             case 'equal':
                 return isset($args[0]) ? $val && ($val == $args[0]) : false;
@@ -832,6 +832,45 @@ class WoniuLoader {
                 return preg_match('/^([1-9]\d*|0)$/', $val);
             case 'natural_no_zero':#自然数不包含0
                 return preg_match('/^[1-9]\d*$/', $val);
+            case 'email':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $val) : $args[0];
+            case 'url':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^http[s]?:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/', $val) : $args[0];
+            case 'qq':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[1-9][0-9]{4,}$/', $val) : $args[0];
+            case 'phone':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(?:\d{3}-?\d{8}|\d{4}-?\d{7})$/', $val) : $args[0];
+            case 'mobile':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/', $val) : $args[0];
+            case 'zipcode':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[1-9]\d{5}(?!\d)$/', $val) : $args[0];
+            case 'idcard':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^\d{14}(\d{4}|(\d{3}[xX])|\d{1})$/', $val) : $args[0];
+            case 'ip':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $val) : $args[0];
+            case 'chs':
+                $count=  implode(',', array_slice($args, 1,2));
+                $count=  empty($count)?'1,':$count;
+                $can_empty=  isset($args[0])&&$args[0]=='true';
+                return !empty($val)?preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val):$can_empty;
+            case 'date':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/', $val) : $args[0];
+            case 'time':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', $val) : $args[0];
+            case 'datetime':
+                $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
+                return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', $val) : $args[0];
+
             case 'reg':#正则表达式验证,reg[/^[\]]$/i]
                 /**
                  * 模式修正符说明:
@@ -927,8 +966,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1033,8 +1072,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1088,8 +1127,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 class WoniuDB {
 
@@ -5318,7 +5357,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.1
+ * @since		Version 2.2.2
  * @filesource
  */
 
@@ -6094,7 +6133,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.1
+ * @since		Version 2.2.2
  * @filesource
  */
 
@@ -7234,8 +7273,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since		Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -7252,7 +7291,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.1
+ * @since		Version 2.2.2
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -10515,8 +10554,8 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 if (!function_exists('trigger404')) {
 
@@ -10980,8 +11019,8 @@ if (!function_exists('mergeRs')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.1
- * @createdtime       2013-12-14 17:03:29
+ * @since                Version 2.2.2
+ * @createdtime       2013-12-15 01:42:28
  */
 class WoniuInput {
 
