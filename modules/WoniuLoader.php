@@ -522,12 +522,12 @@ class WoniuLoader {
      * @return boolean
      */
     public function callFunc($func, $args) {
-        if (is_array($func)||function_exists($func)) {
+        if (is_array($func) || function_exists($func)) {
             return call_user_func_array($func, $args);
-        }elseif (stripos($func, '::')) {
+        } elseif (stripos($func, '::')) {
             $_func = explode('::', $func);
             return $this->callMethod($_func, $args);
-        }  
+        }
         return null;
     }
 
@@ -556,6 +556,28 @@ class WoniuLoader {
                 return isset($args[0]) && isset($data[$args[0]]) ? $val && ($val == $data[$args[0]]) : false;
             case 'equal':
                 return isset($args[0]) ? $val && ($val == $args[0]) : false;
+            case 'unique':#比如unique[user.name] , unique[user.name,id:1]
+                if (!$val || !count($args)) {
+                    return false;
+                }
+                $_info = explode('.', $args[0]);
+                if (count($_info) != 2) {
+                    return false;
+                }
+                $table = $_info[0];
+                $col = $_info[1];
+                if (isset($args[1])) {
+                    $_id_info = explode(':', $args[1]);
+                    if (count($_id_info) != 2) {
+                        return false;
+                    }
+                    $id_col = $_id_info[0];
+                    $id = $_id_info[1];
+                    $where = array($col => $val, "$id_col <>" => $id);
+                } else {
+                    $where = array($col => $val);
+                }
+                return !$this->db->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -605,6 +627,18 @@ class WoniuLoader {
                 return isset($args[0]) ? preg_match($args[0], $val) : false;
             /**
              * set set_post不参与验证，返回true跳过
+             * 
+             * 说明：
+             * set用于设置在验证数据前对数据进行处理的函数或者方法
+             * set_post用于设置在验证数据后对数据进行处理的函数或者方法
+             * 如果设置了set，数据在验证的时候验证的是处理过的数据
+             * 如果设置了set_post，可以通过第三个参数$data接收数据：$this->checkData($rule, $_POST, $data)，$data是验证通过并经过set_post处理后的数据
+             * set和set_post后面是一个或者多个函数或者方法，多个逗号分割
+             * 注意：
+             * 1.无论是函数或者方法都必须有一个字符串返回
+             * 2.如果是系统函数，系统会传递当前值给系统函数，因此系统函数必须是至少接受一个字符串参数，比如md5，trim
+             * 3.如果是自定义的函数，系统会传递当前值和全部数据给自定义的函数，因此自定义函数可以接收两个参数第一个是值，第二个是全部数据$data
+             * 4.如果是类的方法写法是：类名称::方法名 （方法静态动态都可以，public，private，都可以）
              */
             case 'set':
             case 'set_post':

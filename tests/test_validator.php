@@ -39,18 +39,35 @@ require_once('simpletest/autorun.php');
  */
 class Test_validator extends UnitTestCase {
 
+    public function tearDown() {
+        global $default;
+        WoniuRouter::setConfig($default);
+    }
+
+    public function setUp() {
+        global $system;
+        $system['db']['mysql']['dbprefix'] = 'wncms_';
+        WoniuRouter::setConfig($system);
+    }
+
     public function testForm() {
         $WN = WoniuLoader::instance();
+        $WN->database();
+        /**
+         * set_post用于设置在验证数据后对数据进行处理的函数或者方法
+         * 如果设置了set_post，可以通过第三个参数$data接收数据：$WN->checkData($rule, $_POST, $data)
+         * $data是验证通过并经过set_post处理后的数据
+         */
         $_POST['user'] = 'snail';
         $_POST['password'] = '123456';
         $rule = array(
             'user' => array(
                 'alpha_start' => '用户名必须是字母开头',
                 'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
-                'len[5,16]' => '用户名长度5-16',
+                'range_len[5,16]' => '用户名长度5-16',
             ),
             'password' => array(
-                'len[6,16]' => '密码长度6-16',
+                'range_len[6,16]' => '密码长度6-16',
                 'set_post[sha1,md5]' => '',
             )
         );
@@ -72,15 +89,25 @@ class Test_validator extends UnitTestCase {
             'user' => array(
                 'alpha_start' => '用户名必须是字母开头',
                 'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
-                'len[5,16]' => '用户名长度5-16',
+                'range_len[5,16]' => '用户名长度5-16',
                 'set[trim]' => '',
             ),
         );
         $data = array();
         $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名长度5-16');
         $this->assertEqual('snai', $data['user']);
-
-
+        /**
+         * set用于设置在验证数据前对数据进行处理的函数或者方法
+         * set_post用于设置在验证数据后对数据进行处理的函数或者方法
+         * 如果设置了set，数据在验证的时候验证的是处理过的数据
+         * 如果设置了set_post，可以通过第三个参数$data接收数据：$WN->checkData($rule, $_POST, $data)，$data是验证通过并经过set_post处理后的数据
+         * set和set_post后面是一个或者多个函数或者方法，多个逗号分割
+         * 注意：
+         * 1.无论是函数或者方法都必须有一个字符串返回
+         * 2.如果是系统函数，系统会传递当前值给系统函数，因此系统函数必须是至少接受一个字符串参数
+         * 3.如果是自定义的函数，系统会传递当前值和全部数据给自定义的函数，因此自定义函数可以接收两个参数第一个是值，第二个是全部数据$data
+         * 4.如果是类的方法写法是：类名称::方法名 （方法静态动态都可以，public，private，都可以）
+         */
         $_POST['user'] = '123456    ';
         $rule = array(
             'password' => array(
@@ -92,10 +119,48 @@ class Test_validator extends UnitTestCase {
         $data = array();
         $this->assertNull($WN->checkData($rule, $_POST, $data));
         $this->assertEqual($data['password'], md5(sha1('123456')));
+        /**
+         * 添加数据，users表的用户名uname不能重复
+         */
+        $_POST['uname'] = 'admin';
+        $rule = array(
+            'uname' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'range_len[5,16]' => '用户名长度5-16',
+                'set[trim]' => '',
+                'unique[users.uname]' => '用户名已经存在，不能添加'
+            )
+        );
+        $data = array();
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名已经存在，不能添加');
+
+        /**
+         * 修改user_id为1的数据，users表的用户名uname不能重复，修改的时候除了user_id为1的记录的uname，用户名不能和其它记录的重复。
+         */
+        $_POST['uname'] = 'admin';
+        $_POST['user_id'] = 1;
+        $rule = array(
+            'user_id' => array(
+                'natural_no_zero' => '用户ID必须是自然数'
+            ),
+            'uname' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'range_len[5,16]' => '用户名长度5-16',
+                'set[trim]' => '',
+                'unique[users.uname,user_id:' . $_POST['user_id'] . ']' => '用户名已经存在，不能修改'
+            )
+        );
+        $data = array();
+        $this->assertNull($WN->checkData($rule, $_POST, $data));
+        $_POST['uname'] = 'admina';
+        $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名已经存在，不能修改');
     }
 
     public function testValidator() {
         $WN = WoniuLoader::instance();
+        $WN->database();
         $this->assertNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => 'x')));
         $this->assertNotNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => '')));
         $this->assertNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'check', 'check2' => 'check')));
@@ -104,6 +169,10 @@ class Test_validator extends UnitTestCase {
         $this->assertNotNull($WN->checkData(array('check' => array('mathch[check2]' => 'check值不匹配check2值')), array('check' => 'x')));
         $this->assertNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => '')));
+        $this->assertNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在，不能添加')), array('check' => 'xxx')));
+        $this->assertNotNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在,不能修改')), array('check' => 'admin')));
+        $this->assertNull($WN->checkData(array('check' => array('unique[users.uname,user_id:1]' => 'admin已经存在,不能修改')), array('check' => 'admin')));
+        $this->assertNotNull($WN->checkData(array('check' => array('unique[users.uname,user_id:1]' => 'admina已经存在,不能修改')), array('check' => 'admina')));
         $this->assertNull($WN->checkData(array('check' => array('min_len[3]' => 'check长度不小于3')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('min_len[3]' => 'check长度不小于3')), array('check' => '')));
         $this->assertNull($WN->checkData(array('check' => array('max_len[3]' => 'check长度不大于3')), array('check' => 'xxx')));
