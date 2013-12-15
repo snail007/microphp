@@ -45,14 +45,16 @@ class Test_validator extends UnitTestCase {
     }
 
     public function setUp() {
-        global $system;
+        global $default;
+        $system=$default;
+        $system['db']['active_group'] = 'mysql';
         $system['db']['mysql']['dbprefix'] = 'wncms_';
         WoniuRouter::setConfig($system);
+        WoniuLoader::instance()->database(null,FALSE,true);
     }
 
     public function testForm() {
         $WN = WoniuLoader::instance();
-        $WN->database();
         /**
          * set_post用于设置在验证数据后对数据进行处理的函数或者方法
          * 如果设置了set_post，可以通过第三个参数$data接收数据：$WN->checkData($rule, $_POST, $data)
