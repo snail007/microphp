@@ -1,5 +1,5 @@
 
-var 2.2.2
+var 2.2.2:[2013-12-15]
 增加了：
 1.下列方法增加了xss过滤参数$xss_clean，当$xss_clean为true时，会对数据进行xss过滤。
 $this->input->get_post($key=null,$default=null,$xss_clean=false);
