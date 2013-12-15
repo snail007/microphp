@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.1
- * @createdtime         2013-11-27 19:38:01
+ * @since		Version 2.2.2
+ * @createdtime         2013-12-15 11:44:20
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -98,6 +98,24 @@ $system['library_file_subfix'] = '.class.php';
  */
 $system['helper_file_subfix'] = '.php';
 /**
+ * 自定义Loader，用于拓展框架核心功能,
+ * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
+ * 这里是自定义Loader类文件的完整路径
+ * 自定义Loader文件名称和类名称必须是：
+ * 文件名称：类名.class.php
+ * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
+ * 注意：
+ * 1.自定义Loader必须继承WoniuLoader。
+ * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
+ * class MyLoader extends WoniuLoader {
+ *      public function __construct() {
+ *          parent::__construct();
+ *      }
+ *  } 
+ * 3.如果无需自定义Loader，留空即可。
+ */
+$system['my_loader']='';
+/**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
@@ -136,7 +154,7 @@ $system['debug'] = TRUE;
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
-$system['error_manage'] = TRUE;
+$system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
@@ -147,7 +165,7 @@ $system['error_manage'] = TRUE;
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
-$system['log_error'] = TRUE;
+$system['log_error'] = FALSE;
 /* * --------------------------------错误日志记录处理配置-----------------------
  * 错误日志记录处理方法，可以是一个“函数名称”或是“类的静态方法”用数组方式array('class_name'=>'method_name')。
  * 提示：
@@ -272,7 +290,7 @@ $system['cache_config'] = array(
      * Memcache服务器地址;
      */
     "server" => array(
-        array("192.168.199.25", 11211, 1),
+        array("127.0.0.1", 11211, 1),
     //  array("new.host.ip",11211,1),
     ),
     /*
@@ -282,7 +300,7 @@ $system['cache_config'] = array(
         'type' => 'tcp', //sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
         'prefix' => @$_SERVER['HTTP_HOST'], //key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
         'sock' => '', //sock的完整路径
-        'host' => '192.168.199.25',
+        'host' => '127.0.0.1',
         'port' => 6379,
         'password' => NULL, //密码，如果没有,保持null
         'timeout' => 0, //0意味着没有超时限制，单位秒
@@ -303,7 +321,7 @@ $system['session_handle'] = array(
         'lifetime' => 3600, // session lifetime in seconds
     ),
     'mongodb' => array(
-        'host' => '192.168.199.25',
+        'host' => '127.0.0.1',
         'port' => 27017,
         'user' => 'root',
         'password' => 'local',
@@ -338,12 +356,12 @@ $system['session_handle'] = array(
      * memcache采用的是session.save_handler管理机制
      * 需要php安装memcache拓展支持
      */
-    'memcache' => "tcp://192.168.199.25:11211",
+    'memcache' => "tcp://127.0.0.1:11211",
     /**
      * redis采用的是session.save_handler管理机制
      * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
      */
-    'redis' => "tcp://192.168.199.25:6379",
+    'redis' => "tcp://127.0.0.1:6379",
 );
 /**
  * ------------------------数据库配置----------------------------
@@ -361,10 +379,10 @@ $system['db']['active_group'] = 'default';
  * mysql数据库配置示例
  */
 $system['db']['default']['dbdriver'] = "mysql";
-$system['db']['default']['hostname'] = '10.0.0.251';
+$system['db']['default']['hostname'] = '127.0.0.1';
 $system['db']['default']['port'] = '3306';
 $system['db']['default']['username'] = 'root';
-$system['db']['default']['password'] = 'snailadmin';
+$system['db']['default']['password'] = 'admin';
 $system['db']['default']['database'] = 'test';
 $system['db']['default']['dbprefix'] = '';
 $system['db']['default']['pconnect'] = TRUE;
