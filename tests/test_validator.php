@@ -47,10 +47,9 @@ class Test_validator extends UnitTestCase {
     public function setUp() {
         global $default;
         $system=$default;
-        $system['db']['active_group'] = 'mysql';
         $system['db']['mysql']['dbprefix'] = 'wncms_';
         WoniuRouter::setConfig($system);
-        WoniuLoader::instance()->database(null,FALSE,true);
+        WoniuLoader::instance()->database($system['db']['mysql'],FALSE,true);
     }
 
     public function testForm() {
