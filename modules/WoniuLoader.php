@@ -505,7 +505,7 @@ class WoniuLoader {
         }
         return false;
     }
-
+            
     private function checkRule($_rule, $val, $data) {
         $matches = array();
         preg_match('|([^\[]+)(?:\[(.*)\])?|', $_rule, $matches);
