@@ -152,7 +152,9 @@ class Woniu_debuger extends WoniuController {
 
     public function getControllerMethods($clazz) {
         if (!class_exists(basename($clazz))) {
-            WoniuController::instance($clazz);
+            $system = WoniuLoader::$system;
+            $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $clazz . $system['controller_file_subfix'];
+            WoniuLoader::includeOnce($filepath);
         }
         $clazz = basename($clazz);
         $class = new ReflectionClass($clazz);
@@ -178,7 +180,9 @@ class Woniu_debuger extends WoniuController {
 
     public function getModelMethods($clazz) {
         if (!class_exists(basename($clazz))) {
-            WoniuModel::instance($clazz);
+            $system = WoniuLoader::$system;
+            $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $clazz . $system['model_file_subfix'];
+            WoniuLoader::includeOnce($filepath);
         }
         $clazz = basename($clazz);
         $class = new ReflectionClass($clazz);

@@ -550,7 +550,7 @@ class WoniuLoader {
         $method->setAccessible(true);
         return $method->invokeArgs($obj, $args);
     }
-
+            
     private function checkRule($_rule, $val, $data) {
         $matches = $this->getCheckRuleInfo($_rule);
         $_rule = $matches[1];
