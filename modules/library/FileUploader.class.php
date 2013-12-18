@@ -111,7 +111,7 @@ class FileUploader {
         $max_size = $this->size;
         $size_range = 1024 * $max_size;
         if ($_FILES[$this->file_formfield_name]['size'] > $size_range || !$_FILES[$this->file_formfield_name]['size']) {
-            $this->setError(401, '文件大小错误！最大：' . $max_size . 'KB');
+            $this->setError(401, '文件大小错误！最大：' . ( $max_size < 1024 ? $max_size . 'KB' : sprintf('%.1f', $max_size / 1024) . 'MB'));
             return FALSE;
         }
         return TRUE;
