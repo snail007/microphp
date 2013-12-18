@@ -86,7 +86,7 @@ class FileUploader {
             $file_ext = strtolower(pathinfo($_FILES[$this->file_formfield_name]['name'], PATHINFO_EXTENSION));
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
         }
-        if (empty($dir)) {
+        if (!empty($dir)) {
             $subfix=$dir{strlen($dir)-1};
             $_dir=($subfix=='/'||$subfix=="\\"?$dir:$dir.'/');
             $dir = pathinfo($_dir.$save_name, PATHINFO_DIRNAME);
@@ -96,7 +96,7 @@ class FileUploader {
         if (!is_dir($dir)) {
             mkdir($dir, 0777, TRUE);
         }
-        move_uploaded_file($src_file, $save_name);
+        move_uploaded_file($src_file, ($dir ? $dir . '/' : '' ) . $save_name);
         if (file_exists($save_name)) {
             return realpath($save_name);
         } else {
