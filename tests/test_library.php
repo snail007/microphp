@@ -40,14 +40,17 @@ class Test_library extends UnitTestCase{
         $this->assertFalse(class_exists('TestLibrary',FALSE));
         $woniu=  WoniuLoader::instance();
         $this->assertIsA(new TestLibrary(), 'TestLibrary');
+        $this->assertIsA(new SubLib2(), 'SubLib2');
         $lib=$woniu->lib('sub/SubLib');
         $lib2=$woniu->lib('sub/SubLib','SubLib2');
         $lib3=$woniu->lib->SubLib2;
         $lib4=$woniu->lib->SubLib;
+        $lib5=$woniu->lib('sub/SubLib2','SubLib3');
         $this->assertIsA($lib, 'SubLib');
         $this->assertIsA($lib2, 'SubLib');
         $this->assertIsA($lib3, 'SubLib');
         $this->assertIsA($lib4, 'SubLib');
+        $this->assertIsA($lib5, 'SubLib2');
         $this->assertReference($lib2, $lib);
         $this->assertReference($lib3, $lib2);
         $this->assertReference($lib4, $lib3);

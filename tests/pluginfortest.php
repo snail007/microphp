@@ -41,7 +41,10 @@ $system['controller_folder'] = $system['application_folder'] . '/controllers';
 /**
  * 存放模型文件的文件夹路径名称
  */
-$system['model_folder'] = $system['application_folder'] . '/models';
+$system['model_folder'] = array(
+    $system['application_folder'] . '/models',
+    $system['application_folder'] . '/../app2/models'
+);
 /**
  * 存放视图文件的文件夹路径名称
  */
@@ -49,7 +52,10 @@ $system['view_folder'] = $system['application_folder'] . '/views';
 /**
  * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载
  */
-$system['library_folder'] = $system['application_folder'] . '/library';
+$system['library_folder'] = array(
+    $system['application_folder'] . '/library',
+    $system['application_folder'] . '/../app2/library'
+);
 /**
  * 存放函数文件的文件夹路径名称
  */
@@ -119,7 +125,7 @@ $system['helper_file_subfix'] = '.php';
  *  } 
  * 3.如果无需自定义Loader，留空即可。
  */
-$system['my_loader']=$system['library_folder'].'/MyLoader.class.php';
+$system['my_loader'] = $system['library_folder'][0] . '/MyLoader.class.php';
 /**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
@@ -451,7 +457,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-$default=$system;
+$default = $system;
 include('../modules/WoniuInput.class.php');
 include('../modules/WoniuHelper.php');
 include('../modules/db-drivers/db.drivers.php');
@@ -479,7 +485,6 @@ include('../modules/WoniuLoader.php');
 include('../modules/WoniuController.php');
 include('../modules/WoniuModel.php');
 WoniuRouter::setConfig($system);
-
 
 function getReqURL($route, $index = 'indexfortest.php?') {
     return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/' . $index . $route;
