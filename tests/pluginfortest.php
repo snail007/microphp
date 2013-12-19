@@ -59,7 +59,10 @@ $system['library_folder'] = array(
 /**
  * 存放函数文件的文件夹路径名称
  */
-$system['helper_folder'] = $system['application_folder'] . '/helper';
+$system['helper_folder'] = array(
+    $system['application_folder'] . '/helper',
+    $system['application_folder'] . '/../app2/helper'
+);
 /**
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容

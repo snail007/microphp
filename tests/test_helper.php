@@ -39,8 +39,10 @@ class Test_helper extends UnitTestCase {
     public function testHelper(){
         $woniu=  WoniuLoader::instance();
         $woniu->helper('config');
+        $woniu->helper('config2');
         $this->assertEqual($woniu->config('product'), 'microphp');
         $this->assertEqual($woniu->config('host'), '127.0.0.1');
+        $this->assertEqual($woniu->config('host2'), '127.0.0.2');
         $woniu->setConfig('host','localhost');
         $this->assertEqual($woniu->config('host'), 'localhost');
         $this->assertEqual($woniu->config('db','user'), 'root');

@@ -98,7 +98,7 @@ class WoniuLoader {
             $helper_folders = array($helper_folders);
         }
         $count = count($helper_folders);
-        foreach ($helper_folders as $helper_folder) {
+        foreach ($helper_folders as $key=>$helper_folder) {
             $filename = $helper_folder . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
             if (in_array($filename, self::$helper_files)) {
                 return;
