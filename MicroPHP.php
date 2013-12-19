@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.2
- * @createdtime         2013-12-15 11:44:20
+ * @createdtime         2013-12-19 22:35:38
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 class WoniuRouter {
 
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -305,25 +305,35 @@ class WoniuLoader {
 
     public function helper($file_name) {
         $system = WoniuLoader::$system;
-        $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
-        if (in_array($filename, self::$helper_files)) {
-            return;
+        $helper_folders = $system['helper_folder'];
+        if (!is_array($helper_folders)) {
+            $helper_folders = array($helper_folders);
         }
-        if (file_exists($filename)) {
-            self::$helper_files[] = $filename;
-            //包含文件，并把文件里面的变量放入$this->config
-            $before_vars = array_keys(get_defined_vars());
-            $before_vars[] = 'before_vars';
-            include($filename);
-            $vars = get_defined_vars();
-            $all_vars = array_keys($vars);
-            foreach ($all_vars as $key) {
-                if (!in_array($key, $before_vars) && isset($vars[$key])) {
-                    self::$config[$key] = $vars[$key];
+        $count = count($helper_folders);
+        foreach ($helper_folders as $helper_folder) {
+            $filename = $helper_folder . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
+            if (in_array($filename, self::$helper_files)) {
+                return;
+            }
+            if (file_exists($filename)) {
+                self::$helper_files[] = $filename;
+                //包含文件，并把文件里面的变量放入$this->config
+                $before_vars = array_keys(get_defined_vars());
+                $before_vars[] = 'before_vars';
+                include($filename);
+                $vars = get_defined_vars();
+                $all_vars = array_keys($vars);
+                foreach ($all_vars as $key) {
+                    if (!in_array($key, $before_vars) && isset($vars[$key])) {
+                        self::$config[$key] = $vars[$key];
+                    }
+                }
+                break;
+            } else {
+                if($count==$key-1){
+                    trigger404($filename . ' not found.');
                 }
             }
-        } else {
-            trigger404($filename . ' not found.');
         }
     }
 
@@ -336,26 +346,36 @@ class WoniuLoader {
         if (!$alias_name) {
             $alias_name = $classname;
         }
-        $filepath = $system['library_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
-
-        if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
-            return WoniuLibLoader::$lib_files[$alias_name];
-        } else {
-            foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
-                if (strtolower(get_class($obj)) === strtolower($classname)) {
-                    return WoniuLibLoader::$lib_files[$alias_name] = WoniuLibLoader::$lib_files[$aname];
+        $library_folders = $system['library_folder'];
+        if (!is_array($library_folders)) {
+            $library_folders = array($library_folders);
+        }
+        $count = count($library_folders);
+        foreach ($library_folders as $key => $library_folder) {
+            $filepath = $library_folder . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
+            if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
+                return WoniuLibLoader::$lib_files[$alias_name];
+            } else {
+                foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
+                    if (strtolower(get_class($obj)) === strtolower($classname)) {
+                        return WoniuLibLoader::$lib_files[$alias_name] = WoniuLibLoader::$lib_files[$aname];
+                    }
                 }
             }
-        }
-        if (file_exists($filepath)) {
-            self::includeOnce($filepath);
-            if (class_exists($classname, FALSE)) {
-                return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                self::includeOnce($filepath);
+                if (class_exists($classname, FALSE)) {
+                    return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Library Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Library Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -368,25 +388,37 @@ class WoniuLoader {
         if (!$alias_name) {
             $alias_name = strtolower($classname);
         }
-        $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
-        } else {
-            foreach (WoniuModelLoader::$model_files as &$obj) {
-                if (strtolower(get_class($obj)) == strtolower($classname)) {
-                    return WoniuModelLoader::$model_files[$alias_name] = $obj;
+        $model_folders = $system['model_folder'];
+        if (!is_array($model_folders)) {
+            $model_folders = array($model_folders);
+        }
+        $count = count($model_folders);
+        foreach ($model_folders as $key => $model_folder) {
+            //$filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
+            $filepath = $model_folder . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
+            if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+                return WoniuModelLoader::$model_files[$alias_name];
+            } else {
+                foreach (WoniuModelLoader::$model_files as &$obj) {
+                    if (strtolower(get_class($obj)) == strtolower($classname)) {
+                        return WoniuModelLoader::$model_files[$alias_name] = $obj;
+                    }
                 }
             }
-        }
-        if (file_exists($filepath)) {
-            self::includeOnce($filepath);
-            if (class_exists($classname, FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                self::includeOnce($filepath);
+                if (class_exists($classname, FALSE)) {
+                    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Model Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Model Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not  found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -445,19 +477,30 @@ class WoniuLoader {
 
     public static function classAutoloader($clazzName) {
         $system = WoniuLoader::$system;
-        $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-        if (file_exists($library)) {
-            self::includeOnce($library);
-        } else {
-            if (is_dir($system['library_folder'])) {
-                $dir = dir($system['library_folder']);
-                while (($file = $dir->read()) !== false) {
-                    if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
-                        continue;
+        $library_folders = $system['library_folder'];
+        if (!is_array($library_folders)) {
+            $library_folders = array($library_folders);
+        }
+        foreach ($library_folders as $library_folder) {
+            $library = $library_folder . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+            if (file_exists($library)) {
+                self::includeOnce($library);
+            } else {
+                if (is_dir($library_folder)) {
+                    $dir = dir($library_folder);
+                    $found = false;
+                    while (($file = $dir->read()) !== false) {
+                        if ($file == '.' || $file == '..' || is_file($library_folder . DIRECTORY_SEPARATOR . $file)) {
+                            continue;
+                        }
+                        $path = realpath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                        if (file_exists($path)) {
+                            self::includeOnce($path);
+                            $found = true;
+                            break;
+                        }
                     }
-                    $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-                    if (file_exists($path)) {
-                        self::includeOnce($path);
+                    if ($found) {
                         break;
                     }
                 }
@@ -857,10 +900,10 @@ class WoniuLoader {
                 $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
                 return !empty($val) ? preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $val) : $args[0];
             case 'chs':
-                $count=  implode(',', array_slice($args, 1,2));
-                $count=  empty($count)?'1,':$count;
-                $can_empty=  isset($args[0])&&$args[0]=='true';
-                return !empty($val)?preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val):$can_empty;
+                $count = implode(',', array_slice($args, 1, 2));
+                $count = empty($count) ? '1,' : $count;
+                $can_empty = isset($args[0]) && $args[0] == 'true';
+                return !empty($val) ? preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val) : $can_empty;
             case 'date':
                 $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
                 return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/', $val) : $args[0];
@@ -967,7 +1010,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1073,41 +1116,53 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 
-    public static function instance($classname_path=null) {
+    public static function instance($classname_path = null) {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
-        $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
-        $alias_name = strtolower($classname);
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
+
+        $model_folders = $system['model_folder'];
+        if (!is_array($model_folders)) {
+            $model_folders = array($model_folders);
         }
-        
-        if (file_exists($filepath)) {
-            //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-            //如此一来就能满足两种模式
-            WoniuLoader::classAutoloadRegister();
-            if(!class_exists($filepath, FALSE)){
-                WoniuLoader::includeOnce($filepath);
+        $count = count($model_folders);
+        WoniuLoader::classAutoloadRegister();
+        foreach ($model_folders as $key => $model_folder) {
+            $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
+            $alias_name = strtolower($classname);
+            if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+                return WoniuModelLoader::$model_files[$alias_name];
             }
-            if (class_exists($classname,FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+                //如此一来就能满足两种模式
+                //WoniuLoader::classAutoloadRegister();
+                if (!class_exists($filepath, FALSE)) {
+                    WoniuLoader::includeOnce($filepath);
+                }
+                if (class_exists($classname, FALSE)) {
+                    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Model Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Model Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not  found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -1128,7 +1183,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 class WoniuDB {
 
@@ -7274,7 +7329,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10555,7 +10610,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 if (!function_exists('trigger404')) {
 
@@ -11020,7 +11075,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @createdtime       2013-12-19 22:35:38
  */
 class WoniuInput {
 
