@@ -38,7 +38,7 @@ require_once('simpletest/autorun.php');
 class Test_helper extends UnitTestCase {
     public function testHelper(){
         $woniu=  WoniuLoader::instance();
-        $woniu->helper('configxxx');
+        //$woniu->helper('configxxx');
         $woniu->helper('config');
         $woniu->helper('config2');
         $this->assertEqual($woniu->config('product'), 'microphp');
