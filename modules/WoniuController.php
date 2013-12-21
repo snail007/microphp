@@ -74,6 +74,7 @@ class WoniuController extends WoniuLoaderPlus {
 
     public static function instance($classname_path = null) {
         if (empty($classname_path)) {
+            WoniuLoader::classAutoloadRegister();
             return self::$instance=new self();
         }
         $system = WoniuLoader::$system;

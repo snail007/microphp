@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.2
- * @createdtime         2013-12-19 23:03:02
+ * @since		Version 2.2.3
+ * @createdtime         2013-12-21 22:06:14
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 class WoniuRouter {
 
@@ -222,8 +222,8 @@ class WoniuRouter {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1009,8 +1009,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1073,6 +1073,7 @@ class WoniuController extends WoniuLoaderPlus {
 
     public static function instance($classname_path = null) {
         if (empty($classname_path)) {
+            WoniuLoader::classAutoloadRegister();
             return self::$instance=new self();
         }
         $system = WoniuLoader::$system;
@@ -1115,8 +1116,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1126,6 +1127,7 @@ class WoniuModel extends WoniuLoaderPlus {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
+            WoniuLoader::classAutoloadRegister();
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
         $system = WoniuLoader::$system;
@@ -1182,8 +1184,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 class WoniuDB {
 
@@ -5412,7 +5414,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 
@@ -6188,7 +6190,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 
@@ -7328,8 +7330,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since		Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -7346,7 +7348,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -10609,8 +10611,8 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 if (!function_exists('trigger404')) {
 
@@ -11074,8 +11076,8 @@ if (!function_exists('mergeRs')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-19 23:03:02
+ * @since                Version 2.2.3
+ * @createdtime       2013-12-21 22:06:14
  */
 class WoniuInput {
 

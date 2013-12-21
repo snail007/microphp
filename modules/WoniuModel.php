@@ -21,6 +21,7 @@ class WoniuModel extends WoniuLoaderPlus {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
+            WoniuLoader::classAutoloadRegister();
             return empty(self::$instance) ? self::$instance = new self() : self::$instance;
         }
         $system = WoniuLoader::$system;
