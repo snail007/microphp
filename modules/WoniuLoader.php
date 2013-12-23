@@ -320,7 +320,7 @@ class WoniuLoader {
                 self::includeOnce($system['my_loader']);
                 $clazz = basename($system['my_loader'], '.class.php');
                 if (class_exists($clazz, FALSE)) {
-                    eval('class WoniuLoaderPlus extends MyLoader{}');
+                    eval('class WoniuLoaderPlus extends '.$clazz.'{}');
                 } else {
                     eval('class WoniuLoaderPlus extends WoniuLoader{}');
                 }
