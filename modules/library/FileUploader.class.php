@@ -81,7 +81,7 @@ class FileUploader {
         if (!$this->checkSize($this->size, $this->file_formfield_name)) {
             return FALSE;
         }
-        $src_file = $this->truepath($_FILES[$this->file_formfield_name]['tmp_name']);
+        $src_file = realpath($_FILES[$this->file_formfield_name]['tmp_name']);
         if (empty($save_name)) {
             $file_ext = strtolower(pathinfo($_FILES[$this->file_formfield_name]['name'], PATHINFO_EXTENSION));
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
@@ -151,7 +151,6 @@ class FileUploader {
     public function getTmpFilePath() {
         return $_FILES[$this->file_formfield_name]['tmp_name'];
     }
-
     private function truepath($path) {
         // whether $path is unix or not
         $unipath = strlen($path) == 0 || $path{0} != '/';
@@ -173,12 +172,12 @@ class FileUploader {
         }
         $path = implode(DIRECTORY_SEPARATOR, $absolutes);
         // resolve any symlinks
-        if (file_exists($path) && linkinfo($path) > 0)
+        if (function_exists('linkinfo')&&function_exists('readlink')&&file_exists($path) && linkinfo($path) > 0){
             $path = readlink($path);
+        }
         // put initial separator that could have been lost
         $path = !$unipath ? '/' . $path : $path;
         $path = str_replace(array('/', '\\'), '/', $path);
         return $path;
     }
-
 }
