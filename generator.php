@@ -53,12 +53,6 @@ foreach ($files as $file) {
 common_replace($core);
 file_put_contents('MicroPHP.php', "<?php\n" . $core);
 $content = php_strip_whitespace('MicroPHP.php');
-$content = str_replace("class WoniuLoader", "\n /**
- * @property CI_DB_active_record \$db
- * @property phpFastCache        \$cache
- * @property WoniuInput          \$input
- **/
- class WoniuLoader", $content);
 file_put_contents('MicroPHP.php', $header ."\n\n". $core);
 file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
