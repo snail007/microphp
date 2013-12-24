@@ -1,5 +1,22 @@
 <?php
+//test table
+/**
+ *
+ * CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `uname` varchar(32) NOT NULL,
+  `upass` varchar(32) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
+--
+-- 导出表中的数据 `users`
+--
+
+INSERT INTO `users` (`user_id`, `uname`, `upass`) VALUES
+(1, 'admin', 'e3db72cddb1a34c9f3031ee0cd9ab521'),
+(2, 'admina', 'e3db72cddb1a34c9f3031ee0cd9ab521');
+ */
 require_once 'pluginfortest.php';
 //require_once('simpletest/web_tester.php');
 require_once('simpletest/autorun.php');
@@ -47,7 +64,7 @@ class Test_validator extends UnitTestCase {
     public function setUp() {
         global $default;
         $system=$default;
-        $system['db']['mysql']['dbprefix'] = 'wncms_';
+        $system['db']['mysql']['dbprefix'] = '';
         WoniuRouter::setConfig($system);
         WoniuLoader::instance()->database($system['db']['mysql'],FALSE,true);
     }
