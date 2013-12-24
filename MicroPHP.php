@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.3
- * @createdtime         2013-12-24 17:29:07
+ * @createdtime         2013-12-24 20:03:36
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 class WoniuRouter {
 
@@ -187,7 +187,7 @@ class WoniuRouter {
     }
 
     public static function setConfig($system) {
-        $system['application_folder'] = realpath($system['application_folder']);
+        $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
         self::folderAutoInit();
     }
@@ -223,7 +223,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -494,7 +494,7 @@ class WoniuLoader {
                         if ($file == '.' || $file == '..' || is_file($library_folder . DIRECTORY_SEPARATOR . $file)) {
                             continue;
                         }
-                        $path = realpath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                        $path = truepath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
                         if (file_exists($path)) {
                             self::includeOnce($path);
                             $found = true;
@@ -965,7 +965,7 @@ class WoniuLoader {
 
     public static function includeOnce($file_path) {
         static $files = array();
-        $key = md5(realpath(convertPath($file_path)));
+        $key = md5(truepath(convertPath($file_path)));
         if (!isset($files[$key])) {
             include $file_path;
             $files[$key] = 1;
@@ -1011,7 +1011,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1059,10 +1059,10 @@ class WoniuController extends WoniuLoaderPlus {
             $namex = str_replace(".php", "", $file);
             //只include选择的缓存驱动文件
             if ($namex == $system['cache_config']['storage']) {
-                if (!isset($included[realpath($filepath)])) {
+                if (!isset($included[truepath($filepath)])) {
                     WoniuLoader::includeOnce($filepath);
                 } else {
-                    $included[realpath($filepath)] = 1;
+                    $included[truepath($filepath)] = 1;
                 }
             }
         }
@@ -1118,7 +1118,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1186,7 +1186,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 class WoniuDB {
 
@@ -7332,7 +7332,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10613,7 +10613,7 @@ class RedisSessionHandle implements WoniuSessionHandle {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 if (!function_exists('trigger404')) {
 
@@ -10628,6 +10628,43 @@ if (!function_exists('trigger404')) {
             echo $msg;
         }
         exit();
+    }
+
+}
+if (!function_exists('truepath')) {
+
+    /**
+     * This function is to replace PHP's extremely buggy realpath().
+     * @param string The original path, can be relative etc.
+     * @return string The resolved path, it might not exist.
+     */
+    function truepath($path) {
+        // whether $path is unix or not
+        $unipath = strlen($path) == 0 || $path{0} != '/';
+        // attempts to detect if path is relative in which case, add cwd
+        if (strpos($path, ':') === false && $unipath)
+            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+        // resolve path parts (single dot, double dot and double delimiters)
+        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part)
+                continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        $path = implode(DIRECTORY_SEPARATOR, $absolutes);
+        // resolve any symlinks
+        if (file_exists($path) && linkinfo($path) > 0)
+            $path = readlink($path);
+        // put initial separator that could have been lost
+        $path = !$unipath ? '/' . $path : $path;
+        $path = str_replace(array('/', '\\'), '/', $path);
+        return $path;
     }
 
 }
@@ -10829,7 +10866,7 @@ if (!function_exists('woniu_db_error_handler')) {
 if (!function_exists('format_error')) {
 
     function format_error($errno, $errstr, $errfile, $errline) {
-        $path = realpath(WoniuLoader::$system['application_folder']);
+        $path = truepath(WoniuLoader::$system['application_folder']);
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
@@ -10865,7 +10902,7 @@ if (!function_exists('get_strace')) {
         array_pop($trace);
         array_pop($trace);
         $str = '';
-        $path = realpath(WoniuLoader::$system['application_folder']);
+        $path = truepath(WoniuLoader::$system['application_folder']);
         $path.=empty($path) ? '' : '/';
         foreach ($trace as $k => $e) {
             $file = !empty($e['file']) ? "File:" . str_replace($path, '', $e['file']) . "\n" : '';
@@ -11085,7 +11122,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 17:29:07
+ * @createdtime       2013-12-24 20:03:36
  */
 class WoniuInput {
 

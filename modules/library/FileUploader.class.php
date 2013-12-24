@@ -81,7 +81,7 @@ class FileUploader {
         if (!$this->checkSize($this->size, $this->file_formfield_name)) {
             return FALSE;
         }
-        $src_file = truepath($_FILES[$this->file_formfield_name]['tmp_name']);
+        $src_file = $this->truepath($_FILES[$this->file_formfield_name]['tmp_name']);
         if (empty($save_name)) {
             $file_ext = strtolower(pathinfo($_FILES[$this->file_formfield_name]['name'], PATHINFO_EXTENSION));
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
@@ -96,10 +96,10 @@ class FileUploader {
         if (!is_dir($dir)) {
             mkdir($dir, 0777, TRUE);
         }
-        $save_name = ($dir ? truepath($dir) . '/' : '' ) . $save_name;
+        $save_name = ($dir ? $this->truepath($dir) . '/' : '' ) . $save_name;
         move_uploaded_file($src_file, $save_name);
         if (file_exists($save_name)) {
-            return truepath($save_name);
+            return $this->truepath($save_name);
         } else {
             $this->setError(501, '移动临时文件到目标文件失败,请检查目标目录是否有写权限.');
             return FALSE;
