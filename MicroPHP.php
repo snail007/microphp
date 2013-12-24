@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.3
- * @createdtime         2013-12-24 20:21:35
+ * @createdtime         2013-12-24 22:00:50
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 if (!function_exists('trigger404')) {
 
@@ -539,7 +539,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 class WoniuInput {
 
@@ -663,7 +663,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 class WoniuRouter {
 
@@ -857,7 +857,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1242,7 +1242,14 @@ class WoniuLoader {
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.' . $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        $host=$this->input->server('HTTP_HOST');
+        $is_ip=preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
+        $not_regular_domain=preg_match('/^[^\\.]+$/', $host);
+        $auto_domain='.' . $this->input->server('HTTP_HOST');
+        if($is_ip||$not_regular_domain){
+            $auto_domain=$this->input->server('HTTP_HOST');
+        }
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : $auto_domain), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
         $_COOKIE[$key] = $value;
     }
 
@@ -1645,7 +1652,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1752,7 +1759,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1820,7 +1827,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 class WoniuDB {
 
@@ -7966,7 +7973,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.3
- * @createdtime       2013-12-24 20:21:35
+ * @createdtime       2013-12-24 22:00:50
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

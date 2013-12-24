@@ -396,7 +396,14 @@ class WoniuLoader {
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.' . $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        $host=$this->input->server('HTTP_HOST');
+        $is_ip=preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
+        $not_regular_domain=preg_match('/^[^\\.]+$/', $host);
+        $auto_domain='.' . $this->input->server('HTTP_HOST');
+        if($is_ip||$not_regular_domain){
+            $auto_domain=$this->input->server('HTTP_HOST');
+        }
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : $auto_domain), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
         $_COOKIE[$key] = $value;
     }
 
