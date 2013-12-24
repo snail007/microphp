@@ -18,6 +18,8 @@ $header = '<?php
  */
  ';
 $files = array(
+    'modules/WoniuHelper.php',
+    'modules/WoniuInput.class.php',
     'modules/WoniuRouter.php',
     'modules/WoniuLoader.php',
     'modules/WoniuController.php',
@@ -42,8 +44,6 @@ $files = array(
     'modules/session_drivers/MongodbSessionHandle.php',
     'modules/session_drivers/MemcacheSessionHandle.php',
     'modules/session_drivers/RedisSessionHandle.php',
-    'modules/WoniuHelper.php',
-    'modules/WoniuInput.class.php'
 );
 $core = '';
 foreach ($files as $file) {
