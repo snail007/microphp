@@ -29,6 +29,13 @@ if (!function_exists('trigger404')) {
     }
 
 }
+if (!function_exists('convertPath')) {
+
+    function convertPath($path) {
+        return str_replace(array("\\", "/"), '/', $path);
+    }
+
+}
 if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {

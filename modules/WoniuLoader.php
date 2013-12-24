@@ -98,8 +98,9 @@ class WoniuLoader {
             $helper_folders = array($helper_folders);
         }
         $count = count($helper_folders);
-        foreach ($helper_folders as $k=>$helper_folder) {
+        foreach ($helper_folders as $k => $helper_folder) {
             $filename = $helper_folder . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
+            $filename = convertPath($filename);
             if (in_array($filename, self::$helper_files)) {
                 return;
             }
@@ -118,7 +119,7 @@ class WoniuLoader {
                 }
                 break;
             } else {
-                if(($count-1)==$k){
+                if (($count - 1) == $k) {
                     trigger404($filename . ' not found.');
                 }
             }
@@ -320,7 +321,7 @@ class WoniuLoader {
                 self::includeOnce($system['my_loader']);
                 $clazz = basename($system['my_loader'], '.class.php');
                 if (class_exists($clazz, FALSE)) {
-                    eval('class WoniuLoaderPlus extends '.$clazz.'{}');
+                    eval('class WoniuLoaderPlus extends ' . $clazz . '{}');
                 } else {
                     eval('class WoniuLoaderPlus extends WoniuLoader{}');
                 }
@@ -752,7 +753,7 @@ class WoniuLoader {
 
     public static function includeOnce($file_path) {
         static $files = array();
-        $key = md5(realpath($file_path));
+        $key = md5(realpath(convertPath($file_path)));
         if (!isset($files[$key])) {
             include $file_path;
             $files[$key] = 1;
