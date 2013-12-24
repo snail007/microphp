@@ -282,7 +282,7 @@ class WoniuLoader {
                         if ($file == '.' || $file == '..' || is_file($library_folder . DIRECTORY_SEPARATOR . $file)) {
                             continue;
                         }
-                        $path = realpath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                        $path = truepath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
                         if (file_exists($path)) {
                             self::includeOnce($path);
                             $found = true;
@@ -753,7 +753,7 @@ class WoniuLoader {
 
     public static function includeOnce($file_path) {
         static $files = array();
-        $key = md5(realpath(convertPath($file_path)));
+        $key = md5(truepath(convertPath($file_path)));
         if (!isset($files[$key])) {
             include $file_path;
             $files[$key] = 1;
