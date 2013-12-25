@@ -282,7 +282,7 @@ class WoniuLoader {
                         if ($file == '.' || $file == '..' || is_file($library_folder . DIRECTORY_SEPARATOR . $file)) {
                             continue;
                         }
-                        $path = realpath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                        $path = truepath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
                         if (file_exists($path)) {
                             self::includeOnce($path);
                             $found = true;
@@ -396,7 +396,14 @@ class WoniuLoader {
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.' . $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        $host=$this->input->server('HTTP_HOST');
+        $is_ip=preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
+        $not_regular_domain=preg_match('/^[^\\.]+$/', $host);
+        $auto_domain='.' . $this->input->server('HTTP_HOST');
+        if($is_ip||$not_regular_domain){
+            $auto_domain=$this->input->server('HTTP_HOST');
+        }
+        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : $auto_domain), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
         $_COOKIE[$key] = $value;
     }
 
@@ -753,7 +760,7 @@ class WoniuLoader {
 
     public static function includeOnce($file_path) {
         static $files = array();
-        $key = md5(realpath(convertPath($file_path)));
+        $key = md5(truepath(convertPath($file_path)));
         if (!isset($files[$key])) {
             include $file_path;
             $files[$key] = 1;

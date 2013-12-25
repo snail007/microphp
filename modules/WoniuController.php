@@ -59,10 +59,10 @@ class WoniuController extends WoniuLoaderPlus {
             $namex = str_replace(".php", "", $file);
             //只include选择的缓存驱动文件
             if ($namex == $system['cache_config']['storage']) {
-                if (!isset($included[realpath($filepath)])) {
+                if (!isset($included[truepath($filepath)])) {
                     WoniuLoader::includeOnce($filepath);
                 } else {
-                    $included[realpath($filepath)] = 1;
+                    $included[truepath($filepath)] = 1;
                 }
             }
         }

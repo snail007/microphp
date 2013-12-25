@@ -169,7 +169,7 @@ class WoniuRouter {
     }
 
     public static function setConfig($system) {
-        $system['application_folder'] = realpath($system['application_folder']);
+        $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
         self::folderAutoInit();
     }
