@@ -337,7 +337,8 @@ class WoniuLoader {
         self::classAutoloadRegister();
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
-        return empty(self::$instance) ? self::$instance = new self() : self::$instance;
+        $renew = is_bool($name) && $name === true;
+        return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
     }
 
     public function view_path($view_name) {

@@ -30,11 +30,15 @@ class Test_db extends UnitTestCase {
         $system['log_error'] = FALSE;
         $system['db_debug'] = FALSE;
         WoniuRouter::setConfig($system);
+         //重置WoniuLoader::instance()为初始状态
+        WoniuLoader::instance(true);
     }
 
     public function tearDown() {
         global $default;
         WoniuRouter::setConfig($default);
+         //重置WoniuLoader::instance()为初始状态
+        WoniuLoader::instance(true);
     }
 
     public function testDatabaseLoader() {
