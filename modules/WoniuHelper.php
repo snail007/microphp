@@ -37,11 +37,13 @@ if (!function_exists('truepath')) {
      * @return string The resolved path, it might not exist.
      */
     function truepath($path) {
-        // whether $path is unix or not
-        $unipath = strlen($path) == 0 || $path{0} != '/';
-        // attempts to detect if path is relative in which case, add cwd
-        if (strpos($path, ':') === false && $unipath)
+        //是linux系统么？
+        $unipath = PATH_SEPARATOR == ':';
+        //检测一下是否是相对路径，windows下面没有:,linux下面没有/开头
+        //如果是相对路径就加上当前工作目录前缀
+        if (strpos($path, ':') === false && strlen($path) && $path{0} != '/') {
             $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+        }
         // resolve path parts (single dot, double dot and double delimiters)
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
@@ -55,13 +57,11 @@ if (!function_exists('truepath')) {
                 $absolutes[] = $part;
             }
         }
+        //如果是linux这里会导致linux开头的/丢失
         $path = implode(DIRECTORY_SEPARATOR, $absolutes);
-        // resolve any symlinks
-        if (function_exists('linkinfo')&&function_exists('readlink')&&file_exists($path) && linkinfo($path) > 0){
-            $path = readlink($path);
-        }
-        // put initial separator that could have been lost
-        $path = !$unipath ? '/' . $path : $path;
+        //如果是linux，修复系统前缀
+        $path = $unipath ? (strlen($path) && $path{0} != '/' ? '/' . $path : $path) : $path;
+        //最后统一分隔符为/，windows兼容/
         $path = str_replace(array('/', '\\'), '/', $path);
         return $path;
     }
