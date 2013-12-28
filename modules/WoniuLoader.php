@@ -784,9 +784,13 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        return isset(self::$model_files[strtolower($classname)]) ? self::$model_files[strtolower($classname)] : null;
+        if(isset(self::$model_files[strtolower($classname)])){
+            return self::$model_files[strtolower($classname)];
+        }elseif(isset(self::$model_files[$classname])){
+            return self::$model_files[$classname];
+        }
+        return  null;
     }
-
 }
 
 class WoniuLibLoader {

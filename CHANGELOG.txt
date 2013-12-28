@@ -10,6 +10,7 @@
 1.MyLoader自定义类名称无效的问题。
 2.realpath在windows上带来的一些问题。
 3.$this->setCookie在ip或者非域名访问时设置的cookie无效的问题。
+4.$this->model($model_name, $alias_name = null),当$alias_name有大写字母时，无法通过$this->model->$alias_name访问模型的问题。
 优化了：
 
 #############################ver 2.2.2:[2013-12-15]#############################
