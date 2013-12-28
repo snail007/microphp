@@ -6,6 +6,7 @@
 2.WoniuLoader::instance(true)，WoniuModel::instance(true)，增加了true判断，
   如果是ture就使用当前配置重新初始化一个对象，以前是只初始化一次其后一直使用第一次的对象实例。
 3.增加了truepath函数取代系统函数realpath，当路径不存在的时候truepath也可以返回正确的绝对路径字符串。
+4.增加了getInstance()获取当前控制器实例的方法。
 修复了:
 1.MyLoader自定义类名称无效的问题。
 2.realpath在windows上带来的一些问题。
