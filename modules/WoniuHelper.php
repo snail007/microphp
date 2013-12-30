@@ -13,6 +13,7 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
+
 if (!function_exists('getInstance')) {
 
     function &getInstance() {
@@ -20,6 +21,7 @@ if (!function_exists('getInstance')) {
     }
 
 }
+
 if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
@@ -36,6 +38,7 @@ if (!function_exists('trigger404')) {
     }
 
 }
+
 if (!function_exists('truepath')) {
 
     /**
