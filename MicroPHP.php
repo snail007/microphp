@@ -9,12 +9,657 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.2
- * @createdtime         2013-12-15 11:44:20
+ * @since		Version 2.2.3
+ * @createdtime         2014-01-01 10:43:01
  */
  
 
 
+//####################modules/WoniuHelper.php####################{
+
+
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @link                http://git.oschina.net/snail/microphp
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
+ */
+
+if (!function_exists('getInstance')) {
+
+    function &getInstance() {
+        return WoniuController::getInstance();
+    }
+
+}
+
+if (!function_exists('trigger404')) {
+
+    function trigger404($msg = '<h1>Not Found</h1>') {
+        $system = WoniuLoader::$system;
+        if (!headers_sent()) {
+            header('HTTP/1.1 404 NotFound');
+        }
+        if (!empty($system['error_page_404']) && file_exists($system['error_page_404'])) {
+            include $system['error_page_404'];
+        } else {
+            echo $msg;
+        }
+        exit();
+    }
+
+}
+
+if (!function_exists('truepath')) {
+
+    /**
+     * This function is to replace PHP's extremely buggy realpath().
+     * @param string The original path, can be relative etc.
+     * @return string The resolved path, it might not exist.
+     */
+    function truepath($path) {
+        //是linux系统么？
+        $unipath = PATH_SEPARATOR == ':';
+        //检测一下是否是相对路径，windows下面没有:,linux下面没有/开头
+        //如果是相对路径就加上当前工作目录前缀
+        if (strpos($path, ':') === false && strlen($path) && $path{0} != '/') {
+            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+        }
+        // resolve path parts (single dot, double dot and double delimiters)
+        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part)
+                continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        //如果是linux这里会导致linux开头的/丢失
+        $path = implode(DIRECTORY_SEPARATOR, $absolutes);
+        //如果是linux，修复系统前缀
+        $path = $unipath ? (strlen($path) && $path{0} != '/' ? '/' . $path : $path) : $path;
+        //最后统一分隔符为/，windows兼容/
+        $path = str_replace(array('/', '\\'), '/', $path);
+        return $path;
+    }
+
+}
+if (!function_exists('convertPath')) {
+
+    function convertPath($path) {
+        return str_replace(array("\\", "/"), '/', $path);
+    }
+
+}
+if (!function_exists('trigger500')) {
+
+    function trigger500($msg = '<h1>Server Error</h1>') {
+        $system = WoniuLoader::$system;
+        if (!headers_sent()) {
+            header('HTTP/1.1 500 Server Error');
+        }
+        if (!empty($system['error_page_50x']) && file_exists($system['error_page_50x'])) {
+            include $system['error_page_50x'];
+        } else {
+            echo $msg;
+        }
+        exit();
+    }
+
+}
+if (!function_exists('woniu_exception_handler')) {
+
+    function woniu_exception_handler($exception) {
+        $errno = $exception->getCode();
+        $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
+        $errline = $exception->getLine();
+        $errstr = $exception->getMessage();
+        $system = WoniuLoader::$system;
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['exception'];
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
+                    }
+                } else {
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
+                }
+            }
+        }
+        if ($system['debug']) {
+            //@ob_clean();
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+        }
+        exit;
+    }
+
+}
+if (!function_exists('woniu_error_handler')) {
+
+    /**
+     * 非致命错误处理函数。
+     * 该函数会接受所有类型的错误，应该过滤掉致命错误
+     * @param type $errno
+     * @param type $errstr
+     * @param type $errfile
+     * @param type $errline
+     * @return type
+     */
+    function woniu_error_handler($errno, $errstr, $errfile, $errline) {
+        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
+        if (in_array($errno, $fatal_err)) {
+            return;
+        }
+        $system = WoniuLoader::$system;
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['error'];
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
+                    }
+                } else {
+                    if (function_exists($handle)) {
+                        $handle($errno, $errstr, $errfile, $errline, get_strace());
+                    }
+                }
+            }
+        }
+        if ($system['debug']) {
+            //@ob_clean();
+            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+        }
+    }
+
+}
+if (!function_exists('woniu_fatal_handler')) {
+
+    /**
+     * 致命错误处理函数。
+     * 该函数会接受所有类型的错误，应该只处理致命错误
+     * @param type $errno
+     * @param type $errstr
+     * @param type $errfile
+     * @param type $errline
+     * @return type
+     */
+    function woniu_fatal_handler() {
+        $system = WoniuLoader::$system;
+        $errfile = "unknown file";
+        $errstr = "shutdown";
+        $errno = E_CORE_ERROR;
+        $errline = 0;
+        $error = error_get_last();
+        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
+        if ($error !== NULL && isset($error["type"]) && in_array($error["type"], $fatal_err)) {
+            $errno = $error["type"];
+            $errfile = $error["file"];
+            $errline = $error["line"];
+            $errstr = $error["message"];
+            if ($system['log_error']) {
+                $handle = $system['log_error_handle']['error'];
+                if (!empty($handle)) {
+                    if (is_array($handle)) {
+                        $class = key($handle);
+                        $method = $handle[$class];
+                        $rclass_obj = new ReflectionClass($class);
+                        $rclass_obj = $rclass_obj->newInstanceArgs();
+                        if (method_exists($rclass_obj, $method)) {
+                            $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
+                        }
+                    } else {
+                        if (function_exists($handle)) {
+                            $handle($errno, $errstr, $errfile, $errline, get_strace());
+                        }
+                    }
+                }
+            }
+            if ($system['debug']) {
+                //@ob_clean();
+                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+            }
+            exit;
+        }
+    }
+
+}
+
+
+if (!function_exists('woniu_db_error_handler')) {
+
+    function woniu_db_error_handler($error) {
+        $msg = '';
+        if (is_array($error)) {
+            foreach ($error as $m) {
+                $msg.=$m . "\n";
+            }
+        } else {
+            $msg = $error;
+        }
+        $system = WoniuLoader::$system;
+        $woniu_db = WoniuLoader::$system['db'];
+        if ($system['log_error']) {
+            $handle = $system['log_error_handle']['db_error'];
+            if (!empty($handle)) {
+                if (is_array($handle)) {
+                    $class = key($handle);
+                    $method = $handle[$class];
+                    $rclass_obj = new ReflectionClass($class);
+                    $rclass_obj = $rclass_obj->newInstanceArgs();
+                    if (method_exists($rclass_obj, $method)) {
+                        $rclass_obj->{$method}($msg, get_strace(TRUE));
+                    }
+                } else {
+                    if (function_exists($handle)) {
+                        $handle($msg, get_strace(TRUE));
+                    }
+                }
+            }
+        }
+        if ($woniu_db[$woniu_db['active_group']]['db_debug'] && $system['debug']) {
+            if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
+                include $system['error_page_db'];
+            } else {
+                echo '<pre>' . $msg . get_strace(TRUE) . '</pre>';
+            }
+            exit;
+        }
+    }
+
+}
+
+if (!function_exists('format_error')) {
+
+    function format_error($errno, $errstr, $errfile, $errline) {
+        $path = truepath(WoniuLoader::$system['application_folder']);
+        $path.=empty($path) ? '' : '/';
+        $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
+        $trace = get_strace();
+        $content = '';
+        $content .= "错误信息:" . nl2br($errstr) . "\n";
+        $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
+        $content .= "出错行数:{$errline}\n";
+        $content .= "错误代码:{$errno}\n";
+        $content .= "错误类型:{$array_map[$errno]}\n";
+        if (!empty($trace)) {
+            $content .= "调用信息:{$trace}\n";
+        }
+        return $content;
+    }
+
+}
+
+if (!function_exists('get_strace')) {
+
+    function get_strace($is_db = false) {
+        $trace = debug_backtrace(false);
+        foreach ($trace as $t) {
+            if (!in_array($t['function'], array('display_error', 'woniu_db_error_handler', 'woniu_fatal_handler', 'woniu_error_handler', 'woniu_exception_handler'))) {
+                array_shift($trace);
+            } else {
+                array_shift($trace);
+                break;
+            }
+        }
+        if ($is_db) {
+            array_shift($trace);
+        }
+        array_pop($trace);
+        array_pop($trace);
+        $str = '';
+        $path = truepath(WoniuLoader::$system['application_folder']);
+        $path.=empty($path) ? '' : '/';
+        foreach ($trace as $k => $e) {
+            $file = !empty($e['file']) ? "File:" . str_replace($path, '', $e['file']) . "\n" : '';
+            $line = !empty($e['line']) ? "   Line:{$e['line']}\n" : '';
+            $space = (empty($file) && empty($line) ? '' : '   ');
+            $func = $space . (!empty($e['class']) ? "Function:{$e['class']}{$e['type']}{$e['function']}()\n" : "Function:{$e['function']}()\n");
+            $str.="\n#{$k} {$file}{$line}{$func}";
+        }
+        return $str;
+    }
+
+}
+if (!function_exists('stripslashes_all')) {
+
+    function stripslashes_all() {
+        if (!get_magic_quotes_gpc()) {
+            return;
+        }
+        $strip_list = array('_GET', '_POST', '_COOKIE');
+        foreach ($strip_list as $val) {
+            global $$val;
+            $$val = stripslashes2($$val);
+        }
+    }
+
+}
+if (!function_exists('stripslashes2')) {
+#过滤魔法转义，参数可以是字符串或者数组，支持嵌套数组
+
+    function stripslashes2($var) {
+        if (!get_magic_quotes_gpc()) {
+            return $var;
+        }
+        if (is_array($var)) {
+            foreach ($var as $key => $val) {
+                if (is_array($val)) {
+                    $var[$key] = stripslashes2($val);
+                } else {
+                    $var[$key] = stripslashes($val);
+                }
+            }
+        } elseif (is_string($var)) {
+            $var = stripslashes($var);
+        }
+        return $var;
+    }
+
+}
+if (!function_exists('is_php')) {
+
+    function is_php($version = '5.0.0') {
+        static $_is_php;
+        $version = (string) $version;
+
+        if (!isset($_is_php[$version])) {
+            $_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
+        }
+
+        return $_is_php[$version];
+    }
+
+}
+if (!function_exists('forceDownload')) {
+
+    /**
+     * 强制下载
+     * 经过修改，支持中文名称
+     * Generates headers that force a download to happen
+     *
+     * @access    public
+     * @param    string    filename
+     * @param    mixed    the data to be downloaded
+     * @return    void
+     */
+    function forceDownload($filename = '', $data = '') {
+        if ($filename == '' OR $data == '') {
+            return FALSE;
+        }
+        # Try to determine if the filename includes a file extension.
+        # We need it in order to set the MIME type
+        if (FALSE === strpos($filename, '.')) {
+            return FALSE;
+        }
+        # Grab the file extension
+        $x = explode('.', $filename);
+        $extension = end($x);
+        # Load the mime types
+        $mimes = array('hqx' => 'application/mac-binhex40', 'cpt' => 'application/mac-compactpro', 'csv' => array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel'), 'bin' => 'application/macbinary', 'dms' => 'application/octet-stream', 'lha' => 'application/octet-stream', 'lzh' => 'application/octet-stream', 'exe' => array('application/octet-stream', 'application/x-msdownload'), 'class' => 'application/octet-stream', 'psd' => 'application/x-photoshop', 'so' => 'application/octet-stream', 'sea' => 'application/octet-stream', 'dll' => 'application/octet-stream', 'oda' => 'application/oda', 'pdf' => array('application/pdf', 'application/x-download'), 'ai' => 'application/postscript', 'eps' => 'application/postscript', 'ps' => 'application/postscript', 'smi' => 'application/smil', 'smil' => 'application/smil', 'mif' => 'application/vnd.mif', 'xls' => array('application/excel', 'application/vnd.ms-excel', 'application/msexcel'), 'ppt' => array('application/powerpoint', 'application/vnd.ms-powerpoint'), 'wbxml' => 'application/wbxml', 'wmlc' => 'application/wmlc', 'dcr' => 'application/x-director', 'dir' => 'application/x-director', 'dxr' => 'application/x-director', 'dvi' => 'application/x-dvi', 'gtar' => 'application/x-gtar', 'gz' => 'application/x-gzip', 'php' => 'application/x-httpd-php', 'php4' => 'application/x-httpd-php', 'php3' => 'application/x-httpd-php', 'phtml' => 'application/x-httpd-php', 'phps' => 'application/x-httpd-php-source', 'js' => 'application/x-javascript', 'swf' => 'application/x-shockwave-flash', 'sit' => 'application/x-stuffit', 'tar' => 'application/x-tar', 'tgz' => array('application/x-tar', 'application/x-gzip-compressed'), 'xhtml' => 'application/xhtml+xml', 'xht' => 'application/xhtml+xml', 'zip' => array('application/x-zip', 'application/zip', 'application/x-zip-compressed'), 'mid' => 'audio/midi', 'midi' => 'audio/midi', 'mpga' => 'audio/mpeg', 'mp2' => 'audio/mpeg', 'mp3' => array('audio/mpeg', 'audio/mpg', 'audio/mpeg3', 'audio/mp3'), 'aif' => 'audio/x-aiff', 'aiff' => 'audio/x-aiff', 'aifc' => 'audio/x-aiff', 'ram' => 'audio/x-pn-realaudio', 'rm' => 'audio/x-pn-realaudio', 'rpm' => 'audio/x-pn-realaudio-plugin', 'ra' => 'audio/x-realaudio', 'rv' => 'video/vnd.rn-realvideo', 'wav' => 'audio/x-wav', 'bmp' => 'image/bmp', 'gif' => 'image/gif', 'jpeg' => array('image/jpeg', 'image/pjpeg'), 'jpg' => array('image/jpeg', 'image/pjpeg'), 'jpe' => array('image/jpeg', 'image/pjpeg'), 'png' => array('image/png', 'image/x-png'), 'tiff' => 'image/tiff', 'tif' => 'image/tiff', 'css' => 'text/css', 'html' => 'text/html', 'htm' => 'text/html', 'shtml' => 'text/html', 'txt' => 'text/plain', 'text' => 'text/plain', 'log' => array('text/plain', 'text/x-log'), 'rtx' => 'text/richtext', 'rtf' => 'text/rtf', 'xml' => 'text/xml', 'xsl' => 'text/xml', 'mpeg' => 'video/mpeg', 'mpg' => 'video/mpeg', 'mpe' => 'video/mpeg', 'qt' => 'video/quicktime', 'mov' => 'video/quicktime', 'avi' => 'video/x-msvideo', 'movie' => 'video/x-sgi-movie', 'doc' => 'application/msword', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'word' => array('application/msword', 'application/octet-stream'), 'xl' => 'application/excel', 'eml' => 'message/rfc822', 'json' => array('application/json', 'text/json'));
+        # Set a default mime if we can't find it
+        if (!isset($mimes[$extension])) {
+            $mime = 'application/octet-stream';
+        } else {
+            $mime = (is_array($mimes[$extension])) ? $mimes[$extension][0] : $mimes[$extension];
+        }
+        header('Content-Type: "' . $mime . '"');
+        $tmpName = $filename;
+        $filename = '"' . urlencode($tmpName) . '"'; #ie中文文件名支持
+        if (strstr(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox') != false) {
+            $filename = '"' . $tmpName . '"';
+        }#firefox中文文件名支持
+        if (strstr(strtolower($_SERVER['HTTP_USER_AGENT']), 'chrome') != false) {
+            $filename = urlencode($tmpName);
+        }#Chrome中文文件名支持
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header("Content-Transfer-Encoding: binary");
+        header('Pragma: no-cache');
+        header("Content-Length: " . strlen($data));
+        exit($data);
+    }
+
+}
+if (!function_exists('getRsCol')) {
+
+    /**
+     * 获取结果集中的一个字段的数组
+     * @param type $rows
+     * @param type $col_name
+     * @return array
+     */
+    function getRsCol($rows, $col_name) {
+        $ret = array();
+        foreach ($rows as &$row) {
+            $ret[] = $row[$col_name];
+        }
+        return $ret;
+    }
+
+}
+if (!function_exists('sortRs')) {
+
+    /**
+     * 按字段对结果集进行排序
+     * @param type $rows
+     * @param type $key
+     * @param type $order
+     * @return array
+     */
+    function sortRs($rows, $key, $order = 'asc') {
+        $sort = array();
+        foreach ($rows as $k => $value) {
+            $sort[$k] = $value[$key];
+        }
+        $order == 'asc' ? asort($sort) : arsort($sort);
+        $ret = array();
+        foreach ($sort as $k => $value) {
+            $ret[] = $rows[$k];
+        }
+        return $ret;
+    }
+
+}
+
+if (!function_exists('mergeRs')) {
+
+    /**
+     * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
+     * 比如：$rs1=array(array('a'=>'1111','b'=>'fasdfas'),array('a'=>'222','b'=>'fasdfas'),array('a'=>'333','b'=>'fasdfas'));
+      $rs2=array(array('c'=>'1111','r'=>'fasd22fas'),array('c'=>'222','r'=>'fasd22fas'),array('c'=>'333','r'=>'fasdf22as'));
+      $rs3=array(array('a'=>'1111','e'=>'fasd33fas'),array('a'=>'222','e'=>'fas33dfas'),array('a'=>'333','e'=>'fas33dfas'));
+      var_dump(mergeRs(array($rs1,'a'),array($rs2,'c'),array($rs3,'a')));
+     * 上面的例子中三个结果集中的关联字段是$rs1.a=$rs2.c=$rs3.a
+     * @return array
+     */
+    function mergeRs() {
+        $argv = func_get_args();
+        $argc = count($argv);
+        $ret = array();
+        foreach ($argv[0][0] as $v) {
+            $r = $v;
+            for ($j = 1; $j < $argc; $j++) {
+                foreach ($argv[$j][0] as $row) {
+                    if ($v[$argv[0][1]] == $row[$argv[$j][1]]) {
+                        $r = array_merge($r, $row);
+                        break;
+                    }
+                }
+            }
+            $ret[] = $r;
+        }
+        $allkeys = array();
+        foreach ($argv as $rs) {
+            foreach (array_keys($rs[0][0]) as $key) {
+                $allkeys[] = $key;
+            }
+        }
+        foreach ($ret as &$row) {
+            foreach ($allkeys as $key) {
+                if (!isset($row[$key])) {
+                    $row[$key] = null;
+                }
+            }
+        }
+        return $ret;
+    }
+
+}
+/* End of file Helper.php */
+ 
+
+//####################modules/WoniuInput.class.php####################{
+
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * MicroPHP
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package                MicroPHP
+ * @author                狂奔的蜗牛
+ * @email                672308444@163.com
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @link                http://git.oschina.net/snail/microphp
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
+ */
+class WoniuInput {
+
+    public static $router;
+
+    public static function get_post($key = null, $default = null, $xss_clean = false) {
+        $get = self::gpcs('_GET', $key, $default);
+        $val = $get === null ? self::gpcs('_POST', $key, $default) : $get;
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
+    public static function get($key = null, $default = null, $xss_clean = false) {
+        $val = self::gpcs('_GET', $key, $default);
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
+    public static function post($key = null, $default = null, $xss_clean = false) {
+        $val = self::gpcs('_POST', $key, $default);
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
+    public static function cookie($key = null, $default = null, $xss_clean = false) {
+        $val = self::gpcs('_COOKIE', $key, $default);
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
+    public static function session($key = null, $default = null) {
+        return self::gpcs('_SESSION', $key, $default);
+    }
+
+    public static function server($key = null, $default = null) {
+        $key = strtoupper($key);
+        return self::gpcs('_SERVER', $key, $default);
+    }
+
+    private static function gpcs($range, $key, $default) {
+        global $$range;
+        if ($key === null) {
+            return $$range;
+        } else {
+            $range = $$range;
+            return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
+        }
+    }
+
+    public static function isCli() {
+        return php_sapi_name() == 'cli';
+    }
+
+    public static function is_ajax() {
+        return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
+    }
+
+    public static function xss_clean($val) {
+        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
+        // this prevents some character re-spacing such as <java\0script>
+        // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
+        $val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
+
+        // straight replacements, the user should never need these since they're normal characters
+        // this prevents like <IMG SRC=@avascript:alert('XSS')>
+        $search = 'abcdefghijklmnopqrstuvwxyz';
+        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $search .= '1234567890!@#$%^&*()';
+        $search .= '~`";:?+/={}[]-_|\'\\';
+        for ($i = 0; $i < strlen($search); $i++) {
+            // ;? matches the ;, which is optional
+            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
+            // @ @ search for the hex values
+            $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
+            // @ @ 0{0,7} matches '0' zero to seven times
+            $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
+        }
+
+        // now the only remaining whitespace attacks are \t, \n, and \r
+        $ra1 = array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
+        $ra2 = array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+        $ra = array_merge($ra1, $ra2);
+
+        $found = true; // keep replacing as long as the previous round replaced something
+        while ($found == true) {
+            $val_before = $val;
+            for ($i = 0; $i < sizeof($ra); $i++) {
+                $pattern = '/';
+                for ($j = 0; $j < strlen($ra[$i]); $j++) {
+                    if ($j > 0) {
+                        $pattern .= '(';
+                        $pattern .= '(&#[xX]0{0,8}([9ab]);)';
+                        $pattern .= '|';
+                        $pattern .= '|(&#0{0,8}([9|10|13]);)';
+                        $pattern .= ')*';
+                    }
+                    $pattern .= $ra[$i][$j];
+                }
+                $pattern .= '/i';
+                $replacement = substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
+                $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
+                if ($val_before == $val) {
+                    // no replacements were made, so exit the loop
+                    $found = false;
+                }
+            }
+        }
+        return $val;
+    }
+
+}
+
+/* End of file WoniuInput.php */
 //####################modules/WoniuRouter.php####################{
 
 
@@ -26,10 +671,10 @@
  * @package                MicroPHP
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  */
 class WoniuRouter {
 
@@ -187,7 +832,7 @@ class WoniuRouter {
     }
 
     public static function setConfig($system) {
-        $system['application_folder'] = realpath($system['application_folder']);
+        $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
         self::folderAutoInit();
     }
@@ -220,10 +865,10 @@ class WoniuRouter {
  * @package                MicroPHP
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -231,7 +876,7 @@ class WoniuRouter {
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
-    private static $helper_files = array();
+    private static $helper_files = array(),$files = array();
     private static $instance, $config = array();
     public static $system;
 
@@ -305,25 +950,36 @@ class WoniuLoader {
 
     public function helper($file_name) {
         $system = WoniuLoader::$system;
-        $filename = $system['helper_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
-        if (in_array($filename, self::$helper_files)) {
-            return;
+        $helper_folders = $system['helper_folder'];
+        if (!is_array($helper_folders)) {
+            $helper_folders = array($helper_folders);
         }
-        if (file_exists($filename)) {
-            self::$helper_files[] = $filename;
-            //包含文件，并把文件里面的变量放入$this->config
-            $before_vars = array_keys(get_defined_vars());
-            $before_vars[] = 'before_vars';
-            include($filename);
-            $vars = get_defined_vars();
-            $all_vars = array_keys($vars);
-            foreach ($all_vars as $key) {
-                if (!in_array($key, $before_vars) && isset($vars[$key])) {
-                    self::$config[$key] = $vars[$key];
+        $count = count($helper_folders);
+        foreach ($helper_folders as $k => $helper_folder) {
+            $filename = $helper_folder . DIRECTORY_SEPARATOR . $file_name . $system['helper_file_subfix'];
+            $filename = convertPath($filename);
+            if (in_array($filename, self::$helper_files)) {
+                return;
+            }
+            if (file_exists($filename)) {
+                self::$helper_files[] = $filename;
+                //包含文件，并把文件里面的变量放入$this->config
+                $before_vars = array_keys(get_defined_vars());
+                $before_vars[] = 'before_vars';
+                include($filename);
+                $vars = get_defined_vars();
+                $all_vars = array_keys($vars);
+                foreach ($all_vars as $key) {
+                    if (!in_array($key, $before_vars) && isset($vars[$key])) {
+                        self::$config[$key] = $vars[$key];
+                    }
+                }
+                break;
+            } else {
+                if (($count - 1) == $k) {
+                    trigger404($filename . ' not found.');
                 }
             }
-        } else {
-            trigger404($filename . ' not found.');
         }
     }
 
@@ -336,26 +992,36 @@ class WoniuLoader {
         if (!$alias_name) {
             $alias_name = $classname;
         }
-        $filepath = $system['library_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
-
-        if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
-            return WoniuLibLoader::$lib_files[$alias_name];
-        } else {
-            foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
-                if (strtolower(get_class($obj)) === strtolower($classname)) {
-                    return WoniuLibLoader::$lib_files[$alias_name] = WoniuLibLoader::$lib_files[$aname];
+        $library_folders = $system['library_folder'];
+        if (!is_array($library_folders)) {
+            $library_folders = array($library_folders);
+        }
+        $count = count($library_folders);
+        foreach ($library_folders as $key => $library_folder) {
+            $filepath = $library_folder . DIRECTORY_SEPARATOR . $file_name . $system['library_file_subfix'];
+            if (in_array($alias_name, array_keys(WoniuLibLoader::$lib_files))) {
+                return WoniuLibLoader::$lib_files[$alias_name];
+            } else {
+                foreach (WoniuLibLoader::$lib_files as $aname => $obj) {
+                    if (strtolower(get_class($obj)) === strtolower($classname)) {
+                        return WoniuLibLoader::$lib_files[$alias_name] = WoniuLibLoader::$lib_files[$aname];
+                    }
                 }
             }
-        }
-        if (file_exists($filepath)) {
-            self::includeOnce($filepath);
-            if (class_exists($classname, FALSE)) {
-                return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                self::includeOnce($filepath);
+                if (class_exists($classname, FALSE)) {
+                    return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Library Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Library Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -368,25 +1034,37 @@ class WoniuLoader {
         if (!$alias_name) {
             $alias_name = strtolower($classname);
         }
-        $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
-        } else {
-            foreach (WoniuModelLoader::$model_files as &$obj) {
-                if (strtolower(get_class($obj)) == strtolower($classname)) {
-                    return WoniuModelLoader::$model_files[$alias_name] = $obj;
+        $model_folders = $system['model_folder'];
+        if (!is_array($model_folders)) {
+            $model_folders = array($model_folders);
+        }
+        $count = count($model_folders);
+        foreach ($model_folders as $key => $model_folder) {
+            //$filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
+            $filepath = $model_folder . DIRECTORY_SEPARATOR . $file_name . $system['model_file_subfix'];
+            if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+                return WoniuModelLoader::$model_files[$alias_name];
+            } else {
+                foreach (WoniuModelLoader::$model_files as &$obj) {
+                    if (strtolower(get_class($obj)) == strtolower($classname)) {
+                        return WoniuModelLoader::$model_files[$alias_name] = $obj;
+                    }
                 }
             }
-        }
-        if (file_exists($filepath)) {
-            self::includeOnce($filepath);
-            if (class_exists($classname, FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                self::includeOnce($filepath);
+                if (class_exists($classname, FALSE)) {
+                    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Model Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Model Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not  found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -445,19 +1123,30 @@ class WoniuLoader {
 
     public static function classAutoloader($clazzName) {
         $system = WoniuLoader::$system;
-        $library = $system['library_folder'] . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-        if (file_exists($library)) {
-            self::includeOnce($library);
-        } else {
-            if (is_dir($system['library_folder'])) {
-                $dir = dir($system['library_folder']);
-                while (($file = $dir->read()) !== false) {
-                    if ($file == '.' || $file == '..' || is_file($system['library_folder'] . DIRECTORY_SEPARATOR . $file)) {
-                        continue;
+        $library_folders = $system['library_folder'];
+        if (!is_array($library_folders)) {
+            $library_folders = array($library_folders);
+        }
+        foreach ($library_folders as $library_folder) {
+            $library = $library_folder . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+            if (file_exists($library)) {
+                self::includeOnce($library);
+            } else {
+                if (is_dir($library_folder)) {
+                    $dir = dir($library_folder);
+                    $found = false;
+                    while (($file = $dir->read()) !== false) {
+                        if ($file == '.' || $file == '..' || is_file($library_folder . DIRECTORY_SEPARATOR . $file)) {
+                            continue;
+                        }
+                        $path = truepath($library_folder) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
+                        if (file_exists($path)) {
+                            self::includeOnce($path);
+                            $found = true;
+                            break;
+                        }
                     }
-                    $path = realpath($system['library_folder']) . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . $clazzName . $system['library_file_subfix'];
-                    if (file_exists($path)) {
-                        self::includeOnce($path);
+                    if ($found) {
                         break;
                     }
                 }
@@ -489,7 +1178,7 @@ class WoniuLoader {
                 self::includeOnce($system['my_loader']);
                 $clazz = basename($system['my_loader'], '.class.php');
                 if (class_exists($clazz, FALSE)) {
-                    eval('class WoniuLoaderPlus extends MyLoader{}');
+                    eval('class WoniuLoaderPlus extends ' . $clazz . '{}');
                 } else {
                     eval('class WoniuLoaderPlus extends WoniuLoader{}');
                 }
@@ -505,7 +1194,8 @@ class WoniuLoader {
         self::classAutoloadRegister();
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
-        return empty(self::$instance) ? self::$instance = new self() : self::$instance;
+        $renew = is_bool($name) && $name === true;
+        return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
     }
 
     public function view_path($view_name) {
@@ -564,7 +1254,21 @@ class WoniuLoader {
 
     public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        setcookie($key, $value, ($life ? $life + time() : null), $path, ($domian ? $domian : '.' . $this->input->server('HTTP_HOST')), ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        if (!is_null($domian)) {
+            $auto_domain = $domian;
+        } else {
+            $host = $this->input->server('HTTP_HOST');
+            $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
+            $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
+            if ($is_ip) {
+                $auto_domain = $host;
+            } elseif ($not_regular_domain) {
+                $auto_domain = NULL;
+            } else {
+                $auto_domain = '.' . $host;
+            }
+        }
+        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
         $_COOKIE[$key] = $value;
     }
 
@@ -857,10 +1561,10 @@ class WoniuLoader {
                 $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
                 return !empty($val) ? preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $val) : $args[0];
             case 'chs':
-                $count=  implode(',', array_slice($args, 1,2));
-                $count=  empty($count)?'1,':$count;
-                $can_empty=  isset($args[0])&&$args[0]=='true';
-                return !empty($val)?preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val):$can_empty;
+                $count = implode(',', array_slice($args, 1, 2));
+                $count = empty($count) ? '1,' : $count;
+                $can_empty = isset($args[0]) && $args[0] == 'true';
+                return !empty($val) ? preg_match('/^[\x{4e00}-\x{9fa5}]{' . $count . '}$/u', $val) : $can_empty;
             case 'date':
                 $args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
                 return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$/', $val) : $args[0];
@@ -920,11 +1624,10 @@ class WoniuLoader {
     }
 
     public static function includeOnce($file_path) {
-        static $files = array();
-        $key = md5(realpath($file_path));
-        if (!isset($files[$key])) {
+        $key = md5(truepath(convertPath($file_path)));
+        if (!isset(self::$files[$key])) {
             include $file_path;
-            $files[$key] = 1;
+            self::$files[$key] = 1;
         }
     }
 
@@ -937,9 +1640,13 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        return isset(self::$model_files[strtolower($classname)]) ? self::$model_files[strtolower($classname)] : null;
+        if(isset(self::$model_files[strtolower($classname)])){
+            return self::$model_files[strtolower($classname)];
+        }elseif(isset(self::$model_files[$classname])){
+            return self::$model_files[$classname];
+        }
+        return  null;
     }
-
 }
 
 class WoniuLibLoader {
@@ -964,10 +1671,10 @@ class WoniuLibLoader {
  * @package                MicroPHP
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1015,10 +1722,10 @@ class WoniuController extends WoniuLoaderPlus {
             $namex = str_replace(".php", "", $file);
             //只include选择的缓存驱动文件
             if ($namex == $system['cache_config']['storage']) {
-                if (!isset($included[realpath($filepath)])) {
+                if (!isset($included[truepath($filepath)])) {
                     WoniuLoader::includeOnce($filepath);
                 } else {
-                    $included[realpath($filepath)] = 1;
+                    $included[truepath($filepath)] = 1;
                 }
             }
         }
@@ -1030,6 +1737,7 @@ class WoniuController extends WoniuLoaderPlus {
 
     public static function instance($classname_path = null) {
         if (empty($classname_path)) {
+            WoniuLoader::classAutoloadRegister();
             return self::$instance=new self();
         }
         $system = WoniuLoader::$system;
@@ -1070,44 +1778,58 @@ class WoniuController extends WoniuLoaderPlus {
  * @package                MicroPHP
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  */
 class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 
-    public static function instance($classname_path=null) {
+    public static function instance($classname_path = null) {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
-            return empty(self::$instance) ? self::$instance = new self() : self::$instance;
+            $renew = is_bool($classname_path) && $classname_path === true;
+            WoniuLoader::classAutoloadRegister();
+            return empty(self::$instance)||$renew ? self::$instance = new self() : self::$instance;
         }
-        $system=  WoniuLoader::$system;
+        $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
-        $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
-        $alias_name = strtolower($classname);
-        if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-            return WoniuModelLoader::$model_files[$alias_name];
+
+        $model_folders = $system['model_folder'];
+        if (!is_array($model_folders)) {
+            $model_folders = array($model_folders);
         }
-        
-        if (file_exists($filepath)) {
-            //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-            //如此一来就能满足两种模式
-            WoniuLoader::classAutoloadRegister();
-            if(!class_exists($filepath, FALSE)){
-                WoniuLoader::includeOnce($filepath);
+        $count = count($model_folders);
+        WoniuLoader::classAutoloadRegister();
+        foreach ($model_folders as $key => $model_folder) {
+            $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
+            $alias_name = strtolower($classname);
+            if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+                return WoniuModelLoader::$model_files[$alias_name];
             }
-            if (class_exists($classname,FALSE)) {
-                return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+            if (file_exists($filepath)) {
+                //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+                //如此一来就能满足两种模式
+                //WoniuLoader::classAutoloadRegister();
+                if (!class_exists($filepath, FALSE)) {
+                    WoniuLoader::includeOnce($filepath);
+                }
+                if (class_exists($classname, FALSE)) {
+                    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+                } else {
+                    if ($key == $count - 1) {
+                        trigger404('Model Class:' . $classname . ' not found.');
+                    }
+                }
             } else {
-                trigger404('Model Class:' . $classname . ' not found.');
+                if ($key == $count - 1) {
+                    trigger404($filepath . ' not  found.');
+                }
             }
-        } else {
-            trigger404($filepath . ' not found.');
         }
     }
 
@@ -1125,10 +1847,10 @@ class WoniuModel extends WoniuLoaderPlus {
  * @package                MicroPHP
  * @author                狂奔的蜗牛
  * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since                Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  */
 class WoniuDB {
 
@@ -5357,7 +6079,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 
@@ -6133,7 +6855,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 
@@ -7271,10 +7993,10 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
+ * @since		Version 2.2.3
+ * @createdtime       2014-01-01 10:43:01
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -7291,7 +8013,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.2
+ * @since		Version 2.2.3
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -10540,593 +11262,3 @@ class RedisSessionHandle implements WoniuSessionHandle {
     }
 
 }
-
-//####################modules/WoniuHelper.php####################{
-
-
-/**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * @package                MicroPHP
- * @author                狂奔的蜗牛
- * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
- */
-if (!function_exists('trigger404')) {
-
-    function trigger404($msg = '<h1>Not Found</h1>') {
-        $system = WoniuLoader::$system;
-        if (!headers_sent()) {
-            header('HTTP/1.1 404 NotFound');
-        }
-        if (!empty($system['error_page_404']) && file_exists($system['error_page_404'])) {
-            include $system['error_page_404'];
-        } else {
-            echo $msg;
-        }
-        exit();
-    }
-
-}
-if (!function_exists('trigger500')) {
-
-    function trigger500($msg = '<h1>Server Error</h1>') {
-        $system = WoniuLoader::$system;
-        if (!headers_sent()) {
-            header('HTTP/1.1 500 Server Error');
-        }
-        if (!empty($system['error_page_50x']) && file_exists($system['error_page_50x'])) {
-            include $system['error_page_50x'];
-        } else {
-            echo $msg;
-        }
-        exit();
-    }
-
-}
-if (!function_exists('woniu_exception_handler')) {
-
-    function woniu_exception_handler($exception) {
-        $errno = $exception->getCode();
-        $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
-        $errline = $exception->getLine();
-        $errstr = $exception->getMessage();
-        $system = WoniuLoader::$system;
-        if ($system['log_error']) {
-            $handle = $system['log_error_handle']['exception'];
-            if (!empty($handle)) {
-                if (is_array($handle)) {
-                    $class = key($handle);
-                    $method = $handle[$class];
-                    $rclass_obj = new ReflectionClass($class);
-                    $rclass_obj = $rclass_obj->newInstanceArgs();
-                    if (method_exists($rclass_obj, $method)) {
-                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
-                    }
-                } else {
-                    if (function_exists($handle)) {
-                        $handle($errno, $errstr, $errfile, $errline, get_strace());
-                    }
-                }
-            }
-        }
-        if ($system['debug']) {
-            //@ob_clean();
-            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
-        }
-        exit;
-    }
-
-}
-if (!function_exists('woniu_error_handler')) {
-
-    /**
-     * 非致命错误处理函数。
-     * 该函数会接受所有类型的错误，应该过滤掉致命错误
-     * @param type $errno
-     * @param type $errstr
-     * @param type $errfile
-     * @param type $errline
-     * @return type
-     */
-    function woniu_error_handler($errno, $errstr, $errfile, $errline) {
-        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
-        if (in_array($errno, $fatal_err)) {
-            return;
-        }
-        $system = WoniuLoader::$system;
-        if ($system['log_error']) {
-            $handle = $system['log_error_handle']['error'];
-            if (!empty($handle)) {
-                if (is_array($handle)) {
-                    $class = key($handle);
-                    $method = $handle[$class];
-                    $rclass_obj = new ReflectionClass($class);
-                    $rclass_obj = $rclass_obj->newInstanceArgs();
-                    if (method_exists($rclass_obj, $method)) {
-                        $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
-                    }
-                } else {
-                    if (function_exists($handle)) {
-                        $handle($errno, $errstr, $errfile, $errline, get_strace());
-                    }
-                }
-            }
-        }
-        if ($system['debug']) {
-            //@ob_clean();
-            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
-        }
-    }
-
-}
-if (!function_exists('woniu_fatal_handler')) {
-
-    /**
-     * 致命错误处理函数。
-     * 该函数会接受所有类型的错误，应该只处理致命错误
-     * @param type $errno
-     * @param type $errstr
-     * @param type $errfile
-     * @param type $errline
-     * @return type
-     */
-    function woniu_fatal_handler() {
-        $system = WoniuLoader::$system;
-        $errfile = "unknown file";
-        $errstr = "shutdown";
-        $errno = E_CORE_ERROR;
-        $errline = 0;
-        $error = error_get_last();
-        $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
-        if ($error !== NULL && isset($error["type"]) && in_array($error["type"], $fatal_err)) {
-            $errno = $error["type"];
-            $errfile = $error["file"];
-            $errline = $error["line"];
-            $errstr = $error["message"];
-            if ($system['log_error']) {
-                $handle = $system['log_error_handle']['error'];
-                if (!empty($handle)) {
-                    if (is_array($handle)) {
-                        $class = key($handle);
-                        $method = $handle[$class];
-                        $rclass_obj = new ReflectionClass($class);
-                        $rclass_obj = $rclass_obj->newInstanceArgs();
-                        if (method_exists($rclass_obj, $method)) {
-                            $rclass_obj->{$method}($errno, $errstr, $errfile, $errline, get_strace());
-                        }
-                    } else {
-                        if (function_exists($handle)) {
-                            $handle($errno, $errstr, $errfile, $errline, get_strace());
-                        }
-                    }
-                }
-            }
-            if ($system['debug']) {
-                //@ob_clean();
-                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
-            }
-            exit;
-        }
-    }
-
-}
-
-
-if (!function_exists('woniu_db_error_handler')) {
-
-    function woniu_db_error_handler($error) {
-        $msg = '';
-        if (is_array($error)) {
-            foreach ($error as $m) {
-                $msg.=$m . "\n";
-            }
-        } else {
-            $msg = $error;
-        }
-        $system = WoniuLoader::$system;
-        $woniu_db = WoniuLoader::$system['db'];
-        if ($system['log_error']) {
-            $handle = $system['log_error_handle']['db_error'];
-            if (!empty($handle)) {
-                if (is_array($handle)) {
-                    $class = key($handle);
-                    $method = $handle[$class];
-                    $rclass_obj = new ReflectionClass($class);
-                    $rclass_obj = $rclass_obj->newInstanceArgs();
-                    if (method_exists($rclass_obj, $method)) {
-                        $rclass_obj->{$method}($msg, get_strace(TRUE));
-                    }
-                } else {
-                    if (function_exists($handle)) {
-                        $handle($msg, get_strace(TRUE));
-                    }
-                }
-            }
-        }
-        if ($woniu_db[$woniu_db['active_group']]['db_debug'] && $system['debug']) {
-            if (!empty($system['error_page_db']) && file_exists($system['error_page_db'])) {
-                include $system['error_page_db'];
-            } else {
-                echo '<pre>' . $msg . get_strace(TRUE) . '</pre>';
-            }
-            exit;
-        }
-    }
-
-}
-
-if (!function_exists('format_error')) {
-
-    function format_error($errno, $errstr, $errfile, $errline) {
-        $path = realpath(WoniuLoader::$system['application_folder']);
-        $path.=empty($path) ? '' : '/';
-        $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
-        $trace = get_strace();
-        $content = '';
-        $content .= "错误信息:" . nl2br($errstr) . "\n";
-        $content .= "出错文件:" . str_replace($path, '', $errfile) . "\n";
-        $content .= "出错行数:{$errline}\n";
-        $content .= "错误代码:{$errno}\n";
-        $content .= "错误类型:{$array_map[$errno]}\n";
-        if (!empty($trace)) {
-            $content .= "调用信息:{$trace}\n";
-        }
-        return $content;
-    }
-
-}
-
-if (!function_exists('get_strace')) {
-
-    function get_strace($is_db = false) {
-        $trace = debug_backtrace(false);
-        foreach ($trace as $t) {
-            if (!in_array($t['function'], array('display_error', 'woniu_db_error_handler', 'woniu_fatal_handler', 'woniu_error_handler', 'woniu_exception_handler'))) {
-                array_shift($trace);
-            } else {
-                array_shift($trace);
-                break;
-            }
-        }
-        if ($is_db) {
-            array_shift($trace);
-        }
-        array_pop($trace);
-        array_pop($trace);
-        $str = '';
-        $path = realpath(WoniuLoader::$system['application_folder']);
-        $path.=empty($path) ? '' : '/';
-        foreach ($trace as $k => $e) {
-            $file = !empty($e['file']) ? "File:" . str_replace($path, '', $e['file']) . "\n" : '';
-            $line = !empty($e['line']) ? "   Line:{$e['line']}\n" : '';
-            $space = (empty($file) && empty($line) ? '' : '   ');
-            $func = $space . (!empty($e['class']) ? "Function:{$e['class']}{$e['type']}{$e['function']}()\n" : "Function:{$e['function']}()\n");
-            $str.="\n#{$k} {$file}{$line}{$func}";
-        }
-        return $str;
-    }
-
-}
-if (!function_exists('stripslashes_all')) {
-
-    function stripslashes_all() {
-        if (!get_magic_quotes_gpc()) {
-            return;
-        }
-        $strip_list = array('_GET', '_POST', '_COOKIE');
-        foreach ($strip_list as $val) {
-            global $$val;
-            $$val = stripslashes2($$val);
-        }
-    }
-
-}
-if (!function_exists('stripslashes2')) {
-#过滤魔法转义，参数可以是字符串或者数组，支持嵌套数组
-
-    function stripslashes2($var) {
-        if (!get_magic_quotes_gpc()) {
-            return $var;
-        }
-        if (is_array($var)) {
-            foreach ($var as $key => $val) {
-                if (is_array($val)) {
-                    $var[$key] = stripslashes2($val);
-                } else {
-                    $var[$key] = stripslashes($val);
-                }
-            }
-        } elseif (is_string($var)) {
-            $var = stripslashes($var);
-        }
-        return $var;
-    }
-
-}
-if (!function_exists('is_php')) {
-
-    function is_php($version = '5.0.0') {
-        static $_is_php;
-        $version = (string) $version;
-
-        if (!isset($_is_php[$version])) {
-            $_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
-        }
-
-        return $_is_php[$version];
-    }
-
-}
-if (!function_exists('forceDownload')) {
-
-    /**
-     * 强制下载
-     * 经过修改，支持中文名称
-     * Generates headers that force a download to happen
-     *
-     * @access    public
-     * @param    string    filename
-     * @param    mixed    the data to be downloaded
-     * @return    void
-     */
-    function forceDownload($filename = '', $data = '') {
-        if ($filename == '' OR $data == '') {
-            return FALSE;
-        }
-        # Try to determine if the filename includes a file extension.
-        # We need it in order to set the MIME type
-        if (FALSE === strpos($filename, '.')) {
-            return FALSE;
-        }
-        # Grab the file extension
-        $x = explode('.', $filename);
-        $extension = end($x);
-        # Load the mime types
-        $mimes = array('hqx' => 'application/mac-binhex40', 'cpt' => 'application/mac-compactpro', 'csv' => array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel'), 'bin' => 'application/macbinary', 'dms' => 'application/octet-stream', 'lha' => 'application/octet-stream', 'lzh' => 'application/octet-stream', 'exe' => array('application/octet-stream', 'application/x-msdownload'), 'class' => 'application/octet-stream', 'psd' => 'application/x-photoshop', 'so' => 'application/octet-stream', 'sea' => 'application/octet-stream', 'dll' => 'application/octet-stream', 'oda' => 'application/oda', 'pdf' => array('application/pdf', 'application/x-download'), 'ai' => 'application/postscript', 'eps' => 'application/postscript', 'ps' => 'application/postscript', 'smi' => 'application/smil', 'smil' => 'application/smil', 'mif' => 'application/vnd.mif', 'xls' => array('application/excel', 'application/vnd.ms-excel', 'application/msexcel'), 'ppt' => array('application/powerpoint', 'application/vnd.ms-powerpoint'), 'wbxml' => 'application/wbxml', 'wmlc' => 'application/wmlc', 'dcr' => 'application/x-director', 'dir' => 'application/x-director', 'dxr' => 'application/x-director', 'dvi' => 'application/x-dvi', 'gtar' => 'application/x-gtar', 'gz' => 'application/x-gzip', 'php' => 'application/x-httpd-php', 'php4' => 'application/x-httpd-php', 'php3' => 'application/x-httpd-php', 'phtml' => 'application/x-httpd-php', 'phps' => 'application/x-httpd-php-source', 'js' => 'application/x-javascript', 'swf' => 'application/x-shockwave-flash', 'sit' => 'application/x-stuffit', 'tar' => 'application/x-tar', 'tgz' => array('application/x-tar', 'application/x-gzip-compressed'), 'xhtml' => 'application/xhtml+xml', 'xht' => 'application/xhtml+xml', 'zip' => array('application/x-zip', 'application/zip', 'application/x-zip-compressed'), 'mid' => 'audio/midi', 'midi' => 'audio/midi', 'mpga' => 'audio/mpeg', 'mp2' => 'audio/mpeg', 'mp3' => array('audio/mpeg', 'audio/mpg', 'audio/mpeg3', 'audio/mp3'), 'aif' => 'audio/x-aiff', 'aiff' => 'audio/x-aiff', 'aifc' => 'audio/x-aiff', 'ram' => 'audio/x-pn-realaudio', 'rm' => 'audio/x-pn-realaudio', 'rpm' => 'audio/x-pn-realaudio-plugin', 'ra' => 'audio/x-realaudio', 'rv' => 'video/vnd.rn-realvideo', 'wav' => 'audio/x-wav', 'bmp' => 'image/bmp', 'gif' => 'image/gif', 'jpeg' => array('image/jpeg', 'image/pjpeg'), 'jpg' => array('image/jpeg', 'image/pjpeg'), 'jpe' => array('image/jpeg', 'image/pjpeg'), 'png' => array('image/png', 'image/x-png'), 'tiff' => 'image/tiff', 'tif' => 'image/tiff', 'css' => 'text/css', 'html' => 'text/html', 'htm' => 'text/html', 'shtml' => 'text/html', 'txt' => 'text/plain', 'text' => 'text/plain', 'log' => array('text/plain', 'text/x-log'), 'rtx' => 'text/richtext', 'rtf' => 'text/rtf', 'xml' => 'text/xml', 'xsl' => 'text/xml', 'mpeg' => 'video/mpeg', 'mpg' => 'video/mpeg', 'mpe' => 'video/mpeg', 'qt' => 'video/quicktime', 'mov' => 'video/quicktime', 'avi' => 'video/x-msvideo', 'movie' => 'video/x-sgi-movie', 'doc' => 'application/msword', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'word' => array('application/msword', 'application/octet-stream'), 'xl' => 'application/excel', 'eml' => 'message/rfc822', 'json' => array('application/json', 'text/json'));
-        # Set a default mime if we can't find it
-        if (!isset($mimes[$extension])) {
-            $mime = 'application/octet-stream';
-        } else {
-            $mime = (is_array($mimes[$extension])) ? $mimes[$extension][0] : $mimes[$extension];
-        }
-        header('Content-Type: "' . $mime . '"');
-        $tmpName = $filename;
-        $filename = '"' . urlencode($tmpName) . '"'; #ie中文文件名支持
-        if (strstr(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox') != false) {
-            $filename = '"' . $tmpName . '"';
-        }#firefox中文文件名支持
-        if (strstr(strtolower($_SERVER['HTTP_USER_AGENT']), 'chrome') != false) {
-            $filename = urlencode($tmpName);
-        }#Chrome中文文件名支持
-        header('Content-Disposition: attachment; filename=' . $filename);
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header("Content-Transfer-Encoding: binary");
-        header('Pragma: no-cache');
-        header("Content-Length: " . strlen($data));
-        exit($data);
-    }
-
-}
-if (!function_exists('getRsCol')) {
-
-    /**
-     * 获取结果集中的一个字段的数组
-     * @param type $rows
-     * @param type $col_name
-     * @return array
-     */
-    function getRsCol($rows, $col_name) {
-        $ret = array();
-        foreach ($rows as &$row) {
-            $ret[] = $row[$col_name];
-        }
-        return $ret;
-    }
-
-}
-if (!function_exists('sortRs')) {
-
-    /**
-     * 按字段对结果集进行排序
-     * @param type $rows
-     * @param type $key
-     * @param type $order
-     * @return array
-     */
-    function sortRs($rows, $key, $order = 'asc') {
-        $sort = array();
-        foreach ($rows as $k => $value) {
-            $sort[$k] = $value[$key];
-        }
-        $order == 'asc' ? asort($sort) : arsort($sort);
-        $ret = array();
-        foreach ($sort as $k => $value) {
-            $ret[] = $rows[$k];
-        }
-        return $ret;
-    }
-
-}
-
-if (!function_exists('mergeRs')) {
-
-    /**
-     * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
-     * 比如：$rs1=array(array('a'=>'1111','b'=>'fasdfas'),array('a'=>'222','b'=>'fasdfas'),array('a'=>'333','b'=>'fasdfas'));
-      $rs2=array(array('c'=>'1111','r'=>'fasd22fas'),array('c'=>'222','r'=>'fasd22fas'),array('c'=>'333','r'=>'fasdf22as'));
-      $rs3=array(array('a'=>'1111','e'=>'fasd33fas'),array('a'=>'222','e'=>'fas33dfas'),array('a'=>'333','e'=>'fas33dfas'));
-      var_dump(mergeRs(array($rs1,'a'),array($rs2,'c'),array($rs3,'a')));
-     * 上面的例子中三个结果集中的关联字段是$rs1.a=$rs2.c=$rs3.a
-     * @return array
-     */
-    function mergeRs() {
-        $argv = func_get_args();
-        $argc = count($argv);
-        $ret = array();
-        foreach ($argv[0][0] as $v) {
-            $r = $v;
-            for ($j = 1; $j < $argc; $j++) {
-                foreach ($argv[$j][0] as $row) {
-                    if ($v[$argv[0][1]] == $row[$argv[$j][1]]) {
-                        $r = array_merge($r, $row);
-                        break;
-                    }
-                }
-            }
-            $ret[] = $r;
-        }
-        $allkeys = array();
-        foreach ($argv as $rs) {
-            foreach (array_keys($rs[0][0]) as $key) {
-                $allkeys[] = $key;
-            }
-        }
-        foreach ($ret as &$row) {
-            foreach ($allkeys as $key) {
-                if (!isset($row[$key])) {
-                    $row[$key] = null;
-                }
-            }
-        }
-        return $ret;
-    }
-
-}
-/* End of file Helper.php */
- 
-//####################modules/WoniuInput.class.php####################{
-
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * @package                MicroPHP
- * @author                狂奔的蜗牛
- * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.2
- * @createdtime       2013-12-15 11:44:20
- */
-class WoniuInput {
-
-    public static $router;
-
-    public static function get_post($key = null, $default = null, $xss_clean = false) {
-        $get = self::gpcs('_GET', $key, $default);
-        $val = $get === null ? self::gpcs('_POST', $key, $default) : $get;
-        return $xss_clean ? self::xss_clean($val) : $val;
-    }
-
-    public static function get($key = null, $default = null, $xss_clean = false) {
-        $val = self::gpcs('_GET', $key, $default);
-        return $xss_clean ? self::xss_clean($val) : $val;
-    }
-
-    public static function post($key = null, $default = null, $xss_clean = false) {
-        $val = self::gpcs('_POST', $key, $default);
-        return $xss_clean ? self::xss_clean($val) : $val;
-    }
-
-    public static function cookie($key = null, $default = null, $xss_clean = false) {
-        $val = self::gpcs('_COOKIE', $key, $default);
-        return $xss_clean ? self::xss_clean($val) : $val;
-    }
-
-    public static function session($key = null, $default = null) {
-        return self::gpcs('_SESSION', $key, $default);
-    }
-
-    public static function server($key = null, $default = null) {
-        $key = strtoupper($key);
-        return self::gpcs('_SERVER', $key, $default);
-    }
-
-    private static function gpcs($range, $key, $default) {
-        global $$range;
-        if ($key === null) {
-            return $$range;
-        } else {
-            $range = $$range;
-            return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
-        }
-    }
-
-    public static function isCli() {
-        return php_sapi_name() == 'cli';
-    }
-
-    public static function is_ajax() {
-        return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
-    }
-
-    public static function xss_clean($val) {
-        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
-        // this prevents some character re-spacing such as <java\0script>
-        // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
-        $val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
-
-        // straight replacements, the user should never need these since they're normal characters
-        // this prevents like <IMG SRC=@avascript:alert('XSS')>
-        $search = 'abcdefghijklmnopqrstuvwxyz';
-        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $search .= '1234567890!@#$%^&*()';
-        $search .= '~`";:?+/={}[]-_|\'\\';
-        for ($i = 0; $i < strlen($search); $i++) {
-            // ;? matches the ;, which is optional
-            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
-            // @ @ search for the hex values
-            $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
-            // @ @ 0{0,7} matches '0' zero to seven times
-            $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
-        }
-
-        // now the only remaining whitespace attacks are \t, \n, and \r
-        $ra1 = array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
-        $ra2 = array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
-        $ra = array_merge($ra1, $ra2);
-
-        $found = true; // keep replacing as long as the previous round replaced something
-        while ($found == true) {
-            $val_before = $val;
-            for ($i = 0; $i < sizeof($ra); $i++) {
-                $pattern = '/';
-                for ($j = 0; $j < strlen($ra[$i]); $j++) {
-                    if ($j > 0) {
-                        $pattern .= '(';
-                        $pattern .= '(&#[xX]0{0,8}([9ab]);)';
-                        $pattern .= '|';
-                        $pattern .= '|(&#0{0,8}([9|10|13]);)';
-                        $pattern .= ')*';
-                    }
-                    $pattern .= $ra[$i][$j];
-                }
-                $pattern .= '/i';
-                $replacement = substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
-                $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
-                if ($val_before == $val) {
-                    // no replacements were made, so exit the loop
-                    $found = false;
-                }
-            }
-        }
-        return $val;
-    }
-
-}
-
-/* End of file WoniuInput.php */
