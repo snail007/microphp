@@ -401,9 +401,9 @@ class WoniuLoader {
             $auto_domain = $domian;
         } else {
             $host = $this->input->server('HTTP_HOST');
-            $_host = current(explode(":", $host));
-            $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $_host);
-            $not_regular_domain = preg_match('/^[^\\.]+$/', $_host);
+            // $_host = current(explode(":", $host));
+            $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
+            $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
             if ($is_ip) {
                 $auto_domain = $host;
             } elseif ($not_regular_domain) {
