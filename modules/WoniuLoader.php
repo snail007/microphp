@@ -19,7 +19,7 @@
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
-    private static $helper_files = array(),$files = array();
+    private static $helper_files = array(), $files = array();
     private static $instance, $config = array();
     public static $system;
 
@@ -401,6 +401,7 @@ class WoniuLoader {
             $auto_domain = $domian;
         } else {
             $host = $this->input->server('HTTP_HOST');
+            // $_host = current(explode(":", $host));
             $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
             $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
             if ($is_ip) {
@@ -783,13 +784,14 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        if(isset(self::$model_files[strtolower($classname)])){
+        if (isset(self::$model_files[strtolower($classname)])) {
             return self::$model_files[strtolower($classname)];
-        }elseif(isset(self::$model_files[$classname])){
+        } elseif (isset(self::$model_files[$classname])) {
             return self::$model_files[$classname];
         }
-        return  null;
+        return null;
     }
+
 }
 
 class WoniuLibLoader {
