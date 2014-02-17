@@ -48,7 +48,7 @@ class WoniuInput {
     }
 
     public static function server($key = null, $default = null) {
-        $key = strtoupper($key);
+        $key = !is_null($key) ? strtoupper($key) : null;
         return self::gpcs('_SERVER', $key, $default);
     }
 
