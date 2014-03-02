@@ -222,7 +222,7 @@ class WoniuLoader {
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         if (file_exists($view_path)) {
             if ($return) {
-                @ob_end_clean();
+                //@ob_end_clean();
                 ob_start();
                 include $view_path;
                 $html = ob_get_contents();
