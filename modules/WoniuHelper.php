@@ -52,7 +52,7 @@ if (!function_exists('truepath')) {
         //检测一下是否是相对路径，windows下面没有:,linux下面没有/开头
         //如果是相对路径就加上当前工作目录前缀
         if (strpos($path, ':') === false && strlen($path) && $path{0} != '/') {
-            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+            $path = realpath('.') . DIRECTORY_SEPARATOR . $path;
         }
         // resolve path parts (single dot, double dot and double delimiters)
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
