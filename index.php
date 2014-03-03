@@ -14,6 +14,7 @@
  * @createdtime         2014-02-17 17:12:28
  */
 define('IN_WONIU_APP', TRUE);
+define('APP_INDEX_FILE', __FILE__);
 define('WDS', DIRECTORY_SEPARATOR);
 /**
  * --------------------系统配置-------------------------
