@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.3
- * @createdtime         2014-01-01 10:43:01
+ * @since		Version 2.2.4
+ * @createdtime         2014-02-17 17:12:28
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 
 if (!function_exists('getInstance')) {
@@ -549,8 +549,8 @@ if (!function_exists('mergeRs')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 class WoniuInput {
 
@@ -582,7 +582,7 @@ class WoniuInput {
     }
 
     public static function server($key = null, $default = null) {
-        $key = strtoupper($key);
+        $key = !is_null($key) ? strtoupper($key) : null;
         return self::gpcs('_SERVER', $key, $default);
     }
 
@@ -673,8 +673,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 class WoniuRouter {
 
@@ -867,8 +867,8 @@ class WoniuRouter {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -876,7 +876,7 @@ class WoniuRouter {
 class WoniuLoader {
 
     public $model, $lib, $router, $db, $input, $view_vars = array(), $cache;
-    private static $helper_files = array(),$files = array();
+    private static $helper_files = array(), $files = array();
     private static $instance, $config = array();
     public static $system;
 
@@ -1258,6 +1258,7 @@ class WoniuLoader {
             $auto_domain = $domian;
         } else {
             $host = $this->input->server('HTTP_HOST');
+            // $_host = current(explode(":", $host));
             $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
             $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
             if ($is_ip) {
@@ -1640,13 +1641,14 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        if(isset(self::$model_files[strtolower($classname)])){
+        if (isset(self::$model_files[strtolower($classname)])) {
             return self::$model_files[strtolower($classname)];
-        }elseif(isset(self::$model_files[$classname])){
+        } elseif (isset(self::$model_files[$classname])) {
             return self::$model_files[$classname];
         }
-        return  null;
+        return null;
     }
+
 }
 
 class WoniuLibLoader {
@@ -1673,8 +1675,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1780,8 +1782,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1849,8 +1851,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since                Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 class WoniuDB {
 
@@ -6079,7 +6081,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.3
+ * @since		Version 2.2.4
  * @filesource
  */
 
@@ -6855,7 +6857,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.3
+ * @since		Version 2.2.4
  * @filesource
  */
 
@@ -7995,8 +7997,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.3
- * @createdtime       2014-01-01 10:43:01
+ * @since		Version 2.2.4
+ * @createdtime       2014-02-17 17:12:28
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -8013,7 +8015,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.3
+ * @since		Version 2.2.4
  * @filesource
  */
 // ------------------------------------------------------------------------
