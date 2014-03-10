@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-10 15:26:14
+ * @createdtime         2014-03-10 15:37:52
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 
 if (!function_exists('getInstance')) {
@@ -550,7 +550,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 class WoniuInput {
 
@@ -674,7 +674,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 class WoniuRouter {
 
@@ -868,7 +868,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1313,7 +1313,7 @@ class WoniuLoader {
             if ($i == $curpage) {
                 $body.='<a class="page_cur_page" href="javascript:void(0);"><b>' . $i . '</b></a>';
             } else {
-                $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
+                $body.='<a href="' . str_replace('{page}', $i, $url) . '">' . $i . '</a>';
             }
         }
         $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
@@ -1680,7 +1680,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1787,7 +1787,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1856,7 +1856,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 class WoniuDB {
 
@@ -8002,7 +8002,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime       2014-03-10 15:26:14
+ * @createdtime       2014-03-10 15:37:52
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

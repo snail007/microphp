@@ -456,7 +456,7 @@ class WoniuLoader {
             if ($i == $curpage) {
                 $body.='<a class="page_cur_page" href="javascript:void(0);"><b>' . $i . '</b></a>';
             } else {
-                $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
+                $body.='<a href="' . str_replace('{page}', $i, $url) . '">' . $i . '</a>';
             }
         }
         $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
