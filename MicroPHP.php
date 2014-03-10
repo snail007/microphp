@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-10 15:37:52
+ * @createdtime         2014-03-10 15:41:13
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 
 if (!function_exists('getInstance')) {
@@ -550,7 +550,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 class WoniuInput {
 
@@ -674,7 +674,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 class WoniuRouter {
 
@@ -868,7 +868,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1319,7 +1319,7 @@ class WoniuLoader {
         $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
         $subfix = ($curpage == $pages ? '' : '<span class="page_bar_subfix"><a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a></span>');
         $info = "<span class=\"page_cur\">第{$curpage}/{$pages}页</span>";
-        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" class="page_input_num" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" class="page_btn_go" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
+        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><span class="page_input_num"><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/></span><span id="gsd09fhas9daa" class="page_btn_go" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         $total = "<span class=\"page_total\">共{$total}条</span>";
         $pagination = array(
             $total,
@@ -1680,7 +1680,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1787,7 +1787,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1856,7 +1856,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 class WoniuDB {
 
@@ -8002,7 +8002,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime       2014-03-10 15:37:52
+ * @createdtime       2014-03-10 15:41:13
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
