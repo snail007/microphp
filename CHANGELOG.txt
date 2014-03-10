@@ -1,6 +1,14 @@
 #############################ver 2.2.4#############################
 修复了:
 1.在$this->view()之前输出的内容会被清空的bug。
+优化了：
+1.分页条标签，便于css控制
+增加了：
+1.$this->page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10)
+增加了$a_count参数，用于控制分页条中a页码链接的总数量,不包含当前页的a标签，默认10个。当$order为null时$order使用默认array(1, 2, 3, 4, 5, 6)；
+示例：
+$loader=WoniuLoader::instance();
+echo $loader->page(100,$loader->input->get('p',1),2,'?p={page}',null,2);
 
 #############################ver 2.2.3:[2014-01-01]#############################
 增加了：

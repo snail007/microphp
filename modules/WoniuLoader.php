@@ -423,11 +423,12 @@ class WoniuLoader {
      * @param type $pagesize 每页多少
      * @param type $url    url是什么，url里面的{page}会被替换成页码
      * @param array $order 分页条的组成，是一个数组，可以按着1-6的序号，选择分页条组成部分和每个部分的顺序
+     * @param int $a_count   分页条中a页码链接的总数量,不包含当前页的a标签，默认10个。
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6)) {
-        $a_num = 10;
+    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10) {
+        $a_num = $a_count;
         $first = ' 首页 ';
         $last = ' 尾页 ';
         $pre = ' 上页 ';
@@ -448,21 +449,21 @@ class WoniuLoader {
                 $end = $a_num;
             }//当前页在左半边补右边
             if ($end - $curpage <= ($a_num - 1) / 2) {
-                $start-=5 - ($end - $curpage);
+                $start-=floor($a_num/2) - ($end - $curpage);
             }//当前页在右半边补左边
         }
         for ($i = $start; $i <= $end; $i++) {
             if ($i == $curpage) {
-                $body.='<b>' . $i . '</b>';
+                $body.='<a class="page_cur_page" href="javascript:void(0);"><b>' . $i . '</b></a>';
             } else {
                 $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
             }
         }
         $prefix = ($curpage == 1 ? '' : '<a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a>');
         $subfix = ($curpage == $pages ? '' : '<a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a>');
-        $info = " 第{$curpage}/{$pages}页 ";
+        $info = " <span class=\"page_cur\">第{$curpage}/{$pages}页</span> ";
         $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
-        $total = "共{$total}条";
+        $total = "<span class=\"page_total\">共{$total}条</span>";
         $pagination = array(
             $total,
             $info,
@@ -472,6 +473,9 @@ class WoniuLoader {
             $go
         );
         $output = array();
+        if(is_null($order)){
+            $order=array(1, 2, 3, 4, 5, 6);
+        }
         foreach ($order as $key) {
             if (isset($pagination[$key - 1])) {
                 $output[] = $pagination[$key - 1];
