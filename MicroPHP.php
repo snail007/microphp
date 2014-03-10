@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-02-17 17:12:28
+ * @createdtime         2014-03-10 15:09:25
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 
 if (!function_exists('getInstance')) {
@@ -70,7 +70,7 @@ if (!function_exists('truepath')) {
         //检测一下是否是相对路径，windows下面没有:,linux下面没有/开头
         //如果是相对路径就加上当前工作目录前缀
         if (strpos($path, ':') === false && strlen($path) && $path{0} != '/') {
-            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+            $path = realpath('.') . DIRECTORY_SEPARATOR . $path;
         }
         // resolve path parts (single dot, double dot and double delimiters)
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
@@ -550,7 +550,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 class WoniuInput {
 
@@ -674,7 +674,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 class WoniuRouter {
 
@@ -868,7 +868,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1079,7 +1079,7 @@ class WoniuLoader {
         $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         if (file_exists($view_path)) {
             if ($return) {
-                @ob_end_clean();
+                //@ob_end_clean();
                 ob_start();
                 include $view_path;
                 $html = ob_get_contents();
@@ -1280,11 +1280,12 @@ class WoniuLoader {
      * @param type $pagesize 每页多少
      * @param type $url    url是什么，url里面的{page}会被替换成页码
      * @param array $order 分页条的组成，是一个数组，可以按着1-6的序号，选择分页条组成部分和每个部分的顺序
+     * @param int $a_count   分页条中a页码链接的总数量,不包含当前页的a标签，默认10个。
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6)) {
-        $a_num = 10;
+    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10) {
+        $a_num = $a_count;
         $first = ' 首页 ';
         $last = ' 尾页 ';
         $pre = ' 上页 ';
@@ -1305,21 +1306,21 @@ class WoniuLoader {
                 $end = $a_num;
             }//当前页在左半边补右边
             if ($end - $curpage <= ($a_num - 1) / 2) {
-                $start-=5 - ($end - $curpage);
+                $start-=floor($a_num/2) - ($end - $curpage);
             }//当前页在右半边补左边
         }
         for ($i = $start; $i <= $end; $i++) {
             if ($i == $curpage) {
-                $body.='<b>' . $i . '</b>';
+                $body.='<a class="page_cur_page" href="javascript:void(0);"><b>' . $i . '</b></a>';
             } else {
                 $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
             }
         }
         $prefix = ($curpage == 1 ? '' : '<a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a>');
         $subfix = ($curpage == $pages ? '' : '<a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a>');
-        $info = " 第{$curpage}/{$pages}页 ";
+        $info = " <span class=\"page_cur\">第{$curpage}/{$pages}页</span> ";
         $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
-        $total = "共{$total}条";
+        $total = "<span class=\"page_total\">共{$total}条</span>";
         $pagination = array(
             $total,
             $info,
@@ -1329,6 +1330,9 @@ class WoniuLoader {
             $go
         );
         $output = array();
+        if(is_null($order)){
+            $order=array(1, 2, 3, 4, 5, 6);
+        }
         foreach ($order as $key) {
             if (isset($pagination[$key - 1])) {
                 $output[] = $pagination[$key - 1];
@@ -1676,7 +1680,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1783,7 +1787,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1852,7 +1856,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 class WoniuDB {
 
@@ -7998,7 +8002,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime       2014-02-17 17:12:28
+ * @createdtime       2014-03-10 15:09:25
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
