@@ -429,10 +429,10 @@ class WoniuLoader {
      */
     public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10) {
         $a_num = $a_count;
-        $first = ' 首页 ';
-        $last = ' 尾页 ';
-        $pre = ' 上页 ';
-        $next = ' 下页 ';
+        $first = '首页';
+        $last = '尾页';
+        $pre = '上页';
+        $next = '下页';
         $a_num = $a_num % 2 == 0 ? $a_num + 1 : $a_num;
         $pages = ceil($total / $pagesize);
         $curpage = intval($page) ? intval($page) : 1;
@@ -459,10 +459,10 @@ class WoniuLoader {
                 $body.='<a href="' . str_replace('{page}', $i, $url) . '"> ' . $i . ' </a>';
             }
         }
-        $prefix = ($curpage == 1 ? '' : '<a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a>');
-        $subfix = ($curpage == $pages ? '' : '<a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a>');
-        $info = " <span class=\"page_cur\">第{$curpage}/{$pages}页</span> ";
-        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
+        $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
+        $subfix = ($curpage == $pages ? '' : '<span class="page_bar_subfix"><a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a></span>');
+        $info = "<span class=\"page_cur\">第{$curpage}/{$pages}页</span>";
+        $go = '<script>function ekup(){if(event.keyCode==13){clkyup();}}function clkyup(){var num=document.getElementById(\'gsd09fhas9d\').value;if(!/^\d+$/.test(num)||num<=0||num>' . $pages . '){alert(\'请输入正确页码!\');return;};location=\'' . $url . '\'.replace(/\\{page\\}/,document.getElementById(\'gsd09fhas9d\').value);}</script><input onkeyup="ekup()" class="page_input_num" type="text" id="gsd09fhas9d" style="width:40px;vertical-align:text-baseline;padding:0 2px;font-size:10px;border:1px solid gray;"/> <span id="gsd09fhas9daa" class="page_btn_go" onclick="clkyup();" style="cursor:pointer;text-decoration:underline;">转到</span>';
         $total = "<span class=\"page_total\">共{$total}条</span>";
         $pagination = array(
             $total,
@@ -481,7 +481,7 @@ class WoniuLoader {
                 $output[] = $pagination[$key - 1];
             }
         }
-        return implode("&nbsp;", $output);
+        return implode("", $output);
     }
 
     /**
