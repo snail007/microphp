@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-10 15:41:13
+ * @createdtime         2014-03-10 21:07:07
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 
 if (!function_exists('getInstance')) {
@@ -550,7 +550,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 class WoniuInput {
 
@@ -674,7 +674,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 class WoniuRouter {
 
@@ -868,7 +868,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1294,7 +1294,7 @@ class WoniuLoader {
         $pages = ceil($total / $pagesize);
         $curpage = intval($page) ? intval($page) : 1;
         $curpage = $curpage > $pages || $curpage <= 0 ? 1 : $curpage; #当前页超范围置为1
-        $body = '';
+        $body = '<span class="page_body">';
         $prefix = '';
         $subfix = '';
         $start = $curpage - ($a_num - 1) / 2; #开始页
@@ -1316,6 +1316,7 @@ class WoniuLoader {
                 $body.='<a href="' . str_replace('{page}', $i, $url) . '">' . $i . '</a>';
             }
         }
+        $body.='</span>';
         $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
         $subfix = ($curpage == $pages ? '' : '<span class="page_bar_subfix"><a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a></span>');
         $info = "<span class=\"page_cur\">第{$curpage}/{$pages}页</span>";
@@ -1680,7 +1681,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1787,7 +1788,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1856,7 +1857,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 class WoniuDB {
 
@@ -8002,7 +8003,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-10 21:07:07
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
