@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-10 15:41:13
+ * @createdtime         2014-03-14 12:30:03
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 
 if (!function_exists('getInstance')) {
@@ -528,6 +528,40 @@ if (!function_exists('mergeRs')) {
     }
 
 }
+
+if (!function_exists('enableSelectDefault')) {
+    function enableSelectDefault($return = false) {
+        $js = '<script>
+                var func0797986876; 
+                if(typeof(window.onload)=="function"){
+                  func0797986876=window.onload;
+                }
+                window.onload=function(){
+                    func0797986876?func0797986876():null;
+                    var selects=document.getElementsByTagName("select");
+                    for(var k=0;k<selects.length;k++){
+                        var s=selects[k];
+                        var defaultv=s.attributes["default"]?s.attributes["default"].value:null;
+                        if(defaultv){
+                            for(var i=0;i<s.length;i++){
+                            console.log(s[i].value);
+                                if(s[i].value==defaultv){
+                                s[i].selected=true;
+                                break;
+                                }
+                            }
+                        }
+                    }
+                };
+            </script>';
+        if ($return) {
+            return $js;
+        } else {
+            echo $js;
+        }
+    }
+}
+
 /* End of file Helper.php */
  
 
@@ -550,7 +584,7 @@ if (!function_exists('mergeRs')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 class WoniuInput {
 
@@ -674,7 +708,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 class WoniuRouter {
 
@@ -868,7 +902,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1680,7 +1714,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1787,7 +1821,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1856,7 +1890,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 class WoniuDB {
 
@@ -8002,7 +8036,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime       2014-03-10 15:41:13
+ * @createdtime       2014-03-14 12:30:03
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
