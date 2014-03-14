@@ -437,7 +437,7 @@ class WoniuLoader {
         $pages = ceil($total / $pagesize);
         $curpage = intval($page) ? intval($page) : 1;
         $curpage = $curpage > $pages || $curpage <= 0 ? 1 : $curpage; #当前页超范围置为1
-        $body = '';
+        $body = '<span class="page_body">';
         $prefix = '';
         $subfix = '';
         $start = $curpage - ($a_num - 1) / 2; #开始页
@@ -459,6 +459,7 @@ class WoniuLoader {
                 $body.='<a href="' . str_replace('{page}', $i, $url) . '">' . $i . '</a>';
             }
         }
+        $body.='</span>';
         $prefix = ($curpage == 1 ? '' : '<span class="page_bar_prefix"><a href="' . str_replace('{page}', 1, $url) . '">' . $first . '</a><a href="' . str_replace('{page}', $curpage - 1, $url) . '">' . $pre . '</a></span>');
         $subfix = ($curpage == $pages ? '' : '<span class="page_bar_subfix"><a href="' . str_replace('{page}', $curpage + 1, $url) . '">' . $next . '</a><a href="' . str_replace('{page}', $pages, $url) . '">' . $last . '</a></span>');
         $info = "<span class=\"page_cur\">第{$curpage}/{$pages}页</span>";
