@@ -8,10 +8,10 @@
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.2
- * @createdtime         2013-12-15 11:44:20
+ * @since		Version 2.2.4
+ * @createdtime         2014-03-17 13:34:28
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
