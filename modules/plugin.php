@@ -8,10 +8,10 @@
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
- * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.4
- * @createdtime         2014-03-17 13:57:44
+ * @since		Version 1.0
+ * @createdtime         {createdtime}
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -28,7 +28,7 @@ $system['folder_auto_init'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . 'application';
+$system['application_folder'] = realpath('.') . '/' . '../application';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -429,8 +429,32 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-
+include('WoniuInput.class.php');
+include('WoniuHelper.php');
+include('db-drivers/db.drivers.php');
+include('db-drivers/mysql.driver.php');
+include('db-drivers/mysqli.driver.php');
+include('db-drivers/pdo.driver.php');
+include('db-drivers/sqlite3.driver.php');
+include('cache-drivers/phpfastcache.php');
+include('cache-drivers/driver.php');
+include('cache-drivers/drivers/apc.php');
+include('cache-drivers/drivers/files.php');
+include('cache-drivers/drivers/memcache.php');
+include('cache-drivers/drivers/memcached.php');
+include('cache-drivers/drivers/sqlite.php');
+include('cache-drivers/drivers/wincache.php');
+include('cache-drivers/drivers/xcache.php');
+include('cache-drivers/drivers/redis.php');
+include('session_drivers/WoniuSessionHandle.php');
+include('session_drivers/MysqlSessionHandle.php');
+include('session_drivers/MongodbSessionHandle.php');
+include('session_drivers/MemcacheSessionHandle.php');
+include('session_drivers/RedisSessionHandle.php');
+include('WoniuRouter.php');
+include('WoniuLoader.php');
+include('WoniuController.php');
+include('WoniuModel.php');
+WoniuRouter::setConfig($system);
 
 /* End of file index.php */
-include('MicroPHP.min.php');
-WoniuRouter::setConfig($system);
