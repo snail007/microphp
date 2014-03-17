@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-17 13:34:28
+ * @createdtime         2014-03-17 13:57:44
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -233,7 +233,7 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-    "/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+    //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
 );
 /**
  * ---------------------缓存配置-----------------------
