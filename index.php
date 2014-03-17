@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.4
- * @createdtime         2014-03-14 20:35:02
+ * @createdtime         2014-03-17 13:34:28
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
