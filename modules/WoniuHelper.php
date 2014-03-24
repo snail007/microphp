@@ -13,6 +13,15 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
+if (!function_exists('sessionStart')) {
+
+    function sessionStart() {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+    }
+
+}
 
 if (!function_exists('getInstance')) {
 
@@ -512,6 +521,7 @@ if (!function_exists('mergeRs')) {
 }
 
 if (!function_exists('enableSelectDefault')) {
+
     function enableSelectDefault($return = false) {
         $js = '<script>
                 var func0797986876; 
@@ -542,6 +552,7 @@ if (!function_exists('enableSelectDefault')) {
             echo $js;
         }
     }
+
 }
 
 /* End of file Helper.php */

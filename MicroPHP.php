@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.4
- * @createdtime         2014-03-17 13:57:44
+ * @since		Version 2.2.5
+ * @createdtime         2014-03-24 10:13:10
  */
  
 
@@ -28,9 +28,18 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
+if (!function_exists('sessionStart')) {
+
+    function sessionStart() {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+    }
+
+}
 
 if (!function_exists('getInstance')) {
 
@@ -530,6 +539,7 @@ if (!function_exists('mergeRs')) {
 }
 
 if (!function_exists('enableSelectDefault')) {
+
     function enableSelectDefault($return = false) {
         $js = '<script>
                 var func0797986876; 
@@ -560,6 +570,7 @@ if (!function_exists('enableSelectDefault')) {
             echo $js;
         }
     }
+
 }
 
 /* End of file Helper.php */
@@ -583,8 +594,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 class WoniuInput {
 
@@ -707,8 +718,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 class WoniuRouter {
 
@@ -901,8 +912,8 @@ class WoniuRouter {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1714,8 +1725,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1821,8 +1832,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1890,8 +1901,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since                Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 class WoniuDB {
 
@@ -5294,7 +5305,7 @@ function log_message($level, $msg) {/* just suppress logging */
  * @author                ExpressionEngine Dev Team
  * @link                http://codeigniter.com/user_guide/database/
  */
-class CI_DB_mysql_driver extends CI_DB{
+class CI_DB_mysql_driver extends CI_DB {
 
     var $dbdriver = 'mysql';
 // The character used for escaping
@@ -5545,7 +5556,7 @@ class CI_DB_mysql_driver extends CI_DB{
 
         if (function_exists('mysql_real_escape_string') AND is_resource($this->conn_id)) {
             $str = mysql_real_escape_string($str, $this->conn_id);
-        } elseif (function_exists('mysql_escape_string')) {
+        } elseif (function_exists('mysql_escape_string') && (version_compare(PHP_VERSION, '5.3.0','<'))) {
             $str = mysql_escape_string($str);
         } else {
             $str = addslashes($str);
@@ -6120,7 +6131,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.4
+ * @since		Version 2.2.5
  * @filesource
  */
 
@@ -6896,7 +6907,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.4
+ * @since		Version 2.2.5
  * @filesource
  */
 
@@ -8036,8 +8047,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.4
- * @createdtime       2014-03-17 13:57:44
+ * @since		Version 2.2.5
+ * @createdtime       2014-03-24 10:13:10
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -8054,7 +8065,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.4
+ * @since		Version 2.2.5
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -10827,7 +10838,9 @@ class MysqlSessionHandle implements WoniuSessionHandle {
 
         // start it up
         if ($config['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 
@@ -11002,7 +11015,9 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 
         // start it up
         if ($config['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 
@@ -11153,11 +11168,11 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
      * @access  public
      * @param   array   $config
      */
-    public function start($config = array()) { 
+    public function start($config = array()) {
         $session_save_path = $config['memcache'];
         ini_set('session.save_handler', 'memcache');
         ini_set('session.save_path', $session_save_path);
-        
+
         // set some important session vars
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
@@ -11183,10 +11198,12 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         session_name($config['common']['session_name']);
 
         register_shutdown_function('session_write_close');
-        
+
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 
@@ -11274,7 +11291,9 @@ class RedisSessionHandle implements WoniuSessionHandle {
         
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 

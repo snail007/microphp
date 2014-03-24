@@ -25,7 +25,7 @@
                佛祖保佑         永无BUG
 */
 date_default_timezone_set('PRC');
-$ver = "Version 2.2.4";
+$ver = "Version 2.2.5";
 $header = '<?php
 /**
  * MicroPHP

@@ -55,7 +55,9 @@ class RedisSessionHandle implements WoniuSessionHandle {
         
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 

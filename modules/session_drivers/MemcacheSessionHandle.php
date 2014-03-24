@@ -21,11 +21,11 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
      * @access  public
      * @param   array   $config
      */
-    public function start($config = array()) { 
+    public function start($config = array()) {
         $session_save_path = $config['memcache'];
         ini_set('session.save_handler', 'memcache');
         ini_set('session.save_path', $session_save_path);
-        
+
         // set some important session vars
         ini_set('session.auto_start', 0);
         ini_set('session.gc_probability', 1);
@@ -51,10 +51,12 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         session_name($config['common']['session_name']);
 
         register_shutdown_function('session_write_close');
-        
+
         // start it up
         if ($config['common']['autostart'] && !isset($_SESSION)) {
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
         }
     }
 

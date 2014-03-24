@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.4
- * @createdtime         2014-03-17 13:57:44
+ * @since		Version 2.2.5
+ * @createdtime         2014-03-24 10:13:10
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);

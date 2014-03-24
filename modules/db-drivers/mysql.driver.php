@@ -13,7 +13,7 @@
  * @author                ExpressionEngine Dev Team
  * @link                http://codeigniter.com/user_guide/database/
  */
-class CI_DB_mysql_driver extends CI_DB{
+class CI_DB_mysql_driver extends CI_DB {
 
     var $dbdriver = 'mysql';
 // The character used for escaping
@@ -264,7 +264,7 @@ class CI_DB_mysql_driver extends CI_DB{
 
         if (function_exists('mysql_real_escape_string') AND is_resource($this->conn_id)) {
             $str = mysql_real_escape_string($str, $this->conn_id);
-        } elseif (function_exists('mysql_escape_string')) {
+        } elseif (function_exists('mysql_escape_string') && (version_compare(PHP_VERSION, '5.3.0','<'))) {
             $str = mysql_escape_string($str);
         } else {
             $str = addslashes($str);
