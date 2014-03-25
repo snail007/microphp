@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-03-24 10:13:49
+ * @createdtime         2014-03-25 22:44:31
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 if (!function_exists('sessionStart')) {
 
@@ -595,7 +595,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 class WoniuInput {
 
@@ -719,7 +719,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 class WoniuRouter {
 
@@ -913,7 +913,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1249,8 +1249,8 @@ class WoniuLoader {
         return $view_path;
     }
 
-    public function ajax_echo($code, $tip = '', $data = '', $jsonp_callback = null, $is_exit = true) {
-        $str = json_encode(array('code' => $code, 'tip' => $tip ? $tip : '', 'data' => empty($data) ? '' : $data));
+    public function ajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true) {
+        $str = json_encode(array('code' => $code, 'tip' => is_null($tip) ? '' : $tip, 'data' => is_null($data) ? '' : $data));
         if (!empty($jsonp_callback)) {
             echo $jsonp_callback . "($str)";
         } else {
@@ -1329,7 +1329,7 @@ class WoniuLoader {
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10) {
+    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
         $a_num = $a_count;
         $first = '首页';
         $last = '尾页';
@@ -1351,7 +1351,7 @@ class WoniuLoader {
                 $end = $a_num;
             }//当前页在左半边补右边
             if ($end - $curpage <= ($a_num - 1) / 2) {
-                $start-=floor($a_num/2) - ($end - $curpage);
+                $start-=floor($a_num / 2) - ($end - $curpage);
             }//当前页在右半边补左边
         }
         for ($i = $start; $i <= $end; $i++) {
@@ -1376,8 +1376,8 @@ class WoniuLoader {
             $go
         );
         $output = array();
-        if(is_null($order)){
-            $order=array(1, 2, 3, 4, 5, 6);
+        if (is_null($order)) {
+            $order = array(1, 2, 3, 4, 5, 6);
         }
         foreach ($order as $key) {
             if (isset($pagination[$key - 1])) {
@@ -1726,7 +1726,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1833,7 +1833,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1902,7 +1902,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 class WoniuDB {
 
@@ -8048,7 +8048,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-03-24 10:13:49
+ * @createdtime       2014-03-25 22:44:31
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

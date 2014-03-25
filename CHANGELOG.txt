@@ -4,7 +4,9 @@
 1.增加sessionStart()函数，安全启用session，避免重复启用session。
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
-
+修复了:
+1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
+  当$tip或者$data为0的时候不显示0的bug；
 
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:
