@@ -10,6 +10,7 @@
 修复了:
 1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
   当$tip或者$data为0的时候不显示0的bug；
+2.$this->page()产生的分页条在某些情况下会js报错的bug
 
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:

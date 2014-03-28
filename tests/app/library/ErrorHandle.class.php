@@ -47,7 +47,7 @@ class ErrorHandle {
 
     public static function log($content) {
         $filename = self::getPath();
-        $filesize = @intval(filesize($filename));
+        $filesize = file_exists($filename) ? @intval(filesize($filename)) : 0;
         $filesize = $filesize / 1024;
         if ($filesize > self::$max_log_size) {
             @unlink($filename);
