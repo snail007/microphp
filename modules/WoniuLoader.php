@@ -427,7 +427,7 @@ class WoniuLoader {
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6),$a_count=10) {
+    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
         $a_num = $a_count;
         $first = '首页';
         $last = '尾页';
@@ -449,7 +449,7 @@ class WoniuLoader {
                 $end = $a_num;
             }//当前页在左半边补右边
             if ($end - $curpage <= ($a_num - 1) / 2) {
-                $start-=floor($a_num/2) - ($end - $curpage);
+                $start-=floor($a_num / 2) - ($end - $curpage);
             }//当前页在右半边补左边
         }
         for ($i = $start; $i <= $end; $i++) {
@@ -474,8 +474,8 @@ class WoniuLoader {
             $go
         );
         $output = array();
-        if(is_null($order)){
-            $order=array(1, 2, 3, 4, 5, 6);
+        if (is_null($order)) {
+            $order = array(1, 2, 3, 4, 5, 6);
         }
         foreach ($order as $key) {
             if (isset($pagination[$key - 1])) {
@@ -645,7 +645,8 @@ class WoniuLoader {
                         return false;
                     }
                     $id_col = $_id_info[0];
-                    $id = $_id_info[1];
+                    $id=$_id_info[1];
+                    $id = stripos($id, '#') === 0 ? $this->input->get_post(substr($id, 1)) : $id;
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);

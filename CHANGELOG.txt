@@ -2,6 +2,9 @@
 #############################ver 2.2.5#############################
 增加了：
 1.增加sessionStart()函数，安全启用session，避免重复启用session。
+2.表单验证unique[table.field,id:1],其中的id:1支持变量。
+比如：id:#user_id,
+那么就会使用get或者post的user_id内容作为id内容。
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
 
