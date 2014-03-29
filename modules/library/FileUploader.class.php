@@ -135,6 +135,14 @@ class FileUploader {
         return $this->error;
     }
 
+    public function getErrorMsg() {
+        return $this->error['error'];
+    }
+
+    public function getErrorCode() {
+        return $this->error['code'];
+    }
+
     private function setError($code, $info) {
         $this->error['code'] = $code;
         $this->error['error'] = $info;
