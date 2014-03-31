@@ -507,26 +507,64 @@ class WoniuLoader {
             $data = $this->input->post();
         }
         $return_data = $data;
-        $this->checkSetData('set', $rule, $return_data);
+        /**
+         * 验证前默认值规则处理
+         */
         foreach ($rule as $col => $val) {
+            //提取出默认值
             foreach ($val as $_rule => $msg) {
-                if (!empty($_rule)) {
-                    #有规则但是没有数据，就补上空数据，然后进行验证
-                    if (!isset($return_data[$col])) {
-                        $return_data[$col] = '';
-                    }
+                if (stripos($_rule, 'default[') === 0) {
+                    //删除默认值规则
+                    unset($rule[$col][$_rule]);
                     $matches = $this->getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
-                    if ($_r == 'set' || $_r == 'set_post') {
-                        continue;
-                    }
-                    if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
-                        return $msg;
+                    $return_data[$col] =$args[0];
+                }
+            }
+        }
+        /**
+         * 验证前默认值规则处理,没有默认值就补空
+         */
+        foreach ($rule as $col => $val) {
+            if (!isset($return_data[$col])) {
+                $return_data[$col] = '';
+            }
+        }
+        /**
+         * 验证前set处理
+         */
+        $this->checkSetData('set', $rule, $return_data);
+        /**
+         * 验证规则
+         */
+        foreach ($rule as $col => $val) {
+            foreach ($val as $_rule => $msg) {
+                if (!empty($_rule)) {
+                    /**
+                     * 可以为空规则检测
+                     */
+                    if (empty($return_data[$col]) && isset($val['optional'])) {
+                        //当前字段，验证通过
+                        unset($return_data[$col]);
+                        break;
+                    } else {
+                        $matches = $this->getCheckRuleInfo($_rule);
+                        $_r = $matches[1];
+                        $args = $matches[2];
+                        if ($_r == 'set' || $_r == 'set_post') {
+                            continue;
+                        }
+                        if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
+                            return $msg;
+                        }
                     }
                 }
             }
         }
+        /**
+         * 验证后set_post处理
+         */
         $this->checkSetData('set_post', $rule, $return_data);
         return NULL;
     }
@@ -535,9 +573,13 @@ class WoniuLoader {
         foreach ($rule as $col => $val) {
             foreach (array_keys($val) as $_rule) {
                 if (!empty($_rule)) {
-                    #有规则但是没有数据，就补上空数据，然后进行验证
+                    #有规则而且不是非必须的，但是没有数据，就补上空数据，然后进行验证
                     if (!isset($return_data[$col])) {
-                        $return_data[$col] = '';
+                        if (isset($_rule['optional'])) {
+                            break;
+                        } else {
+                            $return_data[$col] = '';
+                        }
                     }
                     $matches = $this->getCheckRuleInfo($_rule);
                     $_r = $matches[1];
@@ -645,7 +687,7 @@ class WoniuLoader {
                         return false;
                     }
                     $id_col = $_id_info[0];
-                    $id=$_id_info[1];
+                    $id = $_id_info[1];
                     $id = stripos($id, '#') === 0 ? $this->input->get_post(substr($id, 1)) : $id;
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {

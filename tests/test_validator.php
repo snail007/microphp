@@ -78,7 +78,7 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
         $w = WoniuLoader::instance();
         //这里会污染WoniuLoader::instance()对象的db属性
         $w->database($system['db']['mysql'], FALSE, true);
-        foreach(explode(";\n", $this->sql) as $sql){
+        foreach (explode(";\n", $this->sql) as $sql) {
             $w->db->simple_query($sql);
         }
     }
@@ -128,6 +128,48 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
         $data = array();
         $this->assertEqual($WN->checkData($rule, $_POST, $data), '用户名长度5-16');
         $this->assertEqual('snai', $data['user']);
+        /**
+         * 默认值测试
+         */
+        $rule2 = array(
+            'user' => array(
+                'default[micr[o]php]' => ''
+            ),
+        );
+        $data = array();
+        $this->assertNull($WN->checkData($rule2, array(), $data));
+        $this->assertEqual('micr[o]php', $data['user']);
+        /**
+         * 可以为空规则optional测试1
+         */
+        $rule2 = array(
+            'user' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'range_len[5,16]' => '用户名长度5-16',
+                'optional' => ''
+            ),
+        );
+        $data = array();
+        $this->assertNull($WN->checkData($rule2, array(), $data));
+        $this->assertFalse(isset($data['user']));
+        /**
+         * 可以为空规则optional测试2
+         */
+        $rule2 = array(
+            'user' => array(
+                'alpha_start' => '用户名必须是字母开头',
+                'alpha_dash' => '用户名必须是数字、字母、下划线和-组成',
+                'range_len[5,16]' => '用户名长度5-16',
+                'optional' => ''
+            ),
+        ); 
+        $this->assertEqual($WN->checkData($rule2, array('user'=>'_fadsfsd'), $data),'用户名必须是字母开头');
+        
+        
+        //$this->assertEqual('microphp', $data['user']);
+        
+        
         /**
          * set用于设置在验证数据前对数据进行处理的函数或者方法
          * set_post用于设置在验证数据后对数据进行处理的函数或者方法
