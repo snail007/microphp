@@ -525,10 +525,13 @@ class WoniuLoader {
         }
         /**
          * 验证前默认值规则处理,没有默认值就补空
+         * 并标记最后要清理的key
          */
+        $unset_keys=array();
         foreach ($rule as $col => $val) {
             if (!isset($return_data[$col])) {
                 $return_data[$col] = '';
+                $unset_keys[]=$col;
             }
         }
         /**
@@ -566,6 +569,13 @@ class WoniuLoader {
          * 验证后set_post处理
          */
         $this->checkSetData('set_post', $rule, $return_data);
+        
+        /**
+         * 清理没有传递的key
+         */
+        foreach ($unset_keys as $key) {
+            unset($return_data[$key]);
+        }
         return NULL;
     }
 
