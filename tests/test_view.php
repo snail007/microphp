@@ -51,5 +51,19 @@ class Test_view extends WebTestCase{
         $this->get(getReqURL('view.return'));
         $this->assertEqual($this->getBrowser()->getContent(), 'test_include');
     }
+    public function testCall(){
+        function forcall($a){
+            echo $a.'xxx';
+        }
+        $test=new test();
+        $test->call='forcall';
+        $test->t('rrrrrrr');
+    }
     
+}
+class test{
+    public $call;
+    public function t(){
+        call_user_func_array($this->call, array('ccccccccc'));
+    }
 }
