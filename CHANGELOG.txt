@@ -7,8 +7,11 @@
 当没有post对应字段的值或者值为空的时候那么就会使用默认规则的值作为该字段的值。然后用这个值继续
 后面的规则进行验证。
 4.表单验证增加了optional可以为空规则;例如user字段规则中有optional,当没有传递字段user的值或者值是空的时候，
-user验证会通过(忽略其它规则即使有required规则)，而且$this->checkData($rule, $_POST, $ret_data)
-返回的数据$ret_data就不会有user字段.如果user传递有值，那么就会用这个值继续后面的规则进行验证。
+user验证会通过(忽略其它规则即使有required规则)，
+提示：
+$this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
+如果传递了user字段$ret_data就有user字段，反之没有user字段.
+如果user传递有值，那么就会用这个值继续后面的规则进行验证。
 
 比如：id:#user_id,
 那么就会使用get或者post的user_id内容作为id内容。
