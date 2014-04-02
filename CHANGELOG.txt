@@ -3,24 +3,27 @@
 增加了：
 1.增加sessionStart()函数，安全启用session，避免重复启用session。
 2.表单验证unique[table.field,id:1],其中的id:1支持变量。
+  比如：id:#user_id,
+  那么就会使用get或者post的user_id内容作为id内容。
 3.表单验证增加了default[默认值]规则。
-当没有post对应字段的值或者值为空的时候那么就会使用默认规则的值作为该字段的值。然后用这个值继续
-后面的规则进行验证。
+  当没有post对应字段的值或者值为空的时候那么就会使用默认规则的值作为该字段的值。然后用这个值继续
+  后面的规则进行验证。
 4.表单验证增加了optional可以为空规则;例如user字段规则中有optional,当没有传递字段user的值或者值是空的时候，
-user验证会通过(忽略其它规则即使有required规则)，
-提示：
-$this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
-如果传递了user字段$ret_data就有user字段，反之没有user字段.
-如果user传递有值，那么就会用这个值继续后面的规则进行验证。
+  user验证会通过(忽略其它规则即使有required规则)，
+  提示：
+    $this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
+    如果传递了user字段$ret_data就有user字段，反之没有user字段.
+    如果user传递有值，那么就会用这个值继续后面的规则进行验证。
 
-比如：id:#user_id,
-那么就会使用get或者post的user_id内容作为id内容。
+
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
+
 修复了:
 1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
   当$tip或者$data为0的时候不显示0的bug；
 2.$this->page()产生的分页条在某些情况下会js报错的bug
+3.当设置了错误处理，@不能抑制错误的bug
 
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:
