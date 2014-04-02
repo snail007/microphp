@@ -15,6 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+if (!function_exists('lcfirst')) {
+
+    function lcfirst($str) {
+        if (strlen($str)) {
+            return strtolower($str{0}) . substr($str, 1);
+        }
+        return '';
+    }
+
+}
 
 /**
  * MicroPHP
@@ -32,39 +42,42 @@
 class Woniu_debuger extends WoniuController {
 
     private $view_path = 'woniu_debuger';
+
     /**
      * 访问密码
      * @var type 
      */
     private $password = 'snail';
+
     /**
      * IP白名单，只有在数组中的IP才能访问，如果白名单为空则允许所有IP访问
      * @var type 
      */
-    private $ip_white_list=array(
+    private $ip_white_list = array(
         '127.0.0.1',
     );
+
     /**
      * 控制器文件夹和模型文件夹里面忽略的文件
      * 点开头的文件会自动忽略，比如：.htaccess
      * @var type 
      */
-    private $ingore_files=array(
+    private $ingore_files = array(
         'index.html'
     );
-    
+
     public function __construct() {
         parent::__construct();
-        if(!isset($_SESSION)){
+        if (!isset($_SESSION)) {
             session_start();
         }
-        if(!empty($this->ip_white_list)&&!in_array($this->input->server('remote_addr'), $this->ip_white_list)){
+        if (!empty($this->ip_white_list) && !in_array($this->input->server('remote_addr'), $this->ip_white_list)) {
             exit();
         }
-        if (empty($_SESSION['debuger'])&&$this->input->post('p') == $this->password) {
+        if (empty($_SESSION['debuger']) && $this->input->post('p') == $this->password) {
             $_SESSION['debuger'] = true;
         } elseif (empty($_SESSION['debuger'])) {
-            $html='<form action="?'.$this->router['cpath'].'.index" method="post">'
+            $html = '<form action="?' . $this->router['cpath'] . '.index" method="post">'
                     . 'Password:<input name="p" style="width:80px;" type="password"/>'
                     . '</form>';
             exit($html);
@@ -73,7 +86,7 @@ class Woniu_debuger extends WoniuController {
 
     public function doLogout() {
         unset($_SESSION['debuger']);
-        $this->redirect('?'.$this->router['cpath'].'.index');
+        $this->redirect('?' . $this->router['cpath'] . '.index');
     }
 
     public function doIndex() {
@@ -85,13 +98,15 @@ class Woniu_debuger extends WoniuController {
         $data['m'] = $models;
         $this->view($this->view_path, $data);
     }
-    public function doGetMethods($type=NULL) {
-        if($type=='controller'){
-            $this->ajax_echo(200,null,$this->getControllerMethods($this->input->post('clazz')));
-        }else{
-            $this->ajax_echo(200,null,$this->getModelMethods($this->input->post('clazz')));
+
+    public function doGetMethods($type = NULL) {
+        if ($type == 'controller') {
+            $this->ajax_echo(200, null, $this->getControllerMethods($this->input->post('clazz')));
+        } else {
+            $this->ajax_echo(200, null, $this->getModelMethods($this->input->post('clazz')));
         }
     }
+
     public function doModelLoader() {
         $args = func_get_args();
         $model = $this->input->get('debuger_model');
@@ -110,10 +125,10 @@ class Woniu_debuger extends WoniuController {
         $path = realpath(self::$system['controller_folder']);
         $sub_fix = self::$system['controller_file_subfix'];
         $res = $this->scan($path);
-        $ret=array();
+        $ret = array();
         foreach ($res as &$p) {
-            if(stripos(basename($p), '.')!==0&&!in_array(basename($p), $this->ingore_files)){
-                 $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
+            if (stripos(basename($p), '.') !== 0 && !in_array(basename($p), $this->ingore_files)) {
+                $ret[] = str_replace(array($path . DIRECTORY_SEPARATOR, $sub_fix), '', $p);
             }
         }
         return array_diff($ret, array(lcfirst(get_class($this))));
@@ -123,10 +138,10 @@ class Woniu_debuger extends WoniuController {
         $path = realpath(self::$system['model_folder']);
         $sub_fix = self::$system['model_file_subfix'];
         $res = $this->scan($path);
-        $ret=array();
+        $ret = array();
         foreach ($res as &$p) {
-            if(stripos(basename($p), '.')!==0&&!in_array(basename($p), $this->ingore_files)){
-                 $ret[] = str_replace(array($path . '/', $sub_fix), '', $p);
+            if (stripos(basename($p), '.') !== 0 && !in_array(basename($p), $this->ingore_files)) {
+                $ret[] = str_replace(array($path . DIRECTORY_SEPARATOR, $sub_fix), '', $p);
             }
         }
         return $ret;
@@ -140,7 +155,7 @@ class Woniu_debuger extends WoniuController {
             if ($reach_last == $p) {
                 $reach_last = true;
             }
-            $p = $path . '/' . $p;
+            $p = $path . DIRECTORY_SEPARATOR . $p;
             if (is_file($p)) {
                 $controllers[] = realpath($p);
             } else {
