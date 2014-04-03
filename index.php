@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-01 09:40:47
+ * @createdtime         2014-04-03 09:41:10
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -263,8 +263,8 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => "", // 缓存文件存储默认路径
-    "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
+    "path" => "cache", // 缓存文件存储默认路径
+    //"securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
 
     /*
      * 第二驱动
