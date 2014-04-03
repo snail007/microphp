@@ -477,7 +477,7 @@ class phpFastCache {
                 $this->option['system']['driver'] = "sqlite";
             }
         }
-        $this->option("path", $this->getPath(FALSE));
+        $this->option("path", $this->getPath(TRUE));
         return $this->option;
     }
 
@@ -576,7 +576,7 @@ allow from 127.0.0.1";
 
         $full_path = $this->option("path") . "/" ;//. $this->option("securityKey") . "/";
 
-        if ($create_path && $this->checked['path'] == false) {
+        if ($create_path==false && $this->checked['path'] == false) {
 
             if (!file_exists($full_path) || !is_writable($full_path)) {
                 if (!file_exists($full_path)) {
