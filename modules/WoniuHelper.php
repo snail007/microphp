@@ -155,9 +155,16 @@ if (!function_exists('woniu_error_handler')) {
      * @return type
      */
     function woniu_error_handler($errno, $errstr, $errfile, $errline) {
+        // get the current error reporting level
+        $level = error_reporting();
+
+        // if error was supressed or $errno not set in current error level
+        if ($level == 0 || ($level & $errno) == 0) {
+            return true;
+        }
         $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
         if (in_array($errno, $fatal_err)) {
-            return;
+            return true;
         }
         $system = WoniuLoader::$system;
         if ($system['log_error']) {

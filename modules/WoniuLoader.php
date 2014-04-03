@@ -519,7 +519,7 @@ class WoniuLoader {
                     $matches = $this->getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
-                    $return_data[$col] =$args[0];
+                    $return_data[$col] = isset($args[0]) ? $args[0] : '';
                 }
             }
         }
