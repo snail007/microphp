@@ -17,6 +17,7 @@ $this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
 那么就会使用get或者post的user_id内容作为id内容。
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
+2.缓存文件夹的判断避免了只读环境报错
 修复了:
 1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
   当$tip或者$data为0的时候不显示0的bug；
