@@ -114,7 +114,7 @@ $system['helper_file_subfix'] = '.php';
  *  } 
  * 3.如果无需自定义Loader，留空即可。
  */
-$system['my_loader']='';
+$system['my_loader'] = '';
 /**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
@@ -233,7 +233,7 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-    //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+        //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -263,9 +263,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => "", // 缓存文件存储默认路径
-    "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
-
+    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files缓存的时候确保文件夹存在而且可写
     /*
      * 第二驱动
      * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc

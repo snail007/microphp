@@ -44,7 +44,7 @@ class phpFastCache {
         "fallback" => array(
             "example" => "files",
         ),
-        "securityKey" => "auto",
+        "securityKey" => "",
         "htaccess" => true,
         "path" => "",
         "server" => array(
@@ -66,7 +66,7 @@ class phpFastCache {
     var $option = array(
         "path" => "", // path for cache folder
         "htaccess" => null, // auto create htaccess
-        "securityKey" => null, // Key Folder, Setup Per Domain will good.
+        "securityKey" => '', // Key Folder, Setup Per Domain will good.
         "system" => array(),
         "storage" => "",
         "cachePath" => "",
@@ -312,9 +312,9 @@ class phpFastCache {
 
         $this->option("storage", $storage);
 
-        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
-            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
-        }
+//        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
+//            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
+//        }
 
 
         $this->driver = new $driver($this->option);
@@ -477,7 +477,7 @@ class phpFastCache {
                 $this->option['system']['driver'] = "sqlite";
             }
         }
-        $this->option("path", $this->getPath(true));
+        $this->option("path", $this->getPath(TRUE));
         return $this->option;
     }
 
@@ -574,9 +574,9 @@ allow from 127.0.0.1";
         }
 
 
-        $full_path = $this->option("path") . "/" . $this->option("securityKey") . "/";
+        $full_path = $this->option("path") . "/" ;//. $this->option("securityKey") . "/";
 
-        if ($create_path == false && $this->checked['path'] == false) {
+        if ($create_path==false && $this->checked['path'] == false) {
 
             if (!file_exists($full_path) || !is_writable($full_path)) {
                 if (!file_exists($full_path)) {
@@ -585,9 +585,9 @@ allow from 127.0.0.1";
                 if (!is_writable($full_path)) {
                     @chmod($full_path, 0777);
                 }
-                if (!file_exists($full_path) || !is_writable($full_path)) {
-                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
-                }
+//                if (!file_exists($full_path) || !is_writable($full_path)) {
+//                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
+//                }
             }
 
 

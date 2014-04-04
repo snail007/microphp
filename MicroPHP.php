@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-04 23:08:30
+ * @createdtime         2014-04-04 23:50:15
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 if (!function_exists('sessionStart')) {
 
@@ -602,7 +602,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 class WoniuInput {
 
@@ -726,7 +726,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 class WoniuRouter {
 
@@ -920,7 +920,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1787,7 +1787,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1894,7 +1894,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1963,7 +1963,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 class WoniuDB {
 
@@ -8109,7 +8109,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-04 23:08:30
+ * @createdtime       2014-04-04 23:50:15
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -10169,7 +10169,7 @@ class phpFastCache {
         "fallback" => array(
             "example" => "files",
         ),
-        "securityKey" => "auto",
+        "securityKey" => "",
         "htaccess" => true,
         "path" => "",
         "server" => array(
@@ -10191,7 +10191,7 @@ class phpFastCache {
     var $option = array(
         "path" => "", // path for cache folder
         "htaccess" => null, // auto create htaccess
-        "securityKey" => null, // Key Folder, Setup Per Domain will good.
+        "securityKey" => '', // Key Folder, Setup Per Domain will good.
         "system" => array(),
         "storage" => "",
         "cachePath" => "",
@@ -10437,9 +10437,9 @@ class phpFastCache {
 
         $this->option("storage", $storage);
 
-        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
-            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
-        }
+//        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
+//            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
+//        }
 
 
         $this->driver = new $driver($this->option);
@@ -10602,7 +10602,7 @@ class phpFastCache {
                 $this->option['system']['driver'] = "sqlite";
             }
         }
-        $this->option("path", $this->getPath(true));
+        $this->option("path", $this->getPath(TRUE));
         return $this->option;
     }
 
@@ -10638,24 +10638,24 @@ class phpFastCache {
      */
 
     public function htaccessGen($path = "") {
-        if ($this->option("htaccess") == true) {
-
-            if (!file_exists($path . "/.htaccess")) {
-                //   echo "write me";
-                $html = "order deny, allow \r\n
-deny from all \r\n
-allow from 127.0.0.1";
-
-                $f = @fopen($path . "/.htaccess", "w+");
-                if (!$f) {
-                    throw new Exception("Can't create .htaccess", 97);
-                }
-                fwrite($f, $html);
-                fclose($f);
-            } else {
-                //   echo "got me";
-            }
-        }
+//        if ($this->option("htaccess") == true) {
+//
+//            if (!file_exists($path . "/.htaccess")) {
+//                //   echo "write me";
+//                $html = "order deny, allow \r\n
+//deny from all \r\n
+//allow from 127.0.0.1";
+//
+//                $f = @fopen($path . "/.htaccess", "w+");
+//                if (!$f) {
+//                    throw new Exception("Can't create .htaccess", 97);
+//                }
+//                fwrite($f, $html);
+//                fclose($f);
+//            } else {
+//                //   echo "got me";
+//            }
+//        }
     }
 
     /*
@@ -10699,9 +10699,9 @@ allow from 127.0.0.1";
         }
 
 
-        $full_path = $this->option("path") . "/" . $this->option("securityKey") . "/";
+        $full_path = $this->option("path") . "/" ;//. $this->option("securityKey") . "/";
 
-        if ($create_path == false && $this->checked['path'] == false) {
+        if ($create_path==false && $this->checked['path'] == false) {
 
             if (!file_exists($full_path) || !is_writable($full_path)) {
                 if (!file_exists($full_path)) {
@@ -10710,9 +10710,9 @@ allow from 127.0.0.1";
                 if (!is_writable($full_path)) {
                     @chmod($full_path, 0777);
                 }
-                if (!file_exists($full_path) || !is_writable($full_path)) {
-                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
-                }
+//                if (!file_exists($full_path) || !is_writable($full_path)) {
+//                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
+//                }
             }
 
 
