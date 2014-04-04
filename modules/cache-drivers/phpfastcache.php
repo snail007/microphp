@@ -513,24 +513,24 @@ class phpFastCache {
      */
 
     public function htaccessGen($path = "") {
-        if ($this->option("htaccess") == true) {
-
-            if (!file_exists($path . "/.htaccess")) {
-                //   echo "write me";
-                $html = "order deny, allow \r\n
-deny from all \r\n
-allow from 127.0.0.1";
-
-                $f = @fopen($path . "/.htaccess", "w+");
-                if (!$f) {
-                    throw new Exception("Can't create .htaccess", 97);
-                }
-                fwrite($f, $html);
-                fclose($f);
-            } else {
-                //   echo "got me";
-            }
-        }
+//        if ($this->option("htaccess") == true) {
+//
+//            if (!file_exists($path . "/.htaccess")) {
+//                //   echo "write me";
+//                $html = "order deny, allow \r\n
+//deny from all \r\n
+//allow from 127.0.0.1";
+//
+//                $f = @fopen($path . "/.htaccess", "w+");
+//                if (!$f) {
+//                    throw new Exception("Can't create .htaccess", 97);
+//                }
+//                fwrite($f, $html);
+//                fclose($f);
+//            } else {
+//                //   echo "got me";
+//            }
+//        }
     }
 
     /*
