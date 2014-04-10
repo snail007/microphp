@@ -163,12 +163,17 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
                 'range_len[5,16]' => '用户名长度5-16',
                 'optional' => ''
             ),
+            'pass'=>array(
+                'optional' => ''
+            ),
         ); 
         $this->assertEqual($WN->checkData($rule2, array('user'=>'_fadsfsd'), $data),'用户名必须是字母开头');
-        
-        
-        //$this->assertEqual('microphp', $data['user']);
-        
+        $this->assertFalse(isset($data['pass']));
+        $this->assertNull($WN->checkData($rule2, array('user'=>'adsfsd'), $data));
+        $this->assertFalse(isset($data['pass']));
+        $this->assertNull($WN->checkData($rule2, array('user'=>'adsfsd','pass'=>''), $data));
+        $this->assertTrue(isset($data['pass'])); 
+         
         
         /**
          * set用于设置在验证数据前对数据进行处理的函数或者方法
