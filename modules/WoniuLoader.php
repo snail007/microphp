@@ -42,12 +42,24 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        //屏蔽错误的逻辑是：一旦接管了错误或者打开记录错误，必须error_reporting(0)
-        //反之意思就是，只有没有接管错误且关闭了记录错误且打开了调试模式，就error_reporting(E_ALL);
-        if (!$system['error_manage'] && !$system['log_error'] && $system['debug']) {
-            error_reporting(E_ALL);
+        /**
+         * 提醒：
+         * error_reporting   控制报告错误类型
+         * display_errors    控制是否在页面显示报告了的类型的错误的错误信息
+         * 言外之意就是即使报告了所有错误，但是却可以不显示错误信息。
+         * 另外：
+         * 如果用 set_error_handler() 设定了自定义的错误处理函数，
+         * 即使PHP表达式之前放置在一个@ ，但是自定义的错误处理函仍然会被调用，
+         * 当出错语句前有 @ 时, error_reporting()将返回 0。
+         * 错误处理函数可以调用 error_reporting()处理 @ 的情况。
+         */
+        //只有设置了报告所有错误，handle才能捕捉所有错误
+        error_reporting(E_ALL);
+        //是否显示错误
+        if ($system['debug']) {
+            ini_set('display_errors', true);
         } else {
-            error_reporting(0);
+            ini_set('display_errors', FALSE);
         }
         if ($system['error_manage'] || $system['log_error']) {
             set_exception_handler('woniu_exception_handler');

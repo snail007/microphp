@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-12 17:01:46
+ * @createdtime         2014-04-12 18:27:06
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 if (!function_exists('sessionStart')) {
 
@@ -173,12 +173,8 @@ if (!function_exists('woniu_error_handler')) {
      * @return type
      */
     function woniu_error_handler($errno, $errstr, $errfile, $errline) {
-        // get the current error reporting level
-        $level = error_reporting();
-
-        // if error was supressed or $errno not set in current error level
-        if ($level == 0 || ($level & $errno) == 0) {
-            return true;
+        if (!error_reporting()) {
+            return;
         }
         $fatal_err = array(E_ERROR, E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_RECOVERABLE_ERROR);
         if (in_array($errno, $fatal_err)) {
@@ -602,7 +598,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 class WoniuInput {
 
@@ -726,7 +722,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 class WoniuRouter {
 
@@ -920,7 +916,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -951,12 +947,24 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        //屏蔽错误的逻辑是：一旦接管了错误或者打开记录错误，必须error_reporting(0)
-        //反之意思就是，只有没有接管错误且关闭了记录错误且打开了调试模式，就error_reporting(E_ALL);
-        if (!$system['error_manage'] && !$system['log_error'] && $system['debug']) {
-            error_reporting(E_ALL);
+        /**
+         * 提醒：
+         * error_reporting   控制报告错误类型
+         * display_errors    控制是否在页面显示报告了的类型的错误的错误信息
+         * 言外之意就是即使报告了所有错误，但是却可以不显示错误信息。
+         * 另外：
+         * 如果用 set_error_handler() 设定了自定义的错误处理函数，
+         * 即使PHP表达式之前放置在一个@ ，但是自定义的错误处理函仍然会被调用，
+         * 当出错语句前有 @ 时, error_reporting()将返回 0。
+         * 错误处理函数可以调用 error_reporting()处理 @ 的情况。
+         */
+        //只有设置了报告所有错误，handle才能捕捉所有错误
+        error_reporting(E_ALL);
+        //是否显示错误
+        if ($system['debug']) {
+            ini_set('display_errors', true);
         } else {
-            error_reporting(0);
+            ini_set('display_errors', FALSE);
         }
         if ($system['error_manage'] || $system['log_error']) {
             set_exception_handler('woniu_exception_handler');
@@ -1794,7 +1802,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1901,7 +1909,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1970,7 +1978,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 class WoniuDB {
 
@@ -8116,7 +8124,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-12 17:01:46
+ * @createdtime       2014-04-12 18:27:06
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
