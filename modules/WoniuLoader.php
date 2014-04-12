@@ -42,7 +42,9 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        if ($system['debug']) {
+        //屏蔽错误的逻辑是：一旦接管了错误或者打开记录错误，必须error_reporting(0)
+        //反之意思就是，只有没有接管错误且关闭了记录错误且打开了调试模式，就error_reporting(E_ALL);
+        if (!$system['error_manage'] && !$system['log_error'] && $system['debug']) {
             error_reporting(E_ALL);
         } else {
             error_reporting(0);
