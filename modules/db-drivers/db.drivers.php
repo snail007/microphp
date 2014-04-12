@@ -18,6 +18,21 @@ class WoniuDB {
     private static $conns = array();
 
     public static function getInstance($config, $force_new_conn = false) {
+        $default['dbdriver'] = "mysql";
+        $default['hostname'] = '127.0.0.1';
+        $default['port'] = '3306';
+        $default['username'] = 'root';
+        $default['password'] = '';
+        $default['database'] = 'test';
+        $default['dbprefix'] = '';
+        $default['pconnect'] = TRUE;
+        $default['db_debug'] = TRUE;
+        $default['char_set'] = 'utf8';
+        $default['dbcollat'] = 'utf8_general_ci';
+        $default['swap_pre'] = '';
+        $default['autoinit'] = TRUE;
+        $default['stricton'] = FALSE;
+        $config=  array_merge($default,$config);
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
         $hash = md5(sha1(var_export($config, TRUE)));
         if ($force_new_conn || !isset(self::$conns[$hash])) {
@@ -31,7 +46,6 @@ class WoniuDB {
     }
 
 }
-
 
 /**
  * CI_DB_mysql_driver -> CI_DB -> CI_DB_active_record -> CI_DB_driver
@@ -254,7 +268,7 @@ class CI_DB_driver {
         }
 
 // Verify table prefix and replace if necessary
-        if (($this->dbprefix != '' AND $this->swap_pre != '') AND ($this->dbprefix != $this->swap_pre)) {
+        if (($this->dbprefix != '' AND $this->swap_pre != '') AND ( $this->dbprefix != $this->swap_pre)) {
             $sql = preg_replace("/(\W)" . $this->swap_pre . "(\S+?)/", "\\1" . $this->dbprefix . "\\2", $sql);
         }
 
@@ -1211,7 +1225,7 @@ class CI_DB_driver {
             }
         }
 
-        if ($protect_identifiers === TRUE AND !in_array($item, $this->_reserved_identifiers)) {
+        if ($protect_identifiers === TRUE AND ! in_array($item, $this->_reserved_identifiers)) {
             $item = $this->_escape_identifiers($item);
         }
 
@@ -1302,9 +1316,9 @@ class CI_DB_result {
             $object = new $class_name();
 
             foreach ($row as $key => $value) {
-                if(method_exists($object, 'set_'.$key)){
-                    $object->{'set_'.$key}($value);
-                }else{
+                if (method_exists($object, 'set_' . $key)) {
+                    $object->{'set_' . $key}($value);
+                } else {
                     $object->$key = $value;
                 }
             }
@@ -1427,7 +1441,7 @@ class CI_DB_result {
             return;
         }
 
-        if ($key != '' AND !is_null($value)) {
+        if ($key != '' AND ! is_null($value)) {
             $this->row_data[$key] = $value;
         }
     }
