@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-10 23:02:38
+ * @createdtime         2014-04-12 17:01:46
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 if (!function_exists('sessionStart')) {
 
@@ -602,7 +602,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 class WoniuInput {
 
@@ -726,7 +726,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 class WoniuRouter {
 
@@ -920,7 +920,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -951,7 +951,9 @@ class WoniuLoader {
 
     public function registerErrorHandle() {
         $system = WoniuLoader::$system;
-        if ($system['debug']) {
+        //屏蔽错误的逻辑是：一旦接管了错误或者打开记录错误，必须error_reporting(0)
+        //反之意思就是，只有没有接管错误且关闭了记录错误且打开了调试模式，就error_reporting(E_ALL);
+        if (!$system['error_manage'] && !$system['log_error'] && $system['debug']) {
             error_reporting(E_ALL);
         } else {
             error_reporting(0);
@@ -1792,7 +1794,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1899,7 +1901,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1968,7 +1970,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 class WoniuDB {
 
@@ -8114,7 +8116,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-10 23:02:38
+ * @createdtime       2014-04-12 17:01:46
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
