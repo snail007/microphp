@@ -35,10 +35,10 @@
 3.当设置了错误处理，@不能抑制错误的bug
 
 升级提示：
-为了方便，2.2.5之前版本的：$this->message($msg,$view = null, $url = null, $time = 3);
-在2.2.5以及后续版本中，参数顺序调整为：$this->message($msg, $url = null, $time = 3, $view = null);
-升级之前如果之前代码使用了$this->message()记得修改一下参数顺序。
-
+1.为了方便，2.2.5之前版本的：$this->message($msg,$view = null, $url = null, $time = 3);
+  在2.2.5以及后续版本中，参数顺序调整为：$this->message($msg, $url = null, $time = 3, $view = null);
+  升级之前如果之前代码使用了$this->message()记得修改一下参数顺序。
+2.在$system配置里面增加一项：$system['message_page_view'] = '';
 
 
 #############################ver 2.2.4:[2014-03-17]#############################
