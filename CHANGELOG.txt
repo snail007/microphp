@@ -14,6 +14,14 @@
     $this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
     如果传递了user字段$ret_data就有user字段，反之没有user字段.
     如果user传递有值，那么就会用这个值继续后面的规则进行验证。
+5.增加了$system['message_page_view'] = '';配置项，即$this->message()方法默认使用的视图，
+  该视图会在第4个参数为null时使用。视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
+  这里需要填写的是视图名称，不带视图后缀。没有就留空。
+6.增加了function systemInfo($key = NULL)函数，获取系统配置信息,也就是WoniuLoader::$system里面的信息，
+  $key是WoniuLoader::$system的键。
+7.增加了function dbInfo($group = NULL)函数，获取系统数据库配置信息。
+  $group是数据库组名称，即WoniuLoader::$system['db']的键。
+  $group为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
 
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
@@ -25,6 +33,13 @@
   当$tip或者$data为0的时候不显示0的bug；
 2.$this->page()产生的分页条在某些情况下会js报错的bug
 3.当设置了错误处理，@不能抑制错误的bug
+
+升级提示：
+为了方便，2.2.5之前版本的：$this->message($msg,$view = null, $url = null, $time = 3);
+在2.2.5以及后续版本中，参数顺序调整为：$this->message($msg, $url = null, $time = 3, $view = null);
+升级之前如果之前代码使用了$this->message()记得修改一下参数顺序。
+
+
 
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:

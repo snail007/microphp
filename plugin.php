@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-12 22:24:35
+ * @createdtime         2014-04-13 14:26:59
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -64,6 +64,12 @@ $system['error_page_50x'] = 'application/error/error_50x.php';
  * 文件里面可以使用$msg变量获取出错提示内容
  */
 $system['error_page_db'] = 'application/error/error_db.php';
+/**
+ * $this->message()方法默认使用的视图，该视图会在第4个参数为null时使用。
+ * 视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
+ * 这里需要填写的是视图名称，不带视图后缀。没有就留空。
+ */
+$system['message_page_view'] = '';
 /**
  * 默认控制器文件名称,不包含后缀,支持子文件夹,比如home.welcome,
  * 就是控制器文件夹下面的home文件夹里面welcome.php(假定后缀是.php)

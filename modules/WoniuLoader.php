@@ -396,11 +396,12 @@ class WoniuLoader {
         exit();
     }
 
-    public function message($msg, $view = null, $url = null, $time = 3) {
+    public function message($msg, $url = null, $time = 3, $view = null) {
         if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
         header("Content-type: text/html; charset=utf-8");
+        $view = is_null($view) ? systemInfo('message_page_view') : $view;
         if (!empty($view)) {
             $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
         } else {

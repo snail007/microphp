@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-12 22:24:35
+ * @createdtime         2014-04-13 14:26:59
  */
  
 
@@ -29,8 +29,46 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
+/**
+ * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
+ * @param type $key  WoniuLoader::$system的键
+ * @return null
+ */
+if (!function_exists('systemInfo')) {
+
+    function systemInfo($key = NULL) {
+        if (is_null($key)) {
+            return WoniuLoader::$system;
+        } elseif (isset(WoniuLoader::$system[$key])) {
+            return WoniuLoader::$system[$key];
+        } else {
+            return null;
+        }
+    }
+
+}
+/**
+ * 获取系统数据库配置信息
+ * @param type $group  数据库组名称，即WoniuLoader::$system['db']的键.
+ *                     为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+ * @return null
+ */
+if (!function_exists('dbInfo')) {
+
+    function dbInfo($group = NULL) {
+        if (is_null($group)) {
+            return WoniuLoader::$system['db'][$system['db']['active_group']];
+        } elseif (isset(WoniuLoader::$system['db'][$group])) {
+            return WoniuLoader::$system['db'][$group];
+        } else {
+            return null;
+        }
+    }
+
+}
+
 if (!function_exists('sessionStart')) {
 
     function sessionStart() {
@@ -598,7 +636,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 class WoniuInput {
 
@@ -722,7 +760,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 class WoniuRouter {
 
@@ -916,7 +954,7 @@ class WoniuRouter {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  * @property CI_DB_active_record \$db
  * @property phpFastCache        \$cache
  * @property WoniuInput          \$input
@@ -1301,11 +1339,12 @@ class WoniuLoader {
         exit();
     }
 
-    public function message($msg, $view = null, $url = null, $time = 3) {
+    public function message($msg, $url = null, $time = 3, $view = null) {
         if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
         header("Content-type: text/html; charset=utf-8");
+        $view = is_null($view) ? systemInfo('message_page_view') : $view;
         if (!empty($view)) {
             $this->view($view, array('msg' => $msg, 'url' => $url, 'time' => $time));
         } else {
@@ -1802,7 +1841,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 class WoniuController extends WoniuLoaderPlus {
 
@@ -1909,7 +1948,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 class WoniuModel extends WoniuLoaderPlus {
 
@@ -1978,7 +2017,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 class WoniuDB {
 
@@ -8138,7 +8177,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-12 22:24:35
+ * @createdtime       2014-04-13 14:26:59
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

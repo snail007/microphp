@@ -13,6 +13,44 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
+/**
+ * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
+ * @param type $key  WoniuLoader::$system的键
+ * @return null
+ */
+if (!function_exists('systemInfo')) {
+
+    function systemInfo($key = NULL) {
+        if (is_null($key)) {
+            return WoniuLoader::$system;
+        } elseif (isset(WoniuLoader::$system[$key])) {
+            return WoniuLoader::$system[$key];
+        } else {
+            return null;
+        }
+    }
+
+}
+/**
+ * 获取系统数据库配置信息
+ * @param type $group  数据库组名称，即WoniuLoader::$system['db']的键.
+ *                     为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+ * @return null
+ */
+if (!function_exists('dbInfo')) {
+
+    function dbInfo($group = NULL) {
+        if (is_null($group)) {
+            return WoniuLoader::$system['db'][$system['db']['active_group']];
+        } elseif (isset(WoniuLoader::$system['db'][$group])) {
+            return WoniuLoader::$system['db'][$group];
+        } else {
+            return null;
+        }
+    }
+
+}
+
 if (!function_exists('sessionStart')) {
 
     function sessionStart() {
