@@ -6,15 +6,15 @@
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package                MicroPHP
- * @author                狂奔的蜗牛
- * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link                http://git.oschina.net/snail/microphp
- * @since                Version 1.0
- * @createdtime       {createdtime}
- * @property CI_DB_active_record \$db
- * @property phpFastCache        \$cache
- * @property WoniuInput          \$input
+ * @author                 狂奔的蜗牛
+ * @email                  672308444@163.com
+ * @copyright              Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
+ * @link                   http://git.oschina.net/snail/microphp
+ * @since                  Version 1.0
+ * @createdtime            {createdtime}
+ * @property CI_DB_active_record $db
+ * @property phpFastCache        $cache
+ * @property WoniuInput          $input
  */
 class WoniuLoader {
 
@@ -31,7 +31,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-
+        
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {

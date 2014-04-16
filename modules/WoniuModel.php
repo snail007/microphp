@@ -12,6 +12,9 @@
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 1.0
  * @createdtime       {createdtime}
+ * @property CI_DB_active_record $db
+ * @property phpFastCache        $cache
+ * @property WoniuInput          $input
  */
 class WoniuModel extends WoniuLoaderPlus {
 
