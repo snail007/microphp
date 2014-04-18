@@ -41,7 +41,7 @@ if (!function_exists('dbInfo')) {
 
     function dbInfo($group = NULL) {
         if (is_null($group)) {
-            return WoniuLoader::$system['db'][$system['db']['active_group']];
+            return WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
         } elseif (isset(WoniuLoader::$system['db'][$group])) {
             return WoniuLoader::$system['db'][$group];
         } else {
