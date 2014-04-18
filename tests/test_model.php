@@ -54,12 +54,15 @@ class Test_model extends UnitTestCase {
     }
 
     public function testModelLoader() {
+        $loader=  WoniuLoader::instance();
         $this->assertIsA(WoniuModel::instance('UserModel'), 'UserModel');
         $this->assertIsA(WoniuModel::instance('UserModel'), 'UserModel');
         $this->assertIsA(WoniuModel::instance('UserModel')->test(), 'SubUserModel');
         $this->assertIsA(WoniuModel::instance('test/SubUserModel'), 'SubUserModel');
         $this->assertIsA(WoniuModel::instance('test/SubUserModel'), 'SubUserModel');
         $this->assertIsA(WoniuModel::instance('test/SubUserModel')->test(), 'UserModel');
+        $this->assertIsA($loader->model->SubUserModel, 'SubUserModel');
+        $this->assertIsA($loader->model->UserModel, 'UserModel');
         WoniuLoader::instance()->model('UserModel', 'user');
         $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->UserModel);
         $this->assertReference(WoniuLoader::instance()->model->user, WoniuModel::instance('UserModel'));
