@@ -877,7 +877,7 @@ class WoniuLibLoader {
     public static $lib_files = array();
 
     function __get($classname) {
-        return isset(self::$lib_files[$classname]) ? self::$lib_files[$classname] : null;
+        return isset(self::$lib_files[$classname]) ? self::$lib_files[$classname] : WoniuLoader::model($classname);
     }
 
 }

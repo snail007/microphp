@@ -22,12 +22,18 @@
 7.增加了function dbInfo($group = NULL)函数，获取系统数据库配置信息。
   $group是数据库组名称，即WoniuLoader::$system['db']的键。
   $group为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+8.使用$this->model->$model_class_name时,当$model_class_name模型没有被加载的时候会自动尝试加载。
+  注意：此时$model_class_name一定要是模型名称类名称区分大小写，否则会提示找不到模型类文件。
 
 优化了：
 1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
 2.缓存文件夹的判断避免了只读环境报错。
 3.错误控制逻辑。
-
+4.$this->model($model_name,$alias_name),没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，
+  xxx和$model_name中的模型类名称是一样的，“区分大小写”。
+比如：
+  1.$this->model('admin/UserModel');加载模型目录中admin文件夹下面的UserModel模型，那么xxx就是UserModel
+  2.$this->model('AdminModel');加载模型目录中的AdminModel模型，那么xxx就是AdminModel
 修复了:
 1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
   当$tip或者$data为0的时候不显示0的bug；
@@ -39,7 +45,9 @@
   在2.2.5以及后续版本中，参数顺序调整为：$this->message($msg, $url = null, $time = 3, $view = null);
   升级之前如果之前代码使用了$this->message()记得修改一下参数顺序。
 2.在$system配置里面增加一项：$system['message_page_view'] = '';
-
+3.为了更加规范，凡是使用了$this->model($model_name,$alias_name),没有传递$alias_name参数的代码，
+  当通过$this->model->xxx,引用模型的时候xxx必须和$model_name中的模型类名称是一样的。
+  2.2.5之前的版本xxx是模型类名称的全部小写。
 
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:
