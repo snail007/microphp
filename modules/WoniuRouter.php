@@ -172,24 +172,31 @@ class WoniuRouter {
     private static function checkHmvc($pathinfo_query) {
         //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
         $_module = current(explode('/', $pathinfo_query));
-        $_system = $system = WoniuLoader::$system;
+        $_system = WoniuLoader::$system;
         if (isset($_system['hmvc_modules'][$_module])) {
-            $module = $_system['hmvc_folder'] . '/' . $_system['hmvc_modules'][$_module] . '/hvmc.php';
-            include($module);
-            foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
-                if (!is_array($_system[$folder])) {
-                    $_system[$folder] = array($_system[$folder]);
-                }
-                if (!is_array($system[$folder])) {
-                    $system[$folder] = array($system[$folder]);
-                }
-                $system[$folder] = array_merge($system[$folder], $_system[$folder]);
-            }
-            //切换核心配置
-            self::setConfig($system);
+            self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
             return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    public static function switchHmvcConfig($hmvc_folder) {
+        $_system = $system = WoniuLoader::$system;
+        $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
+        //$system被hmvc模块配置重写
+        include($module);
+        //共享主配置：模型，类库，helper
+        foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
+            if (!is_array($_system[$folder])) {
+                $_system[$folder] = array($_system[$folder]);
+            }
+            if (!is_array($system[$folder])) {
+                $system[$folder] = array($system[$folder]);
+            }
+            $system[$folder] = array_merge($system[$folder], $_system[$folder]);
+        }
+        //切换核心配置
+        WoniuLoader::$system = $system;
     }
 
     public static function setConfig($system) {

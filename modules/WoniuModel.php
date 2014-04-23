@@ -20,19 +20,23 @@ class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 
-    public static function instance($classname_path = null) {
+    public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
             $renew = is_bool($classname_path) && $classname_path === true;
             WoniuLoader::classAutoloadRegister();
-            return empty(self::$instance)||$renew ? self::$instance = new self() : self::$instance;
+            return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
 
         $model_folders = $system['model_folder'];
+         
         if (!is_array($model_folders)) {
             $model_folders = array($model_folders);
         }

@@ -11,6 +11,8 @@ class Home extends WoniuController {
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
     }
 
+    public function doHmvc() {
+        return 'okay';
+    }
 
 }
-

@@ -75,17 +75,20 @@ class WoniuController extends WoniuLoaderPlus {
         return self::$woniu;
     }
 
-    public static function instance($classname_path = null) {
+    public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         if (empty($classname_path)) {
             WoniuLoader::classAutoloadRegister();
-            return self::$instance=new self();
+            return self::$instance = new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
         $alias_name = strtolower($classname);
-        static $loadedClasses=array();
+        static $loadedClasses = array();
         if (in_array($alias_name, array_keys($loadedClasses))) {
             return $loadedClasses[$alias_name];
         }
@@ -94,7 +97,7 @@ class WoniuController extends WoniuLoaderPlus {
             //如此一来就能满足两种模式
             WoniuLoader::classAutoloadRegister();
             WoniuLoader::includeOnce($filepath);
-            if (class_exists($classname,FALSE)) {
+            if (class_exists($classname, FALSE)) {
                 return $loadedClasses[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');

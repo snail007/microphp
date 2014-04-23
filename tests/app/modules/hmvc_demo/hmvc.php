@@ -176,7 +176,7 @@ $system['session_handle'] = array(
  * ------------------------数据库配置----------------------------
  */
 
-//$system['db']['active_group'] = 'default';
+$system['db']['active_group'] = 'default';
 
 /**
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
@@ -185,9 +185,9 @@ $system['session_handle'] = array(
 /**
  * mysql数据库配置示例
  */
-/*
+
 $system['db']['default']['dbdriver'] = "mysql";
-$system['db']['default']['hostname'] = '127.0.0.1';
+$system['db']['default']['hostname'] = 'localhost';
 $system['db']['default']['port'] = '3306';
 $system['db']['default']['username'] = 'root';
 $system['db']['default']['password'] = 'admin';
@@ -200,7 +200,7 @@ $system['db']['default']['dbcollat'] = 'utf8_general_ci';
 $system['db']['default']['swap_pre'] = '';
 $system['db']['default']['autoinit'] = TRUE;
 $system['db']['default']['stricton'] = FALSE;
-*/
+
 
 /*
  * PDO database config demo

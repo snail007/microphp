@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-23 14:09:21
+ * @createdtime         2014-04-23 15:01:56
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  */
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
@@ -636,7 +636,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  */
 class WoniuInput {
 
@@ -760,7 +760,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  */
 class WoniuRouter {
 
@@ -921,24 +921,31 @@ class WoniuRouter {
     private static function checkHmvc($pathinfo_query) {
         //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
         $_module = current(explode('/', $pathinfo_query));
-        $_system = $system = WoniuLoader::$system;
+        $_system = WoniuLoader::$system;
         if (isset($_system['hmvc_modules'][$_module])) {
-            $module = $_system['hmvc_folder'] . '/' . $_system['hmvc_modules'][$_module] . '/hvmc.php';
-            include($module);
-            foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
-                if (!is_array($_system[$folder])) {
-                    $_system[$folder] = array($_system[$folder]);
-                }
-                if (!is_array($system[$folder])) {
-                    $system[$folder] = array($system[$folder]);
-                }
-                $system[$folder] = array_merge($system[$folder], $_system[$folder]);
-            }
-            //切换核心配置
-            self::setConfig($system);
+            self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
             return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    public static function switchHmvcConfig($hmvc_folder) {
+        $_system = $system = WoniuLoader::$system;
+        $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
+        //$system被hmvc模块配置重写
+        include($module);
+        //共享主配置：模型，类库，helper
+        foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
+            if (!is_array($_system[$folder])) {
+                $_system[$folder] = array($_system[$folder]);
+            }
+            if (!is_array($system[$folder])) {
+                $system[$folder] = array($system[$folder]);
+            }
+            $system[$folder] = array_merge($system[$folder], $_system[$folder]);
+        }
+        //切换核心配置
+        WoniuLoader::$system = $system;
     }
 
     public static function setConfig($system) {
@@ -978,7 +985,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.5
- * @createdtime            2014-04-23 14:09:21
+ * @createdtime            2014-04-23 15:01:56
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1865,7 +1872,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1929,17 +1936,20 @@ class WoniuController extends WoniuLoaderPlus {
         return self::$woniu;
     }
 
-    public static function instance($classname_path = null) {
+    public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         if (empty($classname_path)) {
             WoniuLoader::classAutoloadRegister();
-            return self::$instance=new self();
+            return self::$instance = new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
         $alias_name = strtolower($classname);
-        static $loadedClasses=array();
+        static $loadedClasses = array();
         if (in_array($alias_name, array_keys($loadedClasses))) {
             return $loadedClasses[$alias_name];
         }
@@ -1948,7 +1958,7 @@ class WoniuController extends WoniuLoaderPlus {
             //如此一来就能满足两种模式
             WoniuLoader::classAutoloadRegister();
             WoniuLoader::includeOnce($filepath);
-            if (class_exists($classname,FALSE)) {
+            if (class_exists($classname, FALSE)) {
                 return $loadedClasses[$alias_name] = new $classname();
             } else {
                 trigger404('Ccontroller Class:' . $classname . ' not found.');
@@ -1975,7 +1985,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1984,19 +1994,23 @@ class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 
-    public static function instance($classname_path = null) {
+    public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         if (empty($classname_path)) {
             $renew = is_bool($classname_path) && $classname_path === true;
             WoniuLoader::classAutoloadRegister();
-            return empty(self::$instance)||$renew ? self::$instance = new self() : self::$instance;
+            return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
 
         $model_folders = $system['model_folder'];
+         
         if (!is_array($model_folders)) {
             $model_folders = array($model_folders);
         }
@@ -2047,7 +2061,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  */
 class WoniuDB {
 
@@ -8207,7 +8221,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-23 14:09:21
+ * @createdtime       2014-04-23 15:01:56
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

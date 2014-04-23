@@ -31,7 +31,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        
+
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {
@@ -345,14 +345,26 @@ class WoniuLoader {
         }
     }
 
-    public static function instance($name = null) {
+    /**
+     * 实例化一个loader
+     * @param type $renew               是否强制重新new一个loader，默认只会new一次
+     * @param type $hmvc_module_floder  hmvc模块文件夹名称
+     * @return type
+     */
+    public static function instance($renew = null, $hmvc_module_floder = null) {
+        $default=  WoniuLoader::$system;
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         self::classAutoloadRegister();
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
-        $renew = is_bool($name) && $name === true;
-        return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        $renew = is_bool($renew) && $renew === true;
+        $ret=empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        WoniuLoader::$system=$default;
+        return $ret;
     }
 
     public function view_path($view_name) {
