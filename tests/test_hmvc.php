@@ -40,6 +40,7 @@ require_once('simpletest/autorun.php');
 class test_hmvc extends UnitTestCase {
 
     public function test_instance() {
+        $default = WoniuLoader::$system;
         $db1 = WoniuLoader::instance()->database();
         $controller = WoniuController::instance('home', 'hmvc_demo');
         $this->assertEqual($controller->doHmvc(), 'okay');
@@ -52,6 +53,7 @@ class test_hmvc extends UnitTestCase {
         $this->assertNotEqual($db2, $db1);
         $this->assertEqual($db2, $db4);
         $this->assertEqual($db2, $db3);
+        WoniuLoader::$system = $default;
     }
 
 }
