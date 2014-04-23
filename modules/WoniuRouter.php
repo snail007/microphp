@@ -55,8 +55,9 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
+        $pathinfo_query = self::checkHmvc(self::getQueryStr());
+        $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
-        $pathinfo_query = self::getQueryStr();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
@@ -100,13 +101,13 @@ class WoniuRouter {
         $path = explode('.', $origin_class_method);
         $router['mpath'] = $origin_class_method;
         $router['m'] = $path[count($path) - 1];
-        $router['c']='';
+        $router['c'] = '';
         if (count($path) > 1) {
             $router['c'] = $path[count($path) - 2];
         }
         $router['prefix'] = $system['controller_method_prefix'];
         unset($path[count($path) - 1]);
-        $router['cpath'] = empty($path)?'':implode('.', $path);
+        $router['cpath'] = empty($path) ? '' : implode('.', $path);
         $router['folder'] = '';
         if (count($path) > 1) {
             unset($path[count($path) - 1]);
@@ -116,7 +117,7 @@ class WoniuRouter {
         return $router + $info;
     }
 
-    public static function getQueryStr() {
+    private static function getQueryStr() {
         $system = WoniuLoader::$system;
         //命令行运行检查
         if (WoniuInput::isCli()) {
@@ -138,11 +139,11 @@ class WoniuRouter {
         if ($pathinfo_query && ($pathinfo_query{0} === '/')) {
             $pathinfo_query = substr($pathinfo_query, 1);
         }
-        $pathinfo_query = self::checkRouter($pathinfo_query);
+
         return $pathinfo_query;
     }
 
-    public static function checkSession() {
+    private static function checkSession() {
         $system = WoniuLoader::$system;
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
@@ -155,7 +156,7 @@ class WoniuRouter {
         }
     }
 
-    public static function checkRouter($pathinfo_query) {
+    private static function checkRouter($pathinfo_query) {
         $system = WoniuLoader::$system;
         if (is_array($system['route'])) {
             foreach ($system['route'] as $reg => $replace) {
@@ -168,14 +169,37 @@ class WoniuRouter {
         return $pathinfo_query;
     }
 
+    private static function checkHmvc($pathinfo_query) {
+        //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
+        $_module = current(explode('/', $pathinfo_query));
+        $_system = $system = WoniuLoader::$system;
+        if (isset($_system['hmvc_modules'][$_module])) {
+            $module = $_system['hmvc_folder'] . '/' . $_system['hmvc_modules'][$_module] . '/hvmc.php';
+            include($module);
+            foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
+                if (!is_array($_system[$folder])) {
+                    $_system[$folder] = array($_system[$folder]);
+                }
+                if (!is_array($system[$folder])) {
+                    $system[$folder] = array($system[$folder]);
+                }
+                $system[$folder] = array_merge($system[$folder], $_system[$folder]);
+            }
+            //切换核心配置
+            self::setConfig($system);
+            return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
+        }
+        return $pathinfo_query;
+    }
+
     public static function setConfig($system) {
         $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
         self::folderAutoInit();
     }
 
-    public static function folderAutoInit() {
-        if (WoniuLoader::$system['folder_auto_init']) {
+    private static function folderAutoInit() {
+        if (!empty(WoniuLoader::$system['folder_auto_init'])) {
             $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder');
             foreach (WoniuLoader::$system as $key => $value) {
                 if (in_array($key, $folder)) {
