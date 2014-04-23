@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-23 15:01:56
+ * @createdtime         2014-04-23 15:47:09
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  */
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
@@ -636,7 +636,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  */
 class WoniuInput {
 
@@ -760,7 +760,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  */
 class WoniuRouter {
 
@@ -985,7 +985,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.5
- * @createdtime            2014-04-23 15:01:56
+ * @createdtime            2014-04-23 15:47:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1005,7 +1005,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        
+
         phpFastCache::setup($system['cache_config']);
         $this->cache = phpFastCache($system['cache_config']['storage']);
         if ($system['autoload_db']) {
@@ -1319,14 +1319,26 @@ class WoniuLoader {
         }
     }
 
-    public static function instance($name = null) {
+    /**
+     * 实例化一个loader
+     * @param type $renew               是否强制重新new一个loader，默认只会new一次
+     * @param type $hmvc_module_floder  hmvc模块文件夹名称
+     * @return type
+     */
+    public static function instance($renew = null, $hmvc_module_floder = null) {
+        $default=  WoniuLoader::$system;
+        if (!empty($hmvc_module_floder)) {
+            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+        }
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
         self::classAutoloadRegister();
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
-        $renew = is_bool($name) && $name === true;
-        return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        $renew = is_bool($renew) && $renew === true;
+        $ret=empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        WoniuLoader::$system=$default;
+        return $ret;
     }
 
     public function view_path($view_name) {
@@ -1872,7 +1884,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1985,7 +1997,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2061,7 +2073,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  */
 class WoniuDB {
 
@@ -8221,7 +8233,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-23 15:01:56
+ * @createdtime       2014-04-23 15:47:09
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
