@@ -1,6 +1,6 @@
 <?php include($this->view_path('common/header'));?>
 <div><?php echo $ver;?></div>
-<h2>欢迎使用MicroPHP框架。</h2>
+<h2>欢迎使用MicroPHP框架。I'm in hmvc.</h2>
 <hr style="border-bottom-color:black;border-width: 0 0 2px 0;"/>
 <p>控制器位于:application/controllers/welcome.php</p>
 <p>视图位于:application/views/welcome.php</p>

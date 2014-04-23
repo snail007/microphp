@@ -13,8 +13,7 @@
  * @since		Version 1.0
  * @createdtime         {createdtime}
  */
-define('IN_WONIU_APP', TRUE);
-define('WDS', DIRECTORY_SEPARATOR);
+include (__DIR__ . '/../modules/plugin.php');
 define('TEST_ROOT', dirname(__FILE__));
 //为了正确显示中文，修改simpletest/reporter.php 31行：
 //function __construct($character_set = 'ISO-8859-1')
@@ -63,6 +62,14 @@ $system['helper_folder'] = array(
     $system['application_folder'] . '/helper',
     $system['application_folder'] . '/../app2/helper'
 );
+/**
+ * 存放HMVC模块的文件夹路径名称
+ */
+$system['hmvc_folder'] = $system['application_folder'] . '/modules';
+/**
+ * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+ */
+$system['hmvc_modules'] = array('demo'=>'hmvc_demo');
 /**
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
@@ -461,32 +468,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  * -------------------------数据库配置结束--------------------------
  */
 $default = $system;
-include('../modules/WoniuInput.class.php');
-include('../modules/WoniuHelper.php');
-include('../modules/db-drivers/db.drivers.php');
-include('../modules/db-drivers/mysql.driver.php');
-include('../modules/db-drivers/mysqli.driver.php');
-include('../modules/db-drivers/pdo.driver.php');
-include('../modules/db-drivers/sqlite3.driver.php');
-include('../modules/cache-drivers/phpfastcache.php');
-include('../modules/cache-drivers/driver.php');
-include('../modules/cache-drivers/drivers/apc.php');
-include('../modules/cache-drivers/drivers/files.php');
-include('../modules/cache-drivers/drivers/memcache.php');
-include('../modules/cache-drivers/drivers/memcached.php');
-include('../modules/cache-drivers/drivers/sqlite.php');
-include('../modules/cache-drivers/drivers/wincache.php');
-include('../modules/cache-drivers/drivers/xcache.php');
-include('../modules/cache-drivers/drivers/redis.php');
-include('../modules/session_drivers/WoniuSessionHandle.php');
-include('../modules/session_drivers/MysqlSessionHandle.php');
-include('../modules/session_drivers/MongodbSessionHandle.php');
-include('../modules/session_drivers/MemcacheSessionHandle.php');
-include('../modules/session_drivers/RedisSessionHandle.php');
-include('../modules/WoniuRouter.php');
-include('../modules/WoniuLoader.php');
-include('../modules/WoniuController.php');
-include('../modules/WoniuModel.php');
+
 WoniuRouter::setConfig($system);
 
 function getReqURL($route, $index = 'indexfortest.php?') {
