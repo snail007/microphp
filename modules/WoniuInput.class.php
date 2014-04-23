@@ -28,6 +28,12 @@ class WoniuInput {
         return $xss_clean ? self::xss_clean($val) : $val;
     }
 
+    public static function post_get($key = null, $default = null, $xss_clean = false) {
+        $get = self::gpcs('_POST', $key, $default);
+        $val = $get === null ? self::gpcs('_GET', $key, $default) : $get;
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
     public static function get($key = null, $default = null, $xss_clean = false) {
         $val = self::gpcs('_GET', $key, $default);
         return $xss_clean ? self::xss_clean($val) : $val;

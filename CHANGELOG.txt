@@ -41,7 +41,7 @@
      1.$hmvc_demo_loader=WoniuLoader::instance(true,'hmvc_demo');实例化模块hmvc_demo的一个loader实例
      2.$hmvc_demo_home=WoniuController::instance('home','hmvc_demo');实例化模块hmvc_demo的一个home控制器对象
      3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
-
+3.$this->input增加了post_get($key = null, $default = null, $xss_clean = false) 方法,先尝试从$_POST获取一个变量,没有的话再在$_GET里获取。
 升级提示：
 1.在$system配置里面增加两项：
   $system['hmvc_folder'] = $system['application_folder'] . '/modules';
