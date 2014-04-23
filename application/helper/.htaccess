@@ -1,5 +1,1 @@
-RewriteEngine On
-RewriteRule ^.git - [F,L]
-RewriteRule ^.svn - [F,L]
-RewriteRule ^.gitignore - [F,L]
-RewriteRule ^nbproject - [F,L]
+deny from all
