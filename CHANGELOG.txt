@@ -32,6 +32,15 @@
     比如：
     1.http://127.0.0.1/?demo,访问的就是hmvc_demo模块默认的控制器和方法。
     2.http://127.0.0.1/?demo/home.index,访问的就是hmvc_demo模块home控制器doIndex()方法。
+2.插件模式下的hmvc。
+  a.WoniuLoader::instance($renew = null, $hmvc_module_floder = null)
+  b.WoniuController::instance($classname_path = null, $hmvc_module_floder = NULL)
+  c.WoniuModel::instance($classname_path = null, $hmvc_module_floder = NULL)
+  a,b,c都增加了第二个参数$hmvc_module_floder即模块文件夹名称。
+  比如：
+     1.$hmvc_demo_loader=WoniuLoader::instance(true,'hmvc_demo');实例化模块hmvc_demo的一个loader实例
+     2.$hmvc_demo_home=WoniuController::instance('home','hmvc_demo');实例化模块hmvc_demo的一个home控制器对象
+     3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
 
 升级提示：
 1.在$system配置里面增加两项：
