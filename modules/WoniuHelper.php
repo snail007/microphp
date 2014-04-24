@@ -564,7 +564,7 @@ if (!function_exists('mergeRs')) {
 if (!function_exists('enableSelectDefault')) {
 
     function enableSelectDefault($return = false) {
-        $js = '<script>var func0797986876;if(typeof(window.onload)=="function"){func0797986876=window.onload;}window.onload=function(){func0797986876?func0797986876():null;var selects=document.getElementsByTagName("select");var set_default=function(){for(var k=0;k<selects.length;k++){var s=selects[k];var defaultv=s.attributes["default"]?s.attributes["default"].value:null;if(defaultv){for(var i=0;i<s.length;i++){if(s[i].value==defaultv){s[i].selected=true;break;}}}}}set_default();window["set_default"]=select_default;};</script>';
+        $js = '<script>var func0797986876;if(typeof(window.onload)=="function"){func0797986876=window.onload};window.onload=function(){func0797986876?func0797986876():null;var b=document.getElementsByTagName("select");var c=function(){for(var k=0;k<b.length;k++){var s=b[k];var a=s.attributes["default"]?s.attributes["default"].value:null;if(a){for(var i=0;i<s.length;i++){if(s[i].value==a){s[i].selected=true;break;}}}}};c();window["select_default"]=c;};</script>';
         if ($return) {
             return $js;
         } else {

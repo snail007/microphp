@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.6
- * @createdtime         2014-04-24 16:48:18
+ * @createdtime         2014-04-24 17:03:08
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  */
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
@@ -582,7 +582,7 @@ if (!function_exists('mergeRs')) {
 if (!function_exists('enableSelectDefault')) {
 
     function enableSelectDefault($return = false) {
-        $js = '<script>var func0797986876;if(typeof(window.onload)=="function"){func0797986876=window.onload;}window.onload=function(){func0797986876?func0797986876():null;var selects=document.getElementsByTagName("select");var set_default=function(){for(var k=0;k<selects.length;k++){var s=selects[k];var defaultv=s.attributes["default"]?s.attributes["default"].value:null;if(defaultv){for(var i=0;i<s.length;i++){if(s[i].value==defaultv){s[i].selected=true;break;}}}}}set_default();window["set_default"]=select_default;};</script>';
+        $js = '<script>var func0797986876;if(typeof(window.onload)=="function"){func0797986876=window.onload};window.onload=function(){func0797986876?func0797986876():null;var b=document.getElementsByTagName("select");var c=function(){for(var k=0;k<b.length;k++){var s=b[k];var a=s.attributes["default"]?s.attributes["default"].value:null;if(a){for(var i=0;i<s.length;i++){if(s[i].value==a){s[i].selected=true;break;}}}}};c();window["select_default"]=c;};</script>';
         if ($return) {
             return $js;
         } else {
@@ -614,7 +614,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  */
 class WoniuInput {
 
@@ -744,7 +744,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  */
 class WoniuRouter {
 
@@ -969,7 +969,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.6
- * @createdtime            2014-04-24 16:48:18
+ * @createdtime            2014-04-24 17:03:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1894,7 +1894,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2007,7 +2007,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2083,7 +2083,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  */
 class WoniuDB {
 
@@ -8243,7 +8243,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.6
- * @createdtime       2014-04-24 16:48:18
+ * @createdtime       2014-04-24 17:03:08
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

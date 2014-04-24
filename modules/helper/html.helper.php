@@ -5,7 +5,7 @@ if (!function_exists('enableSelectDefault')) {
                 var func0797986876; 
                 if(typeof(window.onload)=="function"){
                   func0797986876=window.onload;
-                }
+                };
                 window.onload=function(){
                     func0797986876?func0797986876():null;
                     var selects=document.getElementsByTagName("select");
@@ -23,9 +23,9 @@ if (!function_exists('enableSelectDefault')) {
                                     }
                                 }
                             }                    
-                        }
-                        set_default();
-                        window["set_default"]=select_default;
+                        };
+                    set_default();
+                    window["set_default"]=select_default;
                 };
             </script>';
         if ($return) {
