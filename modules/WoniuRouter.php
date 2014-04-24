@@ -136,11 +136,8 @@ class WoniuRouter {
             $query_str = empty($pathinfo['query']) ? '' : $pathinfo['query'];
             $pathinfo_query = empty($_SERVER['PATH_INFO']) ? $query_str : $_SERVER['PATH_INFO'] . '&' . $query_str;
         }
-        if ($pathinfo_query && ($pathinfo_query{0} === '/')) {
-            $pathinfo_query = substr($pathinfo_query, 1);
-        }
-        if ($pathinfo_query && ($pathinfo_query{0} === '&')) {
-            $pathinfo_query = substr($pathinfo_query, 1);
+        if ($pathinfo_query) {
+            $pathinfo_query = trim($pathinfo_query, '/&');
         }
         return $pathinfo_query;
     }
