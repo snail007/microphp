@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime         2014-04-23 15:47:09
+ * @createdtime         2014-04-24 12:54:41
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  */
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
@@ -636,7 +636,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  */
 class WoniuInput {
 
@@ -645,6 +645,12 @@ class WoniuInput {
     public static function get_post($key = null, $default = null, $xss_clean = false) {
         $get = self::gpcs('_GET', $key, $default);
         $val = $get === null ? self::gpcs('_POST', $key, $default) : $get;
+        return $xss_clean ? self::xss_clean($val) : $val;
+    }
+
+    public static function post_get($key = null, $default = null, $xss_clean = false) {
+        $get = self::gpcs('_POST', $key, $default);
+        $val = $get === null ? self::gpcs('_GET', $key, $default) : $get;
         return $xss_clean ? self::xss_clean($val) : $val;
     }
 
@@ -760,7 +766,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  */
 class WoniuRouter {
 
@@ -934,8 +940,8 @@ class WoniuRouter {
         $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
         //$system被hmvc模块配置重写
         include($module);
-        //共享主配置：模型，类库，helper
-        foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
+        //共享主配置：模型，视图，类库，helper
+        foreach (array('model_folder','view_folder', 'library_folder', 'helper_folder') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }
@@ -985,7 +991,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.5
- * @createdtime            2014-04-23 15:47:09
+ * @createdtime            2014-04-24 12:54:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1207,20 +1213,29 @@ class WoniuLoader {
             extract($this->view_vars);
         }
         $system = WoniuLoader::$system;
-        $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-        if (file_exists($view_path)) {
-            if ($return) {
-                //@ob_end_clean();
-                ob_start();
-                include $view_path;
-                $html = ob_get_contents();
-                @ob_end_clean();
-                return $html;
-            } else {
-                include $view_path;
+        $view_folders = $system['view_folder'];
+        if (!is_array($view_folders)) {
+            $view_folders = array($view_folders);
+        }
+        $count = count($view_folders);
+        $i = 0;
+        $view_path = '';
+        foreach ($view_folders as $dir) {
+            $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+            if (file_exists($view_path)) {
+                if ($return) {
+                    @ob_start();
+                    include $view_path;
+                    $html = ob_get_contents();
+                    @ob_end_clean();
+                    return $html;
+                } else {
+                    include $view_path;
+                    return;
+                }
+            } elseif (($i++) == $count - 1) {
+                trigger404('View:' . $view_path . ' not found');
             }
-        } else {
-            trigger404('View:' . $view_path . ' not found');
         }
     }
 
@@ -1326,7 +1341,7 @@ class WoniuLoader {
      * @return type
      */
     public static function instance($renew = null, $hmvc_module_floder = null) {
-        $default=  WoniuLoader::$system;
+        $default = WoniuLoader::$system;
         if (!empty($hmvc_module_floder)) {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);
         }
@@ -1336,14 +1351,31 @@ class WoniuLoader {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         $renew = is_bool($renew) && $renew === true;
-        $ret=empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        WoniuLoader::$system=$default;
+        $ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        WoniuLoader::$system = $default;
         return $ret;
     }
 
-    public function view_path($view_name) {
+    /**
+     * 获取视图绝对路径，在视图中include其它视图的时候用到。
+     * 提示：
+     * hvmc模式，“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
+     * 即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
+     * @param type $view_name 视图名称，不含后缀
+     * @param type $path_key  就是配置中“视图路经数组”的键
+     * @return string
+     */
+    public function view_path($view_name, $path_key = 0) {
+
         $system = WoniuLoader::$system;
-        $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+        if (!is_array($system['view_folder'])) {
+            $system['view_folder'] = array($system['view_folder']);
+        }
+        if (!isset($system['view_folder'][$path_key])) {
+            trigger404('error key[' . $path_key . '] of $system["view_folder"]');
+        }
+        $dir = $system['view_folder'][$path_key];
+        $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }
 
@@ -1884,7 +1916,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1997,7 +2029,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2073,7 +2105,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  */
 class WoniuDB {
 
@@ -8233,7 +8265,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.5
- * @createdtime       2014-04-23 15:47:09
+ * @createdtime       2014-04-24 12:54:41
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
