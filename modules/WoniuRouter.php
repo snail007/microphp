@@ -185,8 +185,8 @@ class WoniuRouter {
         $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
         //$system被hmvc模块配置重写
         include($module);
-        //共享主配置：模型，类库，helper
-        foreach (array('model_folder', 'library_folder', 'helper_folder') as $folder) {
+        //共享主配置：模型，视图，类库，helper
+        foreach (array('model_folder','view_folder', 'library_folder', 'helper_folder') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }

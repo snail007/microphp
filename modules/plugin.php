@@ -34,19 +34,19 @@ $system['application_folder'] = realpath('.') . '/' . '../application';
  */
 $system['controller_folder'] = $system['application_folder'] . '/controllers';
 /**
- * 存放模型文件的文件夹路径名称
+ * 存放模型文件的文件夹路径名称,支持数组
  */
 $system['model_folder'] = $system['application_folder'] . '/models';
 /**
- * 存放视图文件的文件夹路径名称
+ * 存放视图文件的文件夹路径名称,支持数组
  */
 $system['view_folder'] = $system['application_folder'] . '/views';
 /**
- * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载
+ * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载,支持数组
  */
 $system['library_folder'] = $system['application_folder'] . '/library';
 /**
- * 存放函数文件的文件夹路径名称
+ * 存放函数文件的文件夹路径名称,支持数组
  */
 $system['helper_folder'] = $system['application_folder'] . '/helper';
 /**

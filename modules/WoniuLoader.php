@@ -244,7 +244,6 @@ class WoniuLoader {
             $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
             if (file_exists($view_path)) {
                 if ($return) {
-                    //@ob_end_clean();
                     @ob_start();
                     include $view_path;
                     $html = ob_get_contents();
@@ -252,6 +251,7 @@ class WoniuLoader {
                     return $html;
                 } else {
                     include $view_path;
+                    return;
                 }
             } elseif (($i++) == $count - 1) {
                 trigger404('View:' . $view_path . ' not found');
@@ -376,9 +376,25 @@ class WoniuLoader {
         return $ret;
     }
 
-    public function view_path($view_name, $path_key = null) {
+    /**
+     * 获取视图绝对路径，在视图中include其它视图的时候用到。
+     * 提示：
+     * hvmc模式，“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
+     * 即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
+     * @param type $view_name 视图名称，不含后缀
+     * @param type $path_key  就是配置中“视图路经数组”的键
+     * @return string
+     */
+    public function view_path($view_name, $path_key = 0) {
+
         $system = WoniuLoader::$system;
-        $dir = is_array($system['view_folder']) ? $system['view_folder'][$path_key] : $system['view_folder'];
+        if (!is_array($system['view_folder'])) {
+            $system['view_folder'] = array($system['view_folder']);
+        }
+        if (!isset($system['view_folder'][$path_key])) {
+            trigger404('error key[' . $path_key . '] of $system["view_folder"]');
+        }
+        $dir = $system['view_folder'][$path_key];
         $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }

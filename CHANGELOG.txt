@@ -25,7 +25,7 @@
     提醒：
 
     1.$system['my_loader']，$system['hmvc_folder']，$system['hmvc_modules']这三个配置项在HMVC配置中无效。 
-    2.HMVC模块共享主配置的：模型，helper和类库。当有重名时，优先使用HMVC模块的。
+    2.HMVC模块共享主配置的：模型，视图，helper和类库。当有重名时，优先使用HMVC模块的。
 
     如何访问hvmc模块？
     访问hvmc模块很简单，只要在url控制器前面加上“模块名称/”即可，其它规则和以前框架规则一样。
@@ -42,6 +42,9 @@
      2.$hmvc_demo_home=WoniuController::instance('home','hmvc_demo');实例化模块hmvc_demo的一个home控制器对象
      3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
 3.$this->input增加了post_get($key = null, $default = null, $xss_clean = false) 方法,先尝试从$_POST获取一个变量,没有的话再在$_GET里获取。
+4.系统配置$system['view_folder']支持数组。
+
+
 升级提示：
 1.在$system配置里面增加两项：
   $system['hmvc_folder'] = $system['application_folder'] . '/modules';

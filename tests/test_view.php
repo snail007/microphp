@@ -42,6 +42,10 @@ class Test_view extends WebTestCase{
         echo $loader->page(100,$loader->input->get('p',1),5,'?p={page}',null,10);
         $this->get(getReqURL('view.view'));
         $this->assertEqual($this->getBrowser()->getContent(), 'inc');
+        $this->get(getReqURL('demo/home.testView'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'inc');
+        $this->get(getReqURL('demo/home.testViewSame'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'v1');
     }
     public function testViewData(){
         $this->get(getReqURL('view.data'));
@@ -51,6 +55,7 @@ class Test_view extends WebTestCase{
         $this->get(getReqURL('view.return'));
         $this->assertEqual($this->getBrowser()->getContent(), 'test_include');
     }
+    
     public function testCall(){
         function forcall($a){
             echo $a.'xxx';
