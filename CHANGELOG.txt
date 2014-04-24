@@ -43,6 +43,11 @@
      3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
 3.$this->input增加了post_get($key = null, $default = null, $xss_clean = false) 方法,先尝试从$_POST获取一个变量,没有的话再在$_GET里获取。
 4.系统配置$system['view_folder']支持数组。
+5.$this->view_path($view_name, $path_key = 0),增加了第二个参数。当视图配置文件夹$system['view_folder']是数组的时候， 
+  可以指定数组的键，用于指定使用哪个视图路经。该方法是获取视图绝对路径，在视图中include其它视图的时候用到。
+  提示：
+       hvmc模式时“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
+       即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
 
 
 升级提示：
