@@ -139,7 +139,9 @@ class WoniuRouter {
         if ($pathinfo_query && ($pathinfo_query{0} === '/')) {
             $pathinfo_query = substr($pathinfo_query, 1);
         }
-
+        if ($pathinfo_query && ($pathinfo_query{0} === '&')) {
+            $pathinfo_query = substr($pathinfo_query, 1);
+        }
         return $pathinfo_query;
     }
 
@@ -186,7 +188,7 @@ class WoniuRouter {
         //$system被hmvc模块配置重写
         include($module);
         //共享主配置：模型，视图，类库，helper
-        foreach (array('model_folder','view_folder', 'library_folder', 'helper_folder') as $folder) {
+        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }
