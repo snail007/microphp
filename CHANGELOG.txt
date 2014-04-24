@@ -49,7 +49,6 @@
        hvmc模式时“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
        即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
 
-
 升级提示：
 1.在$system配置里面增加两项：
   $system['hmvc_folder'] = $system['application_folder'] . '/modules';

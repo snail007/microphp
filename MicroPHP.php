@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.5
- * @createdtime         2014-04-24 12:54:41
+ * @since		Version 2.2.6
+ * @createdtime         2014-04-24 13:24:26
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  */
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
@@ -635,8 +635,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  */
 class WoniuInput {
 
@@ -765,8 +765,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  */
 class WoniuRouter {
 
@@ -990,8 +990,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.5
- * @createdtime            2014-04-24 12:54:41
+ * @since                  Version 2.2.6
+ * @createdtime            2014-04-24 13:24:26
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1915,8 +1915,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2028,8 +2028,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2104,8 +2104,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since                Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  */
 class WoniuDB {
 
@@ -6348,7 +6348,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.5
+ * @since		Version 2.2.6
  * @filesource
  */
 
@@ -7124,7 +7124,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.5
+ * @since		Version 2.2.6
  * @filesource
  */
 
@@ -8264,8 +8264,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.5
- * @createdtime       2014-04-24 12:54:41
+ * @since		Version 2.2.6
+ * @createdtime       2014-04-24 13:24:26
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -8282,7 +8282,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.5
+ * @since		Version 2.2.6
  * @filesource
  */
 // ------------------------------------------------------------------------
