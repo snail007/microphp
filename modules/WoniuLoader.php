@@ -233,20 +233,29 @@ class WoniuLoader {
             extract($this->view_vars);
         }
         $system = WoniuLoader::$system;
-        $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-        if (file_exists($view_path)) {
-            if ($return) {
-                //@ob_end_clean();
-                ob_start();
-                include $view_path;
-                $html = ob_get_contents();
-                @ob_end_clean();
-                return $html;
-            } else {
-                include $view_path;
+        $view_folders = $system['view_folder'];
+        if (!is_array($view_folders)) {
+            $view_folders = array($view_folders);
+        }
+        $count = count($view_folders);
+        $i = 0;
+        $view_path = '';
+        foreach ($view_folders as $dir) {
+            $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+            if (file_exists($view_path)) {
+                if ($return) {
+                    //@ob_end_clean();
+                    @ob_start();
+                    include $view_path;
+                    $html = ob_get_contents();
+                    @ob_end_clean();
+                    return $html;
+                } else {
+                    include $view_path;
+                }
+            } elseif (($i++) == $count - 1) {
+                trigger404('View:' . $view_path . ' not found');
             }
-        } else {
-            trigger404('View:' . $view_path . ' not found');
         }
     }
 
@@ -352,7 +361,7 @@ class WoniuLoader {
      * @return type
      */
     public static function instance($renew = null, $hmvc_module_floder = null) {
-        $default=  WoniuLoader::$system;
+        $default = WoniuLoader::$system;
         if (!empty($hmvc_module_floder)) {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);
         }
@@ -362,14 +371,15 @@ class WoniuLoader {
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();
         $renew = is_bool($renew) && $renew === true;
-        $ret=empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        WoniuLoader::$system=$default;
+        $ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+        WoniuLoader::$system = $default;
         return $ret;
     }
 
-    public function view_path($view_name) {
+    public function view_path($view_name, $path_key = null) {
         $system = WoniuLoader::$system;
-        $view_path = $system['view_folder'] . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+        $dir = is_array($system['view_folder']) ? $system['view_folder'][$path_key] : $system['view_folder'];
+        $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
         return $view_path;
     }
 
