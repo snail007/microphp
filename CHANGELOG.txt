@@ -1,4 +1,109 @@
 
+#############################ver 2.2.6#############################
+增加了：
+1.HMVC支持。
+    对应配置项：
+    /**
+     * 存放HMVC模块的文件夹路径名称
+     */
+    $system['hmvc_folder'] = $system['application_folder'] . '/modules';
+    /**
+     * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+     */
+    $system['hmvc_modules'] = array('demo' => 'hmvc_demo');
+
+    MicroPHP HMVC模块结构说明：
+    每个模块文件夹里面必须有个名称为hmvc.php的模块配置文件。
+    模块文件夹结构可以参考示例模块：hmvc_demo，位于：application/modules/hmvc_demo
+    配置说明:
+
+        1.模块配置文件和入口文件里面的主配置一样。 
+        2.如果HMVC模块有自己的配置，模块就可以覆盖主配置。 
+        3.模块配置里面已经配置了一些必要的配置项目。 
+        4.如果HMVC模块需要其它不同于主配置的配置，那么取消配置前面的注释,然后配置即可。 
+
+    提醒：
+
+    1.$system['my_loader']，$system['hmvc_folder']，$system['hmvc_modules']这三个配置项在HMVC配置中无效。 
+    2.HMVC模块共享主配置的：模型，视图，helper和类库。当有重名时，优先使用HMVC模块的。
+
+    如何访问hvmc模块？
+    访问hvmc模块很简单，只要在url控制器前面加上“模块名称/”即可，其它规则和以前框架规则一样。
+    比如：
+    1.http://127.0.0.1/?demo,访问的就是hmvc_demo模块默认的控制器和方法。
+    2.http://127.0.0.1/?demo/home.index,访问的就是hmvc_demo模块home控制器doIndex()方法。
+2.插件模式下的hmvc。
+  a.WoniuLoader::instance($renew = null, $hmvc_module_floder = null)
+  b.WoniuController::instance($classname_path = null, $hmvc_module_floder = NULL)
+  c.WoniuModel::instance($classname_path = null, $hmvc_module_floder = NULL)
+  a,b,c都增加了第二个参数$hmvc_module_floder即模块文件夹名称。
+  比如：
+     1.$hmvc_demo_loader=WoniuLoader::instance(true,'hmvc_demo');实例化模块hmvc_demo的一个loader实例
+     2.$hmvc_demo_home=WoniuController::instance('home','hmvc_demo');实例化模块hmvc_demo的一个home控制器对象
+     3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
+3.$this->input增加了post_get($key = null, $default = null, $xss_clean = false) 方法,先尝试从$_POST获取一个变量,没有的话再在$_GET里获取。
+4.系统配置$system['view_folder']支持数组。
+5.$this->view_path($view_name, $path_key = 0),增加了第二个参数。当视图配置文件夹$system['view_folder']是数组的时候， 
+  可以指定数组的键，用于指定使用哪个视图路经。该方法是获取视图绝对路径，在视图中include其它视图的时候用到。
+  提示：
+       hvmc模式时“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
+       即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
+
+升级提示：
+1.在$system配置里面增加两项：
+  $system['hmvc_folder'] = $system['application_folder'] . '/modules';
+  $system['hmvc_modules'] = array();
+
+#############################ver 2.2.5[2014-04-19]#############################
+增加了：
+1.增加sessionStart()函数，安全启用session，避免重复启用session。
+2.表单验证unique[table.field,id:1],其中的id:1支持变量。
+  比如：id:#user_id,
+  那么就会使用get或者post的user_id内容作为id内容。
+3.表单验证增加了default[默认值]规则。
+  当没有post对应字段的值或者值为空的时候那么就会使用默认规则的值作为该字段的值。然后用这个值继续
+  后面的规则进行验证。
+4.表单验证增加了optional可以为空规则;例如user字段规则中有optional,当没有传递字段user的值或者值是空的时候，
+  user验证会通过(忽略其它规则即使有required规则)，
+  提示：
+    $this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data，
+    如果传递了user字段$ret_data就有user字段，反之没有user字段.
+    如果user传递有值，那么就会用这个值继续后面的规则进行验证。
+5.增加了$system['message_page_view'] = '';配置项，即$this->message()方法默认使用的视图，
+  该视图会在第4个参数为null时使用。视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
+  这里需要填写的是视图名称，不带视图后缀。没有就留空。
+6.增加了function systemInfo($key = NULL)函数，获取系统配置信息,也就是WoniuLoader::$system里面的信息，
+  $key是WoniuLoader::$system的键。
+7.增加了function dbInfo($group = NULL)函数，获取系统数据库配置信息。
+  $group是数据库组名称，即WoniuLoader::$system['db']的键。
+  $group为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+8.使用$this->model->$model_class_name时,当$model_class_name模型没有被加载的时候会自动尝试加载。
+  注意：此时$model_class_name一定要是模型名称类名称区分大小写，否则会提示找不到模型类文件。
+
+优化了：
+1.mysql_escape_string()在PHP5.3及以上版本中不再使用。
+2.缓存文件夹的判断避免了只读环境报错。
+3.错误控制逻辑。
+4.$this->model($model_name,$alias_name),没有指定$alias_name的时候，通过$this->model->xxx访问模型类的，
+  xxx和$model_name中的模型类名称是一样的，“区分大小写”。
+比如：
+  1.$this->model('admin/UserModel');加载模型目录中admin文件夹下面的UserModel模型，那么xxx就是UserModel
+  2.$this->model('AdminModel');加载模型目录中的AdminModel模型，那么xxx就是AdminModel
+修复了:
+1.$this->ajax_echoajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true)
+  当$tip或者$data为0的时候不显示0的bug；
+2.$this->page()产生的分页条在某些情况下会js报错的bug
+3.当设置了错误处理，@不能抑制错误的bug
+
+升级提示：
+1.为了方便，2.2.5之前版本的：$this->message($msg,$view = null, $url = null, $time = 3);
+  在2.2.5以及后续版本中，参数顺序调整为：$this->message($msg, $url = null, $time = 3, $view = null);
+  升级之前如果之前代码使用了$this->message()记得修改一下参数顺序。
+2.在$system配置里面增加一项：$system['message_page_view'] = '';
+3.为了更加规范，凡是使用了$this->model($model_name,$alias_name),没有传递$alias_name参数的代码，
+  当通过$this->model->xxx,引用模型的时候xxx必须和$model_name中的模型类名称是一样的。
+  2.2.5之前的版本xxx是模型类名称的全部小写。
+
 #############################ver 2.2.4:[2014-03-17]#############################
 修复了:
 1.在$this->view()之前输出的内容会被清空的bug。

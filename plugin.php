@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.4
- * @createdtime         2014-03-17 13:57:44
+ * @since		Version 2.2.6
+ * @createdtime         2014-04-24 13:24:26
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -34,21 +34,29 @@ $system['application_folder'] = realpath('.') . '/' . 'application';
  */
 $system['controller_folder'] = $system['application_folder'] . '/controllers';
 /**
- * 存放模型文件的文件夹路径名称
+ * 存放模型文件的文件夹路径名称,支持数组
  */
 $system['model_folder'] = $system['application_folder'] . '/models';
 /**
- * 存放视图文件的文件夹路径名称
+ * 存放视图文件的文件夹路径名称,支持数组
  */
 $system['view_folder'] = $system['application_folder'] . '/views';
 /**
- * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载
+ * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载,支持数组
  */
 $system['library_folder'] = $system['application_folder'] . '/library';
 /**
- * 存放函数文件的文件夹路径名称
+ * 存放函数文件的文件夹路径名称,支持数组
  */
 $system['helper_folder'] = $system['application_folder'] . '/helper';
+/**
+ * 存放HMVC模块的文件夹路径名称
+ */
+$system['hmvc_folder'] = $system['application_folder'] . '/modules';
+/**
+ * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+ */
+$system['hmvc_modules'] = array('demo' => 'hmvc_demo');
 /**
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
@@ -64,6 +72,12 @@ $system['error_page_50x'] = 'application/error/error_50x.php';
  * 文件里面可以使用$msg变量获取出错提示内容
  */
 $system['error_page_db'] = 'application/error/error_db.php';
+/**
+ * $this->message()方法默认使用的视图，该视图会在第4个参数为null时使用。
+ * 视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
+ * 这里需要填写的是视图名称，不带视图后缀。没有就留空。
+ */
+$system['message_page_view'] = '';
 /**
  * 默认控制器文件名称,不包含后缀,支持子文件夹,比如home.welcome,
  * 就是控制器文件夹下面的home文件夹里面welcome.php(假定后缀是.php)
@@ -113,8 +127,9 @@ $system['helper_file_subfix'] = '.php';
  *      }
  *  } 
  * 3.如果无需自定义Loader，留空即可。
+ * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
  */
-$system['my_loader']='';
+$system['my_loader'] = '';
 /**
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
@@ -221,7 +236,9 @@ $system['default_timezone'] = 'PRC';
  * 比如：
  *   (1).http://localhost/index.php?welcome.index
  *   (2).http://localhost/index.php/welcome.index
- * 路由字符串是welcome.index(不包含最前面的?或者/)，路由规则都是针对“路由字符串”的。
+ *   (3).http://localhost/index.php?news/welcome.index
+ *   (4).http://localhost/index.php/news/welcome.index
+ * 路由字符串是welcome.index(不包含最前面的?、/、模块名称)，路由规则都是针对“路由字符串”的。
  * 现在定义路由规则：
  *   $system['route']=array(
  *        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
@@ -233,7 +250,7 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-    //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+        //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -263,9 +280,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => "", // 缓存文件存储默认路径
-    "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
-
+    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files缓存的时候确保文件夹存在而且可写
     /*
      * 第二驱动
      * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
