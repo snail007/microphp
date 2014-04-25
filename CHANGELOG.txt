@@ -5,11 +5,15 @@
 2.对querystring的解析。
 
 增加了：
-1.系统方法：url($acrion=null,$_)，生成url链接。
-2.系统方法：urlPath($subpath = null)，获取入口文件所在目录url路径。
-3.系统方法：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
-4.系统方法：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
+1.系统函数：url($acrion=null,$_)，生成url链接。
+2.系统函数：urlPath($subpath = null)，获取入口文件所在目录url路径。
+3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
+4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
 
+升级提示：
+1.在$system配置里面增加一项：
+  $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
+  该配置会影响url()函数生成的链接
 
 #############################ver 2.2.6[2014-04-24]#############################
 增加了：
