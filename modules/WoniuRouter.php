@@ -93,7 +93,7 @@ class WoniuRouter {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
         }
-        if (count($parameters) === 1 && empty($parameters[0])) {
+        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
             $parameters = array();
         }
         $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
@@ -206,7 +206,7 @@ class WoniuRouter {
 
     private static function folderAutoInit() {
         if (!empty(WoniuLoader::$system['folder_auto_init'])) {
-            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder');
+            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder', 'hmvc_folder');
             foreach (WoniuLoader::$system as $key => $value) {
                 if (in_array($key, $folder)) {
                     if (!is_dir($value)) {

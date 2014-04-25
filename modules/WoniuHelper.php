@@ -13,6 +13,117 @@
  * @since                Version 1.0
  * @createdtime       {createdtime}
  */
+if (!function_exists('dump')) {
+
+    /**
+     * 打印变量内容，参数和var_dump一样
+     * @param type $arg
+     * @param type $_
+     */
+    function dump($arg, $_ = null) {
+        $args = func_get_args();
+        if (WoniuInput::isCli()) {
+            call_user_func_array('var_dump', $args);
+        } else {
+            echo '<pre>';
+            call_user_func_array('var_dump', $args);
+            echo '</pre>';
+        }
+    }
+
+}
+if (!function_exists('url')) {
+
+    /**
+     * 生成url链接<br>
+     * 使用示例：<br>
+     * url(),<br>
+     * url('welcome.index'),<br>
+     * url('welcome.index','aa','bb'),<br>
+     * url('welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
+     * url('welcome.index','dd','ee',array('a'=>'bb')),<br>
+     * url('welcome.index',array('a'=>'bb','b'=>'ccc')),<br>
+     * url('','aa','bb'),<br>
+     * url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
+     * url('',array('a'=>'bb','b'=>'ccc')),<br>
+     * @return string
+     */
+    function url() {
+        $action = null;
+        $argc = func_num_args();
+        if ($argc > 0) {
+            $action = func_get_arg(0);
+        }
+        $args = array();
+        $get_str_arr = array();
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if (is_array($arg = func_get_arg($i))) {
+                    foreach ($arg as $k => $v) {
+                        $get_str_arr[] = $k . '=' . urlencode($v);
+                    }
+                } else {
+                    $args[] = $arg;
+                }
+            }
+        }
+
+        if (empty(WoniuLoader::$system['url_rewrite'])) {
+            $app_start = '?';
+            $get_start = '&';
+        } else {
+            $app_start = '';
+            $get_start = '?';
+        }
+
+        $url_app = urlPath() . '/' .
+                (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
+                ($action . (empty($args) || empty($action) ? '' : '/' ) . implode('/', $args)) .
+                (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
+        return $url_app;
+    }
+
+}
+
+if (!function_exists('urlPath')) {
+
+    /**
+     * 获取入口文件所在目录url路径。
+     * 只能在web访问时使用，在命令行下面会抛出异常。
+     * @param type $subpath  子路径或者文件路径，如果非空就会被附加在入口文件所在目录的后面
+     * @return type           
+     * @throws Exception     
+     */
+    function urlPath($subpath = null) {
+        if (WoniuInput::isCli()) {
+            throw new Exception('function urlPath() can not be used in cli mode');
+        } else {
+            $old_path = getcwd();
+            $root = str_replace(array("/", "\\"), '/', WoniuInput::server('DOCUMENT_ROOT'));
+            chdir($root);
+            $root = getcwd();
+            $root = str_replace(array("/", "\\"), '/', $root);
+            chdir($old_path);
+            $path = path($subpath);
+            return str_replace($root, '', $path);
+        }
+    }
+
+}
+
+if (!function_exists('path')) {
+
+    /**
+     * 获取入口文件所在目录绝对路径。
+     * @param type $subpath 子路径或者文件路径，如果非空就会被附加在入口文件所在目录的绝对路径后面
+     * @return type
+     */
+    function path($subpath = null) {
+        $path = str_replace(array("/", "\\"), '/', realpath('.') . ($subpath ? '/' . trim($subpath, '/\\') : ''));
+        return truepath($path);
+    }
+
+}
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
  * @param type $key  WoniuLoader::$system的键

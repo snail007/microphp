@@ -34,4 +34,19 @@ class Route extends WoniuController{
     public function doIndex($flag=null,$flag2=null){
         echo "hello:".$flag.$flag2.$this->input->get('flag','');
     }
+    public function doTestUrl(){
+        dump(
+            url(),
+            url('welcome.index'),
+            url('welcome.index','aa','bb'),
+            url('welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee'),
+            url('welcome.index',array('a'=>'bb','b'=>'ccc')),
+            url('welcome.index','dd','ee',array('a'=>'bb')),
+            url('','aa','bb'),
+            url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),
+            url('',array('a'=>'bb','b'=>'ccc')),
+            urlPath('../public/test/'), 
+            path('/public/test/')
+         );
+    }
 }

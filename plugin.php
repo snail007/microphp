@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.6
- * @createdtime         2014-04-24 23:24:24
+ * @createdtime         2014-04-25 23:51:05
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -24,6 +24,11 @@ define('WDS', DIRECTORY_SEPARATOR);
  * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
  */
 $system['folder_auto_init'] = FALSE;
+/**
+ * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
+ * 该配置会影响url系列函数生成的href链接
+ */
+$system['url_rewrite'] = TRUE;
 /**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
