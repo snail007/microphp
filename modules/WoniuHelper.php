@@ -46,6 +46,14 @@ if (!function_exists('url')) {
      * url('','aa','bb'),<br>
      * url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
      * url('',array('a'=>'bb','b'=>'ccc')),<br>
+     * 另外可以在第一个参数开始加上:<br>
+     * #和?用来控制url中显示入口文件名称和使用相对路经<br>
+     * 默认不显示入口文件名称，使用绝对路经<br>
+     * 使用示例：<br>
+     * url('#welcome.index'),<br>
+     * url('?welcome.index'),<br>
+     * url('#?welcome.index'),<br>
+     * url('?#welcome.index'),<br>
      * @return string
      */
     function url() {
@@ -69,20 +77,24 @@ if (!function_exists('url')) {
         }
 
         if (empty(WoniuLoader::$system['url_rewrite'])) {
-            $self_name=  pathinfo(WoniuInput::server('php_self'),PATHINFO_BASENAME);
+            //url是否包含入口文件名称检查
+            $self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(WoniuInput::server('php_self'), PATHINFO_BASENAME) : '';
             $app_start = '?';
             $get_start = '&';
         } else {
-            $self_name=  '';
+            $self_name = '';
             $app_start = '';
             $get_start = '?';
         }
+        //是否使用相对路经检查
+        $path = (stripos($action, '?') === 0 || stripos($action, '?') === 1 ? '' : urlPath() . '/' );
 
-        $url_app = urlPath() . '/' .$self_name.
+        $action = ltrim($action, '#?');
+        $url_app = $path . $self_name .
                 (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
                 ($action . (empty($args) || empty($action) ? '' : '/' ) . implode('/', $args)) .
                 (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
-        return $url_app;
+        return str_replace('?&', '?', $url_app);
     }
 
 }

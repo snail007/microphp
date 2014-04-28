@@ -28,6 +28,7 @@ define('TEST_ROOT', dirname(__FILE__));
  * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
  */
 $system['folder_auto_init'] = FALSE;
+$system['url_rewrite'] = FALSE;
 /**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。

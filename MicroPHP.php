@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-04-28 10:34:21
+ * @createdtime         2014-04-28 11:15:10
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  */
 if (!function_exists('dump')) {
 
@@ -64,6 +64,14 @@ if (!function_exists('url')) {
      * url('','aa','bb'),<br>
      * url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
      * url('',array('a'=>'bb','b'=>'ccc')),<br>
+     * 另外可以在第一个参数开始加上:<br>
+     * #和?用来控制url中显示入口文件名称和使用相对路经<br>
+     * 默认不显示入口文件名称，使用绝对路经<br>
+     * 使用示例：<br>
+     * url('#welcome.index'),<br>
+     * url('?welcome.index'),<br>
+     * url('#?welcome.index'),<br>
+     * url('?#welcome.index'),<br>
      * @return string
      */
     function url() {
@@ -87,19 +95,24 @@ if (!function_exists('url')) {
         }
 
         if (empty(WoniuLoader::$system['url_rewrite'])) {
-            $self_name=  pathinfo(WoniuInput::server('php_self'),PATHINFO_BASENAME);
-            $app_start = $self_name.'?';
+            //url是否包含入口文件名称检查
+            $self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(WoniuInput::server('php_self'), PATHINFO_BASENAME) : '';
+            $app_start = '?';
             $get_start = '&';
         } else {
+            $self_name = '';
             $app_start = '';
             $get_start = '?';
         }
+        //是否使用相对路经检查
+        $path = (stripos($action, '?') === 0 || stripos($action, '?') === 1 ? '' : urlPath() . '/' );
 
-        $url_app = urlPath() . '/' .
+        $action = ltrim($action, '#?');
+        $url_app = $path . $self_name .
                 (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
                 ($action . (empty($args) || empty($action) ? '' : '/' ) . implode('/', $args)) .
                 (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
-        return $url_app;
+        return str_replace('?&', '?', $url_app);
     }
 
 }
@@ -726,7 +739,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  */
 class WoniuInput {
 
@@ -856,7 +869,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  */
 class WoniuRouter {
 
@@ -1080,7 +1093,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-04-28 10:34:21
+ * @createdtime            2014-04-28 11:15:10
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2005,7 +2018,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2118,7 +2131,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2194,7 +2207,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  */
 class WoniuDB {
 
@@ -8354,7 +8367,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-04-28 10:34:21
+ * @createdtime       2014-04-28 11:15:10
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

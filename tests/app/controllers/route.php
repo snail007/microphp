@@ -36,10 +36,10 @@ class Route extends WoniuController{
     }
     public function doTestUrl(){
         dump(
-            url(),
-            url('welcome.index'),
-            url('welcome.index','aa','bb'),
-            url('welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee'),
+            url('#?'),
+            url('#?welcome.index'),
+            url('?#welcome.index','aa','bb'),
+            url('?welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee'),
             url('welcome.index',array('a'=>'bb','b'=>'ccc')),
             url('welcome.index','dd','ee',array('a'=>'bb')),
             url('','aa','bb'),
