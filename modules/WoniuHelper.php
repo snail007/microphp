@@ -70,14 +70,15 @@ if (!function_exists('url')) {
 
         if (empty(WoniuLoader::$system['url_rewrite'])) {
             $self_name=  pathinfo(WoniuInput::server('php_self'),PATHINFO_BASENAME);
-            $app_start = $self_name.'?';
+            $app_start = '?';
             $get_start = '&';
         } else {
+            $self_name=  '';
             $app_start = '';
             $get_start = '?';
         }
 
-        $url_app = urlPath() . '/' .
+        $url_app = urlPath() . '/' .$self_name.
                 (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
                 ($action . (empty($args) || empty($action) ? '' : '/' ) . implode('/', $args)) .
                 (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
