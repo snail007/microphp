@@ -69,7 +69,8 @@ if (!function_exists('url')) {
         }
 
         if (empty(WoniuLoader::$system['url_rewrite'])) {
-            $app_start = '?';
+            $self_name=  pathinfo(WoniuInput::server('php_self'),PATHINFO_BASENAME);
+            $app_start = $self_name.'?';
             $get_start = '&';
         } else {
             $app_start = '';
