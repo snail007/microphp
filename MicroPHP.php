@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.6
- * @createdtime         2014-04-25 23:51:05
+ * @since		Version 2.2.7
+ * @createdtime         2014-04-28 10:34:21
  */
  
 
@@ -28,92 +28,121 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  */
+if (!function_exists('dump')) {
 
-/**
- * 打印变量内容，参数和var_dump一样
- * @param type $arg
- * @param type $_
- */
-function dump($arg, $_ = null) {
-    $args = func_get_args();
-    if (WoniuInput::isCli()) {
-        call_user_func_array('var_dump', $args);
-    } else {
-        echo '<pre>';
-        call_user_func_array('var_dump', $args);
-        echo '</pre>';
-    }
-}
-
-/**
- * 
- * @return string
- */
-function url() {
-    $action = null;
-    $argc = func_num_args();
-    if ($argc > 0) {
-        $action = func_get_arg(0);
-    }
-    $args = array();
-    $get_str_arr = array();
-    if ($argc > 1) {
-        for ($i = 1; $i < $argc; $i++) {
-            if (is_array($arg = func_get_arg($i))) {
-                foreach ($arg as $k => $v) {
-                    $get_str_arr[] = $k . '=' . urlencode($v);
-                }
-            } else {
-                $args[] = $arg;
-            }
+    /**
+     * 打印变量内容，参数和var_dump一样
+     * @param type $arg
+     * @param type $_
+     */
+    function dump($arg, $_ = null) {
+        $args = func_get_args();
+        if (WoniuInput::isCli()) {
+            call_user_func_array('var_dump', $args);
+        } else {
+            echo '<pre>';
+            call_user_func_array('var_dump', $args);
+            echo '</pre>';
         }
     }
 
-    if (empty(WoniuLoader::$system['url_rewrite'])) {
-        $app_start = '?';
-        $get_start = '&';
-    } else {
-        $app_start = '';
-        $get_start = '?';
+}
+if (!function_exists('url')) {
+
+    /**
+     * 生成url链接<br>
+     * 使用示例：<br>
+     * url(),<br>
+     * url('welcome.index'),<br>
+     * url('welcome.index','aa','bb'),<br>
+     * url('welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
+     * url('welcome.index','dd','ee',array('a'=>'bb')),<br>
+     * url('welcome.index',array('a'=>'bb','b'=>'ccc')),<br>
+     * url('','aa','bb'),<br>
+     * url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),<br>
+     * url('',array('a'=>'bb','b'=>'ccc')),<br>
+     * @return string
+     */
+    function url() {
+        $action = null;
+        $argc = func_num_args();
+        if ($argc > 0) {
+            $action = func_get_arg(0);
+        }
+        $args = array();
+        $get_str_arr = array();
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if (is_array($arg = func_get_arg($i))) {
+                    foreach ($arg as $k => $v) {
+                        $get_str_arr[] = $k . '=' . urlencode($v);
+                    }
+                } else {
+                    $args[] = $arg;
+                }
+            }
+        }
+
+        if (empty(WoniuLoader::$system['url_rewrite'])) {
+            $self_name=  pathinfo(WoniuInput::server('php_self'),PATHINFO_BASENAME);
+            $app_start = $self_name.'?';
+            $get_start = '&';
+        } else {
+            $app_start = '';
+            $get_start = '?';
+        }
+
+        $url_app = urlPath() . '/' .
+                (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
+                ($action . (empty($args) || empty($action) ? '' : '/' ) . implode('/', $args)) .
+                (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
+        return $url_app;
     }
 
-    $url_app = urlPath() . '/' .
-            (empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
-            ($action . (empty($args)||empty($action) ? '' : '/' ) . implode('/', $args)) .
-            (empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
-    return $url_app;
 }
 
-/**
- * 获取入口文件所在目录url路径。
- * 只能在web访问时使用，在命令行下面会抛出异常。
- * @param type $subpath  子路径或者文件路径，如果非空就会被附加在入口文件所在目录的后面
- * @return type           
- * @throws Exception     
- */
-function urlPath($subpath = null) {
-    if (WoniuInput::isCli()) {
-        throw new Exception('function urlPath() can not be used in cli mode');
-    } else {
-        $old_path = getcwd();
-        $root = str_replace(array("/", "\\"), '/', WoniuInput::server('DOCUMENT_ROOT'));
-        chdir($root);
-        $root = getcwd();
-        $root = str_replace(array("/", "\\"), '/', $root);
-        chdir($old_path);
-        $path = path($subpath);
-        return str_replace($root, '', $path);
+if (!function_exists('urlPath')) {
+
+    /**
+     * 获取入口文件所在目录url路径。
+     * 只能在web访问时使用，在命令行下面会抛出异常。
+     * @param type $subpath  子路径或者文件路径，如果非空就会被附加在入口文件所在目录的后面
+     * @return type           
+     * @throws Exception     
+     */
+    function urlPath($subpath = null) {
+        if (WoniuInput::isCli()) {
+            throw new Exception('function urlPath() can not be used in cli mode');
+        } else {
+            $old_path = getcwd();
+            $root = str_replace(array("/", "\\"), '/', WoniuInput::server('DOCUMENT_ROOT'));
+            chdir($root);
+            $root = getcwd();
+            $root = str_replace(array("/", "\\"), '/', $root);
+            chdir($old_path);
+            $path = path($subpath);
+            return str_replace($root, '', $path);
+        }
     }
+
 }
 
-function path($subpath = null) {
-    $path = str_replace(array("/", "\\"), '/', realpath('.') . ($subpath ? '/' . trim($subpath, '/\\') : ''));
-    return truepath($path);
-}
+if (!function_exists('path')) {
 
+    /**
+     * 获取入口文件所在目录绝对路径。
+     * @param type $subpath 子路径或者文件路径，如果非空就会被附加在入口文件所在目录的绝对路径后面
+     * @return type
+     */
+    function path($subpath = null) {
+        $path = str_replace(array("/", "\\"), '/', realpath('.') . ($subpath ? '/' . trim($subpath, '/\\') : ''));
+        return truepath($path);
+    }
+
+}
 /**
  * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
  * @param type $key  WoniuLoader::$system的键
@@ -696,8 +725,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  */
 class WoniuInput {
 
@@ -826,8 +855,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  */
 class WoniuRouter {
 
@@ -909,7 +938,7 @@ class WoniuRouter {
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
         }
-        if (count($parameters) === 1 && empty($parameters[0])) {
+        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
             $parameters = array();
         }
         $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
@@ -1022,7 +1051,7 @@ class WoniuRouter {
 
     private static function folderAutoInit() {
         if (!empty(WoniuLoader::$system['folder_auto_init'])) {
-            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder');
+            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder', 'hmvc_folder');
             foreach (WoniuLoader::$system as $key => $value) {
                 if (in_array($key, $folder)) {
                     if (!is_dir($value)) {
@@ -1050,8 +1079,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.6
- * @createdtime            2014-04-25 23:51:05
+ * @since                  Version 2.2.7
+ * @createdtime            2014-04-28 10:34:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1975,8 +2004,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2088,8 +2117,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2164,8 +2193,8 @@ class WoniuModel extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since                Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  */
 class WoniuDB {
 
@@ -6408,7 +6437,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.6
+ * @since		Version 2.2.7
  * @filesource
  */
 
@@ -7184,7 +7213,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.6
+ * @since		Version 2.2.7
  * @filesource
  */
 
@@ -8324,8 +8353,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.6
- * @createdtime       2014-04-25 23:51:05
+ * @since		Version 2.2.7
+ * @createdtime       2014-04-28 10:34:21
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -8342,7 +8371,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.6
+ * @since		Version 2.2.7
  * @filesource
  */
 // ------------------------------------------------------------------------

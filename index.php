@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.6
- * @createdtime         2014-04-25 23:51:05
+ * @since		Version 2.2.7
+ * @createdtime         2014-04-28 10:34:21
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -26,9 +26,9 @@ define('WDS', DIRECTORY_SEPARATOR);
 $system['folder_auto_init'] = FALSE;
 /**
  * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
- * 该配置会影响url系列函数生成的href链接
+ * 该配置会影响url()函数生成的链接
  */
-$system['url_rewrite'] = TRUE;
+$system['url_rewrite'] = FALSE;
 /**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
