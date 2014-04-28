@@ -75,6 +75,13 @@ class WoniuController extends WoniuLoaderPlus {
         return self::$woniu;
     }
 
+    /**
+     * 实例化一个控制器
+     * @staticvar array $loadedClasses
+     * @param type $classname_path
+     * @param type $hmvc_module_floder
+     * @return WoniuController
+     */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
         if (!empty($hmvc_module_floder)) {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);

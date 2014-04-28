@@ -358,7 +358,7 @@ class WoniuLoader {
      * 实例化一个loader
      * @param type $renew               是否强制重新new一个loader，默认只会new一次
      * @param type $hmvc_module_floder  hmvc模块文件夹名称
-     * @return type
+     * @return type WoniuLoader
      */
     public static function instance($renew = null, $hmvc_module_floder = null) {
         $default = WoniuLoader::$system;
