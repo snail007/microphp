@@ -44,7 +44,7 @@ class WoniuModel extends WoniuLoaderPlus {
         WoniuLoader::classAutoloadRegister();
         foreach ($model_folders as $key => $model_folder) {
             $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
-            $alias_name = strtolower($classname);
+            $alias_name = $classname;
             if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
                 return WoniuModelLoader::$model_files[$alias_name];
             }
