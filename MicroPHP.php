@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-04-28 11:15:10
+ * @createdtime         2014-05-02 18:01:09
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  */
 if (!function_exists('dump')) {
 
@@ -739,7 +739,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  */
 class WoniuInput {
 
@@ -869,7 +869,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  */
 class WoniuRouter {
 
@@ -1093,7 +1093,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-04-28 11:15:10
+ * @createdtime            2014-05-02 18:01:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1271,7 +1271,7 @@ class WoniuLoader {
             $classname = basename($file_name);
         }
         if (!$alias_name) {
-            $alias_name = strtolower($classname);
+            $alias_name = $classname;
         }
         $model_folders = $system['model_folder'];
         if (!is_array($model_folders)) {
@@ -1982,12 +1982,11 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        if (isset(self::$model_files[strtolower($classname)])) {
-            return self::$model_files[strtolower($classname)];
-        } elseif (isset(self::$model_files[$classname])) {
+        if (isset(self::$model_files[$classname])) {
             return self::$model_files[$classname];
+        } else {
+            return WoniuLoader::model($classname);
         }
-        return null;
     }
 
 }
@@ -1997,7 +1996,11 @@ class WoniuLibLoader {
     public static $lib_files = array();
 
     function __get($classname) {
-        return isset(self::$lib_files[$classname]) ? self::$lib_files[$classname] : WoniuLoader::model($classname);
+        if (isset(self::$lib_files[$classname])) {
+            return self::$lib_files[$classname];
+        } else {
+            return WoniuLoader::lib($classname);
+        }
     }
 
 }
@@ -2018,7 +2021,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2131,7 +2134,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2164,7 +2167,7 @@ class WoniuModel extends WoniuLoaderPlus {
         WoniuLoader::classAutoloadRegister();
         foreach ($model_folders as $key => $model_folder) {
             $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
-            $alias_name = strtolower($classname);
+            $alias_name = $classname;
             if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
                 return WoniuModelLoader::$model_files[$alias_name];
             }
@@ -2207,7 +2210,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  */
 class WoniuDB {
 
@@ -8367,7 +8370,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-04-28 11:15:10
+ * @createdtime       2014-05-02 18:01:09
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
