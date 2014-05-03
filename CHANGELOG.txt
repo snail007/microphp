@@ -5,7 +5,7 @@
 2.对querystring的解析。
 
 增加了：
-1.系统函数：url($acrion=null,$_)，生成url链接。
+1.系统函数：url()，生成url链接。
 2.系统函数：urlPath($subpath = null)，获取入口文件所在目录url路径。
 3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
 4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
