@@ -189,7 +189,7 @@ class WoniuLoader {
             $classname = basename($file_name);
         }
         if (!$alias_name) {
-            $alias_name = strtolower($classname);
+            $alias_name = $classname;
         }
         $model_folders = $system['model_folder'];
         if (!is_array($model_folders)) {
@@ -900,12 +900,11 @@ class WoniuModelLoader {
     public static $model_files = array();
 
     function __get($classname) {
-        if (isset(self::$model_files[strtolower($classname)])) {
-            return self::$model_files[strtolower($classname)];
-        } elseif (isset(self::$model_files[$classname])) {
+        if (isset(self::$model_files[$classname])) {
             return self::$model_files[$classname];
+        } else {
+            return WoniuLoader::model($classname);
         }
-        return null;
     }
 
 }
@@ -915,7 +914,11 @@ class WoniuLibLoader {
     public static $lib_files = array();
 
     function __get($classname) {
-        return isset(self::$lib_files[$classname]) ? self::$lib_files[$classname] : WoniuLoader::model($classname);
+        if (isset(self::$lib_files[$classname])) {
+            return self::$lib_files[$classname];
+        } else {
+            return WoniuLoader::lib($classname);
+        }
     }
 
 }

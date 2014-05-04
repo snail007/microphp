@@ -61,6 +61,13 @@ class Test_autoload extends UnitTestCase {
         $this->assertFalse(class_exists('LibAutoload_again',FALSE));
         $this->assertFalse(class_exists('ModelAutoload_again',FALSE));
         $woniu=WoniuLoader::instance();
+        $this->assertIsA($woniu->model->ModelAutoload2, 'ModelAutoload2');
+        $woniu->model('ModelAutoload2','mod2');
+        $this->assertReference($woniu->model->ModelAutoload2, $woniu->model->mod2);
+        $this->assertIsA($woniu->lib->LibAutoload2, 'LibAutoload2');
+        $woniu->lib('LibAutoload2','lib2');
+        $this->assertReference($woniu->lib->LibAutoload2, $woniu->lib->lib2);
+        
         $this->assertEqual(testFunctionAgain('hello'), 'hello');
         $this->assertIsA($woniu->lib->LibAutoload_again, 'LibAutoload_again');
         $this->assertIsA($woniu->lib->laa, 'LibAutoload_again');
