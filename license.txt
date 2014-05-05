@@ -39,7 +39,7 @@ the following conditions are met:
 
 6. Products derived from the Software may not be called "MicroPHP",
    nor may "MicroPHP" appear in their name, without prior written
-   permission from EllisLab, Inc.
+   permission from BoltedSnail, Inc.
 
 INDEMNITY
 You agree to indemnify and hold harmless the authors of the Software and

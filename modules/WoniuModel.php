@@ -20,6 +20,12 @@ class WoniuModel extends WoniuLoaderPlus {
 
     private static $instance;
 
+    /**
+     * 实例化一个模型
+     * @param type $classname_path
+     * @param type $hmvc_module_floder
+     * @return type WoniuModel
+     */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
         if (!empty($hmvc_module_floder)) {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);
@@ -36,7 +42,7 @@ class WoniuModel extends WoniuLoaderPlus {
         $classname = basename($classname_path);
 
         $model_folders = $system['model_folder'];
-         
+
         if (!is_array($model_folders)) {
             $model_folders = array($model_folders);
         }
