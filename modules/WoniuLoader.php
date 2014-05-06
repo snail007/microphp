@@ -77,27 +77,25 @@ class WoniuLoader {
     }
 
     public function database($config = NULL, $is_return = false, $force_new_conn = false) {
-        if ($is_return) {
-            $db = null;
-            //没有传递配置，使用默认配置
-            if ($force_new_conn || !is_array($config)) {
-                $woniu_db = self::$system['db'];
-                $db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
-            } else {
-                $db = WoniuDB::getInstance($config, $force_new_conn);
-            }
-            return $db;
+        $woniu_db = self::$system['db'];
+        $db_cfg_key = $woniu_db['active_group'];
+        if (is_string($config) && !empty($config)) {
+            //传递配置key
+            $db_cfg = $woniu_db[$config];
+        } elseif (is_array($config)) {
+            //传递配置
+            $db_cfg = $config;
         } else {
             //没有传递配置，使用默认配置
-            if (!is_array($config)) {
-                if ($force_new_conn || !is_object($this->db)) {
-                    $woniu_db = self::$system['db'];
-                    return $this->db = WoniuDB::getInstance($woniu_db[$woniu_db['active_group']], $force_new_conn);
-                }
-                return $this->db;
-            } else {
-                return $this->db = WoniuDB::getInstance($config, $force_new_conn);
+            $db_cfg = $woniu_db[$db_cfg_key];
+        }
+        if ($is_return) {
+            return WoniuDB::getInstance($db_cfg, $force_new_conn);
+        } else {
+            if ($force_new_conn || !is_object($this->db)) {
+                return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
+            return $this->db;
         }
     }
 

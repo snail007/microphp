@@ -9,7 +9,15 @@
 2.系统函数：urlPath($subpath = null)，获取入口文件所在目录url路径。
 3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
 4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
-
+5.可以像下面加载数据库了，也就是第一个参数支持字符串，字符串即$system['db']的key；
+(1).$this->database('default');
+    $this->db变成了使用$system['db']['default']配置组的数据库连接。
+(2).$this->database('default',true);
+    $this->db保持原来不变，这个方法会返回一个使用$system['db']['default']配置组的数据库对象。
+(3).$this->database('pdo');
+    $this->db变成了使用$system['db']['pdo']组配置的数据库连接。
+(4).$this->database('pdo',true);。
+    $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
