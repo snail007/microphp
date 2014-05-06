@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-05 15:37:41
+ * @createdtime         2014-05-06 09:58:39
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  */
 if (!function_exists('dump')) {
 
@@ -739,7 +739,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  */
 class WoniuInput {
 
@@ -869,7 +869,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  */
 class WoniuRouter {
 
@@ -1042,7 +1042,7 @@ class WoniuRouter {
         $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
         //$system被hmvc模块配置重写
         include($module);
-        //共享主配置：模型，视图，类库，helper
+        //共享主配置：模型，视图，类库，helper,同时保留自动加载的东西
         foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder','helper_file_autoload','library_file_autoload','models_file_autoload') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
@@ -1093,7 +1093,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-05 15:37:41
+ * @createdtime            2014-05-06 09:58:39
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2021,7 +2021,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2141,7 +2141,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2188,7 +2188,7 @@ class WoniuModel extends WoniuLoaderPlus {
                 //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
                 //如此一来就能满足两种模式
                 //WoniuLoader::classAutoloadRegister();
-                if (!class_exists($filepath, FALSE)) {
+                if (!class_exists($classname, FALSE)) {
                     WoniuLoader::includeOnce($filepath);
                 }
                 if (class_exists($classname, FALSE)) {
@@ -2224,7 +2224,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  */
 class WoniuDB {
 
@@ -8384,7 +8384,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-05 15:37:41
+ * @createdtime       2014-05-06 09:58:39
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
