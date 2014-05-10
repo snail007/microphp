@@ -10,6 +10,24 @@ class WoniuLoaderPlus extends WoniuLoader {
     
 }
 
+class CI_DB_active_record {
+
+    /**
+     * @return CI_DB_result 
+     */
+    public function get() {
+        
+    }
+
+    /**
+     * @return CI_DB_result 
+     */
+    public function get_where() {
+        
+    }
+
+}
+
 /**
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
