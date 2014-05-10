@@ -16,7 +16,7 @@ function errorHandle() {
  * 
  */
 
-function ip_info($ip_addr) {
+function ip_info($ip_addr,$key=null) {
     $ip_addr = str_replace(" ", "", $ip_addr);    //去除字符串中的空格
     $arr = explode('/', $ip_addr);               //对IP段进行解剖
     $ip_addr = $arr[0];                         //得到IP地址
@@ -52,5 +52,5 @@ function ip_info($ip_addr) {
     $ips['netaddress'] = long2ip($nw);              //子网地址
     $ips['broadcast'] = long2ip($bc);              //广播地址
 
-    return $ips;
+    return is_null($key)?$ips:$ips[$key];
 }
