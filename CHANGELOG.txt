@@ -18,6 +18,7 @@
     $this->db变成了使用$system['db']['pdo']组配置的数据库连接。
 (4).$this->database('pdo',true);。
     $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
+6.系统函数：chRsKey($rs, $col)，改变结果集数组key。
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。

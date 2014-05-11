@@ -617,6 +617,23 @@ if (!function_exists('getRsCol')) {
     }
 
 }
+if (!function_exists('chRsKey')) {
+
+    /**
+     * 改变结果集数组key
+     * @param type $rs  结果集
+     * @param type $col 作为结果集key的字段名称
+     * @return type
+     */
+    function chRsKey($rs, $col) {
+        $_rs = array();
+        foreach ($rs as $v) {
+            $_rs[$v[$col]] = $v;
+        }
+        return $_rs;
+    }
+
+}
 if (!function_exists('sortRs')) {
 
     /**
