@@ -52,7 +52,7 @@ class WoniuInput {
     }
 
     /**
-     * $system配置中方法前缀
+     * $system配置中方法前缀,比如：do
      * @return type
      */
     public static function method_prefix() {

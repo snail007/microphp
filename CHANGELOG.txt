@@ -19,6 +19,35 @@
 (4).$this->database('pdo',true);。
     $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
 6.系统函数：chRsKey($rs, $col)，改变结果集数组key。
+7.$this->input增加了获取路由各种信息的方法。
+具体如下：
+    1.$this->input->module_name()
+      hmvc模块名称，没有模块就为空
+    2.$this->input->method_path()
+      url中方法的路径,比如：1.home.index , 2.user.home.index ，user是文件夹
+    3.$this->input->method_name()
+      url中方法名称,比如：index
+    4.$this->input->method_prefix()
+      $system配置中方法前缀,比如：do
+    5.$this->input->controller_path()
+      url中控制器的路径，比如：1.home 2.user.home ，user是文件夹
+    6.$this->input->controller_name()
+      url中控制器名称，比如：home 
+    7.$this->input->folder_name()
+      url中文件夹名称，没有文件夹返回空 
+    8.$this->input->controller_file()
+      请求的控制器文件绝对路径，比如：/home/www/app/controllers/home.php
+    9.$this->input->class_name()
+      请求的控制器类名称，比如：Home 
+    10.$this->input->class_name()
+      请求的控制器方法名称，比如：doIndex 
+    11.$this->input->parameters($key = null)
+      传递给控制器方法的所有参数的数组，参数为空时返回空数组
+      $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+      比如：
+         1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')。
+         2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
+
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
