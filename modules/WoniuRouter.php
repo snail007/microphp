@@ -55,7 +55,17 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        $pathinfo_query = self::checkHmvc(self::getQueryStr());
+        
+        $pathinfo_query = self::getQueryStr();
+        
+        //路由hmvc模块名称信息检查
+        $router['module']='';
+        $_module = current(explode('/', $pathinfo_query));
+        if (isset(WoniuLoader::$system['hmvc_modules'][$_module])) {
+            $router['module']=$_module;
+        }
+        
+        $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
@@ -185,7 +195,7 @@ class WoniuRouter {
         //$system被hmvc模块配置重写
         include($module);
         //共享主配置：模型，视图，类库，helper,同时保留自动加载的东西
-        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder','helper_file_autoload','library_file_autoload','models_file_autoload') as $folder) {
+        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder', 'helper_file_autoload', 'library_file_autoload', 'models_file_autoload') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }
