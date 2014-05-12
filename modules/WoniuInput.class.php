@@ -22,6 +22,118 @@ class WoniuInput {
 
     public static $router;
 
+    /**
+     * hmvc模块名称，没有模块就为空
+     * @return type
+     */
+    public static function module_name() {
+        return self::$router['module'];
+    }
+
+    /**
+     * url中方法的路径<br/>
+     * 比如：<br>
+     * 1.home.index<br>
+     * 2.user.home.index ，user是文件夹<br>
+     * @return type
+     */
+    public static function method_path() {
+        return self::$router['mpath'];
+    }
+
+    /**
+     * url中方法名称<br/>
+     * 比如：<br>
+     * 1.index<br>
+     * @return type
+     */
+    public static function method_name() {
+        return self::$router['m'];
+    }
+
+    /**
+     * $system配置中方法前缀
+     * @return type
+     */
+    public static function method_prefix() {
+        return self::$router['prefix'];
+    }
+
+    /**
+     * url中控制器的路径<br/>
+     * 比如：<br>
+     * 1.home<br>
+     * 2.user.home ，user是文件夹<br>
+     * @return type
+     */
+    public static function controller_path() {
+        return self::$router['cpath'];
+    }
+
+    /**
+     * url中控制器名称<br/>
+     * 比如：<br>
+     * 1.home<br>
+     * @return type
+     */
+    public static function controller_name() {
+        return self::$router['c'];
+    }
+
+    /**
+     * url中文件夹名称，没有文件夹返回空<br/>
+     * 比如：<br/>
+     * 1.user
+     */
+    public static function folder_name() {
+        return self::$router['folder'];
+    }
+
+    /**
+     * 请求的控制器文件绝对路径<br/>
+     * 比如：/home/www/app/controllers/home.php<br/>
+     * 
+     */
+    public static function controller_file() {
+        return self::$router['file'];
+    }
+
+    /**
+     * 请求的控制器类名称<br/>
+     * 比如：Home
+     */
+    public static function class_name() {
+        return self::$router['class'];
+    }
+
+    /**
+     * 请求的控制器方法名称<br/>
+     * 比如：doIndex
+     */
+    public static function class_method_name() {
+        return self::$router['method'];
+    }
+
+    /**
+     * 传递给控制器方法的所有参数的数组，参数为空时返回空数组<br/>
+     * 比如：<br/>
+     * 1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')<br/>
+     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
+     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+     * @return null
+     */
+    public static function parameters($key = null) {
+        if (!is_null($key)) {
+            if (isset(self::$router['parameters'][$key])) {
+                return self::$router['parameters'][$key];
+            } else {
+                return null;
+            }
+        } else {
+            return self::$router['parameters'];
+        }
+    }
+
     public static function get_post($key = null, $default = null, $xss_clean = false) {
         $get = self::gpcs('_GET', $key, $default);
         $val = $get === null ? self::gpcs('_POST', $key, $default) : $get;

@@ -46,7 +46,8 @@ class Route extends WoniuController{
             url('',array('a'=>'bb','b'=>'ccc'),'dd','ee'),
             url('',array('a'=>'bb','b'=>'ccc')),
             urlPath('../public/test/'), 
-            path('/public/test/')
+            path('/public/test/'),
+            WoniuInput::$router
          );
     }
 }

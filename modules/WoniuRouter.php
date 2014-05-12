@@ -59,7 +59,6 @@ class WoniuRouter {
         $pathinfo_query = self::getQueryStr();
         
         //路由hmvc模块名称信息检查
-        $router['module']='';
         $_module = current(explode('/', $pathinfo_query));
         if (isset(WoniuLoader::$system['hmvc_modules'][$_module])) {
             $router['module']=$_module;
