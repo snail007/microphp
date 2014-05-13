@@ -178,13 +178,14 @@ class WoniuRouter {
         if ($_module = self::getHmvcModuleName($pathinfo_query)) {
             $_system = WoniuLoader::$system;
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
-            return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
+            return preg_replace('|^' . $_module . '[\./&]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
     }
 
     private static function getHmvcModuleName($pathinfo_query) {
-        $_module = current(explode('/', $pathinfo_query));
+        $_module = current(explode('&', $pathinfo_query));
+        $_module = current(explode('/', $_module));
         $_system = WoniuLoader::$system;
         if (isset($_system['hmvc_modules'][$_module])) {
             return $_module;
