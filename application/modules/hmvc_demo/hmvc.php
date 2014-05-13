@@ -38,7 +38,7 @@
 /**
  * --------------------系统配置-------------------------
  */
-$system['application_folder'] = __DIR__;
+$system['application_folder'] = dirname(__FILE__);
 
 $system['controller_folder'] = $system['application_folder'] . '/controllers';
 
