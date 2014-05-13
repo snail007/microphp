@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-13 11:09:57
+ * @createdtime         2014-05-13 11:20:06
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  */
 if (!function_exists('dump')) {
 
@@ -756,7 +756,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  */
 class WoniuInput {
 
@@ -998,7 +998,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  */
 class WoniuRouter {
 
@@ -1042,15 +1042,12 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        
+
         $pathinfo_query = self::getQueryStr();
-        
+
         //路由hmvc模块名称信息检查
-        $_module = current(explode('/', $pathinfo_query));
-        if (isset(WoniuLoader::$system['hmvc_modules'][$_module])) {
-            $router['module']=$_module;
-        }
-        
+        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
@@ -1165,14 +1162,22 @@ class WoniuRouter {
     }
 
     private static function checkHmvc($pathinfo_query) {
-        //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
-        $_module = current(explode('/', $pathinfo_query));
-        $_system = WoniuLoader::$system;
-        if (isset($_system['hmvc_modules'][$_module])) {
+        if ($_module = self::getHmvcModuleName($pathinfo_query)) {
+            $_system = WoniuLoader::$system;
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
             return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    private static function getHmvcModuleName($pathinfo_query) {
+        $_module = current(explode('/', $pathinfo_query));
+        $_system = WoniuLoader::$system;
+        if (isset($_system['hmvc_modules'][$_module])) {
+            return $_module;
+        } else {
+            return '';
+        }
     }
 
     public static function switchHmvcConfig($hmvc_folder) {
@@ -1231,7 +1236,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-13 11:09:57
+ * @createdtime            2014-05-13 11:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2157,7 +2162,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2277,7 +2282,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2360,7 +2365,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  */
 class WoniuDB {
 
@@ -8520,7 +8525,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-13 11:09:57
+ * @createdtime       2014-05-13 11:20:06
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

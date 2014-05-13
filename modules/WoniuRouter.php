@@ -55,15 +55,12 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        
+
         $pathinfo_query = self::getQueryStr();
-        
+
         //路由hmvc模块名称信息检查
-        $_module = current(explode('/', $pathinfo_query));
-        if (isset(WoniuLoader::$system['hmvc_modules'][$_module])) {
-            $router['module']=$_module;
-        }
-        
+        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
@@ -178,14 +175,22 @@ class WoniuRouter {
     }
 
     private static function checkHmvc($pathinfo_query) {
-        //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
-        $_module = current(explode('/', $pathinfo_query));
-        $_system = WoniuLoader::$system;
-        if (isset($_system['hmvc_modules'][$_module])) {
+        if ($_module = self::getHmvcModuleName($pathinfo_query)) {
+            $_system = WoniuLoader::$system;
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
             return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    private static function getHmvcModuleName($pathinfo_query) {
+        $_module = current(explode('/', $pathinfo_query));
+        $_system = WoniuLoader::$system;
+        if (isset($_system['hmvc_modules'][$_module])) {
+            return $_module;
+        } else {
+            return '';
+        }
     }
 
     public static function switchHmvcConfig($hmvc_folder) {
