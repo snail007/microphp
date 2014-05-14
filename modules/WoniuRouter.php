@@ -55,7 +55,13 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        $pathinfo_query = self::checkHmvc(self::getQueryStr());
+
+        $pathinfo_query = self::getQueryStr();
+
+        //路由hmvc模块名称信息检查
+        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+
+        $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
@@ -169,14 +175,23 @@ class WoniuRouter {
     }
 
     private static function checkHmvc($pathinfo_query) {
-        //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
-        $_module = current(explode('/', $pathinfo_query));
-        $_system = WoniuLoader::$system;
-        if (isset($_system['hmvc_modules'][$_module])) {
+        if ($_module = self::getHmvcModuleName($pathinfo_query)) {
+            $_system = WoniuLoader::$system;
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
-            return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
+            return preg_replace('|^' . $_module . '[\./&]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    private static function getHmvcModuleName($pathinfo_query) {
+        $_module = current(explode('&', $pathinfo_query));
+        $_module = current(explode('/', $_module));
+        $_system = WoniuLoader::$system;
+        if (isset($_system['hmvc_modules'][$_module])) {
+            return $_module;
+        } else {
+            return '';
+        }
     }
 
     public static function switchHmvcConfig($hmvc_folder) {
@@ -185,7 +200,7 @@ class WoniuRouter {
         //$system被hmvc模块配置重写
         include($module);
         //共享主配置：模型，视图，类库，helper,同时保留自动加载的东西
-        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder','helper_file_autoload','library_file_autoload','models_file_autoload') as $folder) {
+        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder', 'helper_file_autoload', 'library_file_autoload', 'models_file_autoload') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }

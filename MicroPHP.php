@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-14 22:20:47
+ * @createdtime         2014-05-13 11:39:58
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  */
 if (!function_exists('dump')) {
 
@@ -756,11 +756,123 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  */
 class WoniuInput {
 
     public static $router;
+
+    /**
+     * hmvc模块名称，没有模块就为空
+     * @return type
+     */
+    public static function module_name() {
+        return self::$router['module'];
+    }
+
+    /**
+     * url中方法的路径<br/>
+     * 比如：<br>
+     * 1.home.index<br>
+     * 2.user.home.index ，user是文件夹<br>
+     * @return type
+     */
+    public static function method_path() {
+        return self::$router['mpath'];
+    }
+
+    /**
+     * url中方法名称<br/>
+     * 比如：<br>
+     * 1.index<br>
+     * @return type
+     */
+    public static function method_name() {
+        return self::$router['m'];
+    }
+
+    /**
+     * $system配置中方法前缀,比如：do
+     * @return type
+     */
+    public static function method_prefix() {
+        return self::$router['prefix'];
+    }
+
+    /**
+     * url中控制器的路径<br/>
+     * 比如：<br>
+     * 1.home<br>
+     * 2.user.home ，user是文件夹<br>
+     * @return type
+     */
+    public static function controller_path() {
+        return self::$router['cpath'];
+    }
+
+    /**
+     * url中控制器名称<br/>
+     * 比如：<br>
+     * 1.home<br>
+     * @return type
+     */
+    public static function controller_name() {
+        return self::$router['c'];
+    }
+
+    /**
+     * url中文件夹名称，没有文件夹返回空<br/>
+     * 比如：<br/>
+     * 1.user
+     */
+    public static function folder_name() {
+        return self::$router['folder'];
+    }
+
+    /**
+     * 请求的控制器文件绝对路径<br/>
+     * 比如：/home/www/app/controllers/home.php<br/>
+     * 
+     */
+    public static function controller_file() {
+        return self::$router['file'];
+    }
+
+    /**
+     * 请求的控制器类名称<br/>
+     * 比如：Home
+     */
+    public static function class_name() {
+        return self::$router['class'];
+    }
+
+    /**
+     * 请求的控制器方法名称<br/>
+     * 比如：doIndex
+     */
+    public static function class_method_name() {
+        return self::$router['method'];
+    }
+
+    /**
+     * 传递给控制器方法的所有参数的数组，参数为空时返回空数组<br/>
+     * 比如：<br/>
+     * 1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')<br/>
+     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
+     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+     * @return null
+     */
+    public static function parameters($key = null) {
+        if (!is_null($key)) {
+            if (isset(self::$router['parameters'][$key])) {
+                return self::$router['parameters'][$key];
+            } else {
+                return null;
+            }
+        } else {
+            return self::$router['parameters'];
+        }
+    }
 
     public static function get_post($key = null, $default = null, $xss_clean = false) {
         $get = self::gpcs('_GET', $key, $default);
@@ -886,7 +998,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  */
 class WoniuRouter {
 
@@ -930,7 +1042,13 @@ class WoniuRouter {
     }
 
     private static function parseURI() {
-        $pathinfo_query = self::checkHmvc(self::getQueryStr());
+
+        $pathinfo_query = self::getQueryStr();
+
+        //路由hmvc模块名称信息检查
+        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+
+        $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
@@ -1044,14 +1162,23 @@ class WoniuRouter {
     }
 
     private static function checkHmvc($pathinfo_query) {
-        //$_pathinfo_query = str_replace('.', '/', $pathinfo_query);
-        $_module = current(explode('/', $pathinfo_query));
-        $_system = WoniuLoader::$system;
-        if (isset($_system['hmvc_modules'][$_module])) {
+        if ($_module = self::getHmvcModuleName($pathinfo_query)) {
+            $_system = WoniuLoader::$system;
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
-            return preg_replace('|^' . $_module . '[\./]?|', '', $pathinfo_query);
+            return preg_replace('|^' . $_module . '[\./&]?|', '', $pathinfo_query);
         }
         return $pathinfo_query;
+    }
+
+    private static function getHmvcModuleName($pathinfo_query) {
+        $_module = current(explode('&', $pathinfo_query));
+        $_module = current(explode('/', $_module));
+        $_system = WoniuLoader::$system;
+        if (isset($_system['hmvc_modules'][$_module])) {
+            return $_module;
+        } else {
+            return '';
+        }
     }
 
     public static function switchHmvcConfig($hmvc_folder) {
@@ -1060,7 +1187,7 @@ class WoniuRouter {
         //$system被hmvc模块配置重写
         include($module);
         //共享主配置：模型，视图，类库，helper,同时保留自动加载的东西
-        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder','helper_file_autoload','library_file_autoload','models_file_autoload') as $folder) {
+        foreach (array('model_folder', 'view_folder', 'library_folder', 'helper_folder', 'helper_file_autoload', 'library_file_autoload', 'models_file_autoload') as $folder) {
             if (!is_array($_system[$folder])) {
                 $_system[$folder] = array($_system[$folder]);
             }
@@ -1110,7 +1237,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-14 22:20:47
+ * @createdtime            2014-05-13 11:39:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2435,7 +2562,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2555,7 +2682,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2638,7 +2765,7 @@ class WoniuModel extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  */
 class WoniuDB {
 
@@ -8798,7 +8925,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-14 22:20:47
+ * @createdtime       2014-05-13 11:39:58
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
