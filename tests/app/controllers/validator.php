@@ -32,23 +32,24 @@
 class Validator extends WoniuController {
 
     public function doIndex() {
-        $rules = array(
-            'email' => eval($this->input->post('rule'))
-        );
+         $rules = eval($this->input->post('rule'));
+        $rules = !is_array($rules) ? array() : $rules;
         $data = $this->input->post();
-        if (is_null($msg = $this->checkData($rules, $data,$return))) {
+        if (is_null($msg = $this->checkData($rules, $data, $return))) {
             echo 'validator okay.';
         } else {
             echo $msg;
         }
     }
-    public function doCall(){
+
+    public function doCall() {
         //$this->callFunc(array($this,'callTest'),array('self obj calltest1','2'));
-        $this->callFunc(array($this,'callTest2'),array('self obj calltest2','2'));
-        $this->callFunc('Validator::callTest',array('self obj calltest3','2'));
-        $this->callFunc('callTest',array('self obj calltest4','2'));
-        $this->callFunc('var_dump',array('self obj calltest5','2'));
+        $this->callFunc(array($this, 'callTest2'), array('self obj calltest2', '2'));
+        $this->callFunc('Validator::callTest', array('self obj calltest3', '2'));
+        $this->callFunc('callTest', array('self obj calltest4', '2'));
+        $this->callFunc('var_dump', array('self obj calltest5', '2'));
     }
+
     private static function callTest() {
         var_dump(func_get_args());
     }
