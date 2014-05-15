@@ -6,8 +6,38 @@
 
 增加了：
 1.系统函数：url()，生成url链接。
+    可以在第一个参数开始加上:#用来控制url中显示入口文件名称和?用来控制使用相对路经。
+    默认不显示入口文件名称，使用绝对路经
+    使用示例：
+    1. url('#?')
+    2. url('#?welcome.index')
+    3. url('?#welcome.index','aa','bb')
+    4. url('?welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee')
+    5. url('#welcome.index',array('a'=>'bb','b'=>'ccc'))
+    6. url('welcome.index','dd','ee',array('a'=>'bb'))
+    7. url('','aa','bb')
+    8. url('',array('a'=>'bb','b'=>'ccc'),'dd','ee')
+    9. url('',array('a'=>'bb','b'=>'ccc'))
+    示例输出如下：
+    1. indexfortest.php
+    2. indexfortest.php?welcome.index
+    3. indexfortest.php?welcome.index/aa/bb
+    4. ?welcome.index/dd/ee&a=bb&b=ccc
+    5. /microphp/tests/indexfortest.php?welcome.index&a=bb&b=ccc
+    6. /microphp/tests/?welcome.index/dd/ee&a=bb
+    7. /microphp/tests/?aa/bb
+    8. /microphp/tests/?dd/ee&a=bb&b=ccc
+    9. /microphp/tests/?a=bb&b=ccc
 2.系统函数：urlPath($subpath = null)，获取入口文件所在目录url路径。
+  使用示例：
+  1. urlPath('../public/test/')
+  示例输出如下：
+  1. /microphp/public/test
 3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
+  使用示例：
+  1. path('/public/test/')
+  示例输出如下：
+  1. /home/pm/gitcode/microphp/tests/public/test
 4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
 5.可以像下面加载数据库了，也就是第一个参数支持字符串，字符串即$system['db']的key；
   (1).$this->database('default');
@@ -193,11 +223,11 @@
 1.HMVC支持。
     对应配置项：
     /**
-     * 存放HMVC模块的文件夹路径名称
+存放HMVC模块的文件夹路径名称
      */
     $system['hmvc_folder'] = $system['application_folder'] . '/modules';
     /**
-     * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
      */
     $system['hmvc_modules'] = array('demo' => 'hmvc_demo');
 
@@ -498,24 +528,24 @@ $system['log_error_handle'] = array(
 $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
-     * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+默认存储方式
+可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
-     * 默认缓存文件存储的路径
-     * 使用绝对全路径，比如： /home/username/cache
-     * 留空，系统自己选择
+默认缓存文件存储的路径
+使用绝对全路径，比如： /home/username/cache
+留空，系统自己选择
      */
     "path" => "", // 缓存文件存储默认路径
     "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
 
     /*
-     * 第二驱动
-     * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
-     * 这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
-     * $key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
+第二驱动
+比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
+这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
+$key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
      */
     "fallback" => array(
         "memcache" => "files",
@@ -527,19 +557,19 @@ $system['cache_config'] = array(
         "sqlite" => "files",
     ),
     /*
-     * .htaccess 保护
-     * true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
+.htaccess 保护
+true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
      */
     "htaccess" => false,
     /*
-     * Memcache服务器地址;
+Memcache服务器地址;
      */
     "server" => array(
         array("192.168.199.25", 11211, 1),
     //  array("new.host.ip",11211,1),
     ),
     /*
-     * Redis服务器地址;
+Redis服务器地址;
      */
     "redis" => array(
         'type'=>'tcp',//sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
@@ -579,8 +609,8 @@ $system['session_handle'] = array(
         'replicaSet' => false,
     ),
     /**
-     * mysql表结构
-     *   CREATE TABLE `session_handler_table` (
+mysql表结构
+  CREATE TABLE `session_handler_table` (
       `id` varchar(255) NOT NULL,
       `data` mediumtext NOT NULL,
       `timestamp` int(255) NOT NULL,
@@ -598,13 +628,13 @@ $system['session_handle'] = array(
         'table' => 'session_handler_table',
     ),
     /**
-     * memcache采用的是session.save_handler管理机制
-     * 需要php安装memcache拓展支持
+memcache采用的是session.save_handler管理机制
+需要php安装memcache拓展支持
      */
     'memcache' => "tcp://192.168.199.25:11211",
     /**
-     * redis采用的是session.save_handler管理机制
-     * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
+redis采用的是session.save_handler管理机制
+需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
      */
     'redis' => "tcp://192.168.199.25:6379",
 );
