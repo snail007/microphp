@@ -119,14 +119,16 @@
         $user = table('admin');
         $_POST['username'] = 'test';
         //$_POST['username'] = 'testaa';
-        $_POST['password'] = 'testtesttesttest';
+        $_POST['pass'] = 'testtesttesttest';
         $rule = array(
             'username' => array($this->rule->range_len(5, 16) => '用户名5-16字符'),
-            'password' => array($this->rule->len(16) => '密码16字符')
+            'password' => array($this->rule->len(16) => '密码16字符'),
         );
+        $map=array('user'=>'username','pass'=>'password');
         $data = array();
-        if (is_null($msg = $user->check(null, $data, $rule))) {
-            dump($user->update($data,3));
+        if (is_null($msg = $article->check($_POST, $data, $rule,$map))) {
+            //dump($data);
+            dump($article->update($data,3));
         } else {
             echo $msg;
         }

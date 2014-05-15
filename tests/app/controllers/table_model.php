@@ -52,8 +52,8 @@ class table_model extends WoniuController {
         $map=array('user'=>'username','pass'=>'password','test'=>'test');
         $data = array();
         if (is_null($msg = $article->check($_POST, $data, $rule,$map))) {
-            dump($data);
-            //dump($article->update($data,3));
+            //dump($data);
+            dump($article->update($data,3));
         } else {
             echo $msg;
         }

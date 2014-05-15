@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-15 12:31:23
+ * @createdtime         2014-05-15 15:24:45
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  */
 if (!function_exists('dump')) {
 
@@ -769,7 +769,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  */
 class WoniuInput {
 
@@ -1011,7 +1011,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  */
 class WoniuRouter {
 
@@ -1250,7 +1250,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-15 12:31:23
+ * @createdtime            2014-05-15 15:24:45
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1781,7 +1781,7 @@ class WoniuLoader {
      * $source_data和$map的key一致，$map的value是返回数据的key
      * 根据$map的key读取$source_data中的数据，结果是以map的value为key的数数组
      * 
-     * @param Array $map 字段映射数组
+     * @param Array $map 字段映射数组,格式：array('表单name名称'=>'表字段名称',...)
      */
     public function readData(Array $map, $source_data = null) {
         $data = array();
@@ -2575,7 +2575,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2695,7 +2695,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2911,7 +2911,7 @@ class WoniuTableModel extends WoniuModel {
      *                                               )<br/>
      *                               ,...<br/>
      *                             )<br/>
-     * @param type $map  字段映射信息数组。格式：array('表字段名称'=>'表单name名称',...)
+     * @param type $map  字段映射信息数组。格式：array('表单name名称'=>'表字段名称',...)
      * @return string 返回null:验证通过。非空字符串:验证失败提示信息。 
      */
     public function check($source_data, &$ret_data, $rule = null, $map = null) {
@@ -3134,7 +3134,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  */
 class WoniuDB {
 
@@ -9294,7 +9294,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-15 12:31:23
+ * @createdtime       2014-05-15 15:24:45
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
