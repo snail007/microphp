@@ -74,11 +74,23 @@
 
     6.根据条件获取多条记录,并用id排序
     $table_model->find(array('id >'=>10),true,'id asc')
+  (2).findAll($where = null, $orderby = NULL, $limit = null, $fileds = null),获取所有数据。
+      下面是几个例子：
+    1.查询表所有数据。
+      $table_model->findAll()
+    2.查询表中type为1的所有数据。
+      $table_model->findAll(array('type'=>1))
+    3.查询表中type为1的所有数据，并且按着id倒序排列。
+      $table_model->findAll(array('type'=>1),'id desc')
+    4.查询表中type为1的按着id倒序排列的100条数据。
+      $table_model->findAll(array('type'=>1),'id desc',100)
+    5.查询表中type为1的按着id倒序排列的100条数据，同时只获取id和name两个字段。
+      $table_model->findAll(array('type'=>1),'id desc',100,'id,name')
 
-  (2).findCol($col, $where, $is_rows = false, $order_by = null)方法,查询字段数据
+  (3).findCol($col, $where, $is_rows = false, $order_by = null)方法,查询字段数据
    findCol和find类似，值是获取的是某个字段的值或者数组，示例可以参考find方法。
 
-  (3).delete($values, Array $cond = NULL)方法,删除数据
+  (4).delete($values, Array $cond = NULL)方法,删除数据
    delete方法是用来删除数据。
     下面是几个例子：
 
@@ -91,7 +103,7 @@
     3.删除主键是10,11,12记录中gid是3的记录
     $table_model->delete(array(10,11,12),array('gid'=>3))
 
-  (4).deleteIn($key, $values, Array $cond = NULL)方法,删除数据
+  (5).deleteIn($key, $values, Array $cond = NULL)方法,删除数据
     下面是几个例子：
 
     1.删除cat_id是3的记录
@@ -102,7 +114,7 @@
 
     3.删除cat_id是3,4,5记录中id大于100的记录
     $table_model->deleteIn(‘cat_id’,array(3,4,5),array('id >'=>100))
-  (5).check($source_data, &$ret_data, $rule = null, $map = null)方法,验证数据
+  (6).check($source_data, &$ret_data, $rule = null, $map = null)方法,验证数据
    参数说明：
    $source_data 数据源，要检查的数据
    $ret_data    数据验证通过$ret_data是验证规则处理后的数据用户插入或者更新到数据库,数据验证失败$ret_data是空数组
