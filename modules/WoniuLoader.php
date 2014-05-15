@@ -542,7 +542,7 @@ class WoniuLoader {
      * $source_data和$map的key一致，$map的value是返回数据的key
      * 根据$map的key读取$source_data中的数据，结果是以map的value为key的数数组
      * 
-     * @param Array $map 字段映射数组
+     * @param Array $map 字段映射数组,格式：array('表单name名称'=>'表字段名称',...)
      */
     public function readData(Array $map, $source_data = null) {
         $data = array();

@@ -10,38 +10,38 @@
 3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
 4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
 5.可以像下面加载数据库了，也就是第一个参数支持字符串，字符串即$system['db']的key；
-(1).$this->database('default');
-    $this->db变成了使用$system['db']['default']配置组的数据库连接。
-(2).$this->database('default',true);
-    $this->db保持原来不变，这个方法会返回一个使用$system['db']['default']配置组的数据库对象。
-(3).$this->database('pdo');
-    $this->db变成了使用$system['db']['pdo']组配置的数据库连接。
-(4).$this->database('pdo',true);。
-    $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
+  (1).$this->database('default');
+      $this->db变成了使用$system['db']['default']配置组的数据库连接。
+  (2).$this->database('default',true);
+      $this->db保持原来不变，这个方法会返回一个使用$system['db']['default']配置组的数据库对象。
+  (3).$this->database('pdo');
+      $this->db变成了使用$system['db']['pdo']组配置的数据库连接。
+  (4).$this->database('pdo',true);。
+      $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
 6.系统函数：chRsKey($rs, $col)，改变结果集数组key。
 7.$this->input增加了获取路由各种信息的方法。
 具体如下：
-    1.$this->input->module_name()
+    (1).$this->input->module_name()
       hmvc模块名称，没有模块就为空
-    2.$this->input->method_path()
+    (2).$this->input->method_path()
       url中方法的路径,比如：1.home.index , 2.user.home.index ，user是文件夹
-    3.$this->input->method_name()
+    (3).$this->input->method_name()
       url中方法名称,比如：index
-    4.$this->input->method_prefix()
+    (4).$this->input->method_prefix()
       $system配置中方法前缀,比如：do
-    5.$this->input->controller_path()
+    (5).$this->input->controller_path()
       url中控制器的路径，比如：1.home 2.user.home ，user是文件夹
-    6.$this->input->controller_name()
+    (6).$this->input->controller_name()
       url中控制器名称，比如：home 
-    7.$this->input->folder_name()
+    (7).$this->input->folder_name()
       url中文件夹名称，没有文件夹返回空 
-    8.$this->input->controller_file()
+    (8).$this->input->controller_file()
       请求的控制器文件绝对路径，比如：/home/www/app/controllers/home.php
-    9.$this->input->class_name()
+    (9).$this->input->class_name()
       请求的控制器类名称，比如：Home 
-    10.$this->input->class_name()
+    (10).$this->input->class_name()
       请求的控制器方法名称，比如：doIndex 
-    11.$this->input->parameters($key = null)
+    (11).$this->input->parameters($key = null)
       传递给控制器方法的所有参数的数组，参数为空时返回空数组
       $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
       比如：
@@ -50,7 +50,86 @@
 
 8.增加了表单验证规则生成器类$this->rule,所有的表单验证规则都可以通过$this->rule->xxx()获取，而且每个方法都有良好的注释。
   这个功能在自动提示的ide中非常有用，大大提高编码率。
+9.增加了实例化一个表模型函数table($table_name,$db=null);
+  返回的是WoniuTableModel类对象，WoniuTableModel类继承了WoniuModel类。
+  实用的方法如下：
+  $table_model=table('user');
+  (1).find($values, $is_rows = false, $order_by = null)方法,查询数据
+    find方法非常灵活，下面给出几个使用示例：
 
+    1.获取主键是10的记录
+    $table_model->find(10)
+
+    2.获取主键是10，11的两个记录
+    $table_model->find(array(10,11),true)
+
+    3.根据条件获取一条记录
+    $table_model->find(array('id'=>100))
+
+    4.根据条件获取多条记录
+    $table_model->find(array('id >'=>10),true)
+
+    5.获取主键是10，11的两个记录,并用id排序
+    $table_model->find(array(10,11),true,'id desc')
+
+    6.根据条件获取多条记录,并用id排序
+    $table_model->find(array('id >'=>10),true,'id asc')
+
+  (2).findCol($col, $where, $is_rows = false, $order_by = null)方法,查询字段数据
+   findCol和find类似，值是获取的是某个字段的值或者数组，示例可以参考find方法。
+
+  (3).delete($values, Array $cond = NULL)方法,删除数据
+   delete方法是用来删除数据。
+    下面是几个例子：
+
+    1.删除主键是10的记录
+    $table_model->delete(10)
+
+    2.删除主键是10,11,12的记录
+    $table_model->delete(array(10,11,12))
+
+    3.删除主键是10,11,12记录中gid是3的记录
+    $table_model->delete(array(10,11,12),array('gid'=>3))
+
+  (4).deleteIn($key, $values, Array $cond = NULL)方法,删除数据
+    下面是几个例子：
+
+    1.删除cat_id是3的记录
+    $table_model->deleteIn(‘cat_id’,3)
+
+    2.删除cat_id是3,4,5的记录
+    $table_model->deleteIn(‘cat_id’,array(3,4,5))
+
+    3.删除cat_id是3,4,5记录中id大于100的记录
+    $table_model->deleteIn(‘cat_id’,array(3,4,5),array('id >'=>100))
+  (5).check($source_data, &$ret_data, $rule = null, $map = null)方法,验证数据
+   参数说明：
+   $source_data 数据源，要检查的数据
+   $ret_data    数据验证通过$ret_data是验证规则处理后的数据用户插入或者更新到数据库,数据验证失败$ret_data是空数组
+   $rule        验证规则，格式：array(
+                                '字段名称'=>array(
+                                                 '表单验证规则'=>'验证失败提示信息',
+                                                 ...   
+                                                 ),
+                                 ...
+                               )
+   $map         字段映射信息数组。格式：array('表单name名称'=>'表字段名称',...)
+   返回null:验证通过。返回字符串:验证失败提示信息。 
+   使用示例：
+        $user = table('admin');
+        $_POST['username'] = 'test';
+        //$_POST['username'] = 'testaa';
+        $_POST['password'] = 'testtesttesttest';
+        $rule = array(
+            'username' => array($this->rule->range_len(5, 16) => '用户名5-16字符'),
+            'password' => array($this->rule->len(16) => '密码16字符')
+        );
+        $data = array();
+        if (is_null($msg = $user->check(null, $data, $rule))) {
+            dump($user->update($data,3));
+        } else {
+            echo $msg;
+        }
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。

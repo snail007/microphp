@@ -42,15 +42,18 @@ class table_model extends WoniuController {
         $cfg['dbprefix'] = 'mv_';
         $db = $this->database($cfg, true);
         $article = table('admin', $db);
-        $_POST['username'] = 'testsa';
-        $_POST['password'] = 'testtesttesttest';
+        $_POST['user'] = 'testsa';
+        $_POST['test'] = 'testsa';
+        $_POST['pass'] = 'testtesttesttest';
         $rule = array(
             'username' => array($this->rule->range_len(5, 16) => '用户名5-16字符'),
-            'password' => array($this->rule->len(16) => '密码16字符')
+            'password' => array($this->rule->len(16) => '密码16字符'),
         );
+        $map=array('user'=>'username','pass'=>'password','test'=>'test');
         $data = array();
-        if (is_null($msg = $article->check(null, $data, $rule))) {
-            dump($article->delete(3));
+        if (is_null($msg = $article->check($_POST, $data, $rule,$map))) {
+            dump($data);
+            //dump($article->update($data,3));
         } else {
             echo $msg;
         }

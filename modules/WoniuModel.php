@@ -225,7 +225,7 @@ class WoniuTableModel extends WoniuModel {
      *                                               )<br/>
      *                               ,...<br/>
      *                             )<br/>
-     * @param type $map  字段映射信息数组。格式：array('表字段名称'=>'表单name名称',...)
+     * @param type $map  字段映射信息数组。格式：array('表单name名称'=>'表字段名称',...)
      * @return string 返回null:验证通过。非空字符串:验证失败提示信息。 
      */
     public function check($source_data, &$ret_data, $rule = null, $map = null) {

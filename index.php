@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-14 22:23:23
+ * @createdtime         2014-05-15 12:31:23
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -54,6 +54,10 @@ $system['library_folder'] = $system['application_folder'] . '/library';
  * 存放函数文件的文件夹路径名称,支持数组
  */
 $system['helper_folder'] = $system['application_folder'] . '/helper';
+/**
+ * table()方法缓存表字段信息的文件夹路径名称
+ */
+$system['table_cache_folder'] = $system['application_folder'] . '/cache';
 /**
  * 存放HMVC模块的文件夹路径名称
  */
