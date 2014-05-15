@@ -13,7 +13,7 @@
  * @since		Version 1.0
  * @createdtime         {createdtime}
  */
-include (__DIR__ . '/../modules/plugin.php');
+include (dirname(__FILE__) . '/../modules/plugin.php');
 define('TEST_ROOT', dirname(__FILE__));
 //为了正确显示中文，修改simpletest/reporter.php 31行：
 //function __construct($character_set = 'ISO-8859-1')
