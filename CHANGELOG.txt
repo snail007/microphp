@@ -149,7 +149,9 @@
     (8).update($ret_data, $where),需要更新的数据。
         $ret_data  应该是check()验证通过的数据。
         $where     可以是where条件关联数组，还可以是主键值。
+
     (9).columns(),获取表字段数组。
+
     (10).getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10)
         getPage用于获取分页数据，同时含有分页条。返回的是一个数组，items字段是结果集，page字段是分页条字符串。
         参数说明：
