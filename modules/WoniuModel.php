@@ -237,7 +237,7 @@ class WoniuTableModel extends WoniuModel {
 
     /**
      * 添加数据
-     * @param type $ret_data  需要添加的数据
+     * @param array $ret_data  需要添加的数据
      * @return boolean
      */
     public function insert($ret_data) {
