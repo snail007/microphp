@@ -117,8 +117,8 @@
    返回null:验证通过。返回字符串:验证失败提示信息。 
    使用示例：
         $user = table('admin');
-        $_POST['username'] = 'test';
-        //$_POST['username'] = 'testaa';
+        $_POST['user'] = 'test';
+        //$_POST['user'] = 'testaa';
         $_POST['pass'] = 'testtesttesttest';
         $rule = array(
             'username' => array($this->rule->range_len(5, 16) => '用户名5-16字符'),
