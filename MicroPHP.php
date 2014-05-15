@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-15 16:17:21
+ * @createdtime         2014-05-15 17:31:58
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  */
 if (!function_exists('dump')) {
 
@@ -54,7 +54,7 @@ if (!function_exists('table')) {
 
     /**
      * 实例化一个表模型
-     * @param type $table_name    不带表前缀的表名称
+     * @param string $table_name    不带表前缀的表名称
      * @param CI_DB_active_record $db 使用的数据库连接对象，默认留空是当前数据库连接
      * @return WoniuTableModel
      */
@@ -769,7 +769,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  */
 class WoniuInput {
 
@@ -1011,7 +1011,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  */
 class WoniuRouter {
 
@@ -1250,7 +1250,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-15 16:17:21
+ * @createdtime            2014-05-15 17:31:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2575,7 +2575,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2695,7 +2695,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3063,13 +3063,15 @@ class WoniuTableModel extends WoniuModel {
 
     /**
      * 分页方法
-     * @param type $page      第几页
-     * @param type $pagesize  每页多少条
-     * @param type $url       基础url，里面的{page}会被替换为实际的页码
-     * @param type $fields    搜索的字段，全部用*，多个字段用逗号分隔
+     * @param int $page       第几页
+     * @param int $pagesize   每页多少条
+     * @param string $url     基础url，里面的{page}会被替换为实际的页码
+     * @param string $fields  select的字段，全部用*，多个字段用逗号分隔
      * @param array $where    where条件，关联数组
      * @param array $like     搜素的字段，比如array('title'=>'java');搜索title包含java
-     * @param type $orderby   排序字段，比如: 'id desc'
+     * @param string $orderby 排序字段，比如: 'id desc'
+     * @param array $page_bar_order   分页条组成，可以参考手册分页条部分
+     * @param int   $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
      * @return type
      */
     public function getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
@@ -3102,8 +3104,10 @@ class WoniuTableModel extends WoniuModel {
      * @param type $page      第几页
      * @param type $pagesize  每页多少条
      * @param type $url       基础url，里面的{page}会被替换为实际的页码
-     * @param type $fields    搜索的字段，全部用*，多个字段用逗号分隔
+     * @param type $fields    select的字段，全部用*，多个字段用逗号分隔
      * @param type $cond      SQL语句where后面的部分，不要带limit
+     * @param array $page_bar_order   分页条组成，可以参考手册分页条部分
+     * @param int   $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
      * @return type
      */
     public function search($page, $pagesize, $url, $fields, $cond, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
@@ -3134,7 +3138,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  */
 class WoniuDB {
 
@@ -9294,7 +9298,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-15 16:17:21
+ * @createdtime       2014-05-15 17:31:58
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

@@ -377,13 +377,15 @@ class WoniuTableModel extends WoniuModel {
 
     /**
      * 分页方法
-     * @param type $page      第几页
-     * @param type $pagesize  每页多少条
-     * @param type $url       基础url，里面的{page}会被替换为实际的页码
-     * @param type $fields    搜索的字段，全部用*，多个字段用逗号分隔
+     * @param int $page       第几页
+     * @param int $pagesize   每页多少条
+     * @param string $url     基础url，里面的{page}会被替换为实际的页码
+     * @param string $fields  select的字段，全部用*，多个字段用逗号分隔
      * @param array $where    where条件，关联数组
      * @param array $like     搜素的字段，比如array('title'=>'java');搜索title包含java
-     * @param type $orderby   排序字段，比如: 'id desc'
+     * @param string $orderby 排序字段，比如: 'id desc'
+     * @param array $page_bar_order   分页条组成，可以参考手册分页条部分
+     * @param int   $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
      * @return type
      */
     public function getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
@@ -416,8 +418,10 @@ class WoniuTableModel extends WoniuModel {
      * @param type $page      第几页
      * @param type $pagesize  每页多少条
      * @param type $url       基础url，里面的{page}会被替换为实际的页码
-     * @param type $fields    搜索的字段，全部用*，多个字段用逗号分隔
+     * @param type $fields    select的字段，全部用*，多个字段用逗号分隔
      * @param type $cond      SQL语句where后面的部分，不要带limit
+     * @param array $page_bar_order   分页条组成，可以参考手册分页条部分
+     * @param int   $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
      * @return type
      */
     public function search($page, $pagesize, $url, $fields, $cond, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {

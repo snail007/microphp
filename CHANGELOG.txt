@@ -138,12 +138,43 @@
         );
         $map=array('user'=>'username','pass'=>'password');
         $data = array();
-        if (is_null($msg = $article->check($_POST, $data, $rule,$map))) {
+        if (is_null($msg = $table_model->check($_POST, $data, $rule,$map))) {
             //dump($data);
-            dump($article->update($data,3));
+            dump($table_model->update($data,3));
         } else {
             echo $msg;
         }
+    (7).columns(),获取表字段数组。
+    (8).getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10)
+        getPage用于获取分页数据，同时含有分页条。返回的是一个数组，items字段是结果集，page字段是分页条字符串。
+        参数说明：
+        $page       第几页
+        $pagesize   每页多少条
+        $url        基础url，里面的{page}会被替换为实际的页码
+        $fields     select的字段，全部用*，多个字段用逗号分隔
+        $where      where条件，关联数组
+        $like       搜素的字段，比如array('title'=>'java');搜索title包含java
+        $orderby    排序字段，比如: 'id desc'
+        $page_bar_order   分页条组成，可以参考手册分页条部分
+        $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
+        下面是使用示例：
+         1.第一页，每页20条。
+           $table_model->getPage(1, 20, '?demo/&p={page}', '*', null, null, null, array(3, 5));
+    (9).search($page, $pagesize, $url, $fields, $cond, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10)
+        getPage用于获取分页数据，同时含有分页条。返回的是一个数组，items字段是结果集，page字段是分页条字符串。
+        参数说明：
+        $page       第几页
+        $pagesize   每页多少条
+        $url        基础url，里面的{page}会被替换为实际的页码
+        $fields     select的字段，全部用*，多个字段用逗号分隔
+        $cond       SQL语句where后面的部分，不要带limit
+        $page_bar_order   分页条组成，可以参考手册分页条部分
+        $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
+        下面是使用示例：
+         1.搜索id大于11而且type为3，按着id倒序排列。每页20条。
+           $query='id>11 and type=3 order by id desc';
+           $url='?demo.page&query=' . urlencode($query) . '&p={page}';
+           $table_model->search($this->input->get('p'), 20, $url , '*', $query));
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
