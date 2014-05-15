@@ -55,6 +55,9 @@
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
   该配置会影响url()函数生成的链接
+2.在$system配置里面增加一项：
+  $system['table_cache_folder'] = $system['application_folder'] . '/cache';
+  table()方法缓存表字段信息的文件夹路径名称。
 
 #############################ver 2.2.6[2014-04-24]#############################
 增加了：

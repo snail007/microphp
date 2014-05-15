@@ -32,6 +32,19 @@ if (!function_exists('dump')) {
     }
 
 }
+if (!function_exists('table')) {
+
+    /**
+     * 实例化一个表模型
+     * @param type $table_name    不带表前缀的表名称
+     * @param CI_DB_active_record $db 使用的数据库连接对象，默认留空是当前数据库连接
+     * @return WoniuTableModel
+     */
+    function table($table_name,$db=null) {
+        return WoniuTableModel::M($table_name,$db);
+    }
+
+}
 if (!function_exists('url')) {
 
     /**

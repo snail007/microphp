@@ -55,6 +55,10 @@ $system['library_folder'] = $system['application_folder'] . '/library';
  */
 $system['helper_folder'] = $system['application_folder'] . '/helper';
 /**
+ * table()方法缓存表字段信息的文件夹路径名称
+ */
+$system['table_cache_folder'] = $system['application_folder'] . '/cache';
+/**
  * 存放HMVC模块的文件夹路径名称
  */
 $system['hmvc_folder'] = $system['application_folder'] . '/modules';
