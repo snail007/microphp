@@ -378,7 +378,7 @@ class WoniuInput {
      * @return type
      */
     public static function post_get_time($key, $min = null, $max = null, $default = null) {
-        return self::get_date_type('post_get', $key, $min, $max, $default);
+        return self::get_time_type('post_get', $key, $min, $max, $default);
     }
 
     private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {

@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-15 17:35:38
+ * @createdtime         2014-05-16 13:55:22
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  */
 if (!function_exists('dump')) {
 
@@ -769,7 +769,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  */
 class WoniuInput {
 
@@ -871,8 +871,8 @@ class WoniuInput {
      * 传递给控制器方法的所有参数的数组，参数为空时返回空数组<br/>
      * 比如：<br/>
      * 1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')<br/>
-     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
-     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。<br/>
+     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null<br/>
      * @return null
      */
     public static function parameters($key = null) {
@@ -885,6 +885,308 @@ class WoniuInput {
         } else {
             return self::$router['parameters'];
         }
+    }
+
+    private static function get_x_type($rule, $method, $key) {
+        $val = null;
+        switch ($method) {
+            case 'get':
+                $val = self::get($key);
+                break;
+            case 'post':
+                $val = self::post($key);
+                break;
+            case 'get_post':
+                $val = self::get_post($key);
+                break;
+            case 'post_get':
+                $val = self::post_get($key);
+                break;
+        }
+        if (is_null(WoniuLoader::checkData($rule, array('check' => $val)))) {
+            return $val;
+        } else {
+            return null;
+        }
+    }
+
+    private static function get_rule_type($rule, $method, $key, $default = null) {
+        if (!is_array($rule)) {
+            $rule = array($rule => 'err');
+        } else {
+            $_rule = array();
+            foreach ($rule as $r) {
+                $_rule[$r] = 'err';
+            }
+        }
+        $rule = array('check' => $rule);
+        $val = self::get_x_type($rule, $method, $key);
+        return is_null($val) ? $default : $val;
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function get_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'get', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function post_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'post', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function get_post_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'get_post', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function post_get_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'post_get', $key, $default);
+    }
+
+    private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
+        $val = self::get_rule_type(WoniuRule::int(), $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && $val >= $min);
+        $max_okay = is_null($max) || (!is_null($max) && $val <= $max);
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_int($key, $min = null, $max = null, $default = null) {
+        return self::get_int_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_int($key, $min = null, $max = null, $default = null) {
+        return self::get_int_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_int($key, $min = null, $max = null, $default = null) {
+        return self::get_int_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_int($key, $min = null, $max = null, $default = null) {
+        return self::get_int_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_date_type($method, $key, $min = null, $max = null, $default = null) {
+        $val = self::get_rule_type(WoniuRule::date(), $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function get_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function post_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function get_post_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function post_get_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_time_type($method, $key, $min = null, $max = null, $default = null) {
+        $val = self::get_rule_type(WoniuRule::time(), $method, $key);
+        $pre_fix = '2014-01-01 ';
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_time($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
+        $val = self::get_rule_type(WoniuRule::datetime(), $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('post_get', $key, $min, $max, $default);
     }
 
     public static function get_post($key = null, $default = null, $xss_clean = false) {
@@ -1011,7 +1313,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  */
 class WoniuRouter {
 
@@ -1250,7 +1552,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-15 17:35:38
+ * @createdtime            2014-05-16 13:55:22
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1794,9 +2096,9 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
+    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
         if (is_null($data)) {
-            $data = $this->input->post();
+            $data = WoniuInput::post();
         }
         $return_data = $data;
         /**
@@ -1808,7 +2110,7 @@ class WoniuLoader {
                 if (stripos($_rule, 'default[') === 0) {
                     //删除默认值规则
                     unset($rule[$col][$_rule]);
-                    $matches = $this->getCheckRuleInfo($_rule);
+                    $matches = self::getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
                     $return_data[$col] = isset($args[0]) ? $args[0] : '';
@@ -1829,7 +2131,7 @@ class WoniuLoader {
         /**
          * 验证前set处理
          */
-        $this->checkSetData('set', $rule, $return_data);
+        self::checkSetData('set', $rule, $return_data);
         /**
          * 验证规则
          */
@@ -1843,13 +2145,13 @@ class WoniuLoader {
                         //当前字段，验证通过
                         break;
                     } else {
-                        $matches = $this->getCheckRuleInfo($_rule);
+                        $matches = self::getCheckRuleInfo($_rule);
                         $_r = $matches[1];
                         $args = $matches[2];
                         if ($_r == 'set' || $_r == 'set_post' || $_r == 'optional') {
                             continue;
                         }
-                        if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
+                        if (!self::checkRule($_rule, $return_data[$col], $return_data)) {
                             /**
                              * 清理没有传递的key
                              */
@@ -1865,7 +2167,7 @@ class WoniuLoader {
         /**
          * 验证后set_post处理
          */
-        $this->checkSetData('set_post', $rule, $return_data);
+        self::checkSetData('set_post', $rule, $return_data);
 
         /**
          * 清理没有传递的key
@@ -1876,7 +2178,7 @@ class WoniuLoader {
         return NULL;
     }
 
-    private function checkSetData($type, Array $rule, &$return_data = NULL) {
+    private static function checkSetData($type, Array $rule, &$return_data = NULL) {
         foreach ($rule as $col => $val) {
             foreach (array_keys($val) as $_rule) {
                 if (!empty($_rule)) {
@@ -1888,7 +2190,7 @@ class WoniuLoader {
                             $return_data[$col] = '';
                         }
                     }
-                    $matches = $this->getCheckRuleInfo($_rule);
+                    $matches = self::getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
                     if ($_r == $type) {
@@ -1902,7 +2204,7 @@ class WoniuLoader {
                                     $_args = array($_v);
                                 }
                             }
-                            $_v = $this->callFunc($func, $_args);
+                            $_v = self::callFunc($func, $_args);
                         }
                         $return_data[$col] = $_v;
                     }
@@ -1911,7 +2213,7 @@ class WoniuLoader {
         }
     }
 
-    private function getCheckRuleInfo($_rule) {
+    private static function getCheckRuleInfo($_rule) {
         $matches = array();
         preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
         $matches[1] = isset($matches[1]) ? $matches[1] : '';
@@ -1939,19 +2241,19 @@ class WoniuLoader {
      * @param type $args
      * @return boolean
      */
-    public function callFunc($func, $args) {
+    public static function callFunc($func, $args) {
         if (is_array($func)) {
-            return $this->callMethod($func, $args);
+            return self::callMethod($func, $args);
         } elseif (function_exists($func)) {
             return call_user_func_array($func, $args);
         } elseif (stripos($func, '::')) {
             $_func = explode('::', $func);
-            return $this->callMethod($_func, $args);
+            return self::callMethod($_func, $args);
         }
         return null;
     }
 
-    private function callMethod($_func, $args) {
+    private static function callMethod($_func, $args) {
         $class = $_func[0];
         $method = $_func[1];
         if (is_object($class)) {
@@ -1965,8 +2267,8 @@ class WoniuLoader {
         return $method->invokeArgs($obj, $args);
     }
 
-    private function checkRule($_rule, $val, $data) {
-        $matches = $this->getCheckRuleInfo($_rule);
+    private static function checkRule($_rule, $val, $data) {
+        $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
         $args = $matches[2];
         switch ($_rule) {
@@ -1995,12 +2297,12 @@ class WoniuLoader {
                     }
                     $id_col = $_id_info[0];
                     $id = $_id_info[1];
-                    $id = stripos($id, '#') === 0 ? $this->input->get_post(substr($id, 1)) : $id;
+                    $id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);
-                }
-                return !$this->db->where($where)->from($table)->count_all_results();
+                } 
+                return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -2107,7 +2409,7 @@ class WoniuLoader {
                 return true;
             default:
                 $_args = array_merge(array($val, $data), $args);
-                $matches = $this->getCheckRuleInfo($_rule);
+                $matches = self::getCheckRuleInfo($_rule);
                 $func = $matches[1];
                 $args = $matches[2];
                 if (function_exists($func)) {
@@ -2117,7 +2419,7 @@ class WoniuLoader {
                         $_args = isset($_args[0]) ? array($_args[0]) : array();
                     }
                 }
-                return $this->callFunc($_rule, $_args);
+                return self::callFunc($_rule, $_args);
         }
         return false;
     }
@@ -2575,7 +2877,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2695,7 +2997,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3138,7 +3440,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  */
 class WoniuDB {
 
@@ -9298,7 +9600,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-15 17:35:38
+ * @createdtime       2014-05-16 13:55:22
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
