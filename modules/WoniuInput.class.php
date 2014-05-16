@@ -159,14 +159,14 @@ class WoniuInput {
 
     private static function get_rule_type($rule, $method, $key, $default = null) {
         if (!is_array($rule)) {
-            $rule = array($rule => 'err');
+            $_rule = array($rule => 'err');
         } else {
             $_rule = array();
             foreach ($rule as $r) {
                 $_rule[$r] = 'err';
             }
         }
-        $rule = array('check' => $rule);
+        $rule = array('check' => $_rule);
         $val = self::get_x_type($rule, $method, $key);
         return is_null($val) ? $default : $val;
     }

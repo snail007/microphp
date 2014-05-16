@@ -136,12 +136,62 @@ class test_input extends UnitTestCase {
 
 
         //datetime
-        $_POST['datetime_okay'] = 1;
-        $_POST['datetime_err'] = 5;
-        $_GET['datetime_okay'] = 1;
-        $_GET['datetime_err'] = 5;
-        $_GET['datetime_error'] = 5.9;
-        $_POST['datetime_error'] = 5.9;
+        $_POST['datetime_okay'] = '2012-10-10 12:10:10';
+        $_POST['datetime_err'] = '2012-10-10 10:10:20';
+        $_GET['datetime_okay'] = '2012-10-10 10:10:10';
+        $_GET['datetime_err'] = '2012-10-10 10:10:10';
+        $_GET['datetime_error'] = '2012-10-10 12.10';
+        $_POST['datetime_error'] = '2012-10-10 12.10';
+        $this->assertEqual('2012-10-10 10:10:10', WoniuInput::get_datetime('datetime_okay'));
+        $this->assertNull(WoniuInput::get_datetime('datetime_error'));
+        $this->assertNull(WoniuInput::get_datetime('datetime_err', null, '2012-10-10 09:10:15'));
+        $this->assertNull(WoniuInput::get_datetime('datetime_err', '2012-10-10 12:11:10'));
+        $this->assertEqual('2012-10-10 12:10:11', WoniuInput::get_datetime('datetime_err', '2012-10-10 12:09:10', '2012-10-10 12:10:10', '2012-10-10 12:10:11'));
+        
+        $this->assertEqual('2012-10-10 12:10:10', WoniuInput::post_datetime('datetime_okay'));
+        $this->assertNull(WoniuInput::post_datetime('datetime_error'));
+        $this->assertNull(WoniuInput::post_datetime('datetime_err', null, '2012-10-10 09:10:15'));
+        $this->assertNull(WoniuInput::post_datetime('datetime_err', '2012-10-10 12:11:10'));
+        $this->assertEqual('2012-10-10 12:10:11', WoniuInput::post_datetime('datetime_err', '2012-10-10 12:09:10', '2012-10-10 12:10:10', '2012-10-10 12:10:11'));
+        
+        $this->assertEqual('2012-10-10 10:10:10', WoniuInput::get_post_datetime('datetime_okay'));
+        $this->assertNull(WoniuInput::get_post_datetime('datetime_error'));
+        $this->assertNull(WoniuInput::get_post_datetime('datetime_err', null, '2012-10-10 09:10:15'));
+        $this->assertNull(WoniuInput::get_post_datetime('datetime_err', '2012-10-10 12:11:10'));
+        $this->assertEqual('2012-10-10 12:10:11', WoniuInput::get_post_datetime('datetime_err', '2012-10-10 12:09:10', '2012-10-10 12:10:10', '2012-10-10 12:10:11'));
+        
+        $this->assertEqual('2012-10-10 12:10:10', WoniuInput::post_get_datetime('datetime_okay'));
+        $this->assertNull(WoniuInput::post_get_datetime('datetime_error'));
+        $this->assertNull(WoniuInput::post_get_datetime('datetime_err', null, '2012-10-10 09:10:15'));
+        $this->assertNull(WoniuInput::post_get_datetime('datetime_err', '2012-10-10 12:11:10'));
+        $this->assertEqual('2012-10-10 12:10:11', WoniuInput::post_get_datetime('datetime_err', '2012-10-10 12:09:10', '2012-10-10 12:10:10', '2012-10-10 12:10:11'));
+    
+        //rule
+        $_POST['rule_okay'] = 2;
+        $_GET['rule_okay'] = 1;
+        $_GET['rule_error'] = -9;
+        $_POST['rule_error'] = -10;
+        $this->assertEqual(1, WoniuInput::get_rule(WoniuRule::natural(),'rule_okay'));
+        $this->assertNull(WoniuInput::get_rule(WoniuRule::natural(),'rule_error'));
+        $this->assertEqual(1, WoniuInput::get_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_okay'));
+        $this->assertNull(WoniuInput::get_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_error'));
+        
+        $this->assertEqual(2, WoniuInput::post_rule(WoniuRule::natural(),'rule_okay'));
+        $this->assertNull(WoniuInput::post_rule(WoniuRule::natural(),'rule_error'));
+        $this->assertEqual(2, WoniuInput::post_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_okay'));
+        $this->assertNull(WoniuInput::post_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_error'));
+        
+        $this->assertEqual(1, WoniuInput::get_post_rule(WoniuRule::natural(),'rule_okay'));
+        $this->assertNull(WoniuInput::get_post_rule(WoniuRule::natural(),'rule_error'));
+        $this->assertEqual(1, WoniuInput::get_post_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_okay'));
+        $this->assertNull(WoniuInput::get_post_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_error'));
+        
+        $this->assertEqual(2, WoniuInput::post_get_rule(WoniuRule::natural(),'rule_okay'));
+        $this->assertNull(WoniuInput::post_get_rule(WoniuRule::natural(),'rule_error'));
+        $this->assertEqual(2, WoniuInput::post_get_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_okay'));
+        $this->assertNull(WoniuInput::post_get_rule(array(WoniuRule::natural(),WoniuRule::range(0, 2)),'rule_error'));
+        
+        
     }
 
 }
