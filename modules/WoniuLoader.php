@@ -726,7 +726,7 @@ class WoniuLoader {
         return $method->invokeArgs($obj, $args);
     }
 
-    private function checkRule($_rule, $val, $data) {
+    private static function checkRule($_rule, $val, $data) {
         $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
         $args = $matches[2];

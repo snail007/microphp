@@ -118,8 +118,8 @@ class WoniuInput {
      * 传递给控制器方法的所有参数的数组，参数为空时返回空数组<br/>
      * 比如：<br/>
      * 1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')<br/>
-     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
-     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+     * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。<br/>
+     * @param type $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null<br/>
      * @return null
      */
     public static function parameters($key = null) {
@@ -150,7 +150,6 @@ class WoniuInput {
                 $val = self::post_get($key);
                 break;
         }
-        dump($rule, $method, $key);
         if (is_null(WoniuLoader::checkData($rule, array('check' => $val)))) {
             return $val;
         } else {
@@ -158,9 +157,66 @@ class WoniuInput {
         }
     }
 
-    private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
-        $rule = array('check' => array('int' => 'err'));
+    private static function get_rule_type($rule, $method, $key, $default = null) {
+        if (!is_array($rule)) {
+            $rule = array($rule => 'err');
+        } else {
+            $_rule = array();
+            foreach ($rule as $r) {
+                $_rule[$r] = 'err';
+            }
+        }
+        $rule = array('check' => $rule);
         $val = self::get_x_type($rule, $method, $key);
+        return is_null($val) ? $default : $val;
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function get_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'get', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function post_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'post', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function get_post_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'get_post', $key, $default);
+    }
+
+    /**
+     * 根据验证规则和键获取一个值
+     * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+     * @param type $key     键
+     * @param type $default 默认值。格式错误或者验证不通过，返回默认值。
+     * @return type
+     */
+    public static function post_get_rule($rule, $key, $default = null) {
+        return self::get_rule_type($rule, 'post_get', $key, $default);
+    }
+
+    private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
+        $val = self::get_rule_type(WoniuRule::int(), $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && $val >= $min);
         $max_okay = is_null($max) || (!is_null($max) && $val <= $max);
         return $min_okay && $max_okay ? $val : $default;
@@ -215,8 +271,7 @@ class WoniuInput {
     }
 
     private static function get_date_type($method, $key, $min = null, $max = null, $default = null) {
-        $rule = array('check' => array('date' => 'err'));
-        $val = self::get_x_type($rule, $method, $key);
+        $val = self::get_rule_type(WoniuRule::date(), $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
         return $min_okay && $max_okay ? $val : $default;
@@ -271,8 +326,7 @@ class WoniuInput {
     }
 
     private static function get_time_type($method, $key, $min = null, $max = null, $default = null) {
-        $rule = array('check' => array('time' => 'err'));
-        $val = self::get_x_type($rule, $method, $key);
+        $val = self::get_rule_type(WoniuRule::time(), $method, $key);
         $pre_fix = '2014-01-01 ';
         $min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
@@ -328,8 +382,7 @@ class WoniuInput {
     }
 
     private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
-        $rule = array('check' => array('datetime' => 'err'));
-        $val = self::get_x_type($rule, $method, $key);
+        $val = self::get_rule_type(WoniuRule::datetime(), $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
         return $min_okay && $max_okay ? $val : $default;
