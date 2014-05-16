@@ -555,9 +555,9 @@ class WoniuLoader {
         return $data;
     }
 
-    public function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
+    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
         if (is_null($data)) {
-            $data = $this->input->post();
+            $data = WoniuInput::post();
         }
         $return_data = $data;
         /**
@@ -569,7 +569,7 @@ class WoniuLoader {
                 if (stripos($_rule, 'default[') === 0) {
                     //删除默认值规则
                     unset($rule[$col][$_rule]);
-                    $matches = $this->getCheckRuleInfo($_rule);
+                    $matches = self::getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
                     $return_data[$col] = isset($args[0]) ? $args[0] : '';
@@ -590,7 +590,7 @@ class WoniuLoader {
         /**
          * 验证前set处理
          */
-        $this->checkSetData('set', $rule, $return_data);
+        self::checkSetData('set', $rule, $return_data);
         /**
          * 验证规则
          */
@@ -604,13 +604,13 @@ class WoniuLoader {
                         //当前字段，验证通过
                         break;
                     } else {
-                        $matches = $this->getCheckRuleInfo($_rule);
+                        $matches = self::getCheckRuleInfo($_rule);
                         $_r = $matches[1];
                         $args = $matches[2];
                         if ($_r == 'set' || $_r == 'set_post' || $_r == 'optional') {
                             continue;
                         }
-                        if (!$this->checkRule($_rule, $return_data[$col], $return_data)) {
+                        if (!self::checkRule($_rule, $return_data[$col], $return_data)) {
                             /**
                              * 清理没有传递的key
                              */
@@ -626,7 +626,7 @@ class WoniuLoader {
         /**
          * 验证后set_post处理
          */
-        $this->checkSetData('set_post', $rule, $return_data);
+        self::checkSetData('set_post', $rule, $return_data);
 
         /**
          * 清理没有传递的key
@@ -637,7 +637,7 @@ class WoniuLoader {
         return NULL;
     }
 
-    private function checkSetData($type, Array $rule, &$return_data = NULL) {
+    private static function checkSetData($type, Array $rule, &$return_data = NULL) {
         foreach ($rule as $col => $val) {
             foreach (array_keys($val) as $_rule) {
                 if (!empty($_rule)) {
@@ -649,7 +649,7 @@ class WoniuLoader {
                             $return_data[$col] = '';
                         }
                     }
-                    $matches = $this->getCheckRuleInfo($_rule);
+                    $matches = self::getCheckRuleInfo($_rule);
                     $_r = $matches[1];
                     $args = $matches[2];
                     if ($_r == $type) {
@@ -663,7 +663,7 @@ class WoniuLoader {
                                     $_args = array($_v);
                                 }
                             }
-                            $_v = $this->callFunc($func, $_args);
+                            $_v = self::callFunc($func, $_args);
                         }
                         $return_data[$col] = $_v;
                     }
@@ -672,7 +672,7 @@ class WoniuLoader {
         }
     }
 
-    private function getCheckRuleInfo($_rule) {
+    private static function getCheckRuleInfo($_rule) {
         $matches = array();
         preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
         $matches[1] = isset($matches[1]) ? $matches[1] : '';
@@ -700,19 +700,19 @@ class WoniuLoader {
      * @param type $args
      * @return boolean
      */
-    public function callFunc($func, $args) {
+    public static function callFunc($func, $args) {
         if (is_array($func)) {
-            return $this->callMethod($func, $args);
+            return self::callMethod($func, $args);
         } elseif (function_exists($func)) {
             return call_user_func_array($func, $args);
         } elseif (stripos($func, '::')) {
             $_func = explode('::', $func);
-            return $this->callMethod($_func, $args);
+            return self::callMethod($_func, $args);
         }
         return null;
     }
 
-    private function callMethod($_func, $args) {
+    private static function callMethod($_func, $args) {
         $class = $_func[0];
         $method = $_func[1];
         if (is_object($class)) {
@@ -727,7 +727,7 @@ class WoniuLoader {
     }
 
     private function checkRule($_rule, $val, $data) {
-        $matches = $this->getCheckRuleInfo($_rule);
+        $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
         $args = $matches[2];
         switch ($_rule) {
@@ -756,12 +756,12 @@ class WoniuLoader {
                     }
                     $id_col = $_id_info[0];
                     $id = $_id_info[1];
-                    $id = stripos($id, '#') === 0 ? $this->input->get_post(substr($id, 1)) : $id;
+                    $id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);
-                }
-                return !$this->db->where($where)->from($table)->count_all_results();
+                } 
+                return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -868,7 +868,7 @@ class WoniuLoader {
                 return true;
             default:
                 $_args = array_merge(array($val, $data), $args);
-                $matches = $this->getCheckRuleInfo($_rule);
+                $matches = self::getCheckRuleInfo($_rule);
                 $func = $matches[1];
                 $args = $matches[2];
                 if (function_exists($func)) {
@@ -878,7 +878,7 @@ class WoniuLoader {
                         $_args = isset($_args[0]) ? array($_args[0]) : array();
                     }
                 }
-                return $this->callFunc($_rule, $_args);
+                return self::callFunc($_rule, $_args);
         }
         return false;
     }

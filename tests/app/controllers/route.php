@@ -50,4 +50,7 @@ class Route extends WoniuController{
             WoniuInput::$router
          );
     }
+    public function doTest(){
+        dump(WoniuInput::get_int('int',-10,-5,-6));
+    }
 }

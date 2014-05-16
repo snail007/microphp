@@ -134,9 +134,9 @@ class WoniuInput {
         }
     }
 
-    private static function get_int_type($type, $key, $min = 1, $max = null, $default = null) {
+    private static function get_x_type($rule, $method, $key) {
         $val = null;
-        switch ($type) {
+        switch ($method) {
             case 'get':
                 $val = self::get($key);
                 break;
@@ -150,31 +150,237 @@ class WoniuInput {
                 $val = self::post_get($key);
                 break;
         }
-        if (!is_null($val) && $val == intval($val)) {
-            if (is_null($max)) {
-                return $val >= $min ? $val : $default;
-            } else {
-                return $val >= $min && $val <= $max ? $val : $default;
-            }
+        dump($rule, $method, $key);
+        if (is_null(WoniuLoader::checkData($rule, array('check' => $val)))) {
+            return $val;
         } else {
             return null;
         }
     }
 
-    public static function get_int($key, $min = 1, $max = null, $default = null) {
+    private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
+        $rule = array('check' => array('int' => 'err'));
+        $val = self::get_x_type($rule, $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && $val >= $min);
+        $max_okay = is_null($max) || (!is_null($max) && $val <= $max);
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_int($key, $min = null, $max = null, $default = null) {
         return self::get_int_type('get', $key, $min, $max, $default);
     }
 
-    public static function post_int($key, $min = 1, $max = null, $default = null) {
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_int($key, $min = null, $max = null, $default = null) {
         return self::get_int_type('post', $key, $min, $max, $default);
     }
 
-    public static function get_post_int($key, $min = 1, $max = null, $default = null) {
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_int($key, $min = null, $max = null, $default = null) {
         return self::get_int_type('get_post', $key, $min, $max, $default);
     }
 
-    public static function post_get_int($key, $min = 1, $max = null, $default = null) {
+    /**
+     * 获取一个整数
+     * @param type $key     键
+     * @param type $min     最小值，为null不限制
+     * @param type $max     最大值，为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_int($key, $min = null, $max = null, $default = null) {
         return self::get_int_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_date_type($method, $key, $min = null, $max = null, $default = null) {
+        $rule = array('check' => array('date' => 'err'));
+        $val = self::get_x_type($rule, $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function get_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function post_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function get_post_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期，格式:2012-12-12
+     * @param type $key  键
+     * @param type $min  最小日期，格式:2012-12-12。为null不限制
+     * @param type $max  最大日期，格式:2012-12-12。为null不限制
+     * @param type $default 默认日期。格式错误或者不在范围，返回默认日期
+     * @return type
+     */
+    public static function post_get_date($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_time_type($method, $key, $min = null, $max = null, $default = null) {
+        $rule = array('check' => array('time' => 'err'));
+        $val = self::get_x_type($rule, $method, $key);
+        $pre_fix = '2014-01-01 ';
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_time($key, $min = null, $max = null, $default = null) {
+        return self::get_time_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取时间，格式:15:01:55
+     * @param type $key  键
+     * @param type $min  最小时间，格式:15:01:55。为null不限制
+     * @param type $max  最大时间，格式:15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_time($key, $min = null, $max = null, $default = null) {
+        return self::get_date_type('post_get', $key, $min, $max, $default);
+    }
+
+    private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
+        $rule = array('check' => array('datetime' => 'err'));
+        $val = self::get_x_type($rule, $method, $key);
+        $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
+        $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
+        return $min_okay && $max_okay ? $val : $default;
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('get', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function get_post_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('get_post', $key, $min, $max, $default);
+    }
+
+    /**
+     * 获取日期时间，格式:2012-12-12 15:01:55
+     * @param type $key  键
+     * @param type $min  最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $max  最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+     * @param type $default 默认值。格式错误或者不在范围，返回默认值
+     * @return type
+     */
+    public static function post_get_datetime($key, $min = null, $max = null, $default = null) {
+        return self::get_datetime_type('post_get', $key, $min, $max, $default);
     }
 
     public static function get_post($key = null, $default = null, $xss_clean = false) {
