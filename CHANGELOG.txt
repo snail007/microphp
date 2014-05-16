@@ -147,7 +147,7 @@
   (6).check($source_data, &$ret_data, $rule = null, $map = null)方法,验证数据
    参数说明：
    $source_data 数据源，要检查的数据
-   $ret_data    数据验证通过$ret_data是验证规则处理后的数据用户插入或者更新到数据库,数据验证失败$ret_data是空数组
+   $ret_data    数据验证通过$ret_data是验证规则处理后的数据，用于插入或者更新到数据库,数据验证失败$ret_data是空数组
    $rule        验证规则，格式：array(
                                 '字段名称'=>array(
                                                  '表单验证规则'=>'验证失败提示信息',
