@@ -134,6 +134,49 @@ class WoniuInput {
         }
     }
 
+    private static function get_int_type($type, $key, $min = 1, $max = null, $default = null) {
+        $val = null;
+        switch ($type) {
+            case 'get':
+                $val = self::get($key);
+                break;
+            case 'post':
+                $val = self::post($key);
+                break;
+            case 'get_post':
+                $val = self::get_post($key);
+                break;
+            case 'post_get':
+                $val = self::post_get($key);
+                break;
+        }
+        if (!is_null($val) && $val == intval($val)) {
+            if (is_null($max)) {
+                return $val >= $min ? $val : $default;
+            } else {
+                return $val >= $min && $val <= $max ? $val : $default;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public static function get_int($key, $min = 1, $max = null, $default = null) {
+        return self::get_int_type('get', $key, $min, $max, $default);
+    }
+
+    public static function post_int($key, $min = 1, $max = null, $default = null) {
+        return self::get_int_type('post', $key, $min, $max, $default);
+    }
+
+    public static function get_post_int($key, $min = 1, $max = null, $default = null) {
+        return self::get_int_type('get_post', $key, $min, $max, $default);
+    }
+
+    public static function post_get_int($key, $min = 1, $max = null, $default = null) {
+        return self::get_int_type('post_get', $key, $min, $max, $default);
+    }
+
     public static function get_post($key = null, $default = null, $xss_clean = false) {
         $get = self::gpcs('_GET', $key, $default);
         $val = $get === null ? self::gpcs('_POST', $key, $default) : $get;
