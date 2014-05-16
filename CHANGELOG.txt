@@ -82,6 +82,9 @@
   这个功能在自动提示的ide中非常有用，大大提高编码率。
 9.增加了实例化一个表模型函数table($table_name,$db=null);
   返回的是WoniuTableModel类对象，WoniuTableModel类继承了WoniuModel类。
+  提示：
+  1.使用table()之前要确定一下$system['table_cache_folder']文件夹是否存在，该文件夹用来缓存表字段信息。
+  2.如果后期修改了表结构增加或者删除了字段，记得删除1中文件夹里面的对应表缓存文件，名字是：表名称.php。
   实用的方法如下：
   $table_model=table('user');
   (1).find($values, $is_rows = false, $order_by = null)方法,查询数据
