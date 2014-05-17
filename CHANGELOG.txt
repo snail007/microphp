@@ -33,7 +33,7 @@
   1. urlPath('../public/test/')
   示例输出如下：
   1. /microphp/public/test
-3.系统函数：path($acrion=null,$_)，获取入口文件所在目录绝对路径。
+3.系统函数：path($subpath = null)，获取入口文件所在目录绝对路径。
   使用示例：
   1. path('/public/test/')
   示例输出如下：
@@ -213,6 +213,58 @@
            $query='id>11 and type=3 order by id desc';
            $url='?demo.page&query=' . urlencode($query) . '&p={page}';
            $table_model->search($this->input->get('p'), 20, $url , '*', $query));
+10.获取GET，POST数据有4个模式：
+   1.get_xxx       从GET里面获取数据。
+   2.post_xxx      从POST里面获取数据。
+   3.get_post_xxx  先从GET里面获取，没有的话再到POST里获取。
+   4.post_get_xxx  先从POST里面获取，没有的话再到GET里获取。
+
+   $this->input增加了下面的方法，4个模式都有，下面只用get_xxx模式作为说明。
+   (1).$this->input->get_int($key, $min = null, $max = null, $default = null)
+       作用：获取一个整数。
+       参数说明：
+       $key     键
+       $min     最小值，为null不限制
+       $max     最大值，为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_int('id',1,null,1)
+    (2).$this->input->get_date($key, $min = null, $max = null, $default = null)
+       作用：获取日期，格式:2012-12-12
+       参数说明：
+       $key     键
+       $min     最小日期，格式:2012-12-12。为null不限制
+       $max     最大日期，格式:2012-12-12。为null不限制
+       $default 默认日期。格式错误或者不在范围，返回默认日期
+       使用示例：
+       $this->input->get_date('add_date',null,null,date('Y-m-d'))
+    (3).$this->input->get_time($key, $min = null, $max = null, $default = null)
+       作用：获取时间，格式:15:01:55
+       参数说明：
+       $key     键
+       $min     最小时间，格式:15:01:55。为null不限制
+       $max     最大时间，格式:15:01:55。为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_time('add_time',null,null,date('H:i:s'))
+    (4).$this->input->get_datetime($key, $min = null, $max = null, $default = null)
+       作用：获取日期时间，格式:2012-12-12 15:01:55
+       参数说明：
+       $key     键
+       $min     最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+       $max     最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_datetime('add_datetime',null,null,date('Y-m-d H:i:s'))
+    (5).$this->input->get_rule($rule, $key, $default = null)
+       作用：根据验证规则和键获取一个值
+       参数说明：
+       $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+       $key     键
+       $default 默认值。格式错误或者验证不通过，返回默认值。
+       使用示例：
+       $this->input->get_rule(WoniuRule::email(),'email')
+
 升级提示：
 1.在$system配置里面增加一项：
   $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
