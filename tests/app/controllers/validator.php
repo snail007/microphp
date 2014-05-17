@@ -32,13 +32,42 @@
 class Validator extends WoniuController {
 
     public function doIndex() {
-         $rules = eval($this->input->post('rule'));
+        $rules = eval($this->input->post('rule'));
         $rules = !is_array($rules) ? array() : $rules;
         $data = $this->input->post();
         if (is_null($msg = $this->checkData($rules, $data, $return))) {
             echo 'validator okay.';
         } else {
             echo $msg;
+        }
+    }
+
+    public function doForm() {
+        $_POST['token'] = '09adfu09adfmca09dma0';
+        $_POST['title'] = ' 文章<a>xxx</a>标题 ';
+        $_POST['content'] = '内容<a>xxx</a>内容，<a onclick="alert();">xxx</a>脚本<script>xxxxx</script>';
+        $map = array('title' => 'art_title', 'content' => 'art_content');
+        $data = $this->readData($map, $_POST);
+        $rule = array(
+            'art_title' => array(
+                'set[strip_tags,trim]' => '',
+                'required' => '标题不能为空',
+                'max_len[50]' => '标题最多50字符'
+            ),
+            'art_content' => array(
+                'required' => '内容不能为空',
+                'set_post[WoniuInput::xss_clean]' => '',
+            )
+        );
+        $ret_data = array();
+        $error_msg = $this->checkData($rule, $data, $ret_data);
+        if (is_null($error_msg)) {
+            //验证成功，$ret_data是验证处理过的数据。
+            //do sth else
+            dump($ret_data);
+        } else {
+            //验证失败，$error_msg是提示信息
+            echo $error_msg;
         }
     }
 

@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-16 13:55:22
+ * @createdtime         2014-05-17 18:09:01
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  */
 if (!function_exists('dump')) {
 
@@ -769,7 +769,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  */
 class WoniuInput {
 
@@ -912,14 +912,14 @@ class WoniuInput {
 
     private static function get_rule_type($rule, $method, $key, $default = null) {
         if (!is_array($rule)) {
-            $rule = array($rule => 'err');
+            $_rule = array($rule => 'err');
         } else {
             $_rule = array();
             foreach ($rule as $r) {
                 $_rule[$r] = 'err';
             }
         }
-        $rule = array('check' => $rule);
+        $rule = array('check' => $_rule);
         $val = self::get_x_type($rule, $method, $key);
         return is_null($val) ? $default : $val;
     }
@@ -1131,7 +1131,7 @@ class WoniuInput {
      * @return type
      */
     public static function post_get_time($key, $min = null, $max = null, $default = null) {
-        return self::get_date_type('post_get', $key, $min, $max, $default);
+        return self::get_time_type('post_get', $key, $min, $max, $default);
     }
 
     private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
@@ -1313,7 +1313,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  */
 class WoniuRouter {
 
@@ -1397,12 +1397,13 @@ class WoniuRouter {
         $file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
         $class = $class_method[count($class_method) - 1];
         $parameters = explode("/", $pathinfo_query_parameters_str);
+        
+        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
+            $parameters = array();
+        }
         //对参数进行urldecode解码一下
         foreach ($parameters as $key => $value) {
             $parameters[$key] = urldecode($value);
-        }
-        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
-            $parameters = array();
         }
         $info = array('file' => $file, 'class' => ucfirst($class), 'method' => str_replace('.', '/', $method), 'parameters' => $parameters);
         #开始准备router信息
@@ -1552,7 +1553,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-16 13:55:22
+ * @createdtime            2014-05-17 18:09:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2877,7 +2878,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2997,7 +2998,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3440,7 +3441,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  */
 class WoniuDB {
 
@@ -9600,7 +9601,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-16 13:55:22
+ * @createdtime       2014-05-17 18:09:01
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
