@@ -1,4 +1,333 @@
 
+#############################ver 2.2.7[2014-05-18]#############################
+优化了：
+1.在伪静态模式下querystring的处理。
+2.对querystring的解析。
+
+增加了：
+1.系统函数：url()，生成url链接。
+    可以在第一个参数开始加上:#用来控制url中显示入口文件名称和?用来控制url使用相对路经。
+    默认不显示入口文件名称，使用绝对路经。
+    $system['url_rewrite'] = FALSE;时的使用示例：
+    1. url('#?')
+    2. url('#?welcome.index')
+    3. url('?#welcome.index','aa','bb')
+    4. url('?welcome.index',array('a'=>'bb','b'=>'ccc'),'dd','ee')
+    5. url('#welcome.index',array('a'=>'bb','b'=>'ccc'))
+    6. url('welcome.index','dd','ee',array('a'=>'bb'))
+    7. url('','aa','bb')
+    8. url('',array('a'=>'bb','b'=>'ccc'),'dd','ee')
+    9. url('',array('a'=>'bb','b'=>'ccc'))
+    示例输出如下：
+    1. indexfortest.php
+    2. indexfortest.php?welcome.index
+    3. indexfortest.php?welcome.index/aa/bb
+    4. ?welcome.index/dd/ee&a=bb&b=ccc
+    5. /microphp/tests/indexfortest.php?welcome.index&a=bb&b=ccc
+    6. /microphp/tests/?welcome.index/dd/ee&a=bb
+    7. /microphp/tests/?aa/bb
+    8. /microphp/tests/?dd/ee&a=bb&b=ccc
+    9. /microphp/tests/?a=bb&b=ccc
+2.系统函数：urlPath($subpath = null)，获取入口文件所在目录url路径。
+  使用示例：
+  1. urlPath('../public/test/')
+  示例输出如下：
+  1. /microphp/public/test
+3.系统函数：path($subpath = null)，获取入口文件所在目录绝对路径。
+  使用示例：
+  1. path('/public/test/')
+  示例输出如下：
+  1. /home/pm/gitcode/microphp/tests/public/test
+4.系统函数：dump($arg=null,$_)，打印变量内容，参数和var_dump一样。
+5.可以像下面加载数据库了，也就是第一个参数支持字符串，字符串即$system['db']的key；
+  (1).$this->database('default');
+      $this->db变成了使用$system['db']['default']配置组的数据库连接。
+  (2).$this->database('default',true);
+      $this->db保持原来不变，这个方法会返回一个使用$system['db']['default']配置组的数据库对象。
+  (3).$this->database('pdo');
+      $this->db变成了使用$system['db']['pdo']组配置的数据库连接。
+  (4).$this->database('pdo',true);。
+      $this->db保持原来不变，这个方法会返回一个使用$system['db']['pdo']配置组的数据库对象。
+6.系统函数：chRsKey($rs, $col)，改变结果集数组key。
+7.$this->input增加了获取路由各种信息的方法。
+具体如下：
+    (1).$this->input->module_name()
+      hmvc模块名称，没有模块就为空
+    (2).$this->input->method_path()
+      url中方法的路径,比如：1.home.index , 2.user.home.index ，user是文件夹
+    (3).$this->input->method_name()
+      url中方法名称,比如：index
+    (4).$this->input->method_prefix()
+      $system配置中方法前缀,比如：do
+    (5).$this->input->controller_path()
+      url中控制器的路径，比如：1.home 2.user.home ，user是文件夹
+    (6).$this->input->controller_name()
+      url中控制器名称，比如：home 
+    (7).$this->input->folder_name()
+      url中文件夹名称，没有文件夹返回空 
+    (8).$this->input->controller_file()
+      请求的控制器文件绝对路径，比如：/home/www/app/controllers/home.php
+    (9).$this->input->class_name()
+      请求的控制器类名称，比如：Home 
+    (10).$this->input->class_name()
+      请求的控制器方法名称，比如：doIndex 
+    (11).$this->input->parameters($key = null)
+      传递给控制器方法的所有参数的数组，参数为空时返回空数组
+      $key 参数的索引从0开始，如果传递了索引那么将返回索引对应的参数,不存在的索引将返回null
+      比如：
+         1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')。
+         2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。
+
+8.增加了表单验证规则生成器类$this->rule,所有的表单验证规则都可以通过$this->rule->xxx()获取，而且每个方法都有良好的注释。
+  这个功能在自动提示的ide中非常有用，大大提高编码率。
+9.增加了实例化一个表模型函数table($table_name,$db=null);
+  返回的是WoniuTableModel类对象，WoniuTableModel类继承了WoniuModel类。
+  提示：
+  1.使用table()之前要确定一下$system['table_cache_folder']文件夹是否存在，该文件夹用来缓存表字段信息。
+  2.如果后期修改了表结构增加或者删除了字段，记得删除1中文件夹里面的对应表缓存文件，名字是：表名称.php。
+  实用的方法如下：
+  $table_model=table('user');
+  (1).find($values, $is_rows = false, $order_by = null)方法,查询数据
+    find方法非常灵活，下面给出几个使用示例：
+
+    1.获取主键是10的记录
+    $table_model->find(10)
+
+    2.获取主键是10，11的两个记录
+    $table_model->find(array(10,11),true)
+
+    3.根据条件获取一条记录
+    $table_model->find(array('id'=>100))
+
+    4.根据条件获取多条记录
+    $table_model->find(array('id >'=>10),true)
+
+    5.获取主键是10，11的两个记录,并用id排序
+    $table_model->find(array(10,11),true,'id desc')
+
+    6.根据条件获取多条记录,并用id排序
+    $table_model->find(array('id >'=>10),true,'id asc')
+  (2).findAll($where = null, $orderby = NULL, $limit = null, $fileds = null),获取所有数据。
+      下面是几个例子：
+    1.查询表所有数据。
+      $table_model->findAll()
+    2.查询表中type为1的所有数据。
+      $table_model->findAll(array('type'=>1))
+    3.查询表中type为1的所有数据，并且按着id倒序排列。
+      $table_model->findAll(array('type'=>1),'id desc')
+    4.查询表中type为1的按着id倒序排列的100条数据。
+      $table_model->findAll(array('type'=>1),'id desc',100)
+    5.查询表中type为1的按着id倒序排列的100条数据，同时只获取id和name两个字段。
+      $table_model->findAll(array('type'=>1),'id desc',100,'id,name')
+
+  (3).findCol($col, $where, $is_rows = false, $order_by = null)方法,查询字段数据
+   findCol和find类似，值是获取的是某个字段的值或者数组，示例可以参考find方法。
+
+  (4).delete($values, Array $cond = NULL)方法,删除数据
+   delete方法是用来删除数据。
+    下面是几个例子：
+
+    1.删除主键是10的记录
+    $table_model->delete(10)
+
+    2.删除主键是10,11,12的记录
+    $table_model->delete(array(10,11,12))
+
+    3.删除主键是10,11,12记录中gid是3的记录
+    $table_model->delete(array(10,11,12),array('gid'=>3))
+
+  (5).deleteIn($key, $values, Array $cond = NULL)方法,删除数据
+    下面是几个例子：
+
+    1.删除cat_id是3的记录
+    $table_model->deleteIn(‘cat_id’,3)
+
+    2.删除cat_id是3,4,5的记录
+    $table_model->deleteIn(‘cat_id’,array(3,4,5))
+
+    3.删除cat_id是3,4,5记录中id大于100的记录
+    $table_model->deleteIn(‘cat_id’,array(3,4,5),array('id >'=>100))
+  (6).check($source_data, &$ret_data, $rule = null, $map = null)方法,验证数据
+   参数说明：
+   $source_data 数据源，要检查的数据
+   $ret_data    数据验证通过$ret_data是验证规则处理后的数据，用于插入或者更新到数据库,数据验证失败$ret_data是空数组
+   $rule        验证规则，格式：array(
+                                '字段名称'=>array(
+                                                 '表单验证规则'=>'验证失败提示信息',
+                                                 ...   
+                                                 ),
+                                 ...
+                               )
+   $map         字段映射信息数组。格式：array('表单name名称'=>'表字段名称',...)
+   返回null:验证通过。返回字符串:验证失败提示信息。 
+   使用示例：
+        $user = table('admin');
+        $_POST['user'] = 'test';
+        //$_POST['user'] = 'testaa';
+        $_POST['pass'] = 'testtesttesttest';
+        $rule = array(
+            'username' => array($this->rule->range_len(5, 16) => '用户名5-16字符'),
+            'password' => array($this->rule->len(16) => '密码16字符'),
+        );
+        $map=array('user'=>'username','pass'=>'password');
+        $data = array();
+        if (is_null($msg = $table_model->check($_POST, $data, $rule,$map))) {
+            //dump($data);
+            dump($table_model->update($data,3));
+        } else {
+            echo $msg;
+        }
+    (7).insert($ret_data),插入数据。
+        $ret_data应该是check()验证通过的数据。
+    (8).update($ret_data, $where),需要更新的数据。
+        $ret_data  应该是check()验证通过的数据。
+        $where     可以是where条件关联数组，还可以是主键值。
+    (9).columns(),获取表字段数组。
+    (10).getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10)
+        getPage用于获取分页数据，同时含有分页条。返回的是一个数组，items字段是结果集，page字段是分页条字符串。
+        参数说明：
+        $page       第几页
+        $pagesize   每页多少条
+        $url        基础url，里面的{page}会被替换为实际的页码
+        $fields     select的字段，全部用*，多个字段用逗号分隔
+        $where      where条件，关联数组
+        $like       搜素的字段，比如array('title'=>'java');搜索title包含java
+        $orderby    排序字段，比如: 'id desc'
+        $page_bar_order   分页条组成，可以参考手册分页条部分
+        $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
+        下面是使用示例：
+         1.第一页，每页20条。
+           $table_model->getPage(1, 20, '?demo/&p={page}', '*', null, null, null, array(3, 5));
+    (11).search($page, $pagesize, $url, $fields, $cond, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10)
+        getPage用于获取分页数据，同时含有分页条。返回的是一个数组，items字段是结果集，page字段是分页条字符串。
+        参数说明：
+        $page       第几页
+        $pagesize   每页多少条
+        $url        基础url，里面的{page}会被替换为实际的页码
+        $fields     select的字段，全部用*，多个字段用逗号分隔
+        $cond       SQL语句where后面的部分，不要带limit
+        $page_bar_order   分页条组成，可以参考手册分页条部分
+        $page_bar_a_count 分页条a的数量，可以参考手册分页条部分
+        下面是使用示例：
+         1.搜索id大于11而且type为3，按着id倒序排列。每页20条。
+           $query='id>11 and type=3 order by id desc';
+           $url='?demo.page&query=' . urlencode($query) . '&p={page}';
+           $table_model->search($this->input->get('p'), 20, $url , '*', $query));
+10.获取GET，POST数据有4个模式：
+   1.get_xxx       从GET里面获取数据。
+   2.post_xxx      从POST里面获取数据。
+   3.get_post_xxx  先从GET里面获取，没有的话再到POST里获取。
+   4.post_get_xxx  先从POST里面获取，没有的话再到GET里获取。
+
+   $this->input增加了下面的方法，4个模式都有，下面只用get_xxx模式作为说明。
+   (1).$this->input->get_int($key, $min = null, $max = null, $default = null)
+       作用：获取一个整数。
+       参数说明：
+       $key     键
+       $min     最小值，为null不限制
+       $max     最大值，为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_int('id',1,null,1)
+    (2).$this->input->get_date($key, $min = null, $max = null, $default = null)
+       作用：获取日期，格式:2012-12-12
+       参数说明：
+       $key     键
+       $min     最小日期，格式:2012-12-12。为null不限制
+       $max     最大日期，格式:2012-12-12。为null不限制
+       $default 默认日期。格式错误或者不在范围，返回默认日期
+       使用示例：
+       $this->input->get_date('add_date',null,null,date('Y-m-d'))
+    (3).$this->input->get_time($key, $min = null, $max = null, $default = null)
+       作用：获取时间，格式:15:01:55
+       参数说明：
+       $key     键
+       $min     最小时间，格式:15:01:55。为null不限制
+       $max     最大时间，格式:15:01:55。为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_time('add_time',null,null,date('H:i:s'))
+    (4).$this->input->get_datetime($key, $min = null, $max = null, $default = null)
+       作用：获取日期时间，格式:2012-12-12 15:01:55
+       参数说明：
+       $key     键
+       $min     最小日期时间，格式:2012-12-12 15:01:55。为null不限制
+       $max     最大日期时间，格式:2012-12-12 15:01:55。为null不限制
+       $default 默认值。格式错误或者不在范围，返回默认值
+       使用示例：
+       $this->input->get_datetime('add_datetime',null,null,date('Y-m-d H:i:s'))
+    (5).$this->input->get_rule($rule, $key, $default = null)
+       作用：根据验证规则和键获取一个值
+       参数说明：
+       $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
+       $key     键
+       $default 默认值。格式错误或者验证不通过，返回默认值。
+       使用示例：
+       $this->input->get_rule(WoniuRule::email(),'email')
+
+升级提示：
+1.在$system配置里面增加一项：
+  $system['url_rewrite'] = FALSE;如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE。
+  该配置会影响url()函数生成的链接
+2.在$system配置里面增加一项：
+  $system['table_cache_folder'] = $system['application_folder'] . '/cache';
+  table()方法缓存表字段信息的文件夹路径名称。
+
+#############################ver 2.2.6[2014-04-24]#############################
+增加了：
+1.HMVC支持。
+    对应配置项：
+    /**
+存放HMVC模块的文件夹路径名称
+     */
+    $system['hmvc_folder'] = $system['application_folder'] . '/modules';
+    /**
+注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+     */
+    $system['hmvc_modules'] = array('demo' => 'hmvc_demo');
+
+    MicroPHP HMVC模块结构说明：
+    每个模块文件夹里面必须有个名称为hmvc.php的模块配置文件。
+    模块文件夹结构可以参考示例模块：hmvc_demo，位于：application/modules/hmvc_demo
+    配置说明:
+
+        1.模块配置文件和入口文件里面的主配置一样。 
+        2.如果HMVC模块有自己的配置，模块就可以覆盖主配置。 
+        3.模块配置里面已经配置了一些必要的配置项目。 
+        4.如果HMVC模块需要其它不同于主配置的配置，那么取消配置前面的注释,然后配置即可。 
+
+    提醒：
+
+    1.$system['my_loader']，$system['hmvc_folder']，$system['hmvc_modules']这三个配置项在HMVC配置中无效。 
+    2.HMVC模块共享主配置的：模型，视图，helper和类库。当有重名时，优先使用HMVC模块的。
+
+    如何访问hvmc模块？
+    访问hvmc模块很简单，只要在url控制器前面加上“模块名称/”即可，其它规则和以前框架规则一样。
+    比如：
+    1.http://127.0.0.1/?demo,访问的就是hmvc_demo模块默认的控制器和方法。
+    2.http://127.0.0.1/?demo/home.index,访问的就是hmvc_demo模块home控制器doIndex()方法。
+2.插件模式下的hmvc。
+  a.WoniuLoader::instance($renew = null, $hmvc_module_floder = null)
+  b.WoniuController::instance($classname_path = null, $hmvc_module_floder = NULL)
+  c.WoniuModel::instance($classname_path = null, $hmvc_module_floder = NULL)
+  a,b,c都增加了第二个参数$hmvc_module_floder即模块文件夹名称。
+  比如：
+     1.$hmvc_demo_loader=WoniuLoader::instance(true,'hmvc_demo');实例化模块hmvc_demo的一个loader实例
+     2.$hmvc_demo_home=WoniuController::instance('home','hmvc_demo');实例化模块hmvc_demo的一个home控制器对象
+     3.$hmvc_demo_model=WoniuModel::instance('HmvcModel','hmvc_demo');实例化模块hmvc_demo的一个HmvcModel模型对象
+3.$this->input增加了post_get($key = null, $default = null, $xss_clean = false) 方法,先尝试从$_POST获取一个变量,没有的话再在$_GET里获取。
+4.系统配置$system['view_folder']支持数组。
+5.$this->view_path($view_name, $path_key = 0),增加了第二个参数。当视图配置文件夹$system['view_folder']是数组的时候， 
+  可以指定数组的键，用于指定使用哪个视图路经。该方法是获取视图绝对路径，在视图中include其它视图的时候用到。
+  提示：
+       hvmc模式时“视图路经数组”是模块的视图数组和主配置视图数组合并后的数组。
+       即:$hmvc_system['view_folder']=array_merge($hmvc_system['view_folder'], $system['view_folder']);
+
+升级提示：
+1.在$system配置里面增加两项：
+  $system['hmvc_folder'] = $system['application_folder'] . '/modules';
+  $system['hmvc_modules'] = array();
+
 #############################ver 2.2.5[2014-04-19]#############################
 增加了：
 1.增加sessionStart()函数，安全启用session，避免重复启用session。
@@ -254,24 +583,24 @@ $system['log_error_handle'] = array(
 $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
-     * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+默认存储方式
+可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
-     * 默认缓存文件存储的路径
-     * 使用绝对全路径，比如： /home/username/cache
-     * 留空，系统自己选择
+默认缓存文件存储的路径
+使用绝对全路径，比如： /home/username/cache
+留空，系统自己选择
      */
     "path" => "", // 缓存文件存储默认路径
     "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
 
     /*
-     * 第二驱动
-     * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
-     * 这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
-     * $key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
+第二驱动
+比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
+这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
+$key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
      */
     "fallback" => array(
         "memcache" => "files",
@@ -283,19 +612,19 @@ $system['cache_config'] = array(
         "sqlite" => "files",
     ),
     /*
-     * .htaccess 保护
-     * true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
+.htaccess 保护
+true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
      */
     "htaccess" => false,
     /*
-     * Memcache服务器地址;
+Memcache服务器地址;
      */
     "server" => array(
         array("192.168.199.25", 11211, 1),
     //  array("new.host.ip",11211,1),
     ),
     /*
-     * Redis服务器地址;
+Redis服务器地址;
      */
     "redis" => array(
         'type'=>'tcp',//sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
@@ -335,8 +664,8 @@ $system['session_handle'] = array(
         'replicaSet' => false,
     ),
     /**
-     * mysql表结构
-     *   CREATE TABLE `session_handler_table` (
+mysql表结构
+  CREATE TABLE `session_handler_table` (
       `id` varchar(255) NOT NULL,
       `data` mediumtext NOT NULL,
       `timestamp` int(255) NOT NULL,
@@ -354,13 +683,13 @@ $system['session_handle'] = array(
         'table' => 'session_handler_table',
     ),
     /**
-     * memcache采用的是session.save_handler管理机制
-     * 需要php安装memcache拓展支持
+memcache采用的是session.save_handler管理机制
+需要php安装memcache拓展支持
      */
     'memcache' => "tcp://192.168.199.25:11211",
     /**
-     * redis采用的是session.save_handler管理机制
-     * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
+redis采用的是session.save_handler管理机制
+需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
      */
     'redis' => "tcp://192.168.199.25:6379",
 );

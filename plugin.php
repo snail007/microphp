@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.5
- * @createdtime         2014-04-19 21:32:05
+ * @since		Version 2.2.7
+ * @createdtime         2014-05-17 18:09:01
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -25,6 +25,11 @@ define('WDS', DIRECTORY_SEPARATOR);
  */
 $system['folder_auto_init'] = FALSE;
 /**
+ * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
+ * 该配置会影响url()函数生成的链接
+ */
+$system['url_rewrite'] = FALSE;
+/**
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
@@ -34,21 +39,33 @@ $system['application_folder'] = realpath('.') . '/' . 'application';
  */
 $system['controller_folder'] = $system['application_folder'] . '/controllers';
 /**
- * 存放模型文件的文件夹路径名称
+ * 存放模型文件的文件夹路径名称,支持数组
  */
 $system['model_folder'] = $system['application_folder'] . '/models';
 /**
- * 存放视图文件的文件夹路径名称
+ * 存放视图文件的文件夹路径名称,支持数组
  */
 $system['view_folder'] = $system['application_folder'] . '/views';
 /**
- * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载
+ * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载,支持数组
  */
 $system['library_folder'] = $system['application_folder'] . '/library';
 /**
- * 存放函数文件的文件夹路径名称
+ * 存放函数文件的文件夹路径名称,支持数组
  */
 $system['helper_folder'] = $system['application_folder'] . '/helper';
+/**
+ * table()方法缓存表字段信息的文件夹路径名称
+ */
+$system['table_cache_folder'] = $system['application_folder'] . '/cache';
+/**
+ * 存放HMVC模块的文件夹路径名称
+ */
+$system['hmvc_folder'] = $system['application_folder'] . '/modules';
+/**
+ * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
+ */
+$system['hmvc_modules'] = array('demo' => 'hmvc_demo');
 /**
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
@@ -119,6 +136,7 @@ $system['helper_file_subfix'] = '.php';
  *      }
  *  } 
  * 3.如果无需自定义Loader，留空即可。
+ * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
  */
 $system['my_loader'] = '';
 /**
@@ -227,7 +245,9 @@ $system['default_timezone'] = 'PRC';
  * 比如：
  *   (1).http://localhost/index.php?welcome.index
  *   (2).http://localhost/index.php/welcome.index
- * 路由字符串是welcome.index(不包含最前面的?或者/)，路由规则都是针对“路由字符串”的。
+ *   (3).http://localhost/index.php?news/welcome.index
+ *   (4).http://localhost/index.php/news/welcome.index
+ * 路由字符串是welcome.index(不包含最前面的?、/、模块名称)，路由规则都是针对“路由字符串”的。
  * 现在定义路由规则：
  *   $system['route']=array(
  *        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
