@@ -69,7 +69,7 @@
       请求的控制器文件绝对路径，比如：/home/www/app/controllers/home.php
     (9).$this->input->class_name()
       请求的控制器类名称，比如：Home 
-    (10).$this->input->class_name()
+    (10).$this->input->class_method_name()
       请求的控制器方法名称，比如：doIndex 
     (11).$this->input->parameters($key = null)
       传递给控制器方法的所有参数的数组，参数为空时返回空数组
