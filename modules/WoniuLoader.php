@@ -419,7 +419,7 @@ class WoniuLoader {
         }
     }
 
-    public function redirect($url, $msg = null, $view = null, $time = 3) {
+    public function redirect($url, $msg = null, $time = 3, $view = null) {
         if (empty($msg)) {
             header('Location:' . $url);
         } else {
