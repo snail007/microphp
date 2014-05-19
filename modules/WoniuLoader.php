@@ -420,6 +420,7 @@ class WoniuLoader {
     }
 
     public function redirect($url, $msg = null, $time = 3, $view = null) {
+        $time = intval($time) ? intval($time) : 3;
         if (empty($msg)) {
             header('Location:' . $url);
         } else {
@@ -435,6 +436,7 @@ class WoniuLoader {
     }
 
     public function message($msg, $url = null, $time = 3, $view = null) {
+        $time = intval($time) ? intval($time) : 3;
         if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
@@ -760,7 +762,7 @@ class WoniuLoader {
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);
-                } 
+                }
                 return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;

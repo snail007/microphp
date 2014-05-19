@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime         2014-05-19 13:03:09
+ * @createdtime         2014-05-19 13:05:20
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  */
 if (!function_exists('dump')) {
 
@@ -769,7 +769,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  */
 class WoniuInput {
 
@@ -1317,7 +1317,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  */
 class WoniuRouter {
 
@@ -1557,7 +1557,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.7
- * @createdtime            2014-05-19 13:03:09
+ * @createdtime            2014-05-19 13:05:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1966,6 +1966,7 @@ class WoniuLoader {
     }
 
     public function redirect($url, $msg = null, $time = 3, $view = null) {
+        $time = intval($time) ? intval($time) : 3;
         if (empty($msg)) {
             header('Location:' . $url);
         } else {
@@ -1981,6 +1982,7 @@ class WoniuLoader {
     }
 
     public function message($msg, $url = null, $time = 3, $view = null) {
+        $time = intval($time) ? intval($time) : 3;
         if (!empty($url)) {
             header("refresh:{$time};url={$url}"); //单位秒
         }
@@ -2306,7 +2308,7 @@ class WoniuLoader {
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);
-                } 
+                }
                 return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
@@ -2882,7 +2884,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3002,7 +3004,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3445,7 +3447,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  */
 class WoniuDB {
 
@@ -9605,7 +9607,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.7
- * @createdtime       2014-05-19 13:03:09
+ * @createdtime       2014-05-19 13:05:20
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
