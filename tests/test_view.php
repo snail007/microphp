@@ -55,7 +55,15 @@ class Test_view extends WebTestCase{
         $this->get(getReqURL('view.return'));
         $this->assertEqual($this->getBrowser()->getContent(), 'test_include');
     }
-    
+    public function testAutoload(){
+        $this->get(getReqURL('autoload.helper'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'okay');
+        $this->get(getReqURL('autoload.library'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'okay');
+        $this->get(getReqURL('autoload.model'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'okay');
+    }
+
     public function testCall(){
         function forcall($a){
             echo $a.'xxx';

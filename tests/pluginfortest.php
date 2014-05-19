@@ -141,21 +141,21 @@ $system['my_loader'] = $system['library_folder'][0] . '/MyLoader.class.php';
  * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
-$system['helper_file_autoload'] = array();
+$system['helper_file_autoload'] = array('test/config');
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
  * 比如: ImageTool 或者配置数组array('ImageTool'=>'image')
  * 配置数组的作用是为长的类库名用别名代替.
  */
-$system['library_file_autoload'] = array();
+$system['library_file_autoload'] = array(array('sub/SubLibAuto'=>'sublibtest'));
 /**
  * 自动加载的model,比如array($item); 
  * $item是model文件名或者"配置数组",不包含后缀,
  * 比如: UserModel 或者配置数组 array('UserModel'=>'user')
  * 配置数组的作用是为长的model名用别名代替.
  */
-$system['models_file_autoload'] = array();
+$system['models_file_autoload'] = array(array('test/SubUserModelAuto'=>'submodelstest'));
 /**
  * 控制器方法名称是否首字母大写,默认true
  */
