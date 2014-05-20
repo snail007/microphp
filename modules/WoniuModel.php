@@ -204,7 +204,7 @@ class WoniuTableModel extends WoniuModel {
                 }
             }
             $content = 'return ' . var_export($info, true) . ";\n";
-            $content = "<?php\n" . $content;
+            $content = '<?php\n' . $content;
             file_put_contents($cache_file, $content);
             $ret_info[$tableName] = $info;
         } else {
