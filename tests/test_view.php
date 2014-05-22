@@ -46,7 +46,26 @@ class Test_view extends WebTestCase{
         $this->assertEqual($this->getBrowser()->getContent(), 'inc');
         $this->get(getReqURL('demo/home.testViewSame'));
         $this->assertEqual($this->getBrowser()->getContent(), 'v1');
+        $this->get(getReqURL('view.test'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'app1:view');
+        $this->get(getReqURL('view.test/0'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'app1:view');
+        $this->get(getReqURL('view.test/1'));
+        $this->assertEqual($this->getBrowser()->getContent(), 'app2:view');
+        
+        
     }
+    public function testViewPath(){
+        $path1=  truepath('app/views/message.view.php');
+        $path2=  truepath('app2/views/message.view.php');
+        $this->get(getReqURL('view.testPath'));
+        $this->assertEqual($this->getBrowser()->getContent(), $path1);
+        $this->get(getReqURL('view.testPath/0'));
+        $this->assertEqual($this->getBrowser()->getContent(), $path1);
+        $this->get(getReqURL('view.testPath/1'));
+        $this->assertEqual($this->getBrowser()->getContent(), $path2);
+    }
+
     public function testViewData(){
         $this->get(getReqURL('view.data'));
         $this->assertEqual($this->getBrowser()->getContent(), 'include');
