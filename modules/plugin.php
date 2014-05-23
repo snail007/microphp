@@ -109,15 +109,15 @@ $system['controller_file_subfix'] = '.php';
  */
 $system['model_file_subfix'] = '.model.php';
 /**
- * 视图文件名称后缀,比如.view.php'
+ * 视图文件名称后缀,比如.view.php
  */
 $system['view_file_subfix'] = '.view.php';
 /**
- * 类库文件名称后缀,比如.class.php'
+ * 类库文件名称后缀,比如.class.php
  */
 $system['library_file_subfix'] = '.class.php';
 /**
- * 函数文件名称后缀,比如.php'
+ * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
 /**
