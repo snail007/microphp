@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-22 23:55:01
+ * @createdtime         2014-05-23 13:41:53
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -109,15 +109,15 @@ $system['controller_file_subfix'] = '.php';
  */
 $system['model_file_subfix'] = '.model.php';
 /**
- * 视图文件名称后缀,比如.view.php'
+ * 视图文件名称后缀,比如.view.php
  */
 $system['view_file_subfix'] = '.view.php';
 /**
- * 类库文件名称后缀,比如.class.php'
+ * 类库文件名称后缀,比如.class.php
  */
 $system['library_file_subfix'] = '.class.php';
 /**
- * 函数文件名称后缀,比如.php'
+ * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
 /**
@@ -182,11 +182,11 @@ $system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
- * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['default']['db_debug']，
+ * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
  *       同时务必设置自己的错误日志记录处理方法
  * false：关闭
  * 提示：
- * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
+ * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['xxx']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
 $system['log_error'] = FALSE;
