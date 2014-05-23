@@ -48,7 +48,10 @@ $system['model_folder'] = array(
 /**
  * 存放视图文件的文件夹路径名称
  */
-$system['view_folder'] = $system['application_folder'] . '/views';
+$system['view_folder'] = array(
+    $system['application_folder'] . '/views',
+    $system['application_folder'] . '/../app2/views'
+);
 /**
  * 存放类库文件的文件夹路径名称,存放在该文件夹的类库中的类会自动加载
  */

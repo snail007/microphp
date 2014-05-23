@@ -46,7 +46,10 @@ class View extends WoniuController{
         $data['msg']='lude';
         $this->view('view',$data);
     }
-    public function doTest(){
-        var_dump($this->router);
+    public function doTest($key=null){
+        $this->view((!is_null($key)?$key.':':'').'message_1');
+    }
+    public function doTestPath($key=null){
+        echo($this->view_path((!is_null($key)?$key.':':'').'message'));
     }
 }

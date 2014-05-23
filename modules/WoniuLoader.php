@@ -239,22 +239,50 @@ class WoniuLoader {
         }
         $count = count($view_folders);
         $i = 0;
-        $view_path = '';
-        foreach ($view_folders as $dir) {
-            $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-            if (file_exists($view_path)) {
-                if ($return) {
-                    @ob_start();
-                    include $view_path;
-                    $html = ob_get_contents();
-                    @ob_end_clean();
-                    return $html;
+        if (stripos($view_name, ':') !== false) {
+            //指定了键
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+            if (!isset($system['view_folder'][$path_key])) {
+                trigger404('error key[' . $path_key . '] of $system["view_folder"]');
+            } else {
+                $dir = $system['view_folder'][$path_key];
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
                 } else {
-                    include $view_path;
-                    return;
+                    trigger404('View:' . $view_path . ' not found');
                 }
-            } elseif (($i++) == $count - 1) {
-                trigger404('View:' . $view_path . ' not found');
+            }
+        } else {
+            //没有指定键，遍历所有视图文件夹
+            $view_path = '';
+            foreach ($view_folders as $dir) {
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
+                } elseif (($i++) == $count - 1) {
+                    trigger404('View:' . $view_path . ' not found');
+                }
             }
         }
     }
@@ -386,7 +414,11 @@ class WoniuLoader {
      * @return string
      */
     public function view_path($view_name, $path_key = 0) {
-
+        if (stripos($view_name, ':') !== false) {
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+        }
         $system = WoniuLoader::$system;
         if (!is_array($system['view_folder'])) {
             $system['view_folder'] = array($system['view_folder']);
@@ -396,7 +428,7 @@ class WoniuLoader {
         }
         $dir = $system['view_folder'][$path_key];
         $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-        return $view_path;
+        return truepath($view_path);
     }
 
     public function ajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true) {

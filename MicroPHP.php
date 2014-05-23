@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.7
- * @createdtime         2014-05-20 16:58:01
+ * @since		Version 2.2.8
+ * @createdtime         2014-05-22 23:55:01
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  */
 if (!function_exists('dump')) {
 
@@ -768,8 +768,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  */
 class WoniuInput {
 
@@ -1316,8 +1316,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  */
 class WoniuRouter {
 
@@ -1556,8 +1556,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.7
- * @createdtime            2014-05-20 16:58:01
+ * @since                  Version 2.2.8
+ * @createdtime            2014-05-22 23:55:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1785,22 +1785,50 @@ class WoniuLoader {
         }
         $count = count($view_folders);
         $i = 0;
-        $view_path = '';
-        foreach ($view_folders as $dir) {
-            $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-            if (file_exists($view_path)) {
-                if ($return) {
-                    @ob_start();
-                    include $view_path;
-                    $html = ob_get_contents();
-                    @ob_end_clean();
-                    return $html;
+        if (stripos($view_name, ':') !== false) {
+            //指定了键
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+            if (!isset($system['view_folder'][$path_key])) {
+                trigger404('error key[' . $path_key . '] of $system["view_folder"]');
+            } else {
+                $dir = $system['view_folder'][$path_key];
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
                 } else {
-                    include $view_path;
-                    return;
+                    trigger404('View:' . $view_path . ' not found');
                 }
-            } elseif (($i++) == $count - 1) {
-                trigger404('View:' . $view_path . ' not found');
+            }
+        } else {
+            //没有指定键，遍历所有视图文件夹
+            $view_path = '';
+            foreach ($view_folders as $dir) {
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
+                } elseif (($i++) == $count - 1) {
+                    trigger404('View:' . $view_path . ' not found');
+                }
             }
         }
     }
@@ -1932,7 +1960,11 @@ class WoniuLoader {
      * @return string
      */
     public function view_path($view_name, $path_key = 0) {
-
+        if (stripos($view_name, ':') !== false) {
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+        }
         $system = WoniuLoader::$system;
         if (!is_array($system['view_folder'])) {
             $system['view_folder'] = array($system['view_folder']);
@@ -1942,7 +1974,7 @@ class WoniuLoader {
         }
         $dir = $system['view_folder'][$path_key];
         $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-        return $view_path;
+        return truepath($view_path);
     }
 
     public function ajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true) {
@@ -2883,8 +2915,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3003,8 +3035,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3444,8 +3476,8 @@ class WoniuTableModel extends WoniuModel {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  */
 class WoniuDB {
 
@@ -7688,7 +7720,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 
@@ -8464,7 +8496,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 
@@ -9604,8 +9636,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since		Version 2.2.8
+ * @createdtime       2014-05-22 23:55:01
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -9622,7 +9654,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 // ------------------------------------------------------------------------
