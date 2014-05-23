@@ -173,15 +173,26 @@ if (!function_exists('systemInfo')) {
  * 获取系统数据库配置信息
  * @param type $group  数据库组名称，即WoniuLoader::$system['db']的键.
  *                     为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+ * @param type $key    配置组的键,指定了key可以获取指定组的键对应的值
  * @return null
  */
 if (!function_exists('dbInfo')) {
 
-    function dbInfo($group = NULL) {
+    function dbInfo($group = NULL, $key = NULL) {
         if (is_null($group)) {
-            return WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
+            $cfg = WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
+            if (is_null($key)) {
+                return $cfg;
+            } else {
+                return isset($cfg[$key]) ? $cfg[$key] : null;
+            }
         } elseif (isset(WoniuLoader::$system['db'][$group])) {
-            return WoniuLoader::$system['db'][$group];
+            $cfg = WoniuLoader::$system['db'][$group];
+            if (is_null($key)) {
+                return $cfg;
+            } else {
+                return isset($cfg[$key]) ? $cfg[$key] : null;
+            }
         } else {
             return null;
         }
