@@ -40,8 +40,8 @@ if (!function_exists('table')) {
      * @param CI_DB_active_record $db 使用的数据库连接对象，默认留空是当前数据库连接
      * @return WoniuTableModel
      */
-    function table($table_name,$db=null) {
-        return WoniuTableModel::M($table_name,$db);
+    function table($table_name, $db = null) {
+        return WoniuTableModel::M($table_name, $db);
     }
 
 }
@@ -313,7 +313,7 @@ if (!function_exists('woniu_exception_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+            trigger500('<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>');
         }
         exit;
     }
@@ -408,7 +408,7 @@ if (!function_exists('woniu_fatal_handler')) {
             }
             if ($system['debug']) {
                 //@ob_clean();
-                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+                trigger500('<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>');
             }
             exit;
         }

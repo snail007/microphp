@@ -182,11 +182,11 @@ $system['error_manage'] = FALSE;
 
 /**
  * 是否开启错误日志记录
- * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['default']['db_debug']，
+ * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
  *       同时务必设置自己的错误日志记录处理方法
  * false：关闭
  * 提示：
- * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['default']['db_debug']）控制的。
+ * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['xxx']['db_debug']）控制的。
  * 只用都为TRUE时才会显示。
  */
 $system['log_error'] = FALSE;
