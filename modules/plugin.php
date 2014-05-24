@@ -335,7 +335,7 @@ $system['session_handle'] = array(
     'common' => array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
-        'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
+        'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 3600, // session lifetime in seconds
     ),
