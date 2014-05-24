@@ -306,11 +306,6 @@ $system['cache_config'] = array(
         "sqlite" => "files",
     ),
     /*
-     * .htaccess 保护
-     * true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
-     */
-    "htaccess" => false,
-    /*
      * Memcache服务器地址;
      */
     "server" => array(

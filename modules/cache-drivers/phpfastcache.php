@@ -45,7 +45,7 @@ class phpFastCache {
             "example" => "files",
         ),
         "securityKey" => "",
-        "htaccess" => true,
+        "htaccess" => false,
         "path" => "",
         "server" => array(
             array("127.0.0.1", 11211, 1),
