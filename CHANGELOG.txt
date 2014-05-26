@@ -14,6 +14,7 @@
   $view_name也支持类似$this->view()中$view_name的用法来指定视图配置文件夹。
   这种用法可以取代第二个参数。
 3.函数dbInfo($group = NULL, $key = NULL)增加了$key参数，$key就是配置组的键,指定了$key可以获取指定组的键对应的值
+
 修复了:
 1.STRICT:Non-static method WoniuLoader::model() should not be called statically, assuming $this from incompatible context
   报错的问题。
