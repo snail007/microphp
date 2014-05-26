@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-23 13:41:53
+ * @createdtime         2014-05-26 12:44:07
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  */
 class WoniuInput {
 
@@ -1328,7 +1328,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  */
 class WoniuRouter {
 
@@ -1568,7 +1568,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-23 13:41:53
+ * @createdtime            2014-05-26 12:44:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1662,7 +1662,7 @@ class WoniuLoader {
         self::$config[$key] = $val;
     }
 
-    public function helper($file_name) {
+    public static function helper($file_name) {
         $system = WoniuLoader::$system;
         $helper_folders = $system['helper_folder'];
         if (!is_array($helper_folders)) {
@@ -1677,7 +1677,7 @@ class WoniuLoader {
             }
             if (file_exists($filename)) {
                 self::$helper_files[] = $filename;
-                //包含文件，并把文件里面的变量放入$this->config
+                //包含文件，并把文件里面的变量放入self::config
                 $before_vars = array_keys(get_defined_vars());
                 $before_vars[] = 'before_vars';
                 include($filename);
@@ -1697,7 +1697,7 @@ class WoniuLoader {
         }
     }
 
-    public function lib($file_name, $alias_name = null) {
+    public static function lib($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -1739,7 +1739,7 @@ class WoniuLoader {
         }
     }
 
-    public function model($file_name, $alias_name = null) {
+    public static function model($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -2927,7 +2927,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3047,7 +3047,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3488,7 +3488,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  */
 class WoniuDB {
 
@@ -9648,7 +9648,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-23 13:41:53
+ * @createdtime       2014-05-26 12:44:07
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

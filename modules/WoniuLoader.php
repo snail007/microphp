@@ -105,7 +105,7 @@ class WoniuLoader {
         self::$config[$key] = $val;
     }
 
-    public function helper($file_name) {
+    public static function helper($file_name) {
         $system = WoniuLoader::$system;
         $helper_folders = $system['helper_folder'];
         if (!is_array($helper_folders)) {
@@ -120,7 +120,7 @@ class WoniuLoader {
             }
             if (file_exists($filename)) {
                 self::$helper_files[] = $filename;
-                //包含文件，并把文件里面的变量放入$this->config
+                //包含文件，并把文件里面的变量放入self::config
                 $before_vars = array_keys(get_defined_vars());
                 $before_vars[] = 'before_vars';
                 include($filename);
@@ -140,7 +140,7 @@ class WoniuLoader {
         }
     }
 
-    public function lib($file_name, $alias_name = null) {
+    public static function lib($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -182,7 +182,7 @@ class WoniuLoader {
         }
     }
 
-    public function model($file_name, $alias_name = null) {
+    public static function model($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
