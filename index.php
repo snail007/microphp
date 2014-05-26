@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-26 12:55:52
+ * @createdtime         2014-05-26 12:59:01
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -306,11 +306,6 @@ $system['cache_config'] = array(
         "sqlite" => "files",
     ),
     /*
-     * .htaccess 保护
-     * true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
-     */
-    "htaccess" => false,
-    /*
      * Memcache服务器地址;
      */
     "server" => array(
@@ -340,7 +335,7 @@ $system['session_handle'] = array(
     'common' => array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
-        'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
+        'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 3600, // session lifetime in seconds
     ),
