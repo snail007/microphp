@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-26 13:00:10
+ * @createdtime         2014-05-26 21:20:06
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  */
 class WoniuInput {
 
@@ -1328,7 +1328,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  */
 class WoniuRouter {
 
@@ -1568,7 +1568,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-26 13:00:10
+ * @createdtime            2014-05-26 21:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2927,20 +2927,19 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
  */
 class WoniuController extends WoniuLoaderPlus {
 
-    private static $woniu;
     private static $instance;
 
     public function __construct() {
+        self::$instance = &$this;
         $this->autoload();
         parent::__construct();
-        self::$woniu = &$this;
     }
 
     private function autoload() {
@@ -2988,7 +2987,7 @@ class WoniuController extends WoniuLoaderPlus {
     }
 
     public static function &getInstance() {
-        return self::$woniu;
+        return self::$instance;
     }
 
     /**
@@ -3004,7 +3003,7 @@ class WoniuController extends WoniuLoaderPlus {
         }
         if (empty($classname_path)) {
             WoniuLoader::classAutoloadRegister();
-            return self::$instance = new self();
+            return  new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
@@ -3047,7 +3046,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3488,7 +3487,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  */
 class WoniuDB {
 
@@ -9648,7 +9647,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-26 13:00:10
+ * @createdtime       2014-05-26 21:20:06
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
