@@ -52,4 +52,8 @@ class View extends WoniuController{
     public function doTestPath($key=null){
         echo($this->view_path((!is_null($key)?$key.':':'').'message'));
     }
+    public function doTestInstance(){
+        $core=  getInstance();
+        dump($core->db===$this->db,$core->db=123,$this->db);
+    }
 }

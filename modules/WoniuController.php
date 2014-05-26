@@ -18,13 +18,12 @@
  */
 class WoniuController extends WoniuLoaderPlus {
 
-    private static $woniu;
     private static $instance;
 
     public function __construct() {
+        self::$instance = &$this;
         $this->autoload();
         parent::__construct();
-        self::$woniu = &$this;
     }
 
     private function autoload() {
@@ -72,7 +71,7 @@ class WoniuController extends WoniuLoaderPlus {
     }
 
     public static function &getInstance() {
-        return self::$woniu;
+        return self::$instance;
     }
 
     /**
@@ -88,7 +87,7 @@ class WoniuController extends WoniuLoaderPlus {
         }
         if (empty($classname_path)) {
             WoniuLoader::classAutoloadRegister();
-            return self::$instance = new self();
+            return  new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
