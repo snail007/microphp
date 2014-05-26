@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.7
- * @createdtime         2014-05-20 16:58:01
+ * @since		Version 2.2.8
+ * @createdtime         2014-05-26 12:55:52
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  */
 if (!function_exists('dump')) {
 
@@ -58,8 +58,8 @@ if (!function_exists('table')) {
      * @param CI_DB_active_record $db 使用的数据库连接对象，默认留空是当前数据库连接
      * @return WoniuTableModel
      */
-    function table($table_name,$db=null) {
-        return WoniuTableModel::M($table_name,$db);
+    function table($table_name, $db = null) {
+        return WoniuTableModel::M($table_name, $db);
     }
 
 }
@@ -191,15 +191,26 @@ if (!function_exists('systemInfo')) {
  * 获取系统数据库配置信息
  * @param type $group  数据库组名称，即WoniuLoader::$system['db']的键.
  *                     为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+ * @param type $key    配置组的键,指定了key可以获取指定组的键对应的值
  * @return null
  */
 if (!function_exists('dbInfo')) {
 
-    function dbInfo($group = NULL) {
+    function dbInfo($group = NULL, $key = NULL) {
         if (is_null($group)) {
-            return WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
+            $cfg = WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
+            if (is_null($key)) {
+                return $cfg;
+            } else {
+                return isset($cfg[$key]) ? $cfg[$key] : null;
+            }
         } elseif (isset(WoniuLoader::$system['db'][$group])) {
-            return WoniuLoader::$system['db'][$group];
+            $cfg = WoniuLoader::$system['db'][$group];
+            if (is_null($key)) {
+                return $cfg;
+            } else {
+                return isset($cfg[$key]) ? $cfg[$key] : null;
+            }
         } else {
             return null;
         }
@@ -331,7 +342,7 @@ if (!function_exists('woniu_exception_handler')) {
         }
         if ($system['debug']) {
             //@ob_clean();
-            echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+            trigger500('<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>');
         }
         exit;
     }
@@ -426,7 +437,7 @@ if (!function_exists('woniu_fatal_handler')) {
             }
             if ($system['debug']) {
                 //@ob_clean();
-                echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
+                trigger500('<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>');
             }
             exit;
         }
@@ -768,8 +779,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  */
 class WoniuInput {
 
@@ -1316,8 +1327,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  */
 class WoniuRouter {
 
@@ -1556,8 +1567,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.7
- * @createdtime            2014-05-20 16:58:01
+ * @since                  Version 2.2.8
+ * @createdtime            2014-05-26 12:55:52
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1616,7 +1627,7 @@ class WoniuLoader {
         }
     }
 
-    public function config($config_group, $key = null) {
+    public static function config($config_group, $key = null) {
         if (!is_null($key)) {
             return isset(self::$config[$config_group][$key]) ? self::$config[$config_group][$key] : null;
         } else {
@@ -1624,7 +1635,7 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
+    public  function database($config = NULL, $is_return = false, $force_new_conn = false) {
         $woniu_db = self::$system['db'];
         $db_cfg_key = $woniu_db['active_group'];
         if (is_string($config) && !empty($config)) {
@@ -1651,7 +1662,7 @@ class WoniuLoader {
         self::$config[$key] = $val;
     }
 
-    public function helper($file_name) {
+    public static function helper($file_name) {
         $system = WoniuLoader::$system;
         $helper_folders = $system['helper_folder'];
         if (!is_array($helper_folders)) {
@@ -1666,7 +1677,7 @@ class WoniuLoader {
             }
             if (file_exists($filename)) {
                 self::$helper_files[] = $filename;
-                //包含文件，并把文件里面的变量放入$this->config
+                //包含文件，并把文件里面的变量放入self::config
                 $before_vars = array_keys(get_defined_vars());
                 $before_vars[] = 'before_vars';
                 include($filename);
@@ -1686,7 +1697,7 @@ class WoniuLoader {
         }
     }
 
-    public function lib($file_name, $alias_name = null) {
+    public static function lib($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -1728,7 +1739,7 @@ class WoniuLoader {
         }
     }
 
-    public function model($file_name, $alias_name = null) {
+    public static function model($file_name, $alias_name = null) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -1785,22 +1796,50 @@ class WoniuLoader {
         }
         $count = count($view_folders);
         $i = 0;
-        $view_path = '';
-        foreach ($view_folders as $dir) {
-            $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-            if (file_exists($view_path)) {
-                if ($return) {
-                    @ob_start();
-                    include $view_path;
-                    $html = ob_get_contents();
-                    @ob_end_clean();
-                    return $html;
+        if (stripos($view_name, ':') !== false) {
+            //指定了键
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+            if (!isset($system['view_folder'][$path_key])) {
+                trigger404('error key[' . $path_key . '] of $system["view_folder"]');
+            } else {
+                $dir = $system['view_folder'][$path_key];
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
                 } else {
-                    include $view_path;
-                    return;
+                    trigger404('View:' . $view_path . ' not found');
                 }
-            } elseif (($i++) == $count - 1) {
-                trigger404('View:' . $view_path . ' not found');
+            }
+        } else {
+            //没有指定键，遍历所有视图文件夹
+            $view_path = '';
+            foreach ($view_folders as $dir) {
+                $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
+                if (file_exists($view_path)) {
+                    if ($return) {
+                        @ob_start();
+                        include $view_path;
+                        $html = ob_get_contents();
+                        @ob_end_clean();
+                        return $html;
+                    } else {
+                        include $view_path;
+                        return;
+                    }
+                } elseif (($i++) == $count - 1) {
+                    trigger404('View:' . $view_path . ' not found');
+                }
             }
         }
     }
@@ -1931,8 +1970,12 @@ class WoniuLoader {
      * @param type $path_key  就是配置中“视图路经数组”的键
      * @return string
      */
-    public function view_path($view_name, $path_key = 0) {
-
+    public static function view_path($view_name, $path_key = 0) {
+        if (stripos($view_name, ':') !== false) {
+            $info = explode(':', $view_name);
+            $path_key = current($info);
+            $view_name = next($info);
+        }
         $system = WoniuLoader::$system;
         if (!is_array($system['view_folder'])) {
             $system['view_folder'] = array($system['view_folder']);
@@ -1942,7 +1985,7 @@ class WoniuLoader {
         }
         $dir = $system['view_folder'][$path_key];
         $view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
-        return $view_path;
+        return truepath($view_path);
     }
 
     public function ajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true) {
@@ -1957,7 +2000,7 @@ class WoniuLoader {
         }
     }
 
-    public function xml_echo($xml, $is_exit = true) {
+    public static function xml_echo($xml, $is_exit = true) {
         header('Content-type:text/xml;charset=utf-8');
         echo $xml;
         if ($is_exit) {
@@ -2028,7 +2071,7 @@ class WoniuLoader {
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
+    public static function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
         $a_num = $a_count;
         $first = '首页';
         $last = '尾页';
@@ -2092,9 +2135,9 @@ class WoniuLoader {
      * 
      * @param Array $map 字段映射数组,格式：array('表单name名称'=>'表字段名称',...)
      */
-    public function readData(Array $map, $source_data = null) {
+    public static function readData(Array $map, $source_data = null) {
         $data = array();
-        $formdata = is_null($source_data) ? $this->input->post() : $source_data;
+        $formdata = is_null($source_data) ? WoniuInput::post() : $source_data;
         foreach ($formdata as $form_key => $val) {
             if (isset($map[$form_key])) {
                 $data[$map[$form_key]] = $val;
@@ -2883,8 +2926,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3003,8 +3046,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3444,8 +3487,8 @@ class WoniuTableModel extends WoniuModel {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since                Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  */
 class WoniuDB {
 
@@ -7688,7 +7731,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 
@@ -8464,7 +8507,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 
@@ -9604,8 +9647,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.7
- * @createdtime       2014-05-20 16:58:01
+ * @since		Version 2.2.8
+ * @createdtime       2014-05-26 12:55:52
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -9622,7 +9665,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.7
+ * @since		Version 2.2.8
  * @filesource
  */
 // ------------------------------------------------------------------------
