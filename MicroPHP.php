@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-26 12:44:07
+ * @createdtime         2014-05-26 12:54:27
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  */
 class WoniuInput {
 
@@ -1328,7 +1328,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  */
 class WoniuRouter {
 
@@ -1568,7 +1568,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-26 12:44:07
+ * @createdtime            2014-05-26 12:54:27
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1627,7 +1627,7 @@ class WoniuLoader {
         }
     }
 
-    public function config($config_group, $key = null) {
+    public static function config($config_group, $key = null) {
         if (!is_null($key)) {
             return isset(self::$config[$config_group][$key]) ? self::$config[$config_group][$key] : null;
         } else {
@@ -1635,7 +1635,7 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
+    public  function database($config = NULL, $is_return = false, $force_new_conn = false) {
         $woniu_db = self::$system['db'];
         $db_cfg_key = $woniu_db['active_group'];
         if (is_string($config) && !empty($config)) {
@@ -1970,7 +1970,7 @@ class WoniuLoader {
      * @param type $path_key  就是配置中“视图路经数组”的键
      * @return string
      */
-    public function view_path($view_name, $path_key = 0) {
+    public static function view_path($view_name, $path_key = 0) {
         if (stripos($view_name, ':') !== false) {
             $info = explode(':', $view_name);
             $path_key = current($info);
@@ -2000,7 +2000,7 @@ class WoniuLoader {
         }
     }
 
-    public function xml_echo($xml, $is_exit = true) {
+    public static function xml_echo($xml, $is_exit = true) {
         header('Content-type:text/xml;charset=utf-8');
         echo $xml;
         if ($is_exit) {
@@ -2071,7 +2071,7 @@ class WoniuLoader {
      * @return type  String
      * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
-    public function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
+    public static function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
         $a_num = $a_count;
         $first = '首页';
         $last = '尾页';
@@ -2135,9 +2135,9 @@ class WoniuLoader {
      * 
      * @param Array $map 字段映射数组,格式：array('表单name名称'=>'表字段名称',...)
      */
-    public function readData(Array $map, $source_data = null) {
+    public static function readData(Array $map, $source_data = null) {
         $data = array();
-        $formdata = is_null($source_data) ? $this->input->post() : $source_data;
+        $formdata = is_null($source_data) ? WoniuInput::post() : $source_data;
         foreach ($formdata as $form_key => $val) {
             if (isset($map[$form_key])) {
                 $data[$map[$form_key]] = $val;
@@ -2927,7 +2927,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3047,7 +3047,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3488,7 +3488,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  */
 class WoniuDB {
 
@@ -9648,7 +9648,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-26 12:44:07
+ * @createdtime       2014-05-26 12:54:27
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
