@@ -306,11 +306,6 @@ $system['cache_config'] = array(
         "sqlite" => "files",
     ),
     /*
-     * .htaccess 保护
-     * true会自动在缓存文件夹里面建立.htaccess文件防止web非法访问
-     */
-    "htaccess" => false,
-    /*
      * Memcache服务器地址;
      */
     "server" => array(
@@ -340,7 +335,7 @@ $system['session_handle'] = array(
     'common' => array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
-        'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
+        'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
         'session_name' => 'PHPSESSID',
         'lifetime' => 3600, // session lifetime in seconds
     ),
