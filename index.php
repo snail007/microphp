@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-28 16:55:09
+ * @createdtime         2014-05-28 16:56:07
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -456,26 +456,6 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-include('db-drivers/db.drivers.php');
-include('db-drivers/mysql.driver.php');
-include('db-drivers/mysqli.driver.php');
-include('db-drivers/pdo.driver.php');
-include('db-drivers/sqlite3.driver.php');
-include('cache-drivers/phpfastcache.php');
-include('cache-drivers/driver.php');
-include('cache-drivers/drivers/apc.php');
-include('cache-drivers/drivers/files.php');
-include('cache-drivers/drivers/memcache.php');
-include('cache-drivers/drivers/memcached.php');
-include('cache-drivers/drivers/sqlite.php');
-include('cache-drivers/drivers/wincache.php');
-include('cache-drivers/drivers/xcache.php');
-include('cache-drivers/drivers/redis.php');
-include('session_drivers/WoniuSessionHandle.php');
-include('session_drivers/MysqlSessionHandle.php');
-include('session_drivers/MongodbSessionHandle.php');
-include('session_drivers/MemcacheSessionHandle.php');
-include('session_drivers/RedisSessionHandle.php');
 
 
 /* End of file index.php */
