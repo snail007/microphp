@@ -335,10 +335,11 @@ function compress_php_src($src, $is_file = false) {
                                 <label><input type="checkbox" name="keys[]" value="files" checked />files</label>
                                 <label><input type="checkbox" name="keys[]" value="memcache" />memcache</label>
                                 <label><input type="checkbox" name="keys[]" value="memcached" />memcached</label>
-                                <label><input type="checkbox" name="keys[]" value="sqlite" />sqlite</label>
-                                <label><input type="checkbox" name="keys[]" value="xcache" />xcache</label>
                                 <label><input type="checkbox" name="keys[]" value="apc" />apc</label>
                                 <label><input type="checkbox" name="keys[]" value="redis" />redis</label>
+                                <label><input type="checkbox" name="keys[]" value="sqlite" />sqlite</label>
+                                <label><input type="checkbox" name="keys[]" value="xcache" />xcache</label>
+                                <label><input type="checkbox" name="keys[]" value="wincache" />wincache</label>
                             </td>
                         </tr>
                         <tr>
