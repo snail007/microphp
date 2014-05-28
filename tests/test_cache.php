@@ -41,7 +41,11 @@ class Test_cache extends UnitTestCase {
 
     public function testAuto() {
         global $system;
+        $ignore=  explode(',', 'memcached,redis,memcache');
         foreach (explode(",", 'auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache') as $driver) {
+            if(in_array($driver, $ignore)){
+                continue;
+            }
             $system['cache_config']['storage'] = $driver;
             WoniuRouter::setConfig($system);
             $woniu = WoniuController::instance();

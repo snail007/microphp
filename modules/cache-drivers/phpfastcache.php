@@ -316,9 +316,10 @@ class phpFastCache {
 //            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
 //        }
 
-
-        $this->driver = new $driver($this->option);
-        $this->driver->is_driver = true;
+        if (class_exists($driver, false)) {
+            $this->driver = new $driver($this->option);
+            $this->driver->is_driver = true;
+        }
     }
 
     /*
@@ -401,8 +402,12 @@ class phpFastCache {
 
     private function isExistingDriver($class) {
         $class = strtolower($class);
+        if (!class_exists("phpfastcache_" . $class, false)) {
+            return false;
+        }
         foreach ($this->drivers as $namex) {
             $clazz = "phpfastcache_" . $namex;
+
             $option = $this->option;
             $option['skipError'] = true;
             $_driver = new $clazz($option);
@@ -574,9 +579,9 @@ class phpFastCache {
         }
 
 
-        $full_path = $this->option("path") . "/" ;//. $this->option("securityKey") . "/";
+        $full_path = $this->option("path") . "/"; //. $this->option("securityKey") . "/";
 
-        if ($create_path==false && $this->checked['path'] == false) {
+        if ($create_path == false && $this->checked['path'] == false) {
 
             if (!file_exists($full_path) || !is_writable($full_path)) {
                 if (!file_exists($full_path)) {
