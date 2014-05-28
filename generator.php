@@ -358,7 +358,7 @@ function compress_php_src($src, $is_file = false) {
                             比如：<br/>
                             1.没有选择session驱动，那么session功能和相应的配置将不再起作用。<br/>
                             2.没有选择缓存驱动，那么$this->cache将是null。如果只选择了files那么系统配置里面缓存类型将只支持files。<br/>
-                            2.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。<br/>
+                            3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。<br/>
                             </td>
                         </tr>
                         <tr>
