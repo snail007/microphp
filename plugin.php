@@ -3,7 +3,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛
@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-28 10:52:08
+ * @createdtime         2014-05-28 15:30:12
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -120,6 +120,14 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
+
+/**
+ * $this->input->setCookie()和$this->input->cookie()
+ * 设置和获取cookie的时候key使用的前缀
+ * 使用前缀的目的：
+ * 避免主域名和子域名设置的cookie冲突
+ */
+$system['cookie_key_prefix'] = '';
 /**
  * 自定义Loader，用于拓展框架核心功能,
  * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。

@@ -8,7 +8,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -458,7 +458,29 @@ class WoniuInput {
         return $xss_clean ? self::xss_clean($val) : $val;
     }
 
+    /**
+     * 获取一个cookie
+     * 提醒:
+     * 该方法会在key前面加上系统配置里面的$system['cookie_key_prefix']
+     * 如果想不加前缀，获取原始key的cookie，可以使用方法：$this->input->cookie_raw();
+     * @param string $key      cookie键
+     * @param type $default    默认值
+     * @param type $xss_clean  xss过滤
+     * @return type
+     */
     public static function cookie($key = null, $default = null, $xss_clean = false) {
+        $key = systemInfo('cookie_key_prefix') . $key;
+        return self::cookieRaw($key, $default, $xss_clean);
+    }
+
+    /**
+     * 获取一个cookie
+     * @param string $key      cookie键
+     * @param type $default    默认值
+     * @param type $xss_clean  xss过滤
+     * @return type
+     */
+    public static function cookieRaw($key = null, $default = null, $xss_clean = false) {
         $val = self::gpcs('_COOKIE', $key, $default);
         return $xss_clean ? self::xss_clean($val) : $val;
     }

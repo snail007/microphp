@@ -3,7 +3,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * 表单验证类库
  * 

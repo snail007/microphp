@@ -30,7 +30,7 @@ $header = '<?php
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛

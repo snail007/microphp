@@ -2,7 +2,7 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
@@ -778,7 +778,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team

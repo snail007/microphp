@@ -2,7 +2,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛
@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-28 10:52:08
+ * @createdtime         2014-05-28 15:30:12
  */
  
 
@@ -21,7 +21,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  */
 if (!function_exists('dump')) {
 
@@ -772,7 +772,7 @@ if (!function_exists('enableSelectDefault')) {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  */
 class WoniuInput {
 
@@ -1222,7 +1222,29 @@ class WoniuInput {
         return $xss_clean ? self::xss_clean($val) : $val;
     }
 
+    /**
+     * 获取一个cookie
+     * 提醒:
+     * 该方法会在key前面加上系统配置里面的$system['cookie_key_prefix']
+     * 如果想不加前缀，获取原始key的cookie，可以使用方法：$this->input->cookie_raw();
+     * @param string $key      cookie键
+     * @param type $default    默认值
+     * @param type $xss_clean  xss过滤
+     * @return type
+     */
     public static function cookie($key = null, $default = null, $xss_clean = false) {
+        $key = systemInfo('cookie_key_prefix') . $key;
+        return self::cookieRaw($key, $default, $xss_clean);
+    }
+
+    /**
+     * 获取一个cookie
+     * @param string $key      cookie键
+     * @param type $default    默认值
+     * @param type $xss_clean  xss过滤
+     * @return type
+     */
+    public static function cookieRaw($key = null, $default = null, $xss_clean = false) {
         $val = self::gpcs('_COOKIE', $key, $default);
         return $xss_clean ? self::xss_clean($val) : $val;
     }
@@ -1320,7 +1342,7 @@ class WoniuInput {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -1328,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  */
 class WoniuRouter {
 
@@ -1560,7 +1582,7 @@ class WoniuRouter {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                 狂奔的蜗牛
@@ -1568,7 +1590,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-28 10:52:08
+ * @createdtime            2014-05-28 15:30:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2039,12 +2061,12 @@ class WoniuLoader {
         exit();
     }
 
-    public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
+    public static function setCookieRaw($key, $value, $life = null, $path = '/', $domian = null, $http_only = false) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
         if (!is_null($domian)) {
             $auto_domain = $domian;
         } else {
-            $host = $this->input->server('HTTP_HOST');
+            $host = WoniuInput::server('HTTP_HOST');
             // $_host = current(explode(":", $host));
             $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
             $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
@@ -2056,8 +2078,17 @@ class WoniuLoader {
                 $auto_domain = '.' . $host;
             }
         }
-        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (WoniuInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
         $_COOKIE[$key] = $value;
+    }
+
+    /**
+     * 设置一个cookie，该方法会在key前面加上系统配置里面的$system['cookie_key_prefix']前缀
+     * 如果不想加前缀，可以使用方法：$this->setCookieRaw()
+     */
+    public static function setCookie($key, $value, $life = null, $path = '/', $domian = null, $http_only = false) {
+        $key = systemInfo('cookie_key_prefix') . $key;
+        return self::setCookieRaw($key, $value, $life, $path, $domian, $http_only);
     }
 
     /**
@@ -2957,7 +2988,7 @@ class WoniuLibLoader {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -2965,7 +2996,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3076,7 +3107,7 @@ class WoniuController extends WoniuLoaderPlus {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -3084,7 +3115,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3517,7 +3548,7 @@ class WoniuTableModel extends WoniuModel {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                狂奔的蜗牛
@@ -3525,7 +3556,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  */
 class WoniuDB {
 
@@ -7761,7 +7792,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
@@ -8537,7 +8568,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
@@ -9677,7 +9708,7 @@ class CI_DB_pdo_result extends CI_DB_result {
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛
@@ -9685,7 +9716,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-28 10:52:08
+ * @createdtime       2014-05-28 15:30:12
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

@@ -3,7 +3,7 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package                MicroPHP
  * @author                 狂奔的蜗牛
@@ -482,12 +482,12 @@ class WoniuLoader {
         exit();
     }
 
-    public function setCookie($key, $value, $life = null, $path = '/', $domian = null) {
+    public static function setCookieRaw($key, $value, $life = null, $path = '/', $domian = null, $http_only = false) {
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
         if (!is_null($domian)) {
             $auto_domain = $domian;
         } else {
-            $host = $this->input->server('HTTP_HOST');
+            $host = WoniuInput::server('HTTP_HOST');
             // $_host = current(explode(":", $host));
             $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
             $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
@@ -499,8 +499,17 @@ class WoniuLoader {
                 $auto_domain = '.' . $host;
             }
         }
-        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, ($this->input->server('SERVER_PORT') == 443 ? 1 : 0));
+        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (WoniuInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
         $_COOKIE[$key] = $value;
+    }
+
+    /**
+     * 设置一个cookie，该方法会在key前面加上系统配置里面的$system['cookie_key_prefix']前缀
+     * 如果不想加前缀，可以使用方法：$this->setCookieRaw()
+     */
+    public static function setCookie($key, $value, $life = null, $path = '/', $domian = null, $http_only = false) {
+        $key = systemInfo('cookie_key_prefix') . $key;
+        return self::setCookieRaw($key, $value, $life, $path, $domian, $http_only);
     }
 
     /**
