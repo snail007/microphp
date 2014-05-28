@@ -59,7 +59,7 @@ class WoniuRouter {
         $pathinfo_query = self::getQueryStr();
 
         //路由hmvc模块名称信息检查
-        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+        $router['module'] = self::getHmvcModuleName($pathinfo_query);
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
@@ -95,7 +95,7 @@ class WoniuRouter {
         $file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
         $class = $class_method[count($class_method) - 1];
         $parameters = explode("/", $pathinfo_query_parameters_str);
-        
+
         if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
             $parameters = array();
         }
@@ -152,13 +152,14 @@ class WoniuRouter {
     private static function checkSession() {
         $system = WoniuLoader::$system;
         //session自定义配置检测
-        if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
-        ) {
+        if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
             $driver = $system['session_handle']['handle'];
             $config = $system['session_handle'];
             $handle = ucfirst($driver) . 'SessionHandle';
-            $session = new $handle();
-            $session->start($config);
+            if (class_exists($handle, FALSE)) {
+                $session = new $handle();
+                $session->start($config);
+            }
         }
     }
 

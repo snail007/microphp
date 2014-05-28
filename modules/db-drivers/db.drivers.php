@@ -34,6 +34,9 @@ class WoniuDB {
         $default['stricton'] = FALSE;
         $config=  array_merge($default,$config);
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
+        if(!class_exists($class, false)){
+            return null;
+        }
         $hash = md5(sha1(var_export($config, TRUE)));
         if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);

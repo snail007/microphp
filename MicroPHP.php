@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-28 17:04:51
+ * @createdtime         2014-05-28 21:53:40
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  */
 class WoniuInput {
 
@@ -1350,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  */
 class WoniuRouter {
 
@@ -1398,7 +1398,7 @@ class WoniuRouter {
         $pathinfo_query = self::getQueryStr();
 
         //路由hmvc模块名称信息检查
-        $router['module']=  self::getHmvcModuleName($pathinfo_query);
+        $router['module'] = self::getHmvcModuleName($pathinfo_query);
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
@@ -1434,7 +1434,7 @@ class WoniuRouter {
         $file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
         $class = $class_method[count($class_method) - 1];
         $parameters = explode("/", $pathinfo_query_parameters_str);
-        
+
         if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
             $parameters = array();
         }
@@ -1491,13 +1491,14 @@ class WoniuRouter {
     private static function checkSession() {
         $system = WoniuLoader::$system;
         //session自定义配置检测
-        if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])
-        ) {
+        if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
             $driver = $system['session_handle']['handle'];
             $config = $system['session_handle'];
             $handle = ucfirst($driver) . 'SessionHandle';
-            $session = new $handle();
-            $session->start($config);
+            if (class_exists($handle, FALSE)) {
+                $session = new $handle();
+                $session->start($config);
+            }
         }
     }
 
@@ -1590,7 +1591,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-28 17:04:51
+ * @createdtime            2014-05-28 21:53:40
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1612,9 +1613,10 @@ class WoniuLoader {
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
         $this->rule = new WoniuRule();
-
-        phpFastCache::setup($system['cache_config']);
-        $this->cache = phpFastCache($system['cache_config']['storage']);
+        if (class_exists('phpFastCache', false)) {
+            phpFastCache::setup($system['cache_config']);
+            $this->cache = phpFastCache($system['cache_config']['storage']);
+        }
         if ($system['autoload_db']) {
             $this->database();
         }
@@ -2996,7 +2998,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3115,7 +3117,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3556,7 +3558,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  */
 class WoniuDB {
 
@@ -3579,6 +3581,9 @@ class WoniuDB {
         $default['stricton'] = FALSE;
         $config=  array_merge($default,$config);
         $class = 'CI_DB_' . $config['dbdriver'] . '_driver';
+        if(!class_exists($class, false)){
+            return null;
+        }
         $hash = md5(sha1(var_export($config, TRUE)));
         if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
@@ -9716,7 +9721,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-28 17:04:51
+ * @createdtime       2014-05-28 21:53:40
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -12048,9 +12053,10 @@ class phpFastCache {
 //            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
 //        }
 
-
-        $this->driver = new $driver($this->option);
-        $this->driver->is_driver = true;
+        if (class_exists($driver, false)) {
+            $this->driver = new $driver($this->option);
+            $this->driver->is_driver = true;
+        }
     }
 
     /*
@@ -12133,8 +12139,12 @@ class phpFastCache {
 
     private function isExistingDriver($class) {
         $class = strtolower($class);
+        if (!class_exists("phpfastcache_" . $class, false)) {
+            return false;
+        }
         foreach ($this->drivers as $namex) {
             $clazz = "phpfastcache_" . $namex;
+
             $option = $this->option;
             $option['skipError'] = true;
             $_driver = new $clazz($option);
@@ -12306,9 +12316,9 @@ class phpFastCache {
         }
 
 
-        $full_path = $this->option("path") . "/" ;//. $this->option("securityKey") . "/";
+        $full_path = $this->option("path") . "/"; //. $this->option("securityKey") . "/";
 
-        if ($create_path==false && $this->checked['path'] == false) {
+        if ($create_path == false && $this->checked['path'] == false) {
 
             if (!file_exists($full_path) || !is_writable($full_path)) {
                 if (!file_exists($full_path)) {

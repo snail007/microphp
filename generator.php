@@ -48,52 +48,87 @@ $files = array(
     'modules/WoniuLoader.php',
     'modules/WoniuController.php',
     'modules/WoniuModel.php',
-    'modules/db-drivers/db.drivers.php',
+    //db
+    'db' => 'modules/db-drivers/db.drivers.php',
     'mysql' => 'modules/db-drivers/mysql.driver.php',
     'mysqli' => 'modules/db-drivers/mysqli.driver.php',
     'pdo' => 'modules/db-drivers/pdo.driver.php',
     'sqlite3' => 'modules/db-drivers/sqlite3.driver.php',
-    'modules/cache-drivers/driver.php',
+    //cache
+    'cache_driver' => 'modules/cache-drivers/driver.php',
     'apc' => 'modules/cache-drivers/drivers/apc.php',
     'files' => 'modules/cache-drivers/drivers/files.php',
     'memcache' => 'modules/cache-drivers/drivers/memcache.php',
     'memcached' => 'modules/cache-drivers/drivers/memcached.php',
     'sqlite' => 'modules/cache-drivers/drivers/sqlite.php',
-    'xcache' => 'modules/cache-drivers/drivers/wincache.php',
-    'apc' => 'modules/cache-drivers/drivers/xcache.php',
+    'wincache' => 'modules/cache-drivers/drivers/wincache.php',
+    'xcache' => 'modules/cache-drivers/drivers/xcache.php',
     'redis' => 'modules/cache-drivers/drivers/redis.php',
-    'modules/cache-drivers/phpfastcache.php',
-    'modules/session_drivers/WoniuSessionHandle.php',
+    'phpfastcache' => 'modules/cache-drivers/phpfastcache.php',
+    //session
+    'WoniuSession' => 'modules/session_drivers/WoniuSessionHandle.php',
     'MysqlSession' => 'modules/session_drivers/MysqlSessionHandle.php',
     'MongodbSession' => 'modules/session_drivers/MongodbSessionHandle.php',
     'MemcacheSession' => 'modules/session_drivers/MemcacheSessionHandle.php',
     'RedisSession' => 'modules/session_drivers/RedisSessionHandle.php',
 );
-$diy = empty($_POST['keys']) ? array() : $_POST['keys'];
-foreach ($diy as $key) {
-    unset($files[$key]);
-}
+
+
 if (php_sapi_name() == 'cli' || !empty($_POST)) {
-    $core = '';
-    foreach ($files as $file) {
-        $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
-    }
-    common_replace($core);
-    
+    //定制
     if (!empty($_POST)) {
+        $diy = empty($_POST['keys']) ? array() : $_POST['keys'];
+
+        $db_keys = array('mysql', 'mysqli', 'pdo', 'sqlite3');
+        $cache_keys = array('apc', 'files', 'memcache', 'memcached', 'sqlite', 'wincache', 'xcache', 'redis');
+        $session_keys = array('MysqlSession', 'MongodbSession', 'MemcacheSession', 'RedisSession');
+        $not_selected_all = array();
+
+        $not_selected = array_diff($db_keys, $diy);
+        if (count($not_selected) == count($db_keys)) {
+            unset($files['db']);
+        }
+        $not_selected_all = array_merge($not_selected_all, $not_selected);
+
+        $not_selected = array_diff($cache_keys, $diy);
+        if (count($not_selected) == count($cache_keys)) {
+            unset($files['cache_driver']);
+            unset($files['phpfastcache']);
+        }
+        $not_selected_all = array_merge($not_selected_all, $not_selected);
+
+        $not_selected = array_diff($session_keys, $diy);
+        if (count($not_selected) == count($session_keys)) {
+            unset($files['WoniuSession']);
+        }
+        $not_selected_all = array_merge($not_selected_all, $not_selected);
+
+        foreach ($not_selected_all as $key) {
+            unset($files[$key]);
+        }
+        $core = '';
+        foreach ($files as $file) {
+            $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
+        }
+        common_replace($core);
         $donw_name = 'MicroPHP.php';
-        $content =  "<?php\n" . $core;
+        $content = "<?php\n" . $core;
         if ($_POST['type'] == 'min') {
             $donw_name = 'MicroPHP.min.php';
             $content = compress_php_src($content);
         }
-        $content=  str_replace('<?php', "{$header}", $content);
+        $content = str_replace('<?php', "{$header}", $content);
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . $donw_name . '"');
         header('Content-Transfer-Encoding: binary');
         exit($content);
     }
-    
+    //命令行
+    $core = '';
+    foreach ($files as $file) {
+        $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
+    }
+    common_replace($core);
     file_put_contents('MicroPHP.php', "<?php\n" . $core);
     $content = php_strip_whitespace('MicroPHP.php');
     file_put_contents('MicroPHP.php', $header . "\n\n" . $core);
@@ -123,7 +158,7 @@ function common_replace(&$str) {
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
 }
 
-function compress_php_src($src,$is_file=false) {
+function compress_php_src($src, $is_file = false) {
     // Whitespaces left and right from this signs can be ignored
     static $IW = array(
         T_CONCAT_EQUAL, // .=
@@ -256,45 +291,73 @@ function compress_php_src($src,$is_file=false) {
         <head>
             <title>MicroPHP定制版生成器_定制属于你的MicroPHP</title>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <style>
+                td,th{
+                    padding: 15px;
+                    border-right: 1px #cccccc solid;
+                    border-top: 1px #cccccc solid;
+                }
+                table{
+                    border-left: 1px #cccccc solid;
+                    border-bottom: 1px #cccccc solid;
+                    border-radius: 5px;
+                }
+                caption{
+                    padding:15px;
+                    font-size: 2em;
+                    font-weight: bold;
+                }
+            </style>
         </head>
         <body>
             <form action="?" target="down" name="mpform" method="POST">
-                <table border="1"  cellpadding="0" cellspacing="0" align="center" >
+                <table border="0"  cellpadding="0" cellspacing="0" align="center" >
+                    <caption>MicroPHP定制版生成器</caption>
                     <thead>
                         <tr>
-                            <th width="100">功能</th>
-                            <th>可选内容</th>
+                            <th width="130">功能</th>
+                            <th width="500">可选内容</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td style="text-align: right;">数据库驱动</td>
                             <td>
-                                <label><input type="checkbox" name="keys[mysql]" checked />mysql</label>
-                                <label><input type="checkbox" name="keys[mysqli]" />mysqli</label>
-                                <label><input type="checkbox" name="keys[pdo]" />pdo</label>
-                                <label><input type="checkbox" name="keys[sqlite3]" />sqlite3</label>
+                                <label><input type="checkbox" name="keys[]" value="mysql" checked />mysql</label>
+                                <label><input type="checkbox" name="keys[]" value="mysqli" />mysqli</label>
+                                <label><input type="checkbox" name="keys[]" value="pdo" />pdo</label>
+                                <label><input type="checkbox" name="keys[]" value="sqlite3" />sqlite3</label>
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">缓存驱动</td>
                             <td>
-                                <label><input type="checkbox" name="keys[files]" checked />files</label>
-                                <label><input type="checkbox" name="keys[memcache]" />memcache</label>
-                                <label><input type="checkbox" name="keys[memcached]" />memcached</label>
-                                <label><input type="checkbox" name="keys[sqlite]" />sqlite</label>
-                                <label><input type="checkbox" name="keys[xcache]" />xcache</label>
-                                <label><input type="checkbox" name="keys[apc]" />apc</label>
-                                <label><input type="checkbox" name="keys[redis]" />redis</label>
+                                <label><input type="checkbox" name="keys[]" value="files" checked />files</label>
+                                <label><input type="checkbox" name="keys[]" value="memcache" />memcache</label>
+                                <label><input type="checkbox" name="keys[]" value="memcached" />memcached</label>
+                                <label><input type="checkbox" name="keys[]" value="sqlite" />sqlite</label>
+                                <label><input type="checkbox" name="keys[]" value="xcache" />xcache</label>
+                                <label><input type="checkbox" name="keys[]" value="apc" />apc</label>
+                                <label><input type="checkbox" name="keys[]" value="redis" />redis</label>
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">SESSION驱动</td>
                             <td>
-                                <label><input type="checkbox" name="keys[MysqlSession]" checked />Mysql</label>
-                                <label><input type="checkbox" name="keys[MongodbSession]" />Mongodb</label>
-                                <label><input type="checkbox" name="keys[MemcacheSession]" />Memcache</label>
-                                <label><input type="checkbox" name="keys[RedisSession]" />Redis</label>
+                                <label><input type="checkbox" name="keys[]" value="MysqlSession"  />Mysql</label>
+                                <label><input type="checkbox" name="keys[]" value="MongodbSession" />Mongodb</label>
+                                <label><input type="checkbox" name="keys[]" value="MemcacheSession" />Memcache</label>
+                                <label><input type="checkbox" name="keys[]" value="RedisSession" />Redis</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">提示</td>
+                            <td>
+                            如果相应的功能没有选择驱动，那么生成的核心文件将不支持相应的功能和配置。<br/>
+                            比如：<br/>
+                            1.没有选择session驱动，那么session功能和相应的配置将不再起作用。<br/>
+                            2.没有选择缓存驱动，那么$this->cache将是null。如果只选择了files那么系统配置里面缓存类型将只支持files。<br/>
+                            2.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。<br/>
                             </td>
                         </tr>
                         <tr>

@@ -407,13 +407,14 @@ class phpFastCache {
         }
         foreach ($this->drivers as $namex) {
             $clazz = "phpfastcache_" . $namex;
-
-            $option = $this->option;
-            $option['skipError'] = true;
-            $_driver = new $clazz($option);
-            $_driver->option = $option;
-            if ($_driver->checkdriver() && $class == $namex) {
-                return true;
+            if (class_exists($clazz, false)) {
+                $option = $this->option;
+                $option['skipError'] = true;
+                $_driver = new $clazz($option);
+                $_driver->option = $option;
+                if ($_driver->checkdriver() && $class == $namex) {
+                    return true;
+                }
             }
         }
         $system = WoniuLoader::$system;
@@ -421,14 +422,17 @@ class phpFastCache {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
             $clazz = "phpfastcache_" . $namex;
-            $option = $this->option;
-            $option['skipError'] = true;
-            $_driver = new $clazz($option);
-            $_driver->option = $option;
-            if ($_driver->checkdriver() && $class == $namex) {
-                return true;
+            if (class_exists($clazz, false)) {
+                $option = $this->option;
+                $option['skipError'] = true;
+                $_driver = new $clazz($option);
+                $_driver->option = $option;
+                if ($_driver->checkdriver() && $class == $namex) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
     /*
