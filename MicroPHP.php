@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-28 21:53:40
+ * @createdtime         2014-05-28 22:57:20
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  */
 class WoniuInput {
 
@@ -1350,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  */
 class WoniuRouter {
 
@@ -1591,7 +1591,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-28 21:53:40
+ * @createdtime            2014-05-28 22:57:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2998,7 +2998,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3117,7 +3117,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3558,7 +3558,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  */
 class WoniuDB {
 
@@ -9721,7 +9721,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-28 21:53:40
+ * @createdtime       2014-05-28 22:57:20
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -12144,13 +12144,14 @@ class phpFastCache {
         }
         foreach ($this->drivers as $namex) {
             $clazz = "phpfastcache_" . $namex;
-
-            $option = $this->option;
-            $option['skipError'] = true;
-            $_driver = new $clazz($option);
-            $_driver->option = $option;
-            if ($_driver->checkdriver() && $class == $namex) {
-                return true;
+            if (class_exists($clazz, false)) {
+                $option = $this->option;
+                $option['skipError'] = true;
+                $_driver = new $clazz($option);
+                $_driver->option = $option;
+                if ($_driver->checkdriver() && $class == $namex) {
+                    return true;
+                }
             }
         }
         $system = WoniuLoader::$system;
@@ -12158,14 +12159,17 @@ class phpFastCache {
             $file = pathinfo($filepath, PATHINFO_BASENAME);
             $namex = str_replace(".php", "", $file);
             $clazz = "phpfastcache_" . $namex;
-            $option = $this->option;
-            $option['skipError'] = true;
-            $_driver = new $clazz($option);
-            $_driver->option = $option;
-            if ($_driver->checkdriver() && $class == $namex) {
-                return true;
+            if (class_exists($clazz, false)) {
+                $option = $this->option;
+                $option['skipError'] = true;
+                $_driver = new $clazz($option);
+                $_driver->option = $option;
+                if ($_driver->checkdriver() && $class == $namex) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
     /*
