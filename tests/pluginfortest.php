@@ -287,7 +287,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => "", // 缓存文件存储默认路径
+    "path" => "application/cache", // 缓存文件存储默认路径
     "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
 
     /*
