@@ -163,18 +163,18 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
                 'range_len[5,16]' => '用户名长度5-16',
                 'optional' => ''
             ),
-            'pass'=>array(
+            'pass' => array(
                 'optional' => ''
             ),
-        ); 
-        $this->assertEqual($WN->checkData($rule2, array('user'=>'_fadsfsd'), $data),'用户名必须是字母开头');
+        );
+        $this->assertEqual($WN->checkData($rule2, array('user' => '_fadsfsd'), $data), '用户名必须是字母开头');
         $this->assertFalse(isset($data['pass']));
-        $this->assertNull($WN->checkData($rule2, array('user'=>'adsfsd'), $data));
+        $this->assertNull($WN->checkData($rule2, array('user' => 'adsfsd'), $data));
         $this->assertFalse(isset($data['pass']));
-        $this->assertNull($WN->checkData($rule2, array('user'=>'adsfsd','pass'=>''), $data));
-        $this->assertTrue(isset($data['pass'])); 
-         
-        
+        $this->assertNull($WN->checkData($rule2, array('user' => 'adsfsd', 'pass' => ''), $data));
+        $this->assertTrue(isset($data['pass']));
+
+
         /**
          * set用于设置在验证数据前对数据进行处理的函数或者方法
          * set_post用于设置在验证数据后对数据进行处理的函数或者方法
@@ -250,6 +250,14 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
         $this->assertNotNull($WN->checkData(array('check' => array('equal[xxx]' => 'check不等于xxx')), array('check' => '')));
         $this->assertNull($WN->checkData(array('check' => array('enum[1,a,b]' => 'check只能是1,a,b之一')), array('check' => 'b')));
         $this->assertNotNull($WN->checkData(array('check' => array('enum[1,a,b]' => 'check只能是1,a,b之一')), array('check' => 'xxx')));
+
+        $_POST['user_id'] = 1;
+        $this->assertNotNull($WN->checkData(array('check' => array('exists[users.uname]' => 'xxx不存在')), array('check' => 'xxx')));
+        $this->assertNull($WN->checkData(array('check' => array('exists[users.uname]' => 'xxx不存在')), array('check' => 'admin')));
+        $this->assertNull($WN->checkData(array('check' => array('exists[users.uname,user_id:#user_id]' => 'xxx不存在')), array('check' => 'admin')));
+        $this->assertNotNull($WN->checkData(array('check' => array('exists[users.uname,user_id:#user_id,user_id >:3000]' => 'xxx不存在')), array('check' => 'admin')));
+        $this->assertNotNull($WN->checkData(array('check' => array('exists[users.uname,user_id:2]' => 'xxx不存在')), array('check' => 'admin')));
+
         $this->assertNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在，不能添加')), array('check' => 'xxx')));
         $this->assertNotNull($WN->checkData(array('check' => array('unique[users.uname]' => 'admin已经存在,不能修改')), array('check' => 'admin')));
         $this->assertNull($WN->checkData(array('check' => array('unique[users.uname,user_id:1]' => 'admin已经存在,不能修改')), array('check' => 'admin')));

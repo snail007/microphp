@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime         2014-05-26 21:20:06
+ * @createdtime         2014-05-28 10:52:08
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  */
 class WoniuInput {
 
@@ -1328,7 +1328,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  */
 class WoniuRouter {
 
@@ -1568,7 +1568,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.8
- * @createdtime            2014-05-26 21:20:06
+ * @createdtime            2014-05-28 10:52:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1635,7 +1635,7 @@ class WoniuLoader {
         }
     }
 
-    public  function database($config = NULL, $is_return = false, $force_new_conn = false) {
+    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
         $woniu_db = self::$system['db'];
         $db_cfg_key = $woniu_db['active_group'];
         if (is_string($config) && !empty($config)) {
@@ -2353,6 +2353,30 @@ class WoniuLoader {
                     $where = array($col => $val);
                 }
                 return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
+            case 'exists':#比如exists[user.name] , exists[user.name,type:1], exists[user.name,type:1,sex:#sex]
+                if (!$val || !count($args)) {
+                    return false;
+                }
+                $_info = explode('.', $args[0]);
+                if (count($_info) != 2) {
+                    return false;
+                }
+                $table = $_info[0];
+                $col = $_info[1];
+                $where = array($col => $val);
+                if (count($args) > 1) {
+                    foreach (array_slice($args, 1) as $v) {
+                        $_id_info = explode(':', $v);
+                        if (count($_id_info) != 2) {
+                            continue;
+                        }
+                        $id_col = $_id_info[0];
+                        $id = $_id_info[1];
+                        $id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
+                        $where[$id_col] = $id;
+                    }
+                }
+                return WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -2560,6 +2584,20 @@ class WoniuRule {
      */
     public static function unique($val, $delimiter = '') {
         return 'unique[' . $val . ']' . $delimiter;
+    }
+
+    /**
+     * 规则说明：<br/>
+     * 如果表单元素的值在指定数据表的字段中不存在则返回false，如果存在返回true<br/>
+     * 比如exists[cat.cid]，那么验证类会去查找cat表中cid字段有没有与表单元素一样的值<br/>
+     * cat.cid后面还可以指定附加的where条件<br/>
+     * 比如：exists[users.uname,user_id:2,...] 可以多个条件，逗号分割。<br/>
+     * 上面的规测生成的where就是array('uname'=>$value,'user_id'=>2,....)<br/>
+     * @param string $val 规则内容，比如：1、table.field 2、table.field,id:1<br/>
+     * @param string $delimiter 规则内容的分割符，比如：# ，默认为空即可<br/><br/><br/>
+     */
+    public static function exists($val, $delimiter = '') {
+        return 'exists[' . $val . ']' . $delimiter;
     }
 
     /**
@@ -2927,7 +2965,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3046,7 +3084,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3487,7 +3525,7 @@ class WoniuTableModel extends WoniuModel {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  */
 class WoniuDB {
 
@@ -9647,7 +9685,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.8
- * @createdtime       2014-05-26 21:20:06
+ * @createdtime       2014-05-28 10:52:08
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
