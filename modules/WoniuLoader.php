@@ -32,7 +32,9 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        $this->rule = new WoniuRule();
+        if(class_exists('WoniuRule', FALSE)){
+            $this->rule = new WoniuRule();
+        }
         if (class_exists('phpFastCache', false)) {
             phpFastCache::setup($system['cache_config']);
             $this->cache = phpFastCache($system['cache_config']['storage']);
