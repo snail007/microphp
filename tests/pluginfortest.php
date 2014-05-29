@@ -13,11 +13,12 @@
  * @since		Version 1.0
  * @createdtime         {createdtime}
  */
-if (isset($_GET['release']) || defined('release')) {
+
+if (isset($_GET['release']) || file_exists('release')) {
     include (dirname(__FILE__) . '/../plugin.php');
     file_put_contents('release', '');
 } else {
-    //include (dirname(__FILE__) . '/../modules/plugin.php');
+    include (dirname(__FILE__) . '/../modules/plugin.php');
 }
 
 define('TEST_ROOT', dirname(__FILE__));

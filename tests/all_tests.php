@@ -1,5 +1,12 @@
 <?php
 
+if (!empty($_GET['act'])) {
+    @unlink('release');
+    exit();
+}
+if (isset($_GET['release'])) {
+    echo '<script>window.onload=function(){document.getElementById("down").src="?act=unlink";}</script><iframe id="down" style="display:none;"></iframe>';
+}
 require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 define('IN_ALL_TESTS', true);
@@ -20,7 +27,7 @@ define('IN_ALL_TESTS', true);
 class AllTests extends TestSuite {
 
     public function AllTests() {
-        $ignore_list = array('test_cache.php', 'test_xss.php');
+        $ignore_list = array('test_xss.php');
         $this->TestSuite('All tests');
         $dir = dir(TEST_ROOT);
         while ($file = $dir->read()) {
@@ -34,9 +41,6 @@ class AllTests extends TestSuite {
             }
         }
         $dir->close();
-        if (isset($_GET['release'])) {
-            //unlink('release');
-        }
     }
- 
+
 }
