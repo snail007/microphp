@@ -1,28 +1,28 @@
 <?php
 /*
-  _oo0oo_
-  o8888888o
-  88" . "88
-  (| ^_^ |)
-  0\  =  /0
-  ___/`---'\___
-  .' \\|     | '.
-  / \\|||  :  ||| \
-  / _||||| -:- |||||- \
-  |   | \\\  -  / |   |
-  | \_|  ''\---/''  |_/ |
-  \  .-\__  '-'  ___/-. /
-  ___'. .'  /--.--\  `. .'___
-  ."" '<  `.___\_<|>_/___.' >' "".
-  | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-  \  \ `_.   \_ __\ /__ _/   .-` /  /
-  =====`-.____`.___ \_____/___.-`___.-'=====
-  `=---='
+                       _oo0oo_
+                      o8888888o
+                      88" . "88
+                      (| ^_^ |)
+                      0\  =  /0
+                    ___/`---'\___
+                  .' \\|     | '.
+                 / \\|||  :  ||| \
+                / _||||| -:- |||||- \
+               |   | \\\  -  / |   |
+               | \_|  ''\---/''  |_/ |
+               \  .-\__  '-'  ___/-. /
+             ___'. .'  /--.--\  `. .'___
+          ."" '<  `.___\_<|>_/___.' >' "".
+         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+         \  \ `_.   \_ __\ /__ _/   .-` /  /
+     =====`-.____`.___ \_____/___.-`___.-'=====
+                       `=---='
 
 
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  佛祖保佑         永无BUG
+               佛祖保佑         永无BUG
  */
 date_default_timezone_set('PRC');
 $ver = "Version 2.2.8";
@@ -80,6 +80,12 @@ $files = array(
 if (php_sapi_name() == 'cli' || !empty($_POST)) {
     //定制
     if (!empty($_POST)) {
+        session_start();
+        if(empty($_SESSION['gen_token'])||$_SESSION['gen_token']!=@$_POST['token']){
+            exit('<script>alert("页面已过期，请刷新");</script>');
+        }else{
+            unset($_SESSION['gen_token']);
+        }
         $diy = empty($_POST['keys']) ? array() : $_POST['keys'];
 
         $db_keys = array('mysql', 'mysqli', 'pdo', 'sqlite3');
@@ -292,7 +298,11 @@ function compress_php_src($src, $is_file = false) {
     }
     return $new;
 }
-?><?php if (php_sapi_name() != 'cli') { ?>
+?><?php
+if (php_sapi_name() != 'cli') {
+    session_start();
+    $_SESSION['gen_token']=$token = md5(time());
+    ?>
     <!doctype html>
     <html>
         <head>
@@ -325,6 +335,7 @@ function compress_php_src($src, $is_file = false) {
         </head>
         <body>
             <form action="?" target="down" name="mpform" method="POST">
+                <input type="hidden" name="token" value="<?php echo $token;?>">
                 <table border="0"  cellpadding="0" cellspacing="0" align="center" >
                     <caption>MicroPHP定制版生成器</caption>
                     <thead>
