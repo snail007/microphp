@@ -25,7 +25,7 @@
                佛祖保佑         永无BUG
  */
 date_default_timezone_set('PRC');
-$ver = "Version 2.2.8";
+$ver = "Version 2.2.9";
 $header = '<?php
 /**
  * MicroPHP
@@ -337,7 +337,7 @@ if (php_sapi_name() != 'cli') {
             <form action="?" target="down" name="mpform" method="POST">
                 <input type="hidden" name="token" value="<?php echo $token;?>">
                 <table border="0"  cellpadding="0" cellspacing="0" align="center" >
-                    <caption>MicroPHP定制版生成器</caption>
+                    <caption>MicroPHP定制版生成器<br/><small><?php echo $ver;?></small></caption>
                     <thead>
                         <tr>
                             <th width="130"  style="text-align: right;">功能</th>
@@ -401,7 +401,7 @@ if (php_sapi_name() != 'cli') {
                             <td>
                                 <input type="hidden" id="type" name="type" value="" />
                                 <input type="button" onclick="document.getElementById('type').value = '';
-                                        document.mpform.submit();" value="生成未压缩版" />
+                                        document.mpform.submit();" value="生成原版" />
                                 <input type="button" onclick="document.getElementById('type').value = 'min';
                                         document.mpform.submit();" value="生成压缩版" />
                             </td>
