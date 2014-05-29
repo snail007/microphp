@@ -17,7 +17,7 @@ if (isset($_GET['release']) || defined('release')) {
     include (dirname(__FILE__) . '/../plugin.php');
     file_put_contents('release', '');
 } else {
-    include (dirname(__FILE__) . '/../modules/plugin.php');
+    //include (dirname(__FILE__) . '/../modules/plugin.php');
 }
 
 define('TEST_ROOT', dirname(__FILE__));

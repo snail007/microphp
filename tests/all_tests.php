@@ -35,7 +35,7 @@ class AllTests extends TestSuite {
         }
         $dir->close();
         if (isset($_GET['release'])) {
-            @unlink('release');
+            //unlink('release');
         }
     }
  
