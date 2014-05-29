@@ -410,6 +410,11 @@ if (php_sapi_name() != 'cli') {
                 </table>
             </form>
             <iframe style="display: none;" name="down"></iframe>
+            <div style="display: none;"><script type="text/javascript">
+            var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+            document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F25dc3c6d2187c5da81c6269c209aa726' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            </div>
         </body>
     </html>
     <?php
