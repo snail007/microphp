@@ -216,7 +216,7 @@ class WoniuInput {
     }
 
     private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
-        $val = self::get_rule_type(WoniuRule::int(), $method, $key);
+        $val = self::get_rule_type('int', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && $val >= $min);
         $max_okay = is_null($max) || (!is_null($max) && $val <= $max);
         return $min_okay && $max_okay ? $val : $default;
@@ -271,7 +271,7 @@ class WoniuInput {
     }
 
     private static function get_date_type($method, $key, $min = null, $max = null, $default = null) {
-        $val = self::get_rule_type(WoniuRule::date(), $method, $key);
+        $val = self::get_rule_type('date', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
         return $min_okay && $max_okay ? $val : $default;
@@ -326,7 +326,7 @@ class WoniuInput {
     }
 
     private static function get_time_type($method, $key, $min = null, $max = null, $default = null) {
-        $val = self::get_rule_type(WoniuRule::time(), $method, $key);
+        $val = self::get_rule_type('time', $method, $key);
         $pre_fix = '2014-01-01 ';
         $min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
@@ -382,7 +382,7 @@ class WoniuInput {
     }
 
     private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
-        $val = self::get_rule_type(WoniuRule::datetime(), $method, $key);
+        $val = self::get_rule_type('datetime', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
         return $min_okay && $max_okay ? $val : $default;

@@ -457,6 +457,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  * -------------------------数据库配置结束--------------------------
  */
 include('WoniuInput.class.php');
+include('WoniuRule.class.php');
 include('WoniuHelper.php');
 include('db-drivers/db.drivers.php');
 include('db-drivers/mysql.driver.php');

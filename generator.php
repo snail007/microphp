@@ -42,12 +42,15 @@ $header = '<?php
  */
  ';
 $files = array(
+    //core
     'modules/WoniuHelper.php',
     'modules/WoniuInput.class.php',
     'modules/WoniuRouter.php',
     'modules/WoniuLoader.php',
     'modules/WoniuController.php',
     'modules/WoniuModel.php',
+    //optional_core
+    'rule' => 'modules/WoniuRule.class.php',
     //db
     'db' => 'modules/db-drivers/db.drivers.php',
     'mysql' => 'modules/db-drivers/mysql.driver.php',
@@ -101,6 +104,10 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
         if (count($not_selected) == count($session_keys)) {
             unset($files['WoniuSession']);
         }
+        $not_selected_all = array_merge($not_selected_all, $not_selected);
+
+        $core_keys = array('rule');
+        $not_selected = array_diff($core_keys, $diy);
         $not_selected_all = array_merge($not_selected_all, $not_selected);
 
         foreach ($not_selected_all as $key) {
@@ -307,6 +314,13 @@ function compress_php_src($src, $is_file = false) {
                     font-size: 2em;
                     font-weight: bold;
                 }
+                pre{
+                    padding:0;
+                    margin:0;
+                    line-height: 1.5em;
+                    font-size: 14px;
+                    color:#111;
+                }
             </style>
         </head>
         <body>
@@ -315,7 +329,7 @@ function compress_php_src($src, $is_file = false) {
                     <caption>MicroPHP定制版生成器</caption>
                     <thead>
                         <tr>
-                            <th width="130">功能</th>
+                            <th width="130"  style="text-align: right;">功能</th>
                             <th width="500">可选内容</th>
                         </tr>
                     </thead>
@@ -345,20 +359,30 @@ function compress_php_src($src, $is_file = false) {
                         <tr>
                             <td style="text-align: right;">SESSION驱动</td>
                             <td>
-                                <label><input type="checkbox" name="keys[]" value="MysqlSession"  />Mysql</label>
-                                <label><input type="checkbox" name="keys[]" value="MongodbSession" />Mongodb</label>
-                                <label><input type="checkbox" name="keys[]" value="MemcacheSession" />Memcache</label>
-                                <label><input type="checkbox" name="keys[]" value="RedisSession" />Redis</label>
+                                <label><input type="checkbox" name="keys[]" value="MysqlSession"  />mysql</label>
+                                <label><input type="checkbox" name="keys[]" value="MongodbSession" />mongodb</label>
+                                <label><input type="checkbox" name="keys[]" value="MemcacheSession" />memcache</label>
+                                <label><input type="checkbox" name="keys[]" value="RedisSession" />redis</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">可选核心类</td>
+                            <td>
+                                <label><input type="checkbox" name="keys[]" value="rule"  />WoniuRule(生成表单验证规则助手类)</label>
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">提示</td>
                             <td>
-                            如果相应的功能没有选择驱动，那么生成的核心文件将不支持相应的功能和配置。<br/>
-                            比如：<br/>
-                            1.没有选择session驱动，那么session功能和相应的配置将不再起作用。<br/>
-                            2.没有选择缓存驱动，那么$this->cache将是null。如果只选择了files那么系统配置里面缓存类型将只支持files。<br/>
-                            3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。<br/>
+<pre>
+如果相应的功能内容都没有选择，那么生成的核心文件将不支持相应的功能和配置。
+1.没有选择session驱动，那么session功能和相应的配置将不再起作用。
+2.没有选择缓存驱动，那么$this->cache将是null。
+  如果只选择了files那么系统配置里面缓存类型将只支持files。
+3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。
+  如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。
+4.没有选择可选核心类，那么对应的类的相关方法将不能再使用。
+</pre>
                             </td>
                         </tr>
                         <tr>
@@ -366,9 +390,9 @@ function compress_php_src($src, $is_file = false) {
                             <td>
                                 <input type="hidden" id="type" name="type" value="" />
                                 <input type="button" onclick="document.getElementById('type').value = '';
-                                            document.mpform.submit();" value="生成未压缩版" />
+                                        document.mpform.submit();" value="生成未压缩版" />
                                 <input type="button" onclick="document.getElementById('type').value = 'min';
-                                            document.mpform.submit();" value="生成压缩版" />
+                                        document.mpform.submit();" value="生成压缩版" />
                             </td>
                         </tr>
                     </tbody>
