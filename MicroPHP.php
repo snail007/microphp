@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime         2014-05-30 09:50:29
+ * @createdtime         2014-05-30 14:35:31
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  */
 class WoniuInput {
 
@@ -1350,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  */
 class WoniuRouter {
 
@@ -1591,7 +1591,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.9
- * @createdtime            2014-05-30 09:50:29
+ * @createdtime            2014-05-30 14:35:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2590,7 +2590,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2709,7 +2709,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3093,7 +3093,7 @@ class WoniuTableModel extends WoniuModel {
             $this->db->where($where);
         }
         if (is_array($like)) {
-            $this->db->like(key($like), current($like));
+            $this->db->like($like);
         }
         $total = $this->db->from($this->table)->count_all_results();
         //这里必须重新附加条件，上面的count会重置条件
@@ -3101,7 +3101,7 @@ class WoniuTableModel extends WoniuModel {
             $this->db->where($where);
         }
         if (is_array($like)) {
-            $this->db->like(key($like), current($like));
+            $this->db->like($like);
         }
         if (!is_null($orderby)) {
             $this->db->order_by($orderby);
@@ -3592,7 +3592,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  */
 class WoniuDB {
 
@@ -9755,7 +9755,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime       2014-05-30 09:50:29
+ * @createdtime       2014-05-30 14:35:31
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

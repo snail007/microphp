@@ -395,7 +395,7 @@ class WoniuTableModel extends WoniuModel {
             $this->db->where($where);
         }
         if (is_array($like)) {
-            $this->db->like(key($like), current($like));
+            $this->db->like($like);
         }
         $total = $this->db->from($this->table)->count_all_results();
         //这里必须重新附加条件，上面的count会重置条件
@@ -403,7 +403,7 @@ class WoniuTableModel extends WoniuModel {
             $this->db->where($where);
         }
         if (is_array($like)) {
-            $this->db->like(key($like), current($like));
+            $this->db->like($like);
         }
         if (!is_null($orderby)) {
             $this->db->order_by($orderby);
