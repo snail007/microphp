@@ -1,5 +1,12 @@
 <?php
 
+if (!empty($_GET['act'])) {
+    @unlink('release');
+    exit();
+}
+if (isset($_GET['release'])) {
+    echo '<script>window.onload=function(){document.getElementById("down").src="?act=unlink";}</script><iframe id="down" style="display:none;"></iframe>';
+}
 require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 define('IN_ALL_TESTS', true);
@@ -24,14 +31,13 @@ class AllTests extends TestSuite {
         $this->TestSuite('All tests');
         $dir = dir(TEST_ROOT);
         while ($file = $dir->read()) {
-            if ( stripos($file, 'test_') === 0) {
-                if(!in_array($file, $ignore_list) ){
+            if (stripos($file, 'test_') === 0) {
+                if (!in_array($file, $ignore_list)) {
                     echo "<b style='color:darkgreen'>$file</b><br/>";
                     $this->addFile($file);
-                }else{
+                } else {
                     echo "ignore:$file<br/>";
                 }
-                
             }
         }
         $dir->close();

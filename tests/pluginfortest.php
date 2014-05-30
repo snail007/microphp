@@ -13,7 +13,14 @@
  * @since		Version 1.0
  * @createdtime         {createdtime}
  */
-include (dirname(__FILE__) . '/../modules/plugin.php');
+
+if (isset($_GET['release']) || file_exists('release')) {
+    include (dirname(__FILE__) . '/../plugin.php');
+    file_put_contents('release', '');
+} else {
+    include (dirname(__FILE__) . '/../modules/plugin.php');
+}
+
 define('TEST_ROOT', dirname(__FILE__));
 //为了正确显示中文，修改simpletest/reporter.php 31行：
 //function __construct($character_set = 'ISO-8859-1')
@@ -73,7 +80,7 @@ $system['hmvc_folder'] = $system['application_folder'] . '/modules';
 /**
  * 注册HMVC模块，这里填写模块名称关联数组,键是url中的模块别名，值是模块文件夹名称
  */
-$system['hmvc_modules'] = array('demo'=>'hmvc_demo');
+$system['hmvc_modules'] = array('demo' => 'hmvc_demo');
 /**
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
@@ -151,14 +158,14 @@ $system['helper_file_autoload'] = array('test/config');
  * 比如: ImageTool 或者配置数组array('ImageTool'=>'image')
  * 配置数组的作用是为长的类库名用别名代替.
  */
-$system['library_file_autoload'] = array(array('sub/SubLibAuto'=>'sublibtest'));
+$system['library_file_autoload'] = array(array('sub/SubLibAuto' => 'sublibtest'));
 /**
  * 自动加载的model,比如array($item); 
  * $item是model文件名或者"配置数组",不包含后缀,
  * 比如: UserModel 或者配置数组 array('UserModel'=>'user')
  * 配置数组的作用是为长的model名用别名代替.
  */
-$system['models_file_autoload'] = array(array('test/SubUserModelAuto'=>'submodelstest'));
+$system['models_file_autoload'] = array(array('test/SubUserModelAuto' => 'submodelstest'));
 /**
  * 控制器方法名称是否首字母大写,默认true
  */
@@ -287,7 +294,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => dirname(__FILE__)."/cache", // 缓存文件存储默认路径
+    "path" => dirname(__FILE__) . "/cache", // 缓存文件存储默认路径
     "securityKey" => "", // 缓存安全key，建议留空，系统会自动处理 PATH/securityKey
 
     /*
