@@ -403,7 +403,7 @@ $system['db']['active_group'] = 'default';
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
  */
 /**
- * mysql数据库配置示例
+ * mysql数据库配置示例,如果用mysqli，把下面的dbdriver驱动由mysql改成mysqli即可
  */
 $system['db']['default']['dbdriver'] = "mysql";
 $system['db']['default']['hostname'] = '127.0.0.1';
@@ -412,7 +412,7 @@ $system['db']['default']['username'] = 'root';
 $system['db']['default']['password'] = 'admin';
 $system['db']['default']['database'] = 'test';
 $system['db']['default']['dbprefix'] = '';
-$system['db']['default']['pconnect'] = TRUE;
+$system['db']['default']['pconnect'] = FALSE;
 $system['db']['default']['db_debug'] = TRUE;
 $system['db']['default']['char_set'] = 'utf8';
 $system['db']['default']['dbcollat'] = 'utf8_general_ci';
