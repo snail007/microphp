@@ -27,7 +27,7 @@ define('IN_ALL_TESTS', true);
 class AllTests extends TestSuite {
 
     public function AllTests() {
-        $ignore_list = array('test_xss.php');
+        $ignore_list = array('test_xss.php','test_cache.php');
         $this->TestSuite('All tests');
         $dir = dir(TEST_ROOT);
         while ($file = $dir->read()) {

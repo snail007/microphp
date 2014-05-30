@@ -32,7 +32,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        if(class_exists('WoniuRule', FALSE)){
+        if (class_exists('WoniuRule', FALSE)) {
             $this->rule = new WoniuRule();
         }
         if (class_exists('phpFastCache', false)) {
@@ -97,7 +97,7 @@ class WoniuLoader {
         if ($is_return) {
             return WoniuDB::getInstance($db_cfg, $force_new_conn);
         } else {
-            if ($force_new_conn || !is_object($this->db)) {
+            if ($force_new_conn || !is_object($this->db) || is_array($config)) {
                 return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
             return $this->db;
@@ -601,7 +601,7 @@ class WoniuLoader {
         return $data;
     }
 
-    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
+    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null) {
         if (is_null($data)) {
             $data = WoniuInput::post();
         }
@@ -656,7 +656,7 @@ class WoniuLoader {
                         if ($_r == 'set' || $_r == 'set_post' || $_r == 'optional') {
                             continue;
                         }
-                        if (!self::checkRule($_rule, $return_data[$col], $return_data)) {
+                        if (!self::checkRule($_rule, $return_data[$col], $return_data, $db)) {
                             /**
                              * 清理没有传递的key
                              */
@@ -772,7 +772,10 @@ class WoniuLoader {
         return $method->invokeArgs($obj, $args);
     }
 
-    private static function checkRule($_rule, $val, $data) {
+    private static function checkRule($_rule, $val, $data, $db = null) {
+        if (!$db) {
+            $db = WoniuLoader::instance()->database();
+        }
         $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
         $args = $matches[2];
@@ -807,7 +810,7 @@ class WoniuLoader {
                 } else {
                     $where = array($col => $val);
                 }
-                return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
+                return !$db->where($where)->from($table)->count_all_results();
             case 'exists':#比如exists[user.name] , exists[user.name,type:1], exists[user.name,type:1,sex:#sex]
                 if (!$val || !count($args)) {
                     return false;
@@ -831,7 +834,8 @@ class WoniuLoader {
                         $where[$id_col] = $id;
                     }
                 }
-                return WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
+
+                return $db->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -962,7 +966,6 @@ class WoniuLoader {
     }
 
 }
-
 
 WoniuLoader::checkUserLoader();
 

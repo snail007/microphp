@@ -16,7 +16,9 @@
      如果不想使用前缀，可以使用方法：$this->setCookieRaw()和$this->input->cookieRaw()设置和获取cookie
 3.$this->setCookie($key, $value, $life = null, $path = '/', $domian = null, $http_only = false)
   增加了$http_only参数，允许设置一个cookie不能通过脚本访问。
-
+4.$this->checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null)
+  增加了$db参数，当验证的数据不是当前默认的数据库连接时，可以指定验证数据时使用的数据库连接对象。
+  $db是$this->databse($config = NULL, $is_return = false, $force_new_conn = false)返回的数据库对象。
 升级提示：
 1.在系统配置里面加一项：
   $system['cookie_key_prefix'] = '';

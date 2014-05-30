@@ -55,7 +55,7 @@ class Test_db extends UnitTestCase {
         $this->assertClone(WoniuLoader::instance()->database(NULL, TRUE), $db1);
         $this->assertClone($db2, $db1);
         $this->assertReference(WoniuLoader::instance()->database(), $db);
-        $this->assertReference($db, WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql']));
+        $this->assertClone($db, WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql']));
         
     }
 

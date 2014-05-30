@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime         2014-05-30 14:35:31
+ * @createdtime         2014-05-30 23:39:02
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  */
 class WoniuInput {
 
@@ -1350,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  */
 class WoniuRouter {
 
@@ -1591,7 +1591,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.9
- * @createdtime            2014-05-30 14:35:31
+ * @createdtime            2014-05-30 23:39:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1612,7 +1612,7 @@ class WoniuLoader {
         $this->input = new WoniuInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        if(class_exists('WoniuRule', FALSE)){
+        if (class_exists('WoniuRule', FALSE)) {
             $this->rule = new WoniuRule();
         }
         if (class_exists('phpFastCache', false)) {
@@ -1677,7 +1677,7 @@ class WoniuLoader {
         if ($is_return) {
             return WoniuDB::getInstance($db_cfg, $force_new_conn);
         } else {
-            if ($force_new_conn || !is_object($this->db)) {
+            if ($force_new_conn || !is_object($this->db) || is_array($config)) {
                 return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
             return $this->db;
@@ -2181,7 +2181,7 @@ class WoniuLoader {
         return $data;
     }
 
-    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL) {
+    public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null) {
         if (is_null($data)) {
             $data = WoniuInput::post();
         }
@@ -2236,7 +2236,7 @@ class WoniuLoader {
                         if ($_r == 'set' || $_r == 'set_post' || $_r == 'optional') {
                             continue;
                         }
-                        if (!self::checkRule($_rule, $return_data[$col], $return_data)) {
+                        if (!self::checkRule($_rule, $return_data[$col], $return_data, $db)) {
                             /**
                              * 清理没有传递的key
                              */
@@ -2352,7 +2352,10 @@ class WoniuLoader {
         return $method->invokeArgs($obj, $args);
     }
 
-    private static function checkRule($_rule, $val, $data) {
+    private static function checkRule($_rule, $val, $data, $db = null) {
+        if (!$db) {
+            $db = WoniuLoader::instance()->database();
+        }
         $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
         $args = $matches[2];
@@ -2387,7 +2390,7 @@ class WoniuLoader {
                 } else {
                     $where = array($col => $val);
                 }
-                return !WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
+                return !$db->where($where)->from($table)->count_all_results();
             case 'exists':#比如exists[user.name] , exists[user.name,type:1], exists[user.name,type:1,sex:#sex]
                 if (!$val || !count($args)) {
                     return false;
@@ -2411,7 +2414,8 @@ class WoniuLoader {
                         $where[$id_col] = $id;
                     }
                 }
-                return WoniuLoader::instance()->database()->where($where)->from($table)->count_all_results();
+
+                return $db->where($where)->from($table)->count_all_results();
             case 'min_len':
                 return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
             case 'max_len':
@@ -2543,7 +2547,6 @@ class WoniuLoader {
 
 }
 
-
 WoniuLoader::checkUserLoader();
 
 class WoniuModelLoader {
@@ -2590,7 +2593,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2709,7 +2712,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3592,7 +3595,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  */
 class WoniuDB {
 
@@ -3618,7 +3621,9 @@ class WoniuDB {
         if(!class_exists($class, false)){
             return null;
         }
-        $hash = md5(sha1(var_export($config, TRUE)));
+        $config0=$config;
+        asort($config0);
+        $hash = md5(sha1(var_export($config0, TRUE)));
         if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
@@ -9755,7 +9760,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime       2014-05-30 14:35:31
+ * @createdtime       2014-05-30 23:39:02
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

@@ -37,7 +37,9 @@ class WoniuDB {
         if(!class_exists($class, false)){
             return null;
         }
-        $hash = md5(sha1(var_export($config, TRUE)));
+        $config0=$config;
+        asort($config0);
+        $hash = md5(sha1(var_export($config0, TRUE)));
         if ($force_new_conn || !isset(self::$conns[$hash])) {
             self::$conns[$hash] = new $class($config);
         }
