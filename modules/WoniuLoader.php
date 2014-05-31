@@ -81,7 +81,7 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
+    public function &database($config = NULL, $is_return = false, $force_new_conn = false) {
         $woniu_db = self::$system['db'];
         $db_cfg_key = $woniu_db['active_group'];
         if (is_string($config) && !empty($config)) {
@@ -97,7 +97,7 @@ class WoniuLoader {
         if ($is_return) {
             return WoniuDB::getInstance($db_cfg, $force_new_conn);
         } else {
-            if ($force_new_conn || !is_object($this->db) || is_array($config)) {
+            if ($force_new_conn || !is_object($this->db) || !is_null($config)) {
                 return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
             return $this->db;

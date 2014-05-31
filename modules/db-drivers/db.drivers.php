@@ -17,7 +17,7 @@ class WoniuDB {
 
     private static $conns = array();
 
-    public static function getInstance($config, $force_new_conn = false) {
+    public static function &getInstance($config, $force_new_conn = false) {
         $default['dbdriver'] = "mysql";
         $default['hostname'] = '127.0.0.1';
         $default['port'] = '3306';
