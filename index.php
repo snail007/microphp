@@ -3,15 +3,15 @@
 /**
  * MicroPHP
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.0 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.8
- * @createdtime         2014-05-26 21:20:06
+ * @since		Version 2.2.9
+ * @createdtime         2014-05-31 22:36:02
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -120,6 +120,14 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
+
+/**
+ * $this->input->setCookie()和$this->input->cookie()
+ * 设置和获取cookie的时候key使用的前缀
+ * 使用前缀的目的：
+ * 避免主域名和子域名设置的cookie冲突
+ */
+$system['cookie_key_prefix'] = '';
 /**
  * 自定义Loader，用于拓展框架核心功能,
  * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
@@ -395,7 +403,7 @@ $system['db']['active_group'] = 'default';
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
  */
 /**
- * mysql数据库配置示例
+ * mysql数据库配置示例,如果用mysqli，把下面的dbdriver驱动由mysql改成mysqli即可
  */
 $system['db']['default']['dbdriver'] = "mysql";
 $system['db']['default']['hostname'] = '127.0.0.1';
@@ -404,7 +412,7 @@ $system['db']['default']['username'] = 'root';
 $system['db']['default']['password'] = 'admin';
 $system['db']['default']['database'] = 'test';
 $system['db']['default']['dbprefix'] = '';
-$system['db']['default']['pconnect'] = TRUE;
+$system['db']['default']['pconnect'] = FALSE;
 $system['db']['default']['db_debug'] = TRUE;
 $system['db']['default']['char_set'] = 'utf8';
 $system['db']['default']['dbcollat'] = 'utf8_general_ci';

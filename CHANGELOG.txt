@@ -1,4 +1,29 @@
 
+#############################ver 2.2.9[2014-06-01]#############################
+增加了：
+1.增加了表单验证exists[table.col,col1:val1,...]规则。
+    规则说明：
+       (1).如果表单元素的值在指定数据表的字段中不存在则返回false，如果存在返回true
+       (2).比如exists[cat.cid]，那么验证类会去查找cat表中cid字段有没有与表单元素一样的值
+       (3).cat.cid，cat是表名称（不要带前缀）cid是字段名称。
+         cat.cid后面还可以指定附加的where条件。
+         比如：exists[users.uname,user_id:2,...] 可以多个条件，逗号分割。
+         上面的规测生成的where条件就是array('uname'=>$value,'user_id'=>2,....)
+2.cookie键前缀配置，$system['cookie_key_prefix'] = '';
+  在使用$this->setCookie()和$this->input->cookie()设置和获取cookie的时候key使用的前缀。
+  使用前缀的目的：避免同名的cookie在主域名和子域名之间发生冲突
+  提示：
+     如果不想使用前缀，可以使用方法：$this->setCookieRaw()和$this->input->cookieRaw()设置和获取cookie
+3.$this->setCookie($key, $value, $life = null, $path = '/', $domian = null, $http_only = false)
+  增加了$http_only参数，允许设置一个cookie不能通过脚本访问。
+4.$this->checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null)
+  增加了$db参数，当验证的数据不是当前默认的数据库连接时，可以指定验证数据时使用的数据库连接对象。
+  $db是$this->databse($config = NULL, $is_return = false, $force_new_conn = false)返回的数据库对象。
+升级提示：
+1.在系统配置里面加一项：
+  $system['cookie_key_prefix'] = '';
+
+
 #############################ver 2.2.8[2014-05-26]#############################
 增加了：
 1.当视图文件夹配置是数组的时候，$this->view($view_name, $data = null, $return = false)中的$view_name支持指定视图配置文件夹。
