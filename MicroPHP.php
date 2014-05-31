@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime         2014-05-30 23:39:02
+ * @createdtime         2014-05-31 21:20:55
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  */
 class WoniuInput {
 
@@ -1350,7 +1350,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  */
 class WoniuRouter {
 
@@ -1591,7 +1591,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.9
- * @createdtime            2014-05-30 23:39:02
+ * @createdtime            2014-05-31 21:20:55
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -1661,7 +1661,7 @@ class WoniuLoader {
         }
     }
 
-    public function database($config = NULL, $is_return = false, $force_new_conn = false) {
+    public function &database($config = NULL, $is_return = false, $force_new_conn = false) {
         $woniu_db = self::$system['db'];
         $db_cfg_key = $woniu_db['active_group'];
         if (is_string($config) && !empty($config)) {
@@ -1677,8 +1677,8 @@ class WoniuLoader {
         if ($is_return) {
             return WoniuDB::getInstance($db_cfg, $force_new_conn);
         } else {
-            if ($force_new_conn || !is_object($this->db) || is_array($config)) {
-                return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
+            if ($force_new_conn || !is_object($this->db) || !is_null($config)) {
+                  $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
             return $this->db;
         }
@@ -2593,7 +2593,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2712,7 +2712,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3595,13 +3595,13 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  */
 class WoniuDB {
 
     private static $conns = array();
 
-    public static function getInstance($config, $force_new_conn = false) {
+    public static function &getInstance($config, $force_new_conn = false) {
         $default['dbdriver'] = "mysql";
         $default['hostname'] = '127.0.0.1';
         $default['port'] = '3306';
@@ -9760,7 +9760,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.9
- * @createdtime       2014-05-30 23:39:02
+ * @createdtime       2014-05-31 21:20:55
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1

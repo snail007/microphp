@@ -98,7 +98,7 @@ class WoniuLoader {
             return WoniuDB::getInstance($db_cfg, $force_new_conn);
         } else {
             if ($force_new_conn || !is_object($this->db) || !is_null($config)) {
-                return $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
+                  $this->db = WoniuDB::getInstance($db_cfg, $force_new_conn);
             }
             return $this->db;
         }
