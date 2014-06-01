@@ -8,7 +8,7 @@
        (3).cat.cid，cat是表名称（不要带前缀）cid是字段名称。
          cat.cid后面还可以指定附加的where条件。
          比如：exists[users.uname,user_id:2,...] 可以多个条件，逗号分割。
-         上面的规测生成的where条件就是array('uname'=>$value,'user_id'=>2,....)
+         上面的规则生成的where条件就是array('uname'=>$value,'user_id'=>2,....)
 2.cookie键前缀配置，$system['cookie_key_prefix'] = '';
   在使用$this->setCookie()和$this->input->cookie()设置和获取cookie的时候key使用的前缀。
   使用前缀的目的：避免同名的cookie在主域名和子域名之间发生冲突
