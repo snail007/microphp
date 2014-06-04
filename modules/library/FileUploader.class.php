@@ -19,7 +19,7 @@
 /**
  * MicroPHP
  * Description of test
- * An open source application development framework for PHP 5.2.0 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		MicroPHP
  * @author		狂奔的蜗牛
@@ -48,11 +48,39 @@ class FileUploader {
     }
 
     /**
-     * 设置文件最大大小，单位KB
+     * 设置文件最大大小<br/>
+     * 比如：<br/>
+     * 1. 100（100字节）<br/>
+     * 2. 1KB<br/>
+     * 3. 1MB<br/>
+     * 4. 1.5GB<br/>
+     * 5. 3.1TB<br/>
      * @param type $s
      */
     public function setMaxSize($s) {
+        $s = rtrim(strtoupper($s), 'B');
+        $type = array('K' => 1024, 'M' => 1024 * 1024, 'G' => 1024 * 1024 * 1024, 'T' => 1024 * 1024 * 1024 * 1024);
+        if (isset($type[$t = $s{strlen($s) - 1}])) {
+            $s = rtrim($s, $t) * $type[$t];
+        }
         $this->size = $s;
+    }
+
+    /**
+     * 获取允许的最大文件大小，单位byte字节
+     * @return type
+     */
+    public function getMaxSize() {
+        return $this->size;
+    }
+
+    /**
+     * 获取格式化过的允许的最大文件大小
+     * 比如：1MB
+     * @return type
+     */
+    public function getFormatedMaxSize() {
+        return $this->size_format($this->size);
     }
 
     /**
@@ -86,7 +114,7 @@ class FileUploader {
             $file_ext = strtolower(pathinfo($_FILES[$this->file_formfield_name]['name'], PATHINFO_EXTENSION));
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
         }
-        if (!empty($dir)) {
+        if (empty($dir)) {
             $subfix = $dir{strlen($dir) - 1};
             $_dir = ($subfix == '/' || $subfix == "\\" ? $dir : $dir . '/');
             $dir = pathinfo($_dir . $save_name, PATHINFO_DIRNAME);
@@ -96,25 +124,31 @@ class FileUploader {
         if (!is_dir($dir)) {
             mkdir($dir, 0777, TRUE);
         }
-        $save_name = ($dir ? $this->truepath($dir) . '/' : '' ) . $save_name;
         move_uploaded_file($src_file, $save_name);
         if (file_exists($save_name)) {
-            return $this->truepath($save_name);
+            return realpath($save_name);
         } else {
             $this->setError(501, '移动临时文件到目标文件失败,请检查目标目录是否有写权限.');
             return FALSE;
         }
     }
 
-    //check file size , unit is KB
     private function checkSize() {
         $max_size = $this->size;
-        $size_range = 1024 * $max_size;
+        $size_range = $max_size;
         if ($_FILES[$this->file_formfield_name]['size'] > $size_range || !$_FILES[$this->file_formfield_name]['size']) {
-            $this->setError(401, '文件大小错误！最大：' . ( $max_size < 1024 ? $max_size . 'KB' : sprintf('%.1f', $max_size / 1024) . 'MB'));
+            $this->setError(401, '文件大小错误!最大:' . $this->size_format($max_size));
             return FALSE;
         }
         return TRUE;
+    }
+
+    private function size_format($bit) {
+        $type = array('B', 'KB', 'MB', 'GB', 'TB');
+        for ($i = 0; $bit >= 1024; $i++) {//单位每增大1024，则单位数组向后移动一位表示相应的单位
+            $bit/=1024;
+        }
+        return (floor($bit * 100) / 100) . $type[$i]; //floor是取整函数，为了防止出现一串的小数，这里取了两位小数
     }
 
     //check file extension 
@@ -135,14 +169,6 @@ class FileUploader {
         return $this->error;
     }
 
-    public function getErrorMsg() {
-        return $this->error['error'];
-    }
-
-    public function getErrorCode() {
-        return $this->error['code'];
-    }
-
     private function setError($code, $info) {
         $this->error['code'] = $code;
         $this->error['error'] = $info;
@@ -158,36 +184,6 @@ class FileUploader {
 
     public function getTmpFilePath() {
         return $_FILES[$this->file_formfield_name]['tmp_name'];
-    }
-
-    private function truepath($path) {
-        //是linux系统么？
-        $unipath = PATH_SEPARATOR == ':';
-        //检测一下是否是相对路径，windows下面没有:,linux下面没有/开头
-        //如果是相对路径就加上当前工作目录前缀
-        if (strpos($path, ':') === false && strlen($path) && $path{0} != '/') {
-            $path = getcwd() . DIRECTORY_SEPARATOR . $path;
-        }
-        // resolve path parts (single dot, double dot and double delimiters)
-        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
-        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
-        $absolutes = array();
-        foreach ($parts as $part) {
-            if ('.' == $part)
-                continue;
-            if ('..' == $part) {
-                array_pop($absolutes);
-            } else {
-                $absolutes[] = $part;
-            }
-        }
-        //如果是linux这里会导致linux开头的/丢失
-        $path = implode(DIRECTORY_SEPARATOR, $absolutes);
-        //如果是linux，修复系统前缀
-        $path = $unipath ? (strlen($path) && $path{0} != '/' ? '/' . $path : $path) : $path;
-        //最后统一分隔符为/，windows兼容/
-        $path = str_replace(array('/', '\\'), '/', $path);
-        return $path;
     }
 
 }
