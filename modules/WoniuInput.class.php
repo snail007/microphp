@@ -23,6 +23,14 @@ class WoniuInput {
     public static $router;
 
     /**
+     * 系统最终使用的路由字符串
+     * @return type
+     */
+    public static function route_query() {
+        return self::$router['query'];
+    }
+
+    /**
      * hmvc模块名称，没有模块就为空
      * @return type
      */

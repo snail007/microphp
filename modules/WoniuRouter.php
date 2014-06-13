@@ -63,6 +63,10 @@ class WoniuRouter {
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
+        
+        //标记系统最终使用的路由字符串
+        $router['query']=$pathinfo_query;
+        
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串

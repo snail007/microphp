@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.9
- * @createdtime         2014-05-31 22:40:33
+ * @since		Version 2.2.10
+ * @createdtime         2014-06-13 09:19:14
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  */
 if (!function_exists('dump')) {
 
@@ -779,12 +779,20 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  */
 class WoniuInput {
 
     public static $router;
+
+    /**
+     * 系统最终使用的路由字符串
+     * @return type
+     */
+    public static function route_query() {
+        return self::$router['query'];
+    }
 
     /**
      * hmvc模块名称，没有模块就为空
@@ -1349,8 +1357,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  */
 class WoniuRouter {
 
@@ -1402,6 +1410,10 @@ class WoniuRouter {
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
+        
+        //标记系统最终使用的路由字符串
+        $router['query']=$pathinfo_query;
+        
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
@@ -1590,8 +1602,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.9
- * @createdtime            2014-05-31 22:40:33
+ * @since                  Version 2.2.10
+ * @createdtime            2014-06-13 09:19:14
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2592,8 +2604,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2711,8 +2723,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3594,8 +3606,8 @@ class WoniuRule {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  */
 class WoniuDB {
 
@@ -7843,7 +7855,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 
@@ -8619,7 +8631,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 
@@ -9759,8 +9771,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since		Version 2.2.10
+ * @createdtime       2014-06-13 09:19:14
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -9777,7 +9789,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 // ------------------------------------------------------------------------
