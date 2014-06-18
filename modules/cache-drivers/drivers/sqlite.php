@@ -245,7 +245,8 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
     }
 
     function isExpired($row) {
-        if (isset($row['exp']) && @date("U") >= $row['exp']) {
+        $object=  $this->decode($row['object']);
+        if (!empty($object['expired_in'])&&isset($row['exp']) && @date("U") >= $row['exp']) {
             return true;
         }
 
