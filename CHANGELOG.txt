@@ -1,4 +1,12 @@
 
+#############################ver 2.2.10[2014-06-24]#############################
+增加了：
+1.增加了$this->input->route_query()方法，返回的是系统最终使用的路由字符串.
+  该方法在自定义了路由之后，方面查看自己的路由规则替换的结果是否正常。
+2.$this->input->xss_clean($var)，$var支持数组了，一维或者多维数组都可以。
+修复了:
+1.缓存驱动为files和sqlite时，设置过期时间为0，让缓存数据不过期，无效的问题。
+
 #############################ver 2.2.9[2014-06-01]#############################
 增加了：
 1.增加了表单验证exists[table.col,col1:val1,...]规则。
@@ -8,7 +16,7 @@
        (3).cat.cid，cat是表名称（不要带前缀）cid是字段名称。
          cat.cid后面还可以指定附加的where条件。
          比如：exists[users.uname,user_id:2,...] 可以多个条件，逗号分割。
-         上面的规测生成的where条件就是array('uname'=>$value,'user_id'=>2,....)
+         上面的规则生成的where条件就是array('uname'=>$value,'user_id'=>2,....)
 2.cookie键前缀配置，$system['cookie_key_prefix'] = '';
   在使用$this->setCookie()和$this->input->cookie()设置和获取cookie的时候key使用的前缀。
   使用前缀的目的：避免同名的cookie在主域名和子域名之间发生冲突

@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.9
- * @createdtime         2014-05-31 22:40:33
+ * @since		Version 2.2.10
+ * @createdtime         2014-06-24 12:05:41
  */
  
 
@@ -28,8 +28,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  */
 if (!function_exists('dump')) {
 
@@ -779,12 +779,20 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  */
 class WoniuInput {
 
     public static $router;
+
+    /**
+     * 系统最终使用的路由字符串
+     * @return type
+     */
+    public static function route_query() {
+        return self::$router['query'];
+    }
 
     /**
      * hmvc模块名称，没有模块就为空
@@ -1280,7 +1288,22 @@ class WoniuInput {
         return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
     }
 
-    public static function xss_clean($val) {
+    public static function xss_clean($var) {
+        if (is_array($var)) {
+            foreach ($var as $key => $val) {
+                if (is_array($val)) {
+                    $var[$key] = self::xss_clean($val);
+                } else {
+                    $var[$key] = self::xss_clean0($val);
+                }
+            }
+        } elseif (is_string($var)) {
+            $var = self::xss_clean0($var);
+        }
+        return $var;
+    }
+
+    private static function xss_clean0($val) {
         // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
         // this prevents some character re-spacing such as <java\0script>
         // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
@@ -1349,8 +1372,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  */
 class WoniuRouter {
 
@@ -1402,6 +1425,10 @@ class WoniuRouter {
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
+        
+        //标记系统最终使用的路由字符串
+        $router['query']=$pathinfo_query;
+        
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
@@ -1590,8 +1617,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.9
- * @createdtime            2014-05-31 22:40:33
+ * @since                  Version 2.2.10
+ * @createdtime            2014-06-24 12:05:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2592,8 +2619,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2711,8 +2738,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3594,8 +3621,8 @@ class WoniuRule {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since                Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  */
 class WoniuDB {
 
@@ -7843,7 +7870,7 @@ class CI_DB_mysql_result extends CI_DB_result {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 
@@ -8619,7 +8646,7 @@ class CI_DB_mysqli_driver extends CI_DB {
  * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 
@@ -9759,8 +9786,8 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @email		672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.9
- * @createdtime       2014-05-31 22:40:33
+ * @since		Version 2.2.10
+ * @createdtime       2014-06-24 12:05:41
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -9777,7 +9804,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright  Copyright (c) 2006, pMachine, Inc.
  * @license		http://www.codeignitor.com/user_guide/license.html
  * @link		http://www.codeigniter.com
- * @since		Version 2.2.9
+ * @since		Version 2.2.10
  * @filesource
  */
 // ------------------------------------------------------------------------
@@ -10734,19 +10761,20 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 }
 //####################modules/cache-drivers/drivers/files.php####################{
 
+
 /*
  * khoaofgod@yahoo.com
  * Website: http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://www.codehelper.io
  */
 
-class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
+class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 
     function checkdriver() {
-        if(is_writable($this->getPath())) {
+        if (is_writable($this->getPath())) {
             return true;
         } else {
-
+            
         }
         return false;
     }
@@ -10754,82 +10782,79 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     /*
      * Init Cache Path
      */
+
     function __construct($option = array()) {
 
         $this->setOption($option);
         $this->getPath();
 
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
-
     }
 
     /*
      * Return $FILE FULL PATH
      */
+
     private function getFilePath($keyword, $skip = false) {
         $path = $this->getPath();
         $code = md5($keyword);
-        $folder = substr($code,0,2);
-        $path = $path."/".$folder;
+        $folder = substr($code, 0, 2);
+        $path = $path . "/" . $folder;
         /*
          * Skip Create Sub Folders;
          */
-        if($skip == false) {
-            if(!file_exists($path)) {
-                if(!@mkdir($path,0777)) {
-                    throw new Exception("PLEASE CHMOD ".$this->getPath()." - 0777 OR ANY WRITABLE PERMISSION!",92);
+        if ($skip == false) {
+            if (!file_exists($path)) {
+                if (!@mkdir($path, 0777)) {
+                    throw new Exception("PLEASE CHMOD " . $this->getPath() . " - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
-
-            } elseif(!is_writeable($path)) {
-                @chmod($path,0777);
+            } elseif (!is_writeable($path)) {
+                @chmod($path, 0777);
             }
         }
 
-        $file_path = $path."/".$code.".txt";
+        $file_path = $path . "/" . $code . ".txt";
         return $file_path;
     }
 
-
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
         $file_path = $this->getFilePath($keyword);
-      //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
+        //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
         $toWrite = true;
         /*
          * Skip if Existing Caching in Options
          */
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true && file_exists($file_path)) {
             $content = $this->readfile($file_path);
             $old = $this->decode($content);
             $toWrite = false;
-            if($this->isExpired($old)) {
+            if ($this->isExpired($old)) {
                 $toWrite = true;
             }
         }
 
-        if($toWrite == true) {
-                $f = fopen($file_path,"w+");
-                fwrite($f,$data);
-                fclose($f);
+        if ($toWrite == true) {
+            $f = fopen($file_path, "w+");
+            fwrite($f, $data);
+            fclose($f);
         }
     }
-
-
-
 
     function driver_get($keyword, $option = array()) {
 
         $file_path = $this->getFilePath($keyword);
-        if(!file_exists($file_path)) {
+        if (!file_exists($file_path)) {
             return null;
         }
 
         $content = $this->readfile($file_path);
         $object = $this->decode($content);
-        if($this->isExpired($object)) {
+
+        if ($this->isExpired($object)) {
             @unlink($file_path);
             $this->auto_clean_expired();
             return null;
@@ -10839,8 +10864,8 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     }
 
     function driver_delete($keyword, $option = array()) {
-        $file_path = $this->getFilePath($keyword,true);
-        if(@unlink($file_path)) {
+        $file_path = $this->getFilePath($keyword, true);
+        if (@unlink($file_path)) {
             return true;
         } else {
             return false;
@@ -10850,35 +10875,36 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
     /*
      * Return total cache size + auto removed expired files
      */
+
     function driver_stats($option = array()) {
         $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  "",
+            "info" => "",
+            "size" => "",
+            "data" => "",
         );
 
         $path = $this->getPath();
         $dir = @opendir($path);
-        if(!$dir) {
-            throw new Exception("Can't read PATH:".$path,94);
+        if (!$dir) {
+            throw new Exception("Can't read PATH:" . $path, 94);
         }
 
         $total = 0;
         $removed = 0;
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
                 // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
+                $subdir = @opendir($path . "/" . $file);
+                if (!$subdir) {
+                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != "." && $f != "..") {
+                        $file_path = $path . "/" . $file . "/" . $f;
                         $size = filesize($file_path);
                         $object = $this->decode($this->readfile($file_path));
-                        if($this->isExpired($object)) {
+                        if ($this->isExpired($object)) {
                             unlink($file_path);
                             $removed = $removed + $size;
                         }
@@ -10886,21 +10912,21 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
                     }
                 } // end read subdir
             } // end if
-       } // end while
+        } // end while
 
-       $res['size']  = $total - $removed;
-       $res['info'] = array(
-                "Total" => $total,
-                "Removed"   => $removed,
-                "Current"   => $res['size'],
-       );
-       return $res;
+        $res['size'] = $total - $removed;
+        $res['info'] = array(
+            "Total" => $total,
+            "Removed" => $removed,
+            "Current" => $res['size'],
+        );
+        return $res;
     }
 
     function auto_clean_expired() {
         $autoclean = $this->get("keyword_clean_up_driver_files");
-        if($autoclean == null) {
-            $this->set("keyword_clean_up_driver_files",3600*24);
+        if ($autoclean == null) {
+            $this->set("keyword_clean_up_driver_files", 3600 * 24);
             $res = $this->stats();
         }
     }
@@ -10909,39 +10935,36 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
         $path = $this->getPath();
         $dir = @opendir($path);
-        if(!$dir) {
-            throw new Exception("Can't read PATH:".$path,94);
+        if (!$dir) {
+            throw new Exception("Can't read PATH:" . $path, 94);
         }
 
-        while($file=readdir($dir)) {
-            if($file!="." && $file!=".." && is_dir($path."/".$file)) {
+        while ($file = readdir($dir)) {
+            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
                 // read sub dir
-                $subdir = @opendir($path."/".$file);
-                if(!$subdir) {
-                    throw new Exception("Can't read path:".$path."/".$file,93);
+                $subdir = @opendir($path . "/" . $file);
+                if (!$subdir) {
+                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
                 }
 
-                while($f = readdir($subdir)) {
-                    if($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
+                while ($f = readdir($subdir)) {
+                    if ($f != "." && $f != "..") {
+                        $file_path = $path . "/" . $file . "/" . $f;
                         unlink($file_path);
                     }
                 } // end read subdir
             } // end if
         } // end while
-
-
     }
 
-
     function driver_isExisting($keyword) {
-        $file_path = $this->getFilePath($keyword,true);
-        if(!file_exists($file_path)) {
+        $file_path = $this->getFilePath($keyword, true);
+        if (!file_exists($file_path)) {
             return false;
         } else {
             // check expired or not
             $value = $this->get($keyword);
-            if($value == null) {
+            if ($value == null) {
                 return false;
             } else {
                 return true;
@@ -10951,17 +10974,16 @@ class phpfastcache_files extends  phpFastCache implements phpfastcache_driver  {
 
     function isExpired($object) {
 
-        if(isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
+        //expired_in为0永不过期
+        if (!empty($object['expired_in']) && isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
             return true;
         } else {
             return false;
         }
     }
 
-
-
-
 }
+
 //####################modules/cache-drivers/drivers/memcache.php####################{
 
 
@@ -11427,7 +11449,8 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
     }
 
     function isExpired($row) {
-        if (isset($row['exp']) && @date("U") >= $row['exp']) {
+        $object=  $this->decode($row['object']);
+        if (!empty($object['expired_in'])&&isset($row['exp']) && @date("U") >= $row['exp']) {
             return true;
         }
 
