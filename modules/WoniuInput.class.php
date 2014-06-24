@@ -524,7 +524,22 @@ class WoniuInput {
         return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
     }
 
-    public static function xss_clean($val) {
+    public static function xss_clean($var) {
+        if (is_array($var)) {
+            foreach ($var as $key => $val) {
+                if (is_array($val)) {
+                    $var[$key] = self::xss_clean($val);
+                } else {
+                    $var[$key] = self::xss_clean0($val);
+                }
+            }
+        } elseif (is_string($var)) {
+            $var = self::xss_clean0($var);
+        }
+        return $var;
+    }
+
+    private static function xss_clean0($val) {
         // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
         // this prevents some character re-spacing such as <java\0script>
         // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
