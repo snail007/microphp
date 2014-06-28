@@ -9,10 +9,10 @@
  * 使用方法：
  * $image=new Captcha();
  * $image->config('宽度','高度','字符个数','验证码session索引');
- * $image->create();//这样就会向浏览器输出一张图片
+ * $code=$image->create();//这样就会向浏览器输出一张图片,并返回验证码图片上的内容
  * //所有参数都可以省略，
  * 默认是：宽80 高20 字符数4 验证码session索引captcha_code
- * 第四个参数即把验证码存到$_SESSION['captcha_code']
+ * 第四个参数即把验证码存到$_SESSION['captcha_code'],第四个参数如果为null，则不会在$_SESSION中设置验证码。
  * 最简单使用示例:
  * $image=new Captcha();
  * $image->create();//这样就会向浏览器输出一张图片
@@ -53,17 +53,19 @@ class Captcha {
         $this->outFileHeader();
         //产生验证码
         $this->createCode();
-
         //产生图片
         $this->createImage();
-
         //画正弦干扰线
         $this->wirteSinLine();
         //往图片上写验证码
         $this->writeCheckCodeToImage();
+        
         imagepng($this->checkimage);
         imagedestroy($this->checkimage);
-        $_SESSION[$this->session_flag] = $this->checkcode;
+        if(!empty($this->session_flag)){
+            $_SESSION[$this->session_flag] = $this->checkcode;
+        }
+        return $this->checkcode;
     }
 
     /*
