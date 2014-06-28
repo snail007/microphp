@@ -22,7 +22,6 @@ class Captcha {
     private $width = 80, $height = 20, $codenum = 4;
     public $checkcode;     //产生的验证码
     private $checkimage;    //验证码图片 
-    private $disturbColor = ''; //干扰像素
     private $session_flag = 'captcha_code'; //存到session中的索引
 
 //尝试开始session
@@ -49,11 +48,9 @@ class Captcha {
         $this->outFileHeader();
         //产生验证码
         $this->createCode();
-
         //产生图片
         $this->createImage();
-
-        //画正弦干扰线
+        //画干扰线
         $this->wirteSinLine();
         //往图片上写验证码
         $this->writeCheckCodeToImage();
