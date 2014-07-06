@@ -53,7 +53,7 @@ class phpFastCache {
         ),
         "extensions" => array(),
     );
-    var $drivers = array('apc', 'sqlite', 'files', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
+    var $drivers = array('apc', 'files', 'sqlite', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
     var $tmp = array();
     var $checked = array(
         "path" => false,
