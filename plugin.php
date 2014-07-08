@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.10
- * @createdtime         2014-06-24 12:05:41
+ * @since		Version 2.2.11
+ * @createdtime         2014-07-08 12:55:50
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -288,8 +288,8 @@ $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
      * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+     * 可用的方式有：auto,apc,files,sqlite,memcached,redis,wincache,xcache,memcache
+     * auto自动模式寻找的顺序是 : apc,files,sqlite,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
