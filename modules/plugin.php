@@ -297,7 +297,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files缓存的时候确保文件夹存在而且可写
+    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files、sqlite缓存的时候确保文件夹存在而且可写
     /*
      * 第二驱动
      * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
