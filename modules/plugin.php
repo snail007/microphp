@@ -288,8 +288,8 @@ $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
      * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+     * 可用的方式有：auto,apc,files,sqlite,memcached,redis,wincache,xcache,memcache
+     * auto自动模式寻找的顺序是 : apc,files,sqlite,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
