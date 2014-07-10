@@ -20,6 +20,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
     protected $_config;
     private $__mongo_collection = NULL;
     private $__current_session = NULL;
+    private $__mongo_conn = NULL;
 
     public function connect() {
         $connection_string = sprintf('mongodb://%s:%s', $this->_config['host'], $this->_config['port']);
@@ -42,7 +43,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
         if (!class_exists($class)) {
             $class = 'Mongo';
         }
-        $object_conn = new $class($connection_string, $opts);
+        $this->__mongo_conn=$object_conn = new $class($connection_string, $opts);
         $object_mongo = $object_conn->{$this->_config['database']};
         $this->__mongo_collection = $object_mongo->{$this->_config['collection']};
     }
@@ -122,6 +123,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
      * @return boolean
      */
     public function close() {
+        $this->__mongo_conn->close();
         return true;
     }
 
