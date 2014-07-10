@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.11
- * @createdtime         2014-07-08 12:55:49
+ * @createdtime         2014-07-10 17:37:12
  */
  
 
@@ -29,7 +29,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  */
 if (!function_exists('dump')) {
 
@@ -780,7 +780,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  */
 class WoniuInput {
 
@@ -1373,7 +1373,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  */
 class WoniuRouter {
 
@@ -1618,7 +1618,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.11
- * @createdtime            2014-07-08 12:55:49
+ * @createdtime            2014-07-10 17:37:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2620,7 +2620,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2739,7 +2739,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3622,7 +3622,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  */
 class WoniuDB {
 
@@ -9787,7 +9787,7 @@ class CI_DB_pdo_result extends CI_DB_result {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.11
- * @createdtime       2014-07-08 12:55:49
+ * @createdtime       2014-07-10 17:37:12
  */
 // SQLite3 PDO driver v.0.02 by Xintrea
 // Tested on CodeIgniter 1.7.1
@@ -12619,6 +12619,8 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         if ($result = $this->dbConnection->query($sql)) {
             if ($result->num_rows && $result->num_rows > 0) {
                 $record = $result->fetch_assoc();
+                 $sql = sprintf("update  %s set `timestamp` =%s where id='%s' ", $this->dbTable, time() + intval($this->_config['lifetime']), $this->dbConnection->escape_string($id));
+                 $this->dbConnection->query($sql);
                 return $record['data'];
             } else {
                 return false;
@@ -12636,7 +12638,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
      */
     public function write($id, $data) {
 
-        $sql = sprintf("REPLACE INTO %s VALUES('%s', '%s', '%s')", $this->dbTable, $this->dbConnection->escape_string($id), $this->dbConnection->escape_string($data), time() + intval($this->_config['lifetime']));
+        $sql = sprintf("REPLACE INTO %s VALUES('%s', '%s', %s)", $this->dbTable, $this->dbConnection->escape_string($id), $this->dbConnection->escape_string($data), time() + intval($this->_config['lifetime']));
         return $this->dbConnection->query($sql);
     }
 
@@ -12662,7 +12664,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
      *        (session.gc_probability/session.gc_divisor)
      */
     public function gc($max = 0) {
-        $sql = sprintf("DELETE FROM %s WHERE `timestamp` < '%s'", $this->dbTable, time());
+        $sql = sprintf("DELETE FROM %s WHERE `timestamp` < %s ", $this->dbTable, time());
         return $this->dbConnection->query($sql);
     }
 
