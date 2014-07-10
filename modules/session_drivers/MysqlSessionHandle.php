@@ -125,6 +125,8 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         if ($result = $this->dbConnection->query($sql)) {
             if ($result->num_rows && $result->num_rows > 0) {
                 $record = $result->fetch_assoc();
+                 $sql = sprintf("update  %s set `timestamp` =%s where id='%s' ", $this->dbTable, time() + intval($this->_config['lifetime']), $this->dbConnection->escape_string($id));
+                 $this->dbConnection->query($sql);
                 return $record['data'];
             } else {
                 return false;
@@ -142,7 +144,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
      */
     public function write($id, $data) {
 
-        $sql = sprintf("REPLACE INTO %s VALUES('%s', '%s', '%s')", $this->dbTable, $this->dbConnection->escape_string($id), $this->dbConnection->escape_string($data), time() + intval($this->_config['lifetime']));
+        $sql = sprintf("REPLACE INTO %s VALUES('%s', '%s', %s)", $this->dbTable, $this->dbConnection->escape_string($id), $this->dbConnection->escape_string($data), time() + intval($this->_config['lifetime']));
         return $this->dbConnection->query($sql);
     }
 
@@ -168,7 +170,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
      *        (session.gc_probability/session.gc_divisor)
      */
     public function gc($max = 0) {
-        $sql = sprintf("DELETE FROM %s WHERE `timestamp` < '%s'", $this->dbTable, time());
+        $sql = sprintf("DELETE FROM %s WHERE `timestamp` < %s ", $this->dbTable, time());
         return $this->dbConnection->query($sql);
     }
 
