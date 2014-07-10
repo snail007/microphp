@@ -38,8 +38,11 @@ class MongodbSessionHandle implements WoniuSessionHandle {
         if ($this->_config['replicaSet']) {
             $opts['replicaSet'] = $this->_config['replicaSet'];
         }
-
-        $object_conn = new Mongo($connection_string, $opts);
+        $class = 'MongoClient';
+        if (!class_exists($class)) {
+            $class = 'Mongo';
+        }
+        $object_conn = new $class($connection_string, $opts);
         $object_mongo = $object_conn->{$this->_config['database']};
         $this->__mongo_collection = $object_mongo->{$this->_config['collection']};
     }
@@ -105,11 +108,11 @@ class MongodbSessionHandle implements WoniuSessionHandle {
             $this->connect();
         }
         $result = true;
-        if ($this->__mongo_collection != NULL) {
+        if ($this->__mongo_collection == NULL) {
             $result = false;
         }
         //echo 'open called'."\n";
-        return true;
+        return $result;
     }
 
     /**
