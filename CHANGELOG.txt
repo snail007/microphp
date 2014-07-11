@@ -4,6 +4,7 @@
 1.缓存启动，自动模式搜索顺序修改为：apc,files,sqlite,memcached,redis,wincache,xcache,memcache
 修复了:
 1.使用mysql存储session的时候，session不会自动延期的问题。
+2.使用mysqli数据库驱动的时候，解决了报Deprecated: mysql_escape_string()的问题，5.3以后不再使用该函数。
 
 #############################ver 2.2.10[2014-06-24]#############################
 增加了：
