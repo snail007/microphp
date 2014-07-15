@@ -59,10 +59,10 @@ class Captcha {
         $this->wirteSinLine();
         //往图片上写验证码
         $this->writeCheckCodeToImage();
-        
+
         imagepng($this->checkimage);
         imagedestroy($this->checkimage);
-        if(!empty($this->session_flag)){
+        if (!empty($this->session_flag)) {
             $_SESSION[$this->session_flag] = $this->checkcode;
         }
         return $this->checkcode;
@@ -125,7 +125,7 @@ class Captcha {
         for ($i = 0; $i < $this->codenum; $i++) {
             $bg_color = imagecolorallocate($this->checkimage, rand(0, 255), rand(0, 128), rand(0, 255));
             $x = floor($this->width / $this->codenum) * $i;
-            $y = rand(14, 18);
+            $y = rand($this->height / 2, $this->height - 2);
             imagettftext($this->checkimage, rand(13, 16), rand(-35, 35), $x + 5, $y, $bg_color, $this->font_path, $this->checkcode[$i]);
         }
     }
