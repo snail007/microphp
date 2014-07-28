@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.10
- * @createdtime         2014-06-24 12:05:41
+ * @since		Version 2.2.11
+ * @createdtime         2014-07-11 16:23:08
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -288,8 +288,8 @@ $system['cache_drivers'] = array();
 $system['cache_config'] = array(
     /*
      * 默认存储方式
-     * 可用的方式有：auto,apc,sqlite,files,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,sqlite,files,memcached,redis,wincache,xcache,memcache
+     * 可用的方式有：auto,apc,files,sqlite,memcached,redis,wincache,xcache,memcache
+     * auto自动模式寻找的顺序是 : apc,files,sqlite,memcached,redis,wincache,xcache,memcache
      */
     "storage" => "auto",
     /*
@@ -297,7 +297,7 @@ $system['cache_config'] = array(
      * 使用绝对全路径，比如： /home/username/cache
      * 留空，系统自己选择
      */
-    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files缓存的时候确保文件夹存在而且可写
+    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files、sqlite缓存的时候确保文件夹存在而且可写
     /*
      * 第二驱动
      * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
