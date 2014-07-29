@@ -62,7 +62,7 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         session_set_save_handler(array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'), array($this, 'destroy'), array($this, 'gc'));
         // set some important session vars
         ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 100);
+        ini_set('session.gc_probability', 1);
         ini_set('session.gc_divisor', 100);
         ini_set('session.gc_maxlifetime', $this->_config['lifetime']);
         ini_set('session.referer_check', '');
