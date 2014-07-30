@@ -10,8 +10,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.11
- * @createdtime         2014-07-28 11:07:52
+ * @since		Version 2.2.12
+ * @createdtime         2014-07-30 12:18:21
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -155,7 +155,7 @@ $system['helper_file_autoload'] = array();
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
- * 比如: ImageTool 或者配置数组array('ImageTool'=>'image')
+ * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();

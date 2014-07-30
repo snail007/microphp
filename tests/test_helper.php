@@ -41,6 +41,12 @@ class Test_helper extends UnitTestCase {
         //$woniu->helper('configxxx');
         $woniu->helper('config');
         $woniu->helper('config2');
+        
+        $woniu->helper('test/configCfg',false);
+        $this->assertNull($woniu->config('config_cfg'));
+        $woniu->helper('test/configCfg2',true);
+        $this->assertEqual($woniu->config('config_cfg2'),'okay2');
+        
         $this->assertEqual($woniu->config('product'), 'microphp');
         $this->assertEqual($woniu->config('host'), '127.0.0.1');
         $this->assertEqual($woniu->config('host2'), '127.0.0.2');
