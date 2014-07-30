@@ -241,7 +241,11 @@ class CI_DB_sqlite3_driver extends CI_DB {
      * @return      string         
      */
     function escape_str($str) {
-        return sqlite_escape_string($str);
+        if (function_exists('sqlite_escape_string')) {
+            return sqlite_escape_string($str);
+        } else {
+            return SQLite3::escapeString($str);
+        }
     }
 
 // Added by Xi
@@ -368,7 +372,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function insert_id() {
         return @$this->conn_id->lastInsertId();
     }
-            
 
     // --------------------------------------------------------------------
 

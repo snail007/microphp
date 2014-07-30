@@ -155,7 +155,7 @@ $system['helper_file_autoload'] = array();
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
- * 比如: ImageTool 或者配置数组array('ImageTool'=>'image')
+ * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();

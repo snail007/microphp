@@ -36,9 +36,11 @@ class WoniuController extends WoniuLoaderPlus {
         }
         foreach ($autoload_library as $key => $val) {
             if (is_array($val)) {
+                $new = isset($val['new']) ? $val['new'] : true;
                 $key = key($val);
                 $val = $val[$key];
-                $this->lib($key, $val);
+
+                $this->lib($key, $val, $new);
             } else {
                 $this->lib($val);
             }
@@ -87,7 +89,7 @@ class WoniuController extends WoniuLoaderPlus {
         }
         if (empty($classname_path)) {
             WoniuLoader::classAutoloadRegister();
-            return  new self();
+            return new self();
         }
         $system = WoniuLoader::$system;
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);

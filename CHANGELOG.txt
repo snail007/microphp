@@ -1,6 +1,19 @@
 
 #############################ver 2.2.12[2014-07-28]#############################
-优化了：
+增加了：
+1.$this->lib($file_name, $alias_name = null,$new=true),增加了第三个参数$new，默认true。
+  默认情况下，$this->lib()加载类库的时候，会new一个类的对象。
+  有时候我们只是为了包含进来类库文件，或者类是不可实例化的，那么我们只要指定$new=false即可。
+  然后$this->lib()加载类库的时，只是包含文件，并不会new一个类的对象，此时xxx类对应的$this->lib->xxx不再可用，是null。
+2.系统配置中，类库自动加载的时候，可以指定new参数。
+  $system['library_file_autoload'] = array();
+  自动加载的library文件,比如array($item); 
+  $item是library文件名或者"配置数组",不包含后缀,
+  比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
+  配置数组的作用是为长的类库名用别名代替.
+修复了：
+1.sqlite_escape_string在PHP5.4及以上的版本中被废弃了，使用SQLite3::escapeString()代替。
+
 
 #############################ver 2.2.11[2014-07-28]#############################
 优化了：

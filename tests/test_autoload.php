@@ -39,17 +39,21 @@ class Test_autoload extends UnitTestCase {
     public function testautoload(){
         global $system;
         $system['helper_file_autoload'] = array('function');
-        $system['library_file_autoload'] = array('LibAutoload',array('LibAutoload'=>'la'));
+        $system['library_file_autoload'] = array('LibAutoload',array('LibAutoload'=>'la'),array('sub/SubLibAutoNew'=>'','new'=>false));
         $system['models_file_autoload'] = array('ModelAutoload',array('ModelAutoload' => 'ma'));
         WoniuRouter::setConfig($system);
         $this->assertFalse(function_exists('testFunction'));
         $this->assertFalse(class_exists('LibAutoload',FALSE));
+        $this->assertFalse(class_exists('SubLibAutoNew',FALSE));
         $this->assertFalse(class_exists('ModelAutoload',FALSE));
+        
         $woniu=WoniuLoader::instance();
         $this->assertEqual(testFunction('hello'), 'hello');
         $this->assertIsA($woniu->lib->LibAutoload, 'LibAutoload');
         $this->assertIsA($woniu->lib->la, 'LibAutoload');
         $this->assertReference($woniu->lib->LibAutoload, $woniu->lib->la);
+        $this->assertTrue(class_exists('SubLibAutoNew',FALSE));
+        
         $this->assertIsA($woniu->model->ModelAutoload, 'ModelAutoload');
         $this->assertIsA($woniu->model->ma, 'ModelAutoload');
         $this->assertReference($woniu->model->ModelAutoload, $woniu->model->ma);

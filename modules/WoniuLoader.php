@@ -143,7 +143,7 @@ class WoniuLoader {
         }
     }
 
-    public static function lib($file_name, $alias_name = null) {
+    public static function lib($file_name, $alias_name = null,$new=true) {
         $system = WoniuLoader::$system;
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
@@ -171,7 +171,11 @@ class WoniuLoader {
             if (file_exists($filepath)) {
                 self::includeOnce($filepath);
                 if (class_exists($classname, FALSE)) {
-                    return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+                    if($new){
+                        return WoniuLibLoader::$lib_files[$alias_name] = new $classname();
+                    }else{
+                        return null;
+                    }
                 } else {
                     if ($key == $count - 1) {
                         trigger404('Library Class:' . $classname . ' not found.');

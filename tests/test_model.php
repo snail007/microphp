@@ -65,10 +65,12 @@ class Test_model extends UnitTestCase {
         $this->assertIsA($loader->model->UserModel, 'UserModel');
         WoniuLoader::instance()->model('UserModel', 'user');
         $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->UserModel);
-        $this->assertReference(WoniuLoader::instance()->model->user, WoniuModel::instance('UserModel'));
+        $xx=WoniuModel::instance('UserModel');
+        $this->assertReference(WoniuLoader::instance()->model->user,$xx );
         WoniuLoader::instance()->model('test/SubUserModel', 'subuser');
         $this->assertReference(WoniuLoader::instance()->model->subuser, WoniuLoader::instance()->model->SubUserModel);
-        $this->assertReference(WoniuLoader::instance()->model->subuser, WoniuModel::instance('SubUserModel'));
+        $xx=WoniuModel::instance('SubUserModel');
+        $this->assertReference(WoniuLoader::instance()->model->subuser, $xx);
         $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->user2);
         $browser = new SimpleBrowser();
         $browser->get(getReqURL('?model.mixLoader'));

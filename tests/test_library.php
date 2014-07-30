@@ -1,4 +1,5 @@
 <?php
+
 require_once 'pluginfortest.php';
 require_once('simpletest/autorun.php');
 /*
@@ -35,17 +36,21 @@ require_once('simpletest/autorun.php');
  *
  * @author pm
  */
-class Test_library extends UnitTestCase{
+class Test_library extends UnitTestCase {
+
     public function testLibLoader() {
-        $this->assertFalse(class_exists('TestLibrary',FALSE));
-        $woniu=  WoniuLoader::instance();
+        $this->assertFalse(class_exists('TestLibrary', FALSE));
+        $woniu = WoniuLoader::instance();
         $this->assertIsA(new TestLibrary(), 'TestLibrary');
         $this->assertIsA(new SubLib2(), 'SubLib2');
-        $lib=$woniu->lib('sub/SubLib');
-        $lib2=$woniu->lib('sub/SubLib','SubLib2');
-        $lib3=$woniu->lib->SubLib2;
-        $lib4=$woniu->lib->SubLib;
-        $lib5=$woniu->lib('sub/SubLib2','SubLib3');
+        $this->assertFalse(class_exists('SubLibNew', FALSE));
+        $woniu->lib('sub/SubLibNew',null,false);
+        $this->assertTrue(class_exists('SubLibNew', FALSE));
+        $lib = $woniu->lib('sub/SubLib');
+        $lib2 = $woniu->lib('sub/SubLib', 'SubLib2');
+        $lib3 = $woniu->lib->SubLib2;
+        $lib4 = $woniu->lib->SubLib;
+        $lib5 = $woniu->lib('sub/SubLib2', 'SubLib3');
         $this->assertIsA($lib, 'SubLib');
         $this->assertIsA($lib2, 'SubLib');
         $this->assertIsA($lib3, 'SubLib');
@@ -55,8 +60,10 @@ class Test_library extends UnitTestCase{
         $this->assertReference($lib3, $lib2);
         $this->assertReference($lib4, $lib3);
         $this->assertTrue($lib->test());
-        $woniu->lib('TestLibrary','tl');
+        $woniu->lib('TestLibrary', 'tl');
         $this->assertIsA($woniu->lib->tl, 'TestLibrary');
-        $this->assertReference($woniu->lib('TestLibrary','tl'), $woniu->lib->tl);
+        $libxxx=$woniu->lib('TestLibrary', 'tl'); 
+        $this->assertReference($libxxx,$woniu->lib->tl);
     }
+
 }
