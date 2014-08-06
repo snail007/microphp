@@ -62,17 +62,6 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
         $this->instant->delete($keyword);
     }
 
-    function driver_stats($option = array()) {
-        $this->connectServer();
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => $this->instant->info(),
-        );
-
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         $this->connectServer();
         $this->instant->flushDB();

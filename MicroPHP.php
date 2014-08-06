@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.12
- * @createdtime         2014-08-06 10:42:00
+ * @createdtime         2014-08-06 13:42:31
  */
  
 
@@ -27,7 +27,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  */
 if (!function_exists('dump')) {
 
@@ -776,7 +776,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  */
 class WoniuInput {
 
@@ -1367,7 +1367,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  */
 class WoniuRouter {
 
@@ -1610,7 +1610,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.12
- * @createdtime            2014-08-06 10:42:00
+ * @createdtime            2014-08-06 13:42:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2617,7 +2617,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2736,7 +2736,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3614,7 +3614,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-06 10:42:00
+ * @createdtime       2014-08-06 13:42:31
  */
 class WoniuDB {
     private static $conns = array();
@@ -9223,13 +9223,6 @@ interface phpfastcache_driver {
      function driver_get($keyword, $option = array());
 
     /*
-     * Stats
-     * Show stats of caching
-     * Return array ("info","size","data")
-     */
-     function driver_stats($option = array());
-
-    /*
      * Delete
      * Delete a cache
      */
@@ -9240,11 +9233,6 @@ interface phpfastcache_driver {
      * Clean up whole cache
      */
      function driver_clean($option = array());
-
-
-
-
-
 }
 
 class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
@@ -9286,23 +9274,6 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     function driver_delete($keyword, $option = array()) {
         return apc_delete($keyword);
     }
-
-    function driver_stats($option = array()) {
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => "",
-        );
-
-        try {
-            $res['data'] = apc_cache_info("user");
-        } catch (Exception $e) {
-            $res['data'] = array();
-        }
-
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         @apc_clear_cache();
         @apc_clear_cache("user");
@@ -9420,57 +9391,6 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
         } else {
             return false;
         }
-    }
-
-    /*
-     * Return total cache size + auto removed expired files
-     */
-
-    function driver_stats($option = array()) {
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => "",
-        );
-
-        $path = $this->getPath();
-        $dir = @opendir($path);
-        if (!$dir) {
-            throw new Exception("Can't read PATH:" . $path, 94);
-        }
-
-        $total = 0;
-        $removed = 0;
-        while ($file = readdir($dir)) {
-            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
-                // read sub dir
-                $subdir = @opendir($path . "/" . $file);
-                if (!$subdir) {
-                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
-                }
-
-                while ($f = readdir($subdir)) {
-                    if ($f != "." && $f != "..") {
-                        $file_path = $path . "/" . $file . "/" . $f;
-                        $size = filesize($file_path);
-                        $object = $this->decode($this->readfile($file_path));
-                        if ($this->isExpired($object)) {
-                            unlink($file_path);
-                            $removed = $removed + $size;
-                        }
-                        $total = $total + $size;
-                    }
-                } // end read subdir
-            } // end if
-        } // end while
-
-        $res['size'] = $total - $removed;
-        $res['info'] = array(
-            "Total" => $total,
-            "Removed" => $removed,
-            "Current" => $res['size'],
-        );
-        return $res;
     }
 
     function auto_clean_expired() {
@@ -9601,18 +9521,6 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
          $this->instant->delete($keyword);
     }
 
-    function driver_stats($option = array()) {
-        $this->connectServer();
-        $res = array(
-            "info"  => "",
-            "size"  =>  "",
-            "data"  => $this->instant->getStats(),
-        );
-
-        return $res;
-
-    }
-
     function driver_clean($option = array()) {
         $this->connectServer();
         $this->instant->flush();
@@ -9701,17 +9609,6 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
     function driver_delete($keyword, $option = array()) {
         $this->connectServer();
         $this->instant->delete($keyword);
-    }
-
-    function driver_stats($option = array()) {
-        $this->connectServer();
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => $this->instant->getStats(),
-        );
-
-        return $res;
     }
 
     function driver_clean($option = array()) {
@@ -9993,44 +9890,6 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
         ));
     }
 
-    function driver_stats($option = array()) {
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => "",
-        );
-        $total = 0;
-        $optimized = 0;
-
-        $dir = opendir($this->path);
-        while ($file = readdir($dir)) {
-            if ($file != "." && $file != "..") {
-                $file_path = $this->path . "/" . $file;
-                $size = filesize($file_path);
-                $total = $total + $size;
-
-                $PDO = new PDO("sqlite:" . $file_path);
-                $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                $stm = $PDO->prepare("DELETE FROM `caching` WHERE `exp` <= :U");
-                $stm->execute(array(
-                    ":U" => @date("U"),
-                ));
-
-                $PDO->exec("VACUUM;");
-                $size = filesize($file_path);
-                $optimized = $optimized + $size;
-            }
-        }
-        $res['size'] = round($optimized / 1024 / 1024, 1);
-        $res['info'] = array(
-            "total" => round($total / 1024 / 1024, 1),
-            "optimized" => round($optimized / 1024 / 1024, 1),
-        );
-
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         // delete everything before reset indexing
         $dir = opendir($this->path);
@@ -10099,15 +9958,6 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         return wincache_ucache_delete($keyword);
     }
 
-    function driver_stats($option = array()) {
-        $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  wincache_scache_info(),
-        );
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         wincache_ucache_clear();
         return true;
@@ -10170,22 +10020,6 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
     function driver_delete($keyword, $option = array()) {
         return xcache_unset($keyword);
     }
-
-    function driver_stats($option = array()) {
-        $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  "",
-        );
-
-        try {
-            $res['data'] = xcache_list(XC_TYPE_VAR,100);
-        } catch(Exception $e) {
-            $res['data'] = array();
-        }
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         $cnt = xcache_count(XC_TYPE_VAR);
         for ($i=0; $i < $cnt; $i++) {
@@ -10266,17 +10100,6 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
     function driver_delete($keyword, $option = array()) {
         $this->connectServer();
         $this->instant->delete($keyword);
-    }
-
-    function driver_stats($option = array()) {
-        $this->connectServer();
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => $this->instant->info(),
-        );
-
-        return $res;
     }
 
     function driver_clean($option = array()) {

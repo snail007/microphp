@@ -45,16 +45,6 @@ class phpfastcache_example extends phpFastCache implements phpfastcache_driver  
 
     }
 
-    function driver_stats($option = array()) {
-        $res = array(
-            "info"  => "",
-            "size"  =>  "",
-            "data"  => "",
-        );
-
-        return $res;
-    }
-
     function driver_clean($option = array()) {
 
     }

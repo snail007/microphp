@@ -67,18 +67,6 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
          $this->instant->delete($keyword);
     }
 
-    function driver_stats($option = array()) {
-        $this->connectServer();
-        $res = array(
-            "info"  => "",
-            "size"  =>  "",
-            "data"  => $this->instant->getStats(),
-        );
-
-        return $res;
-
-    }
-
     function driver_clean($option = array()) {
         $this->connectServer();
         $this->instant->flush();

@@ -42,15 +42,6 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
         return wincache_ucache_delete($keyword);
     }
 
-    function driver_stats($option = array()) {
-        $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  wincache_scache_info(),
-        );
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         wincache_ucache_clear();
         return true;

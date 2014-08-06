@@ -103,57 +103,6 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
         }
     }
 
-    /*
-     * Return total cache size + auto removed expired files
-     */
-
-    function driver_stats($option = array()) {
-        $res = array(
-            "info" => "",
-            "size" => "",
-            "data" => "",
-        );
-
-        $path = $this->getPath();
-        $dir = @opendir($path);
-        if (!$dir) {
-            throw new Exception("Can't read PATH:" . $path, 94);
-        }
-
-        $total = 0;
-        $removed = 0;
-        while ($file = readdir($dir)) {
-            if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
-                // read sub dir
-                $subdir = @opendir($path . "/" . $file);
-                if (!$subdir) {
-                    throw new Exception("Can't read path:" . $path . "/" . $file, 93);
-                }
-
-                while ($f = readdir($subdir)) {
-                    if ($f != "." && $f != "..") {
-                        $file_path = $path . "/" . $file . "/" . $f;
-                        $size = filesize($file_path);
-                        $object = $this->decode($this->readfile($file_path));
-                        if ($this->isExpired($object)) {
-                            unlink($file_path);
-                            $removed = $removed + $size;
-                        }
-                        $total = $total + $size;
-                    }
-                } // end read subdir
-            } // end if
-        } // end while
-
-        $res['size'] = $total - $removed;
-        $res['info'] = array(
-            "Total" => $total,
-            "Removed" => $removed,
-            "Current" => $res['size'],
-        );
-        return $res;
-    }
-
     function auto_clean_expired() {
         $autoclean = $this->get("keyword_clean_up_driver_files");
         if ($autoclean == null) {

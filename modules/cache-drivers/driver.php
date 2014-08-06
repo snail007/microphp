@@ -21,13 +21,6 @@ interface phpfastcache_driver {
      function driver_get($keyword, $option = array());
 
     /*
-     * Stats
-     * Show stats of caching
-     * Return array ("info","size","data")
-     */
-     function driver_stats($option = array());
-
-    /*
      * Delete
      * Delete a cache
      */
@@ -38,9 +31,4 @@ interface phpfastcache_driver {
      * Clean up whole cache
      */
      function driver_clean($option = array());
-
-
-
-
-
 }

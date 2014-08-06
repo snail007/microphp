@@ -45,22 +45,6 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
     function driver_delete($keyword, $option = array()) {
         return xcache_unset($keyword);
     }
-
-    function driver_stats($option = array()) {
-        $res = array(
-            "info"  =>  "",
-            "size"  =>  "",
-            "data"  =>  "",
-        );
-
-        try {
-            $res['data'] = xcache_list(XC_TYPE_VAR,100);
-        } catch(Exception $e) {
-            $res['data'] = array();
-        }
-        return $res;
-    }
-
     function driver_clean($option = array()) {
         $cnt = xcache_count(XC_TYPE_VAR);
         for ($i=0; $i < $cnt; $i++) {
