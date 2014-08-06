@@ -122,7 +122,8 @@ class Woniu_debuger extends WoniuController {
     }
 
     public function getControllers() {
-        $path = realpath(self::$system['controller_folder']);
+        $path = is_array(self::$system['controller_folder']) ? current(self::$system['controller_folder']) : self::$system['controller_folder'];
+        $path = realpath($path);
         $sub_fix = self::$system['controller_file_subfix'];
         $res = $this->scan($path);
         $ret = array();
@@ -135,7 +136,8 @@ class Woniu_debuger extends WoniuController {
     }
 
     public function getModels() {
-        $path = realpath(self::$system['model_folder']);
+        $path = is_array(self::$system['model_folder']) ? current(self::$system['model_folder']) : self::$system['model_folder'];
+        $path = realpath($path);
         $sub_fix = self::$system['model_file_subfix'];
         $res = $this->scan($path);
         $ret = array();
