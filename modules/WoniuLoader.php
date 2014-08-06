@@ -588,7 +588,7 @@ class WoniuLoader {
                 $output[] = $pagination[$key - 1];
             }
         }
-        return implode("", $output);
+        return $pages>1?implode("", $output):'';
     }
 
     /**
