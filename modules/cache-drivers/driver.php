@@ -1,12 +1,5 @@
 <?php
 
-/*
- * khoaofgod@yahoo.com
- * Website: http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://www.codehelper.io
- */
-
-
 interface phpfastcache_driver {
     /*
      * Check if this Cache driver is available for server or not

@@ -1,38 +1,4 @@
 <?php
-
-/**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.2.0 or newer
- *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright          Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		http://git.oschina.net/snail/microphp
- * @since		Version 1.0
- * @createdtime       {createdtime}
- */
-// SQLite3 PDO driver v.0.02 by Xintrea
-// Tested on CodeIgniter 1.7.1
-// Based on CI_DB_pdo_driver class v.0.1
-// Warning! This PDO driver work with SQLite3 only!
-
-/**
- * Code Igniter
- *
- * An open source application development framework for PHP 4.3.2 or newer
- *
- * @package		CodeIgniter
- * @author		Rick Ellis
- * @copyright  Copyright (c) 2006, pMachine, Inc.
- * @license		http://www.codeignitor.com/user_guide/license.html
- * @link		http://www.codeigniter.com
- * @since		Version 1.0
- * @filesource
- */
-// ------------------------------------------------------------------------
-
 /**
  * PDO Database Adapter Class
  *
@@ -47,7 +13,6 @@
  * @link		http://dready.jexiste.fr/dotclear/
  */
 class CI_DB_sqlite3_driver extends CI_DB {
-
 // Added by Xi
     var $dbdriver = 'pdo';
     var $_escape_char = ''; // The character used to escape with - not needed for SQLite
@@ -56,14 +21,12 @@ class CI_DB_sqlite3_driver extends CI_DB {
 // clause and character used for LIKE escape sequences - not used in MySQL
     var $_like_escape_str = '';
     var $_like_escape_chr = '';
-
     /**
      * Whether to use the MySQL "delete hack" which allows the number
      * of affected rows to be shown. Uses a preg_replace when enabled,
      * adding a bit more processing to all queries.
      */
     var $delete_hack = TRUE;
-
     /**
      * The syntax to count rows is slightly different across different
      * database engines, so this string appears in each driver and is
@@ -72,7 +35,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     var $_count_string = 'SELECT COUNT(*) AS ';
 // whether SET NAMES must be used to set the character set
     var $use_set_names;
-
     /**
      * Non-persistent database connection
      *
@@ -95,13 +57,10 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if ($conn_id) {
             log_message('debug', 'PDO driver connection ok');
         }
-
         // Added by Xi
         $this->conn_id = $conn_id;
-
         return $conn_id;
     }
-
     /**
      * Show column query
      *
@@ -114,9 +73,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function _list_columns($table = '') {
         return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Persistent database connection
      *
@@ -126,7 +83,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function db_pconnect() {
         // For SQLite architecture can not enable persistent connection
         return $this->db_connect();
-
         /*
           $conn_id = false;
           try {
@@ -138,16 +94,12 @@ class CI_DB_sqlite3_driver extends CI_DB {
           $this->display_error($e->getMessage(), '', TRUE);
           }
           }
-
           // Added by Xi
           $this->conn_id=$conn_id;
-
           return $conn_id;
          */
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Select the database
      *
@@ -157,9 +109,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function db_select() {
         return TRUE;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Execute the query
      *
@@ -172,9 +122,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         log_message('debug', 'SQL : ' . $sql);
         return @$this->conn_id->query($sql);
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Prep the query
      *
@@ -187,7 +135,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function &_prep_query($sql) {
         return $sql;
     }
-
 // Modify by Xi
     /**
      * "Smart" Escape String
@@ -208,12 +155,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
             default : $str = ($str === NULL) ? 'NULL' : $str;
                 break;
         }
-
         return $str;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Escape String
      *
@@ -231,7 +175,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
       return $this->conn_id->quote($str);
       }
      */
-    // --------------------------------------------------------------------
+    
 // Added by Xi
     /**
      * Escape String         
@@ -247,7 +191,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
             return SQLite3::escapeString($str);
         }
     }
-
 // Added by Xi
     /**     * Escape the SQL Identifiers * 
      * This function escapes column and table names * 
@@ -258,26 +201,21 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if ($this->_escape_char == '') {
             return $item;
         }
-
         foreach ($this->_reserved_identifiers as $id) {
             if (strpos($item, '.' . $id) !== FALSE) {
                 $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.', $item);
-
                 // remove duplicates if the user already included the escape
                 return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
             }
         }
-
         if (strpos($item, '.') !== FALSE) {
             $str = $this->_escape_char . str_replace('.', $this->_escape_char . '.' . $this->_escape_char, $item) . $this->_escape_char;
         } else {
             $str = $this->_escape_char . $item . $this->_escape_char;
         }
-
         // remove duplicates if the user already included the escape
         return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
     }
-
 // Add by Xi
     /**
      * Begin Transaction
@@ -289,22 +227,18 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if (!$this->trans_enabled) {
             return TRUE;
         }
-
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0) {
             return TRUE;
         }
-
         // Reset the transaction failure flag.
         // If the $test_mode flag is set to TRUE transactions will be rolled back
         // even if the queries produce a successful result.
         $this->_trans_failure = ($test_mode === TRUE) ? TRUE : FALSE;
-
         $this->simple_query('BEGIN TRANSACTION');
         return TRUE;
     }
-
-    // --------------------------------------------------------------------
+    
 // Add by Xi
     /**
      * Commit Transaction
@@ -316,17 +250,14 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if (!$this->trans_enabled) {
             return TRUE;
         }
-
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0) {
             return TRUE;
         }
-
         $this->simple_query('COMMIT');
         return TRUE;
     }
-
-    // --------------------------------------------------------------------
+    
 // Add by Xi
     /**
      * Rollback Transaction
@@ -338,18 +269,14 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if (!$this->trans_enabled) {
             return TRUE;
         }
-
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0) {
             return TRUE;
         }
-
         $this->simple_query('ROLLBACK');
         return TRUE;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Close DB Connection
      *
@@ -360,9 +287,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function destroy($conn_id) {
         $conn_id = null;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Insert ID
      *
@@ -372,9 +297,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function insert_id() {
         return @$this->conn_id->lastInsertId();
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * "Count All" query
      *
@@ -388,18 +311,13 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function count_all($table = '') {
         if ($table == '')
             return '0';
-
         $query = $this->query("SELECT COUNT(*) AS numrows FROM `" . $table . "`");
-
         if ($query->num_rows() == 0)
             return '0';
-
         $row = $query->row();
         return $row->numrows;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * The error message string
      *
@@ -410,9 +328,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         $infos = $this->conn_id->errorInfo();
         return $infos[2];
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * The error message number
      *
@@ -423,9 +339,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         $infos = $this->conn_id->errorInfo();
         return $infos[1];
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Version number query string
      *
@@ -435,9 +349,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function version() {
         return $this->conn_id->getAttribute(constant("PDO::ATTR_SERVER_VERSION"));
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Escape Table Name
      *
@@ -452,12 +364,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if (stristr($table, '.')) {
             $table = preg_replace("/\./", "`.`", $table);
         }
-
         return $table;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Field data query
      *
@@ -472,9 +381,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         $query = $this->query($sql);
         return $query->field_data();
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Insert statement
      *
@@ -489,9 +396,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function _insert($table, $keys, $values) {
         return "INSERT INTO " . $this->escape_table($table) . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Update statement
      *
@@ -507,12 +412,9 @@ class CI_DB_sqlite3_driver extends CI_DB {
         foreach ($values as $key => $val) {
             $valstr[] = $key . " = " . $val;
         }
-
         return "UPDATE " . $this->escape_table($table) . " SET " . implode(', ', $valstr) . " WHERE " . implode(" ", $where);
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Delete statement
      *
@@ -526,9 +428,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function _delete($table, $where) {
         return "DELETE FROM " . $this->escape_table($table) . " WHERE " . implode(" ", $where);
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Show table query
      *
@@ -540,9 +440,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function _show_tables() {
         return "SELECT name from sqlite_master WHERE type='table'";
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Show columnn query
      *
@@ -556,9 +454,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         // Not supported
         return FALSE;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Limit string
      *
@@ -576,10 +472,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
         } else {
             $offset .= ", ";
         }
-
         return $sql . "LIMIT " . $offset . $limit;
     }
-
 // Commented by Xi
     /**
      * COPY FROM sqlite_driver.php
@@ -598,15 +492,12 @@ class CI_DB_sqlite3_driver extends CI_DB {
       if (is_array($item))
       {
       $escaped_array = array();
-
       foreach($item as $k=>$v)
       {
       $escaped_array[$this->_protect_identifiers($k)] = $this->_protect_identifiers($v, $first_word_only);
       }
-
       return $escaped_array;
       }
-
       // This function may get "item1 item2" as a string, and so
       // we may need "item1 item2" and not "item1 item2"
       if (ctype_alnum($item) === FALSE)
@@ -617,19 +508,15 @@ class CI_DB_sqlite3_driver extends CI_DB {
       $table_name =  substr($item, 0, strpos($item, '.')+1);
       $item = (strpos($aliased_tables, $table_name) !== FALSE) ? $item = $item : $this->dbprefix.$item;
       }
-
       // This function may get "field >= 1", and need it to return "field >= 1"
       $lbound = ($first_word_only === TRUE) ? '' : '|\s|\(';
-
       $item = preg_replace('/(^'.$lbound.')([\w\d\-\_]+?)(\s|\)|$)/iS', '$1$2$3', $item);
       }
       else
       {
       return "{$item}";
       }
-
       $exceptions = array('AS', '/', '-', '%', '+', '*');
-
       foreach ($exceptions as $exception)
       {
       if (stristr($item, " {$exception} ") !== FALSE)
@@ -640,7 +527,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
       return $item;
       }
      */
-
     /**
      * From Tables ... contributed/requested by CodeIgniter user: quindo
      *
@@ -655,12 +541,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
         if (!is_array($tables)) {
             $tables = array($tables);
         }
-
         return implode(', ', $tables);
     }
-
-// --------------------------------------------------------------------
-
     /**
      * Set client character set
      * contributed/requested by CodeIgniter user:  jtiai
@@ -674,9 +556,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
         // TODO - add support if needed
         return TRUE;
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Close DB Connection
      *
@@ -687,7 +567,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function _close($conn_id) {
         // Do nothing since PDO don't have close
     }
-
     /**
      * List table query    
      *    
@@ -699,16 +578,12 @@ class CI_DB_sqlite3_driver extends CI_DB {
      */
     function _list_tables($prefix_limit = FALSE) {
         $sql = "SELECT name from sqlite_master WHERE type='table'";
-
         if ($prefix_limit !== FALSE AND $this->dbprefix != '') {
             $sql .= " AND 'name' LIKE '" . $this->dbprefix . "%'";
         }
-
         return $sql;
     }
-
 }
-
 /**
  * PDO Result Class
  *
@@ -719,10 +594,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
  * @link			http://dready.jexiste.fr/dotclear/
  */
 class CI_DB_sqlite3_result extends CI_DB_result {
-
     var $pdo_results = '';
     var $pdo_index = 0;
-
     /**
      * Number of rows in the result set
      *
@@ -751,9 +624,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
         }
         return sizeof($this->pdo_results);
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Number of fields in the result set
      *
@@ -767,9 +638,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
             return $this->result_id->columnCount();
         }
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Field data
      *
@@ -789,15 +658,11 @@ class CI_DB_sqlite3_result extends CI_DB_result {
       $F->max_length	= 0;
       $F->primary_key = 0;
       $F->default		= '';
-
       $retval[] = $F;
       }
-
       return $retval;
       } */
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Result - associative array
      *
@@ -816,9 +681,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
         }
         return $this->result_id->fetch(PDO::FETCH_ASSOC);
     }
-
-    // --------------------------------------------------------------------
-
+    
     /**
      * Result - object
      *
@@ -842,7 +705,5 @@ class CI_DB_sqlite3_result extends CI_DB_result {
         }
         return $this->result_id->fetch(PDO::FETCH_OBJ);
     }
-
 }
-
 /* End of file sqlite3.php */

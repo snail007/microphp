@@ -121,7 +121,7 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
         }
         $core = '';
         foreach ($files as $file) {
-            $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
+            $core.=str_replace("<?php", "", file_get_contents($file));
         }
         common_replace($core);
         $donw_name = 'MicroPHP.php';
@@ -139,7 +139,7 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
     //命令行
     $core = '';
     foreach ($files as $file) {
-        $core.=str_replace("<?php", "\n//####################{$file}####################{\n", file_get_contents($file));
+        $core.=str_replace("<?php", "", file_get_contents($file));
     }
     common_replace($core);
     file_put_contents('MicroPHP.php', "<?php\n" . $core);

@@ -36,8 +36,7 @@ class WoniuLoader {
             $this->rule = new WoniuRule();
         }
         if (class_exists('phpFastCache', false)) {
-            phpFastCache::setup($system['cache_config']);
-            $this->cache = phpFastCache($system['cache_config']['storage']);
+            $this->cache = phpFastCache::getInstance($system['cache_config']['storage'], $system['cache_config']);
         }
         if ($system['autoload_db']) {
             $this->database();

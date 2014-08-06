@@ -1,38 +1,16 @@
 <?php
-
-/**
- * First you need to create a table in your database:
-
-  CREATE TABLE `session_handler_table` (
-  `id` varchar(255) NOT NULL,
-  `data` mediumtext NOT NULL,
-  `timestamp` int(255) NOT NULL,
-  PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
- */
-
-/**
- * A PHP session handler to keep session data within a MySQL database
- *
- * @author 	Manuel Reinhard <manu@sprain.ch>
- * @link		https://github.com/sprain/PHP-MySQL-Session-Handler
- */
 class MysqlSessionHandle implements WoniuSessionHandle {
-
     private $_config;
-
     /**
      * a database MySQLi connection resource
      * @var resource
      */
     protected $dbConnection;
-
     /**
      * the name of the DB table which handles the sessions
      * @var string
      */
     protected $dbTable;
-
     public function connect() {
         $config = $this->_config;
         $dbHost = $config['host'];
@@ -49,7 +27,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
             throw new Exception('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
         }//if
     }
-
     /**
      * Set db data if no connection is being injected
      * @param 	string	$dbHost	
@@ -73,19 +50,15 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         ini_set('session.use_trans_sid', 0);
         ini_set('session.hash_function', 1);
         ini_set('session.hash_bits_per_character', 5);
-
         // disable client/proxy caching
         session_cache_limiter('nocache');
-
         // set the cookie parameters
         session_set_cookie_params(
                 $this->_config['lifetime'], $this->_config['cookie_path'], $this->_config['cookie_domain']
         );
         // name the session
         session_name($this->_config['session_name']);
-
         register_shutdown_function('session_write_close');
-
         // start it up
         if ($config['autostart'] && !isset($_SESSION)) {
             if (!isset($_SESSION)) {
@@ -93,7 +66,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
             }
         }
     }
-
     /**
      * Open the session
      * @return bool
@@ -104,23 +76,19 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         }
         return TRUE;
     }
-
     /**
      * Close the session
      * @return bool
      */
     public function close() {
-
         return $this->dbConnection->close();
     }
-
     /**
      * Read the session
      * @param int session id
      * @return string string of the sessoin
      */
     public function read($id) {
-
         $sql = sprintf("SELECT data FROM %s WHERE id = '%s'", $this->dbTable, $this->dbConnection->escape_string($id));
         if ($result = $this->dbConnection->query($sql)) {
             if ($result->num_rows && $result->num_rows > 0) {
@@ -136,18 +104,15 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         }
         return true;
     }
-
     /**
      * Write the session
      * @param int session id
      * @param string data of the session
      */
     public function write($id, $data) {
-
         $sql = sprintf("REPLACE INTO %s VALUES('%s', '%s', %s)", $this->dbTable, $this->dbConnection->escape_string($id), $this->dbConnection->escape_string($data), time() + intval($this->_config['lifetime']));
         return $this->dbConnection->query($sql);
     }
-
     /**
      * Destoroy the session
      * @param int session id
@@ -158,7 +123,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         $sql = sprintf("DELETE FROM %s WHERE `id` = '%s'", $this->dbTable, $this->dbConnection->escape_string($id));
         return $this->dbConnection->query($sql);
     }
-
     /**
      * Garbage Collector
      * @param int life time (sec.)
@@ -173,7 +137,4 @@ class MysqlSessionHandle implements WoniuSessionHandle {
         $sql = sprintf("DELETE FROM %s WHERE `timestamp` < %s ", $this->dbTable, time());
         return $this->dbConnection->query($sql);
     }
-
 }
-
-//class

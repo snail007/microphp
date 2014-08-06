@@ -1,11 +1,4 @@
 <?php
-
-/*
- * khoaofgod@yahoo.com
- * Website: http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://www.codehelper.io
- */
-
 class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver {
 
     var $instant;

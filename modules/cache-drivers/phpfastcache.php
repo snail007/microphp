@@ -1,59 +1,23 @@
 <?php
 
-/*
- * khoaofgod@yahoo.com
- * Website: http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://www.codehelper.io
- */
-
-
-
-// short function
-if (!function_exists("__c")) {
-
-    function __c($storage = "", $option = array()) {
-        return phpfastcache($storage, $option);
-    }
-
-}
-
-// main function
-if (!function_exists("phpFastCache")) {
-
-    function phpFastCache($storage = "", $option = array()) {
-        if (!isset(phpFastCache_instances::$instances[$storage])) {
-            phpFastCache_instances::$instances[$storage] = new phpFastCache($storage, $option);
-        }
-        return phpFastCache_instances::$instances[$storage];
-    }
-
-}
-
-class phpFastCache_instances {
-
-    public static $instances = array();
-
-}
-
 // main class
 class phpFastCache {
 
+    var $drivers = array('apc', 'files', 'sqlite', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
+    private static $intances = array();
     public static $storage = "auto";
     public static $config = array(
         "storage" => "auto",
         "fallback" => array(
-            "example" => "files",
         ),
         "securityKey" => "",
         "htaccess" => false,
         "path" => "",
         "server" => array(
             array("127.0.0.1", 11211, 1),
-        //  array("new.host.ip",11211,1),
         ),
         "extensions" => array(),
     );
-    var $drivers = array('apc', 'files', 'sqlite', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
     var $tmp = array();
     var $checked = array(
         "path" => false,
@@ -71,6 +35,44 @@ class phpFastCache {
         "storage" => "",
         "cachePath" => "",
     );
+
+    function __construct($storage = "", $option = array()) {
+        self::setup($option);
+        if (!$this->isExistingDriver($storage) && isset(self::$config['fallback'][$storage])) {
+            $storage = self::$config['fallback'][$storage];
+        }
+
+        if ($storage == "") {
+            $storage = self::$storage;
+            self::option("storage", $storage);
+        } else {
+            self::$storage = $storage;
+        }
+
+        $this->tmp['storage'] = $storage;
+
+        if ($storage != "auto" && $storage != "" && $this->isExistingDriver($storage)) {
+            $driver = "phpfastcache_" . $storage;
+        } else {
+            $storage = $this->autoDriver();
+            self::$storage = $storage;
+            $driver = "phpfastcache_" . $storage;
+        }
+
+        $this->option("storage", $storage);
+
+        if (class_exists($driver, false)) {
+            $this->driver = new $driver($this->option);
+            $this->driver->is_driver = true;
+        }
+    }
+
+    public static function getInstance($type, $config) {
+        if (!isset(self::$intances[$type])) {
+            self::$intances[$type] = new phpFastCache($type, $config);
+        }
+        return self::$intances[$type];
+    }
 
     /*
      * Basic Method
@@ -103,32 +105,11 @@ class phpFastCache {
         return $object['value'];
     }
 
-    function getInfo($keyword, $option = array()) {
-        if ($this->is_driver == true) {
-            $object = $this->driver_get($keyword, $option);
-        } else {
-            $object = $this->driver->driver_get($keyword, $option);
-        }
-
-        if ($object == null) {
-            return null;
-        }
-        return $object;
-    }
-
     function delete($keyword, $option = array()) {
         if ($this->is_driver == true) {
             return $this->driver_delete($keyword, $option);
         } else {
             return $this->driver->driver_delete($keyword, $option);
-        }
-    }
-
-    function stats($option = array()) {
-        if ($this->is_driver == true) {
-            return $this->driver_stats($option);
-        } else {
-            return $this->driver->driver_stats($option);
         }
     }
 
@@ -138,135 +119,6 @@ class phpFastCache {
         } else {
             return $this->driver->driver_clean($option);
         }
-    }
-
-    function isExisting($keyword) {
-        if ($this->is_driver == true) {
-            if (method_exists($this, "driver_isExisting")) {
-                return $this->driver_isExisting($keyword);
-            }
-        } else {
-            if (method_exists($this->driver, "driver_isExisting")) {
-                return $this->driver->driver_isExisting($keyword);
-            }
-        }
-
-        $data = $this->get($keyword);
-        if ($data == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function increment($keyword, $step = 1, $option = array()) {
-        $object = $this->get($keyword);
-        if ($object == null) {
-            return false;
-        } else {
-            $value = (Int) $object['value'] + (Int) $step;
-            $time = $object['expired_time'] - @date("U");
-            $this->set($keyword, $value, $time, $option);
-            return true;
-        }
-    }
-
-    function decrement($keyword, $step = 1, $option = array()) {
-        $object = $this->get($keyword);
-        if ($object == null) {
-            return false;
-        } else {
-            $value = (Int) $object['value'] - (Int) $step;
-            $time = $object['expired_time'] - @date("U");
-            $this->set($keyword, $value, $time, $option);
-            return true;
-        }
-    }
-
-    /*
-     * Extend more time
-     */
-
-    function touch($keyword, $time = 300, $option = array()) {
-        $object = $this->get($keyword);
-        if ($object == null) {
-            return false;
-        } else {
-            $value = $object['value'];
-            $time = $object['expired_time'] - @date("U") + $time;
-            $this->set($keyword, $value, $time, $option);
-            return true;
-        }
-    }
-
-    /*
-     * Other Functions Built-int for phpFastCache since 1.3
-     */
-
-    public function setMulti($list = array()) {
-        foreach ($list as $array) {
-            $this->set($array[0], isset($array[1]) ? $array[1] : 300, isset($array[2]) ? $array[2] : array());
-        }
-    }
-
-    public function getMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->get($name, isset($array[1]) ? $array[1] : array());
-        }
-        return $res;
-    }
-
-    public function getInfoMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->getInfo($name, isset($array[1]) ? $array[1] : array());
-        }
-        return $res;
-    }
-
-    public function deleteMulti($list = array()) {
-        foreach ($list as $array) {
-            $this->delete($array[0], isset($array[1]) ? $array[1] : array());
-        }
-    }
-
-    public function isExistingMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->isExisting($name);
-        }
-        return $res;
-    }
-
-    public function incrementMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->increment($name, $array[1], isset($array[2]) ? $array[2] : array());
-        }
-        return $res;
-    }
-
-    public function decrementMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->decrement($name, $array[1], isset($array[2]) ? $array[2] : array());
-        }
-        return $res;
-    }
-
-    public function touchMulti($list = array()) {
-        $res = array();
-        foreach ($list as $array) {
-            $name = $array[0];
-            $res[$name] = $this->touch($name, $array[1], isset($array[2]) ? $array[2] : array());
-        }
-        return $res;
     }
 
     /*
@@ -284,41 +136,6 @@ class phpFastCache {
             foreach ($name as $n => $value) {
                 self::setup($n, $value);
             }
-        }
-    }
-
-    function __construct($storage = "", $option = array()) {
-        $this->option = array_merge($this->option, self::$config, $option);
-        if (!$this->isExistingDriver($storage) && isset(self::$config['fallback'][$storage])) {
-            $storage = self::$config['fallback'][$storage];
-        }
-
-        if ($storage == "") {
-            $storage = self::$storage;
-            self::option("storage", $storage);
-        } else {
-            self::$storage = $storage;
-        }
-
-        $this->tmp['storage'] = $storage;
-
-        if ($storage != "auto" && $storage != "" && $this->isExistingDriver($storage)) {
-            $driver = "phpfastcache_" . $storage;
-        } else {
-            $storage = $this->autoDriver();
-            self::$storage = $storage;
-            $driver = "phpfastcache_" . $storage;
-        }
-
-        $this->option("storage", $storage);
-
-//        if ($this->option['securityKey'] == "auto" || $this->option['securityKey'] == "") {
-//            $this->option['securityKey'] = "cache.storage." . (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
-//        }
-
-        if (class_exists($driver, false)) {
-            $this->driver = new $driver($this->option);
-            $this->driver->is_driver = true;
         }
     }
 
@@ -367,7 +184,6 @@ class phpFastCache {
                 $this->checked['path'] = false;
                 $this->driver->checked['path'] = false;
             }
-
             self::$config[$name] = $value;
             $this->option[$name] = $value;
             $this->driver->option[$name] = $this->option[$name];
@@ -394,12 +210,6 @@ class phpFastCache {
             throw new Exception("Example ->$name = array('VALUE', 300);", 98);
         }
     }
-
-    /*
-     * Only require_once for the class u use.
-     * Not use autoload default of PHP and don't need to load all classes as default
-     */
-
     private function isExistingDriver($class) {
         $class = strtolower($class);
         if (!class_exists("phpfastcache_" . $class, false)) {
@@ -434,80 +244,9 @@ class phpFastCache {
         }
         return false;
     }
-
-    /*
-     * return System Information
-     */
-
-    public function systemInfo() {
-        if (count($this->option("system")) == 0) {
-
-
-            $this->option['system']['driver'] = "files";
-
-            $this->option['system']['drivers'] = array();
-
-            $system = WoniuLoader::$system;
-
-            foreach ($this->drivers as $namex) {
-                $class = "phpfastcache_" . $namex;
-                $this->option['skipError'] = true;
-                $driver = new $class($this->option);
-                $driver->option = $this->option;
-                if ($driver->checkdriver()) {
-                    $this->option['system']['drivers'][$namex] = true;
-                    $this->option['system']['driver'] = $namex;
-                } else {
-                    $this->option['system']['drivers'][$namex] = false;
-                }
-            }
-
-            foreach ($system['cache_drivers'] as $filepath) {
-                $file = pathinfo($filepath, PATHINFO_BASENAME);
-                $namex = str_replace(".php", "", $file);
-                $class = "phpfastcache_" . $namex;
-                $this->option['skipError'] = true;
-                $driver = new $class($this->option);
-                $driver->option = $this->option;
-                if ($driver->checkdriver()) {
-                    $this->option['system']['drivers'][$namex] = true;
-                    $this->option['system']['driver'] = $namex;
-                } else {
-                    $this->option['system']['drivers'][$namex] = false;
-                }
-            }
-
-
-
-            /*
-             * PDO is highest priority with SQLite
-             */
-            if ($this->option['system']['drivers']['sqlite'] == true) {
-                $this->option['system']['driver'] = "sqlite";
-            }
-        }
-        $this->option("path", $this->getPath(TRUE));
-        return $this->option;
-    }
-
-    public function getOS() {
-        $os = array(
-            "os" => PHP_OS,
-            "php" => PHP_SAPI,
-            "system" => php_uname(),
-            "unique" => md5(php_uname() . PHP_OS . PHP_SAPI)
-        );
-        return $os;
-    }
-
-    /*
-     * Object for Files & SQLite
-     */
-
     public function encode($data) {
         return serialize($data);
     }
-
     public function decode($value) {
         $x = @unserialize($value);
         if ($x == false) {
@@ -516,36 +255,6 @@ class phpFastCache {
             return $x;
         }
     }
-
-    /*
-     * Auto Create .htaccess to protect cache folder
-     */
-
-    public function htaccessGen($path = "") {
-//        if ($this->option("htaccess") == true) {
-//
-//            if (!file_exists($path . "/.htaccess")) {
-//                //   echo "write me";
-//                $html = "order deny, allow \r\n
-//deny from all \r\n
-//allow from 127.0.0.1";
-//
-//                $f = @fopen($path . "/.htaccess", "w+");
-//                if (!$f) {
-//                    throw new Exception("Can't create .htaccess", 97);
-//                }
-//                fwrite($f, $html);
-//                fclose($f);
-//            } else {
-//                //   echo "got me";
-//            }
-//        }
-    }
-
-    /*
-     * Check phpModules or CGI
-     */
-
     public function isPHPModule() {
         if (PHP_SAPI == "apache2handler") {
             return true;
@@ -560,7 +269,6 @@ class phpFastCache {
     /*
      * return PATH for Files & PDO only
      */
-
     public function getPath($create_path = false) {
 
         if ($this->option['path'] == "" && self::$config['path'] != "") {
@@ -581,8 +289,6 @@ class phpFastCache {
                 self::$config['path'] = $this->option("path");
             }
         }
-
-
         $full_path = $this->option("path") . "/"; //. $this->option("securityKey") . "/";
 
         if ($create_path == false && $this->checked['path'] == false) {
@@ -594,25 +300,17 @@ class phpFastCache {
                 if (!is_writable($full_path)) {
                     @chmod($full_path, 0777);
                 }
-//                if (!file_exists($full_path) || !is_writable($full_path)) {
-//                    throw new Exception("Sorry, Please create " . $this->option("path") . "/" . $this->option("securityKey") . "/ and SET Mode 0777 or any Writable Permission!", 100);
-//                }
             }
-
-
             $this->checked['path'] = true;
-            $this->htaccessGen($full_path);
         }
 
         $this->option['cachePath'] = $full_path;
         return $this->option['cachePath'];
     }
-
     /*
      * Read File
      * Use file_get_contents OR ALT read
      */
-
     function readfile($file) {
         if (function_exists("file_get_contents")) {
             return file_get_contents($file);
@@ -632,5 +330,4 @@ class phpFastCache {
             return $string;
         }
     }
-
 }

@@ -1,17 +1,10 @@
 <?php
 
-/*
- * khoaofgod@yahoo.com
- * Website: http://www.phpfastcache.com
- * Example at our website, any bugs, problems, please visit http://www.codehelper.io
- */
-
-
 class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
+
     function checkdriver() {
         // Check apc
-        if(extension_loaded('apc') && ini_get('apc.enabled'))
-        {
+        if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return true;
         } else {
             return false;
@@ -20,28 +13,27 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 
     function __construct($option = array()) {
         $this->setOption($option);
-        if(!$this->checkdriver() && !isset($option['skipError'])) {
+        if (!$this->checkdriver() && !isset($option['skipError'])) {
             throw new Exception("Can't use this driver for your website!");
         }
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
-        if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
-            return apc_add($keyword,$value,$time);
+    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
+            return apc_add($keyword, $value, $time);
         } else {
-            return apc_store($keyword,$value,$time);
+            return apc_store($keyword, $value, $time);
         }
     }
 
     function driver_get($keyword, $option = array()) {
         // return null if no caching
         // return value if in caching
-        $data = apc_fetch($keyword,$bo);
-        if($bo === false) {
+        $data = apc_fetch($keyword, $bo);
+        if ($bo === false) {
             return null;
         }
         return $data;
-
     }
 
     function driver_delete($keyword, $option = array()) {
@@ -51,14 +43,14 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     function driver_stats($option = array()) {
         $res = array(
             "info" => "",
-            "size"  => "",
-            "data"  =>  "",
+            "size" => "",
+            "data" => "",
         );
 
         try {
             $res['data'] = apc_cache_info("user");
-        } catch(Exception $e) {
-            $res['data'] =  array();
+        } catch (Exception $e) {
+            $res['data'] = array();
         }
 
         return $res;
@@ -70,15 +62,11 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
     }
 
     function driver_isExisting($keyword) {
-        if(apc_exists($keyword)) {
+        if (apc_exists($keyword)) {
             return true;
         } else {
             return false;
         }
     }
-
-
-
-
 
 }
