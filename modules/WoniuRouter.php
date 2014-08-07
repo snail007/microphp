@@ -63,26 +63,26 @@ class WoniuRouter {
 
         $pathinfo_query = self::checkHmvc($pathinfo_query);
         $pathinfo_query = self::checkRouter($pathinfo_query);
-        
+
         //标记系统最终使用的路由字符串
-        $router['query']=$pathinfo_query;
-        
+        $router['query'] = $pathinfo_query;
+
         $system = WoniuLoader::$system;
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
             //查询字符串去除头部的/
-            $pathinfo_query{0} === '/' ? $pathinfo_query = substr($pathinfo_query, 1) : null;
+            $pathinfo_query = ltrim($pathinfo_query, '/');
             $requests = explode("/", $pathinfo_query);
             //看看是否指定了类和方法名,最后可以有等号，兼容get表单模式
             preg_match('/[^&]+(?:\.[^&]+)+=?/', $requests[0]) ? $class_method = $requests[0] : null;
             if (strstr($class_method, '&') !== false) {
                 $cm = explode('&', $class_method);
-                $class_method = trim($cm[0],"=");
+                $class_method = trim($cm[0], "=");
             }
         }
         //去掉最后面的等号（如果有）
-        $class_method=trim($class_method,"=");
+        $class_method = trim($class_method, "=");
         //去掉查询字符串中的类方法部分，只留下参数
         $pathinfo_query = str_replace($class_method, '', $pathinfo_query);
         $pathinfo_query_parameters = explode("&", $pathinfo_query);
@@ -152,6 +152,17 @@ class WoniuRouter {
         if ($pathinfo_query) {
             $pathinfo_query = trim($pathinfo_query, '/&');
         }
+        //urldecode 解码所有的参数名，解决get表单会编码参数名称的问题
+        $pq = $_pq = array();
+        $_pq = explode('&', $pathinfo_query);
+        foreach ($_pq as $value) {
+            $p = explode('=', $value);
+            if (isset($p[0])) {
+                $p[0] = urldecode($p[0]);
+            }
+            $pq[] = implode('=', $p);
+        }
+        $pathinfo_query = implode('&', $pq);
         return $pathinfo_query;
     }
 
