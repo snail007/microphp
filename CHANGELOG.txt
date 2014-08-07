@@ -17,6 +17,7 @@
 
 修复了：
 1.sqlite_escape_string在PHP5.4及以上的版本中被废弃了，使用SQLite3::escapeString()代替。
+2.表模型的search方法报错的问题。
 
 优化了：
 1.精简了缓存类

@@ -145,6 +145,7 @@ class WoniuTableModel extends WoniuModel {
         }
         $this->prefix = $this->db->dbprefix;
         $this->table = $table;
+        $this->full_table=$this->prefix.$table;
         $this->fields = $fields = $this->getTableFieldsInfo($table, $this->db);
         foreach ($fields as $col => $info) {
             if ($info['primary']) {
