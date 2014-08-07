@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.12
- * @createdtime         2014-08-07 15:30:21
+ * @createdtime         2014-08-07 17:45:24
  */
  
 
@@ -27,7 +27,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  */
 if (!function_exists('dump')) {
 
@@ -776,7 +776,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  */
 class WoniuInput {
 
@@ -1367,7 +1367,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  */
 class WoniuRouter {
 
@@ -1430,13 +1430,15 @@ class WoniuRouter {
             //查询字符串去除头部的/
             $pathinfo_query{0} === '/' ? $pathinfo_query = substr($pathinfo_query, 1) : null;
             $requests = explode("/", $pathinfo_query);
-            //看看是否指定了类和方法名
-            preg_match('/[^&]+(?:\.[^&]+)+/', $requests[0]) ? $class_method = $requests[0] : null;
+            //看看是否指定了类和方法名,最后可以有等号，兼容get表单模式
+            preg_match('/[^&]+(?:\.[^&]+)+=?/', $requests[0]) ? $class_method = $requests[0] : null;
             if (strstr($class_method, '&') !== false) {
                 $cm = explode('&', $class_method);
-                $class_method = $cm[0];
+                $class_method = trim($cm[0],"=");
             }
         }
+        //去掉最后面的等号（如果有）
+        $class_method=trim($class_method,"=");
         //去掉查询字符串中的类方法部分，只留下参数
         $pathinfo_query = str_replace($class_method, '', $pathinfo_query);
         $pathinfo_query_parameters = explode("&", $pathinfo_query);
@@ -1610,7 +1612,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.12
- * @createdtime            2014-08-07 15:30:21
+ * @createdtime            2014-08-07 17:45:24
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2617,7 +2619,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2736,7 +2738,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3615,7 +3617,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-07 15:30:21
+ * @createdtime       2014-08-07 17:45:24
  */
 class WoniuDB {
     private static $conns = array();
