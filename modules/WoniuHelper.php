@@ -546,6 +546,7 @@ if (!function_exists('stripslashes2')) {
         }
         if (is_array($var)) {
             foreach ($var as $key => $val) {
+                $key = urldecode($key);
                 if (is_array($val)) {
                     $var[$key] = stripslashes2($val);
                 } else {
