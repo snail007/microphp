@@ -187,11 +187,11 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
          * 3.如果是自定义的函数，系统会传递当前值和全部数据给自定义的函数，因此自定义函数可以接收两个参数第一个是值，第二个是全部数据$data
          * 4.如果是类的方法写法是：类名称::方法名 （方法静态动态都可以，public，private，都可以）
          */
-        $_POST['user'] = '123456    ';
+        $_POST['user'] = '<a>test</a>123456    ';
         $rule = array(
             'password' => array(
                 'len[6,16]' => '密码长度6-16',
-                'set[trim]' => '',
+                'set[trim,strip_tags]' => '',
                 'set_post[sha1,md5]' => '',
             )
         );
