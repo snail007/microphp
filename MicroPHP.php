@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.12
- * @createdtime         2014-08-11 11:29:58
+ * @createdtime         2014-08-19 16:31:07
  */
  
 
@@ -27,7 +27,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  */
 if (!function_exists('dump')) {
 
@@ -776,7 +776,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  */
 class WoniuInput {
 
@@ -1367,7 +1367,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  */
 class WoniuRouter {
 
@@ -1591,21 +1591,6 @@ class WoniuRouter {
     public static function setConfig($system) {
         $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
-        self::folderAutoInit();
-    }
-
-    private static function folderAutoInit() {
-        if (!empty(WoniuLoader::$system['folder_auto_init'])) {
-            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder', 'hmvc_folder');
-            foreach (WoniuLoader::$system as $key => $value) {
-                if (in_array($key, $folder)) {
-                    if (!is_dir($value)) {
-                        mkdir($value, 0755, true);
-                        chmod($value, 0755);
-                    }
-                }
-            }
-        }
     }
 
 }
@@ -1623,7 +1608,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.12
- * @createdtime            2014-08-11 11:29:58
+ * @createdtime            2014-08-19 16:31:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2630,7 +2615,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2749,7 +2734,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3628,7 +3613,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-08-11 11:29:58
+ * @createdtime       2014-08-19 16:31:07
  */
 class WoniuDB {
     private static $conns = array();
