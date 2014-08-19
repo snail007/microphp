@@ -235,21 +235,6 @@ class WoniuRouter {
     public static function setConfig($system) {
         $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
-        self::folderAutoInit();
-    }
-
-    private static function folderAutoInit() {
-        if (!empty(WoniuLoader::$system['folder_auto_init'])) {
-            $folder = array('application_folder', 'controller_folder', 'model_folder', 'view_folder', 'library_folder', 'helper_folder', 'hmvc_folder');
-            foreach (WoniuLoader::$system as $key => $value) {
-                if (in_array($key, $folder)) {
-                    if (!is_dir($value)) {
-                        mkdir($value, 0755, true);
-                        chmod($value, 0755);
-                    }
-                }
-            }
-        }
     }
 
 }
