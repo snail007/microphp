@@ -581,7 +581,7 @@ class WoniuInput {
                     $pattern .= $ra[$i][$j];
                 }
                 $pattern .= '/i';
-                $replacement = substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
+                $replacement = '';//substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
                 $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
                 if ($val_before == $val) {
                     // no replacements were made, so exit the loop
