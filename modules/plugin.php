@@ -28,7 +28,7 @@ $system['url_rewrite'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . '../application';
+$system['application_folder'] = dirname(__FILE__) . '/' . '../application';
 /**
  * 存放控制器文件的文件夹路径名称
  */

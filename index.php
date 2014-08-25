@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.12
- * @createdtime         2014-08-21 16:34:05
+ * @createdtime         2014-08-25 16:48:19
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -28,7 +28,7 @@ $system['url_rewrite'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . 'application';
+$system['application_folder'] = dirname(__FILE__) . '/' . 'application';
 /**
  * 存放控制器文件的文件夹路径名称
  */
