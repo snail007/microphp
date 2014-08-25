@@ -233,7 +233,6 @@ class WoniuRouter {
     }
 
     public static function setConfig($system) {
-        $system['application_folder'] = truepath($system['application_folder']);
         WoniuLoader::$system = $system;
     }
 
