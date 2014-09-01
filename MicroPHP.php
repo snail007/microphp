@@ -10,7 +10,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.12
- * @createdtime         2014-09-01 10:14:51
+ * @createdtime         2014-09-01 10:19:02
  */
  
 
@@ -27,7 +27,7 @@
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  */
 if (!function_exists('dump')) {
 
@@ -776,7 +776,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  */
 class WoniuInput {
 
@@ -1346,7 +1346,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  */
 class WoniuRouter {
 
@@ -1586,7 +1586,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.12
- * @createdtime            2014-09-01 10:14:51
+ * @createdtime            2014-09-01 10:19:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2593,7 +2593,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2718,7 +2718,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3597,7 +3597,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:14:51
+ * @createdtime       2014-09-01 10:19:02
  */
 class WoniuDB {
     private static $conns = array();
