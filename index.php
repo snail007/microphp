@@ -10,20 +10,15 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.11
- * @createdtime         2014-07-28 11:07:52
+ * @since		Version 2.2.12
+ * @createdtime         2014-09-01 09:25:50
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
 /**
  * --------------------系统配置-------------------------
  */
-/**
- * 是否自动建立项目文件夹
- * 当开始一个新项目的时候，可以在配置里面设置为TRUE ，系统就会自动建立文件夹。
- * 在建立完文件夹后建议设置为FALSE，这样系统就不用每次都检测文件夹是否存在,提高性能。
- */
-$system['folder_auto_init'] = FALSE;
+
 /**
  * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
  * 该配置会影响url()函数生成的链接
@@ -33,7 +28,7 @@ $system['url_rewrite'] = FALSE;
  * 程序文件夹路径名称，也就是所有的程序文件比如控制器文件夹，
  * 模型文件夹，视图文件夹等所在的文件夹名称。
  */
-$system['application_folder'] = realpath('.') . '/' . 'application';
+$system['application_folder'] = dirname(__FILE__) . '/' . 'application';
 /**
  * 存放控制器文件的文件夹路径名称
  */
@@ -155,7 +150,7 @@ $system['helper_file_autoload'] = array();
 /**
  * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
- * 比如: ImageTool 或者配置数组array('ImageTool'=>'image')
+ * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();
