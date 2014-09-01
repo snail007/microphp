@@ -1,4 +1,5 @@
 <?php
+
 require_once 'pluginfortest.php';
 //require_once('simpletest/web_tester.php');
 require_once('simpletest/autorun.php');
@@ -30,48 +31,64 @@ require_once('simpletest/autorun.php');
  * @link		http://git.oschina.net/snail/microphp
  * @createdtime         2013-11-22 10:05:38
  */
+
 /**
  * Description of empty
  *
  * @author pm
  */
 class Test_autoload extends UnitTestCase {
-    public function testautoload(){
+
+    public function testautoload() {
         global $system;
-        $system['helper_file_autoload'] = array('function');
-        $system['library_file_autoload'] = array('LibAutoload',array('LibAutoload'=>'la'),array('sub/SubLibAutoNew'=>'','new'=>false));
-        $system['models_file_autoload'] = array('ModelAutoload',array('ModelAutoload' => 'ma'));
+        $system['helper_file_autoload'] = array('function', array('test/config_auto' => false));
+        $system['library_file_autoload'] = array('LibAutoload', array('LibAutoload' => 'la'), array('sub/SubLibAutoNew' => '', 'new' => false));
+        $system['models_file_autoload'] = array('ModelAutoload', array('ModelAutoload' => 'ma'));
         WoniuRouter::setConfig($system);
+
+        $this->assertTrue(!function_exists('test_auto_config'));
+
         $this->assertFalse(function_exists('testFunction'));
-        $this->assertFalse(class_exists('LibAutoload',FALSE));
-        $this->assertFalse(class_exists('SubLibAutoNew',FALSE));
-        $this->assertFalse(class_exists('ModelAutoload',FALSE));
-        
-        $woniu=WoniuLoader::instance();
+        $this->assertFalse(class_exists('LibAutoload', FALSE));
+        $this->assertFalse(class_exists('SubLibAutoNew', FALSE));
+        $this->assertFalse(class_exists('ModelAutoload', FALSE));
+
+        $woniu = WoniuLoader::instance();
+
+        $this->assertTrue(function_exists('test_auto_config'));
+        $this->assertFalse($woniu->config('test_auto_config'));
+
         $this->assertEqual(testFunction('hello'), 'hello');
         $this->assertIsA($woniu->lib->LibAutoload, 'LibAutoload');
         $this->assertIsA($woniu->lib->la, 'LibAutoload');
         $this->assertReference($woniu->lib->LibAutoload, $woniu->lib->la);
-        $this->assertTrue(class_exists('SubLibAutoNew',FALSE));
-        
+        $this->assertTrue(class_exists('SubLibAutoNew', FALSE));
+
         $this->assertIsA($woniu->model->ModelAutoload, 'ModelAutoload');
         $this->assertIsA($woniu->model->ma, 'ModelAutoload');
         $this->assertReference($woniu->model->ModelAutoload, $woniu->model->ma);
-        $system['helper_file_autoload'] = array('function_again');
-        $system['library_file_autoload'] = array('LibAutoload_again',array('LibAutoload_again'=>'laa'));
-        $system['models_file_autoload'] = array('ModelAutoload_again',array('ModelAutoload_again' => 'maa'));
+        $system['helper_file_autoload'] = array('function_again', array('test/config_auto2' => true));
+        $system['library_file_autoload'] = array('LibAutoload_again', array('LibAutoload_again' => 'laa'));
+        $system['models_file_autoload'] = array('ModelAutoload_again', array('ModelAutoload_again' => 'maa'));
         WoniuRouter::setConfig($system);
         $this->assertFalse(function_exists('testFunctionAgain'));
-        $this->assertFalse(class_exists('LibAutoload_again',FALSE));
-        $this->assertFalse(class_exists('ModelAutoload_again',FALSE));
-        $woniu=WoniuLoader::instance();
+        $this->assertFalse(class_exists('LibAutoload_again', FALSE));
+        $this->assertFalse(class_exists('ModelAutoload_again', FALSE));
+
+        $this->assertFalse(function_exists('test_auto_config2'));
+
+        $woniu = WoniuLoader::instance();
+
+        $this->assertTrue(function_exists('test_auto_config2'));
+        $this->assertEqual($woniu->config('test_auto_config2'), 'okay');
+
         $this->assertIsA($woniu->model->ModelAutoload2, 'ModelAutoload2');
-        $woniu->model('ModelAutoload2','mod2');
+        $woniu->model('ModelAutoload2', 'mod2');
         $this->assertReference($woniu->model->ModelAutoload2, $woniu->model->mod2);
         $this->assertIsA($woniu->lib->LibAutoload2, 'LibAutoload2');
-        $woniu->lib('LibAutoload2','lib2');
+        $woniu->lib('LibAutoload2', 'lib2');
         $this->assertReference($woniu->lib->LibAutoload2, $woniu->lib->lib2);
-        
+
         $this->assertEqual(testFunctionAgain('hello'), 'hello');
         $this->assertIsA($woniu->lib->LibAutoload_again, 'LibAutoload_again');
         $this->assertIsA($woniu->lib->laa, 'LibAutoload_again');
@@ -80,8 +97,10 @@ class Test_autoload extends UnitTestCase {
         $this->assertIsA($woniu->model->maa, 'ModelAutoload_again');
         $this->assertReference($woniu->model->ModelAutoload_again, $woniu->model->maa);
     }
+
     public function tearDown() {
         global $default;
         WoniuRouter::setConfig($default);
     }
+
 }

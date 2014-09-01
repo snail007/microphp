@@ -31,8 +31,14 @@ class WoniuController extends WoniuLoaderPlus {
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
-        foreach ($autoload_helper as $file_name) {
-            $this->helper($file_name);
+        foreach ($autoload_helper as $val) {
+            if (is_array($val)) {
+                $key = key($val);
+                $val = $val[$key];
+                $this->helper($key,$val);
+            } else {
+                $this->helper($val);
+            }
         }
         foreach ($autoload_library as $key => $val) {
             if (is_array($val)) {

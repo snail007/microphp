@@ -8,12 +8,17 @@
 2.系统配置中，类库自动加载的时候，可以指定new参数。
   $system['library_file_autoload'] = array();
   自动加载的library文件,比如array($item); 
-  $item是library文件名或者"配置数组",不包含后缀,
+  $item是library文件名或者"配置数组"，不包含后缀。
   比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
   配置数组的作用是为长的类库名用别名代替.
 3.$this->helper($file_name, $is_config = true),增加了第二个参数$is_config，默认true。
   默认情况下，$this->helper()加载helper文件的时候，会把文件里面的全局变量放到self::$config里面。
   有时候我们只想要包含helper文件，不对里面的变量进行处理。那么可以通过指定第二个参数$is_config=false即可。
+4.系统配置中，helper自动加载的时候，可以指定$is_config参数。
+  $system['helper_file_autoload] = array();
+  自动加载的helper文件,比如array($item); 
+  $item是helper文件名或者"配置数组"，不包含后缀。
+  比如: html 或者配置数组array('html'=>false),这里的数组key是helper文件，值就是$is_config参数，是true或者false。
 
 修复了：
 1.sqlite_escape_string在PHP5.4及以上的版本中被废弃了，使用SQLite3::escapeString()代替。
