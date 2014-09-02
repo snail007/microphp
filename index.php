@@ -1,12 +1,10 @@
 
 
-
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
 /**
  * --------------------系统配置-------------------------
  */
-
 /**
  * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
  * 该配置会影响url()函数生成的链接
@@ -103,7 +101,6 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
-
 /**
  * $this->input->setCookie()和$this->input->cookie()
  * 设置和获取cookie的时候key使用的前缀
@@ -122,28 +119,28 @@ $system['cookie_key_prefix'] = '';
  * 1.自定义Loader必须继承WoniuLoader。
  * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
  * class MyLoader extends WoniuLoader {
- *      public function __construct() {
- *          parent::__construct();
- *      }
- *  } 
+ *	  public function __construct() {
+ *		  parent::__construct();
+ *	  }
+ *  }
  * 3.如果无需自定义Loader，留空即可。
  * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
  */
 $system['my_loader'] = '';
 /**
- * 自动加载的helper文件,比如:array($item); 
+ * 自动加载的helper文件,比如:array($item);
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
 $system['helper_file_autoload'] = array();
 /**
- * 自动加载的library文件,比如array($item); 
+ * 自动加载的library文件,比如array($item);
  * $item是library文件名或者"配置数组",不包含后缀,
  * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();
 /**
- * 自动加载的model,比如array($item); 
+ * 自动加载的model,比如array($item);
  * $item是model文件名或者"配置数组",不包含后缀,
  * 比如: UserModel 或者配置数组 array('UserModel'=>'user')
  * 配置数组的作用是为长的model名用别名代替.
@@ -163,18 +160,16 @@ $system['autoload_db'] = FALSE;
  * false：所有错误将不显示
  */
 $system['debug'] = TRUE;
-
 /**
  * 是否接管错误信息显示
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
 $system['error_manage'] = FALSE;
-
 /**
  * 是否开启错误日志记录
  * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
- *       同时务必设置自己的错误日志记录处理方法
+ *	   同时务必设置自己的错误日志记录处理方法
  * false：关闭
  * 提示：
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['xxx']['db_debug']）控制的。
@@ -190,24 +185,24 @@ $system['log_error'] = FALSE;
  * 4.系统会传递给error、exception处理方法5个参数：（$errno, $errstr, $errfile, $errline,$strace）
  * 参数说明：
  * $errno：错误级别，就是PHP里面的E_NOTICE之类的静态变量，错误级别和具体含义对应关系如下，键是代码，值是代码含义。
- *         array('0'=>'EXCEPTION',//异常信息
- *               '1' => 'ERROR',//致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。
- *               '2' => 'WARNING', //运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。
- *               '4' => 'PARSE', //编译时语法解析错误。解析错误仅仅由分析器产生。
- *               '8' => 'NOTICE', //运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。
- *               '16' => 'CORE_ERROR', //在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。
- *               '32' => 'CORE_WARNING',//PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。
- *               '64' => 'COMPILE_ERROR', //致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。
- *               '128' => 'COMPILE_WARNING', //编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。
- *               '256' => 'USER_ERROR', //用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *               '512' => 'USER_WARNING', //用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *               '1024' => 'USER_NOTICE',//用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *               '2048' => 'STRICT', //启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。
- *               '4096' => 'RECOVERABLE_ERROR'//可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。
- *               '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
- *               '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *         );
- *         可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，8，2048，8192）.
+ *		 array('0'=>'EXCEPTION',//异常信息
+ *			   '1' => 'ERROR',//致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。
+ *			   '2' => 'WARNING', //运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。
+ *			   '4' => 'PARSE', //编译时语法解析错误。解析错误仅仅由分析器产生。
+ *			   '8' => 'NOTICE', //运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。
+ *			   '16' => 'CORE_ERROR', //在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。
+ *			   '32' => 'CORE_WARNING',//PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。
+ *			   '64' => 'COMPILE_ERROR', //致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。
+ *			   '128' => 'COMPILE_WARNING', //编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。
+ *			   '256' => 'USER_ERROR', //用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *			   '512' => 'USER_WARNING', //用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *			   '1024' => 'USER_NOTICE',//用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *			   '2048' => 'STRICT', //启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。
+ *			   '4096' => 'RECOVERABLE_ERROR'//可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。
+ *			   '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
+ *			   '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *		 );
+ *		 可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，8，2048，8192）.
  * $errstr：具体的错误信息
  * $errfile：出错的文件完整路径
  * $errline：出错的行号
@@ -220,17 +215,14 @@ $system['log_error'] = FALSE;
  * /blob/development/tests/app/library/ErrorHandle.class.php
  */
 $system['log_error_handle'] = array(
-    'error' => '', //array('ErrorHandle' => 'error_handle'),
-    'exception' => '', //array('ErrorHandle' => 'exception_handle'),
-    'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
+	'error' => '', //array('ErrorHandle' => 'error_handle'),
+	'exception' => '', //array('ErrorHandle' => 'exception_handle'),
+	'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
 );
-
-
 /**
  * 默认时区,PRC是中国
  */
 $system['default_timezone'] = 'PRC';
-
 /**
  * ---------------------------自定义URL路由规则------------------------
  * 比如：
@@ -241,7 +233,7 @@ $system['default_timezone'] = 'PRC';
  * 路由字符串是welcome.index(不包含最前面的?、/、模块名称)，路由规则都是针对“路由字符串”的。
  * 现在定义路由规则：
  *   $system['route']=array(
- *        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
+ *		"/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
  *   );
  * 路由规则说明：
  *  1.路由规则是一个关联数组
@@ -250,7 +242,7 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-        //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+		//"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -269,106 +261,106 @@ $system['cache_drivers'] = array();
  * 缓存配置项
  */
 $system['cache_config'] = array(
-    /*
-     * 默认存储方式
-     * 可用的方式有：auto,apc,files,sqlite,memcached,redis,wincache,xcache,memcache
-     * auto自动模式寻找的顺序是 : apc,files,sqlite,memcached,redis,wincache,xcache,memcache
-     */
-    "storage" => "auto",
-    /*
-     * 默认缓存文件存储的路径
-     * 使用绝对全路径，比如： /home/username/cache
-     * 留空，系统自己选择
-     */
-    "path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files、sqlite缓存的时候确保文件夹存在而且可写
-    /*
-     * 第二驱动
-     * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
-     * 这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
-     * $key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
-     */
-    "fallback" => array(
-        "memcache" => "files",
-        "memcached" => "files",
-        "redis" => "files",
-        "wincache" => "files",
-        "xcache" => "files",
-        "apc" => "files",
-        "sqlite" => "files",
-    ),
-    /*
-     * Memcache服务器地址;
-     */
-    "server" => array(
-        array("127.0.0.1", 11211, 1),
-    ),
-    /*
-     * Redis服务器地址;
-     */
-    "redis" => array(
-        'type' => 'tcp', //sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
-        'prefix' => @$_SERVER['HTTP_HOST'], //key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
-        'sock' => '', //sock的完整路径
-        'host' => '127.0.0.1',
-        'port' => 6379,
-        'password' => NULL, //密码，如果没有,保持null
-        'timeout' => 0, //0意味着没有超时限制，单位秒
-        'retry' => 100, //连接失败后的重试时间间隔，单位毫秒
-        'db' => 0, // 数据库序号，默认0, 参考 http://redis.io/commands/select
-    ),
+	/*
+	 * 默认存储方式
+	 * 可用的方式有：auto,apc,files,sqlite,memcached,redis,wincache,xcache,memcache
+	 * auto自动模式寻找的顺序是 : apc,files,sqlite,memcached,redis,wincache,xcache,memcache
+	 */
+	"storage" => "auto",
+	/*
+	 * 默认缓存文件存储的路径
+	 * 使用绝对全路径，比如： /home/username/cache
+	 * 留空，系统自己选择
+	 */
+	"path" => $system['application_folder'] . "/cache", // 缓存文件存储默认路径,使用files、sqlite缓存的时候确保文件夹存在而且可写
+	/*
+	 * 第二驱动
+	 * 比如：当你现在在代码中使用的是memcached, apc等等，然后你的代码转移到了一个新的服务器而且不支持memcached 或 apc
+	 * 这时候怎么办呢？设置第二驱动即可，当你设置的驱动不支持的时候，系统就使用第二驱动。
+	 * $key是你设置的驱动，当设置的“storage”=$key不可用时，就使用$key对应的$value驱动
+	 */
+	"fallback" => array(
+		"memcache" => "files",
+		"memcached" => "files",
+		"redis" => "files",
+		"wincache" => "files",
+		"xcache" => "files",
+		"apc" => "files",
+		"sqlite" => "files",
+	),
+	/*
+	 * Memcache服务器地址;
+	 */
+	"server" => array(
+		array("127.0.0.1", 11211, 1),
+	),
+	/*
+	 * Redis服务器地址;
+	 */
+	"redis" => array(
+		'type' => 'tcp', //sock,tcp;连接类型，tcp：使用host port连接，sock：本地sock文件连接
+		'prefix' => @$_SERVER['HTTP_HOST'], //key的前缀，便于管理查看，在set和get的时候会自动加上和去除前缀，无前缀请保持null
+		'sock' => '', //sock的完整路径
+		'host' => '127.0.0.1',
+		'port' => 6379,
+		'password' => NULL, //密码，如果没有,保持null
+		'timeout' => 0, //0意味着没有超时限制，单位秒
+		'retry' => 100, //连接失败后的重试时间间隔，单位毫秒
+		'db' => 0, // 数据库序号，默认0, 参考 http://redis.io/commands/select
+	),
 );
 /**
  * -----------------------SESSION管理配置---------------------------
  */
 $system['session_handle'] = array(
-    'handle' => '', //支持的管理类型：mongodb,mysql,memcache,redis。留空则不管理，使用默认
-    'common' => array(
-        'autostart' => false, //是否自动session_start()
-        'cookie_path' => '/',
-        'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
-        'session_name' => 'MICROPHP',
-        'lifetime' => 3600, // session lifetime in seconds
-    ),
-    'mongodb' => array(
-        'host' => '127.0.0.1',
-        'port' => 27017,
-        'user' => 'root',
-        'password' => 'local',
-        'database' => 'local', // name of MongoDB database
-        'collection' => 'session', // name of MongoDB collection
-        'persistent' => false, // persistent connection to DB?
-        'persistentId' => 'MongoSession', // name of persistent connection
-        'replicaSet' => false,
-    ),
-    /**
-     * mysql表结构
-     *   CREATE TABLE `session_handler_table` (
-      `id` varchar(255) NOT NULL,
-      `data` mediumtext NOT NULL,
-      `timestamp` int(255) NOT NULL,
-      PRIMARY KEY (`id`),
-      UNIQUE KEY `id` (`id`,`timestamp`),
-      KEY `timestamp` (`timestamp`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-     */
-    'mysql' => array(
-        'host' => '127.0.0.1',
-        'port' => 3306,
-        'user' => 'root',
-        'password' => 'admin',
-        'database' => 'test',
-        'table' => 'session_handler_table',
-    ),
-    /**
-     * memcache采用的是session.save_handler管理机制
-     * 需要php安装memcache拓展支持
-     */
-    'memcache' => "tcp://127.0.0.1:11211",
-    /**
-     * redis采用的是session.save_handler管理机制
-     * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
-     */
-    'redis' => "tcp://127.0.0.1:6379",
+	'handle' => '', //支持的管理类型：mongodb,mysql,memcache,redis。留空则不管理，使用默认
+	'common' => array(
+		'autostart' => false, //是否自动session_start()
+		'cookie_path' => '/',
+		'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
+		'session_name' => 'MICROPHP',
+		'lifetime' => 3600, // session lifetime in seconds
+	),
+	'mongodb' => array(
+		'host' => '127.0.0.1',
+		'port' => 27017,
+		'user' => 'root',
+		'password' => 'local',
+		'database' => 'local', // name of MongoDB database
+		'collection' => 'session', // name of MongoDB collection
+		'persistent' => false, // persistent connection to DB?
+		'persistentId' => 'MongoSession', // name of persistent connection
+		'replicaSet' => false,
+	),
+	/**
+	 * mysql表结构
+	 *   CREATE TABLE `session_handler_table` (
+	  `id` varchar(255) NOT NULL,
+	  `data` mediumtext NOT NULL,
+	  `timestamp` int(255) NOT NULL,
+	  PRIMARY KEY (`id`),
+	  UNIQUE KEY `id` (`id`,`timestamp`),
+	  KEY `timestamp` (`timestamp`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	 */
+	'mysql' => array(
+		'host' => '127.0.0.1',
+		'port' => 3306,
+		'user' => 'root',
+		'password' => 'admin',
+		'database' => 'test',
+		'table' => 'session_handler_table',
+	),
+	/**
+	 * memcache采用的是session.save_handler管理机制
+	 * 需要php安装memcache拓展支持
+	 */
+	'memcache' => "tcp://127.0.0.1:11211",
+	/**
+	 * redis采用的是session.save_handler管理机制
+	 * 需要php安装redis拓展支持,你可以在https://github.com/nicolasff/phpredis 找到该拓展。
+	 */
+	'redis' => "tcp://127.0.0.1:6379",
 );
 /**
  * ------------------------数据库配置----------------------------
@@ -378,7 +370,6 @@ $system['session_handle'] = array(
  * 可以自定义多个数据库组，然后根据不同的环境选择不同的组作为默认数据库连接信息
  */
 $system['db']['active_group'] = 'default';
-
 /**
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
  */
@@ -399,8 +390,6 @@ $system['db']['default']['dbcollat'] = 'utf8_general_ci';
 $system['db']['default']['swap_pre'] = '';
 $system['db']['default']['autoinit'] = TRUE;
 $system['db']['default']['stricton'] = FALSE;
-
-
 /*
  * PDO database config demo
  * 1.pdo sqlite3
@@ -436,8 +425,6 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-
-
 /* End of file index.php */
 include('MicroPHP.min.php');
 WoniuRouter::setConfig($system);

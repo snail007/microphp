@@ -188,8 +188,12 @@ function common_replace(&$str) {
     $str = str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
     $str = str_replace('http://git.oschina.net/snail/microphp', '', $str);
-    $str = preg_replace('|^ *// *[\w].*$\n|m', '', $str);
-    $str = str_replace("<?php", "", preg_replace('|/\*\*[^/]*MicroPHP[^/]*\*/|sm', '', $str));
+    $str = preg_replace('|^ *// *[\w].*$\n|m', '', $str);//去掉英文单行注释
+    $str = preg_replace('|^ *$\n|m', '', $str);//去掉空行
+    $str = preg_replace('| +$|m', '', $str);//去掉行尾空格
+    $str = preg_replace('| {4}|m', "\t", $str);//空格转为制表符
+    $str = preg_replace('|/\*\*[^/]*MicroPHP[^/]*\*/|sm', '', $str);//去掉文件头版权注释块
+    $str = str_replace("<?php", "", $str);
 }
 
 function compress_php_src($src, $is_file = false) {
@@ -407,13 +411,13 @@ if (php_sapi_name() != 'cli') {
                             <td style="text-align: right;">提示</td>
                             <td>
                                 <pre>
-        如果相应的功能内容都没有选择，那么生成的核心文件将不支持相应的功能和配置。
-        1.没有选择session驱动，那么session功能和相应的配置将不再起作用。
-        2.没有选择缓存驱动，那么$this->cache将是null。
-          如果只选择了files那么系统配置里面缓存类型将只支持files。
-        3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。
-          如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。
-        4.没有选择可选核心类，那么对应的类的相关方法将不能再使用。
+            如果相应的功能内容都没有选择，那么生成的核心文件将不支持相应的功能和配置。
+            1.没有选择session驱动，那么session功能和相应的配置将不再起作用。
+            2.没有选择缓存驱动，那么$this->cache将是null。
+              如果只选择了files那么系统配置里面缓存类型将只支持files。
+            3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。
+              如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。
+            4.没有选择可选核心类，那么对应的类的相关方法将不能再使用。
                                 </pre>
                             </td>
                         </tr>
