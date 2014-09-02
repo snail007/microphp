@@ -11,7 +11,7 @@
  * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-02 16:13:34
+ * @createdtime         2014-09-02 16:21:54
  */
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -339,7 +339,7 @@ $system['session_handle'] = array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
         'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
-        'session_name' => 'PHPSESSID',
+        'session_name' => 'MICROPHP',
         'lifetime' => 3600, // session lifetime in seconds
     ),
     'mongodb' => array(
