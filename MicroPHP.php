@@ -9,8 +9,8 @@
  * @email		672308444@163.com
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.12
- * @createdtime         2014-09-01 10:19:02
+ * @since		Version 2.2.13
+ * @createdtime         2014-09-02 16:13:34
  */
  
 
@@ -26,8 +26,8 @@
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  */
 if (!function_exists('dump')) {
 
@@ -775,8 +775,8 @@ if (!function_exists('enableSelectDefault')) {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  */
 class WoniuInput {
 
@@ -883,7 +883,7 @@ class WoniuInput {
     }
 
     /**
-     * 传递给控制器方法的所有参数的数组，参数为空时返回空数组<br/>
+     * 传递给控制器方法的所有参数的数组，参数为空时返回参数数组<br/>
      * 比如：<br/>
      * 1.home.index/username/1234，那么返回的参数数组就是：array('username','1234')<br/>
      * 2.如果传递了$key,比如$key是1， 那么将返回1234。如果$key是2那么将返回null。<br/>
@@ -1345,8 +1345,8 @@ class WoniuInput {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  */
 class WoniuRouter {
 
@@ -1503,6 +1503,29 @@ class WoniuRouter {
 
     private static function checkSession() {
         $system = WoniuLoader::$system;
+        $common_config = $system['session_handle']['common'];
+        // set some important session vars
+        ini_set('session.auto_start', 0);
+        ini_set('session.gc_probability', 1);
+        ini_set('session.gc_divisor', 100);
+        ini_set('session.gc_maxlifetime', $common_config['lifetime']);
+        ini_set('session.referer_check', '');
+        ini_set('session.entropy_file', '/dev/urandom');
+        ini_set('session.entropy_length', 16);
+        ini_set('session.use_cookies', 1);
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.use_trans_sid', 0);
+        ini_set('session.hash_function', 1);
+        ini_set('session.hash_bits_per_character', 5);
+        // disable client/proxy caching
+        session_cache_limiter('nocache');
+        // set the cookie parameters
+        session_set_cookie_params(
+                $common_config['lifetime'], $common_config['cookie_path'], $common_config['cookie_domain']
+        );
+        // name the session
+        session_name($common_config['session_name']);
+        register_shutdown_function('session_write_close');
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
             $driver = $system['session_handle']['handle'];
@@ -1512,6 +1535,10 @@ class WoniuRouter {
                 $session = new $handle();
                 $session->start($config);
             }
+        }
+        // start it up
+        if ($common_config['autostart']) {
+            sessionStart();
         }
     }
 
@@ -1585,8 +1612,8 @@ class WoniuRouter {
  * @email                  672308444@163.com
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
- * @since                  Version 2.2.12
- * @createdtime            2014-09-01 10:19:02
+ * @since                  Version 2.2.13
+ * @createdtime            2014-09-02 16:13:34
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2592,8 +2619,8 @@ class WoniuLibLoader {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2717,8 +2744,8 @@ class WoniuController extends WoniuLoaderPlus {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3596,8 +3623,8 @@ class WoniuRule {
  * @email                672308444@163.com
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.12
- * @createdtime       2014-09-01 10:19:02
+ * @since                Version 2.2.13
+ * @createdtime       2014-09-02 16:13:34
  */
 class WoniuDB {
     private static $conns = array();
@@ -10511,34 +10538,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
     public function start($config = array()) {
         $this->_config = $config = array_merge($config['common'], $config['mysql']);
         session_set_save_handler(array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'), array($this, 'destroy'), array($this, 'gc'));
-        // set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $this->_config['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-        // disable client/proxy caching
-        session_cache_limiter('nocache');
-        // set the cookie parameters
-        session_set_cookie_params(
-                $this->_config['lifetime'], $this->_config['cookie_path'], $this->_config['cookie_domain']
-        );
-        // name the session
-        session_name($this->_config['session_name']);
-        register_shutdown_function('session_write_close');
-        // start it up
-        if ($config['autostart'] && !isset($_SESSION)) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-        }
     }
     /**
      * Open the session
@@ -10653,37 +10652,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
         $config = array_merge($config['common'], $config['mongodb']);
         $this->_config = $config;
         // set object as the save handler
-        session_set_save_handler(
-                array(&$this, 'open'), array(&$this, 'close'), array(&$this, 'read'), array(&$this, 'write'), array(&$this, 'destroy'), array(&$this, 'gc')
-        );
-        // set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $this->_config['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-        // disable client/proxy caching
-        session_cache_limiter('nocache');
-        // set the cookie parameters
-        session_set_cookie_params(
-                $this->_config['lifetime'], $this->_config['cookie_path'], $this->_config['cookie_domain'], ($_SERVER['SERVER_PORT'] == 443), TRUE
-        );
-        // name the session
-        session_name($this->_config['session_name']);
-        register_shutdown_function('session_write_close');
-        // start it up
-        if ($config['autostart'] && !isset($_SESSION)) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-        }
+        session_set_save_handler(array(&$this, 'open'), array(&$this, 'close'), array(&$this, 'read'), array(&$this, 'write'), array(&$this, 'destroy'), array(&$this, 'gc'));
     }
     /**
      * 
@@ -10814,34 +10783,6 @@ class MemcacheSessionHandle implements WoniuSessionHandle {
         $session_save_path = $config['memcache'];
         ini_set('session.save_handler', 'memcache');
         ini_set('session.save_path', $session_save_path);
-        // set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $config['common']['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-        // disable client/proxy caching
-        session_cache_limiter('nocache');
-        // set the cookie parameters
-        session_set_cookie_params(
-                $config['common']['lifetime'], $config['common']['cookie_path'], $config['common']['cookie_domain'], ($_SERVER['SERVER_PORT'] == 443), TRUE
-        );
-        // name the session
-        session_name($config['common']['session_name']);
-        register_shutdown_function('session_write_close');
-        // start it up
-        if ($config['common']['autostart'] && !isset($_SESSION)) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-        }
     }
     public function open($session_path, $session_name) {
         
@@ -10875,36 +10816,6 @@ class RedisSessionHandle implements WoniuSessionHandle {
         ini_set('session.save_handler', 'redis');
         ini_set('session.save_path', $session_save_path);
         
-        // set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $config['common']['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-        // disable client/proxy caching
-        session_cache_limiter('nocache');
-        // set the cookie parameters
-        session_set_cookie_params(
-                $config['common']['lifetime'], $config['common']['cookie_path'], $config['common']['cookie_domain'], ($_SERVER['SERVER_PORT'] == 443), TRUE
-        );
-        // name the session
-        session_name($config['common']['session_name']);
-        register_shutdown_function('session_write_close');
-        
-        
-        // start it up
-        if ($config['common']['autostart'] && !isset($_SESSION)) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-        }
     }
     public function open($session_path, $session_name) {
         

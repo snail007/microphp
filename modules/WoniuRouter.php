@@ -168,6 +168,29 @@ class WoniuRouter {
 
     private static function checkSession() {
         $system = WoniuLoader::$system;
+        $common_config = $system['session_handle']['common'];
+        // set some important session vars
+        ini_set('session.auto_start', 0);
+        ini_set('session.gc_probability', 1);
+        ini_set('session.gc_divisor', 100);
+        ini_set('session.gc_maxlifetime', $common_config['lifetime']);
+        ini_set('session.referer_check', '');
+        ini_set('session.entropy_file', '/dev/urandom');
+        ini_set('session.entropy_length', 16);
+        ini_set('session.use_cookies', 1);
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.use_trans_sid', 0);
+        ini_set('session.hash_function', 1);
+        ini_set('session.hash_bits_per_character', 5);
+        // disable client/proxy caching
+        session_cache_limiter('nocache');
+        // set the cookie parameters
+        session_set_cookie_params(
+                $common_config['lifetime'], $common_config['cookie_path'], $common_config['cookie_domain']
+        );
+        // name the session
+        session_name($common_config['session_name']);
+        register_shutdown_function('session_write_close');
         //session自定义配置检测
         if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
             $driver = $system['session_handle']['handle'];
@@ -177,6 +200,10 @@ class WoniuRouter {
                 $session = new $handle();
                 $session->start($config);
             }
+        }
+        // start it up
+        if ($common_config['autostart']) {
+            sessionStart();
         }
     }
 

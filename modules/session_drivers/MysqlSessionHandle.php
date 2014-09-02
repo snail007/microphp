@@ -37,34 +37,6 @@ class MysqlSessionHandle implements WoniuSessionHandle {
     public function start($config = array()) {
         $this->_config = $config = array_merge($config['common'], $config['mysql']);
         session_set_save_handler(array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'), array($this, 'destroy'), array($this, 'gc'));
-        // set some important session vars
-        ini_set('session.auto_start', 0);
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 100);
-        ini_set('session.gc_maxlifetime', $this->_config['lifetime']);
-        ini_set('session.referer_check', '');
-        ini_set('session.entropy_file', '/dev/urandom');
-        ini_set('session.entropy_length', 16);
-        ini_set('session.use_cookies', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.hash_function', 1);
-        ini_set('session.hash_bits_per_character', 5);
-        // disable client/proxy caching
-        session_cache_limiter('nocache');
-        // set the cookie parameters
-        session_set_cookie_params(
-                $this->_config['lifetime'], $this->_config['cookie_path'], $this->_config['cookie_domain']
-        );
-        // name the session
-        session_name($this->_config['session_name']);
-        register_shutdown_function('session_write_close');
-        // start it up
-        if ($config['autostart'] && !isset($_SESSION)) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-        }
     }
     /**
      * Open the session
