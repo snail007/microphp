@@ -27,6 +27,22 @@
 date_default_timezone_set('PRC');
 $ver = "Version 2.2.13";
 $header = '<?php
+/*
+ * Copyright 2014 pm.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /**
  * MicroPHP
  *
@@ -41,6 +57,7 @@ $header = '<?php
  * @createdtime         ' . date('Y-m-d H:i:s') . '
  */
  ';
+
 $files = array(
     //core
     'modules/WoniuHelper.php',
@@ -139,12 +156,13 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
     //命令行
     $core = '';
     foreach ($files as $file) {
-        $core.=str_replace("<?php", "", file_get_contents($file));
+        $file_content=file_get_contents($file);
+        $core.=str_replace("<?php", "", $file_content);
     }
     common_replace($core);
     file_put_contents('MicroPHP.php', "<?php\n" . $core);
     $content = php_strip_whitespace('MicroPHP.php');
-    file_put_contents('MicroPHP.php', $header . "\n\n" . $core);
+    file_put_contents('MicroPHP.php',  $header.$core);
     file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
     $index = file_get_contents('modules/plugin.php');

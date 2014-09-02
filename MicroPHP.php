@@ -1,4 +1,20 @@
 <?php
+/*
+ * Copyright 2014 pm.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /**
  * MicroPHP
  *
@@ -10,25 +26,9 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-02 16:26:29
+ * @createdtime         2014-09-02 17:42:21
  */
  
-
-
-
-/**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.2.0 or newer
- *
- * @package                MicroPHP
- * @author                狂奔的蜗牛
- * @email                672308444@163.com
- * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
- * @link                http://git.oschina.net/snail/microphp
- * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
- */
 if (!function_exists('dump')) {
 
     /**
@@ -759,12 +759,6 @@ if (!function_exists('enableSelectDefault')) {
 /* End of file Helper.php */
  
 
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * MicroPHP
  *
@@ -776,7 +770,7 @@ if (!function_exists('enableSelectDefault')) {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
+ * @createdtime       2014-09-02 17:42:21
  */
 class WoniuInput {
 
@@ -1346,7 +1340,7 @@ class WoniuInput {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
+ * @createdtime       2014-09-02 17:42:21
  */
 class WoniuRouter {
 
@@ -1613,7 +1607,7 @@ class WoniuRouter {
  * @copyright              Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                   http://git.oschina.net/snail/microphp
  * @since                  Version 2.2.13
- * @createdtime            2014-09-02 16:26:29
+ * @createdtime            2014-09-02 17:42:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2620,7 +2614,7 @@ class WoniuLibLoader {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
+ * @createdtime       2014-09-02 17:42:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -2745,7 +2739,7 @@ class WoniuController extends WoniuLoaderPlus {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
+ * @createdtime       2014-09-02 17:42:21
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
@@ -3172,23 +3166,6 @@ class WoniuTableModel extends WoniuModel {
 }
 
 /* End of file Model.php */
-
-
-/*
- * Copyright 2014 pm.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 /**
  * MicroPHP
@@ -3624,7 +3601,7 @@ class WoniuRule {
  * @copyright          Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link                http://git.oschina.net/snail/microphp
  * @since                Version 2.2.13
- * @createdtime       2014-09-02 16:26:29
+ * @createdtime       2014-09-02 17:42:21
  */
 class WoniuDB {
     private static $conns = array();
