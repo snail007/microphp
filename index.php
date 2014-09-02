@@ -1,18 +1,6 @@
-<?php
 
-/**
- * MicroPHP
- *
- * An open source application development framework for PHP 5.2.0 or newer
- *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright           Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
- * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.13
- * @createdtime         2014-09-02 17:42:21
- */
+
+
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
 /**
@@ -229,7 +217,7 @@ $system['log_error'] = FALSE;
  * $errmsg：具体的数据库错误信息
  * $strace：调用堆栈信息
  * 错误控制类参考：
- * http://git.oschina.net/snail/microphp/blob/development/tests/app/library/ErrorHandle.class.php
+ * /blob/development/tests/app/library/ErrorHandle.class.php
  */
 $system['log_error_handle'] = array(
     'error' => '', //array('ErrorHandle' => 'error_handle'),
@@ -274,7 +262,7 @@ $system['route'] = array(
  * 比如文件名是mycahe.php,那么文件mycahe.php
  * 里面的缓存类就是：class phpfastcache_mycahe{......}
  * mycahe.php的编写规范请参考：
- * http://git.oschina.net/snail/microphp/blob/development/modules/cache-drivers/drivers/example.php
+ * /blob/development/modules/cache-drivers/drivers/example.php
  */
 $system['cache_drivers'] = array();
 /**
@@ -313,7 +301,6 @@ $system['cache_config'] = array(
      */
     "server" => array(
         array("127.0.0.1", 11211, 1),
-    //  array("new.host.ip",11211,1),
     ),
     /*
      * Redis服务器地址;
@@ -349,10 +336,8 @@ $system['session_handle'] = array(
         'password' => 'local',
         'database' => 'local', // name of MongoDB database
         'collection' => 'session', // name of MongoDB collection
-        // persistent related vars
         'persistent' => false, // persistent connection to DB?
         'persistentId' => 'MongoSession', // name of persistent connection
-        // whether we're supporting replicaSet
         'replicaSet' => false,
     ),
     /**

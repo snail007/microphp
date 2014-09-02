@@ -83,21 +83,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
     function db_pconnect() {
         // For SQLite architecture can not enable persistent connection
         return $this->db_connect();
-        /*
-          $conn_id = false;
-          try {
-          $conn_id = new PDO ($this->database, $this->username, $this->password, array(PDO::ATTR_PERSISTENT => true) );
-          } catch (PDOException $e) {
-          log_message('error', $e->getMessage());
-          if ($this->db_debug)
-          {
-          $this->display_error($e->getMessage(), '', TRUE);
-          }
-          }
-          // Added by Xi
-          $this->conn_id=$conn_id;
-          return $conn_id;
-         */
     }
     
     /**
@@ -158,25 +143,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
         return $str;
     }
     
-    /**
-     * Escape String
-     *
-     * @access	public
-     * @param	string
-     * @return	string
-     */
-    /*
-      function escape_str($str)
-      {
-      if (get_magic_quotes_gpc())
-      {
-      $str = stripslashes($str);
-      }
-      return $this->conn_id->quote($str);
-      }
-     */
-    
-// Added by Xi
     /**
      * Escape String         
      *         
@@ -474,59 +440,6 @@ class CI_DB_sqlite3_driver extends CI_DB {
         }
         return $sql . "LIMIT " . $offset . $limit;
     }
-// Commented by Xi
-    /**
-     * COPY FROM sqlite_driver.php
-     * Protect Identifiers ... contributed/requested by CodeIgniter user: quindo
-     *
-     * This function adds backticks if appropriate based on db type
-     *
-     * @access  private
-     * @param   mixed   the item to escape
-     * @param   boolean only affect the first word
-     * @return  mixed   the item with backticks
-     */
-    /*
-      function _protect_identifiers($item, $first_word_only = FALSE)
-      {
-      if (is_array($item))
-      {
-      $escaped_array = array();
-      foreach($item as $k=>$v)
-      {
-      $escaped_array[$this->_protect_identifiers($k)] = $this->_protect_identifiers($v, $first_word_only);
-      }
-      return $escaped_array;
-      }
-      // This function may get "item1 item2" as a string, and so
-      // we may need "item1 item2" and not "item1 item2"
-      if (ctype_alnum($item) === FALSE)
-      {
-      if (strpos($item, '.') !== FALSE)
-      {
-      $aliased_tables = implode(".",$this->ar_aliased_tables).'.';
-      $table_name =  substr($item, 0, strpos($item, '.')+1);
-      $item = (strpos($aliased_tables, $table_name) !== FALSE) ? $item = $item : $this->dbprefix.$item;
-      }
-      // This function may get "field >= 1", and need it to return "field >= 1"
-      $lbound = ($first_word_only === TRUE) ? '' : '|\s|\(';
-      $item = preg_replace('/(^'.$lbound.')([\w\d\-\_]+?)(\s|\)|$)/iS', '$1$2$3', $item);
-      }
-      else
-      {
-      return "{$item}";
-      }
-      $exceptions = array('AS', '/', '-', '%', '+', '*');
-      foreach ($exceptions as $exception)
-      {
-      if (stristr($item, " {$exception} ") !== FALSE)
-      {
-      $item = preg_replace('/ ('.preg_quote($exception).') /i', ' $1 ', $item);
-      }
-      }
-      return $item;
-      }
-     */
     /**
      * From Tables ... contributed/requested by CodeIgniter user: quindo
      *
@@ -599,22 +512,6 @@ class CI_DB_sqlite3_result extends CI_DB_result {
     /**
      * Number of rows in the result set
      *
-     * pfff... that's ugly !!!!!!!
-     *
-     * PHP manual for PDO tell us about nom_rows :
-     * "For most databases, PDOStatement::rowCount() does not return the number of rows affected by
-     * a SELECT statement. Instead, use PDO::query() to issue a SELECT COUNT(*) statement with the
-     * same predicates as your intended SELECT statement, then use PDOStatement::fetchColumn() to
-     * retrieve the number of rows that will be returned.
-     *
-     * which means
-     * 1/ select count(*) as c from table where $where
-     * => numrows
-     * 2/ select * from table where $where
-     * => treatment
-     *
-     * Holy cow !
-     *
      * @access	public
      * @return	integer
      */
@@ -638,30 +535,6 @@ class CI_DB_sqlite3_result extends CI_DB_result {
             return $this->result_id->columnCount();
         }
     }
-    
-    /**
-     * Field data
-     *
-     * Generates an array of objects containing field meta-data
-     *
-     * @access	public
-     * @return	array
-     */
-    /* 	function field_data()
-      {
-      $retval = array();
-      for ($i = 0; $i < $this->num_fields(); $i++)
-      {
-      $F 				= new CI_DB_field();
-      $F->name 		= sqlite_field_name($this->result_id, $i);
-      $F->type 		= 'varchar';
-      $F->max_length	= 0;
-      $F->primary_key = 0;
-      $F->default		= '';
-      $retval[] = $F;
-      }
-      return $retval;
-      } */
     
     /**
      * Result - associative array

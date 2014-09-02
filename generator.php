@@ -1,28 +1,28 @@
 <?php
 /*
-                       _oo0oo_
-                      o8888888o
-                      88" . "88
-                      (| ^_^ |)
-                      0\  =  /0
-                    ___/`---'\___
-                  .' \\|     | '.
-                 / \\|||  :  ||| \
-                / _||||| -:- |||||- \
-               |   | \\\  -  / |   |
-               | \_|  ''\---/''  |_/ |
-               \  .-\__  '-'  ___/-. /
-             ___'. .'  /--.--\  `. .'___
-          ."" '<  `.___\_<|>_/___.' >' "".
-         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-         \  \ `_.   \_ __\ /__ _/   .-` /  /
-     =====`-.____`.___ \_____/___.-`___.-'=====
-                       `=---='
+  _oo0oo_
+  o8888888o
+  88" . "88
+  (| ^_^ |)
+  0\  =  /0
+  ___/`---'\___
+  .' \\|     | '.
+  / \\|||  :  ||| \
+  / _||||| -:- |||||- \
+  |   | \\\  -  / |   |
+  | \_|  ''\---/''  |_/ |
+  \  .-\__  '-'  ___/-. /
+  ___'. .'  /--.--\  `. .'___
+  ."" '<  `.___\_<|>_/___.' >' "".
+  | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+  \  \ `_.   \_ __\ /__ _/   .-` /  /
+  =====`-.____`.___ \_____/___.-`___.-'=====
+  `=---='
 
 
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-               佛祖保佑         永无BUG
+  佛祖保佑         永无BUG
  */
 date_default_timezone_set('PRC');
 $ver = "Version 2.2.13";
@@ -98,9 +98,9 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
     //定制
     if (!empty($_POST)) {
         session_start();
-        if(empty($_SESSION['gen_token'])||$_SESSION['gen_token']!=@$_POST['token']){
+        if (empty($_SESSION['gen_token']) || $_SESSION['gen_token'] != @$_POST['token']) {
             exit('<script>alert("页面已过期，请刷新");</script>');
-        }else{
+        } else {
             unset($_SESSION['gen_token']);
         }
         $diy = empty($_POST['keys']) ? array() : $_POST['keys'];
@@ -156,13 +156,13 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
     //命令行
     $core = '';
     foreach ($files as $file) {
-        $file_content=file_get_contents($file);
-        $core.=str_replace("<?php", "", $file_content);
+        $file_content = file_get_contents($file);
+        $core.=$file_content;
     }
     common_replace($core);
     file_put_contents('MicroPHP.php', "<?php\n" . $core);
     $content = php_strip_whitespace('MicroPHP.php');
-    file_put_contents('MicroPHP.php',  $header.$core);
+    file_put_contents('MicroPHP.php', $header . $core);
     file_put_contents('MicroPHP.min.php', str_replace('<?php', $header, $content));
 
     $index = file_get_contents('modules/plugin.php');
@@ -187,6 +187,9 @@ function common_replace(&$str) {
     $str = str_replace("Version 1.0", $ver, $str);
     $str = str_replace('{createdtime}', date('Y-m-d H:i:s'), $str);
     $str = str_replace("Copyright (c) 2013 - 2013,", 'Copyright (c) 2013 - ' . date('Y') . ',', $str);
+    $str = str_replace('http://git.oschina.net/snail/microphp', '', $str);
+    $str = preg_replace('|^ *// *[\w].*$\n|m', '', $str);
+    $str = str_replace("<?php", "", preg_replace('|/\*\*[^/]*MicroPHP[^/]*\*/|sm', '', $str));
 }
 
 function compress_php_src($src, $is_file = false) {
@@ -319,7 +322,7 @@ function compress_php_src($src, $is_file = false) {
 ?><?php
 if (php_sapi_name() != 'cli') {
     session_start();
-    $_SESSION['gen_token']=$token = md5(time());
+    $_SESSION['gen_token'] = $token = md5(time());
     ?>
     <!doctype html>
     <html>
@@ -353,9 +356,9 @@ if (php_sapi_name() != 'cli') {
         </head>
         <body>
             <form action="?" target="down" name="mpform" method="POST">
-                <input type="hidden" name="token" value="<?php echo $token;?>">
+                <input type="hidden" name="token" value="<?php echo $token; ?>">
                 <table border="0"  cellpadding="0" cellspacing="0" align="center" >
-                    <caption>MicroPHP定制版生成器<br/><small><?php echo $ver;?></small></caption>
+                    <caption>MicroPHP定制版生成器<br/><small><?php echo $ver; ?></small></caption>
                     <thead>
                         <tr>
                             <th width="130"  style="text-align: right;">功能</th>
@@ -403,15 +406,15 @@ if (php_sapi_name() != 'cli') {
                         <tr>
                             <td style="text-align: right;">提示</td>
                             <td>
-<pre>
-如果相应的功能内容都没有选择，那么生成的核心文件将不支持相应的功能和配置。
-1.没有选择session驱动，那么session功能和相应的配置将不再起作用。
-2.没有选择缓存驱动，那么$this->cache将是null。
-  如果只选择了files那么系统配置里面缓存类型将只支持files。
-3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。
-  如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。
-4.没有选择可选核心类，那么对应的类的相关方法将不能再使用。
-</pre>
+                                <pre>
+        如果相应的功能内容都没有选择，那么生成的核心文件将不支持相应的功能和配置。
+        1.没有选择session驱动，那么session功能和相应的配置将不再起作用。
+        2.没有选择缓存驱动，那么$this->cache将是null。
+          如果只选择了files那么系统配置里面缓存类型将只支持files。
+        3.没有选择数据库驱动，那么$this->db将是null，$this->database()不能使用。
+          如果只选择了mysql那么系统配置里面数据库驱动类型将只支持mysql。
+        4.没有选择可选核心类，那么对应的类的相关方法将不能再使用。
+                                </pre>
                             </td>
                         </tr>
                         <tr>
@@ -429,9 +432,9 @@ if (php_sapi_name() != 'cli') {
             </form>
             <iframe style="display: none;" name="down"></iframe>
             <div style="display: none;"><script type="text/javascript">
-            var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-            document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F25dc3c6d2187c5da81c6269c209aa726' type='text/javascript'%3E%3C/script%3E"));
-            </script>
+                var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+                document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F25dc3c6d2187c5da81c6269c209aa726' type='text/javascript'%3E%3C/script%3E"));
+                </script>
             </div>
         </body>
     </html>
