@@ -348,7 +348,7 @@ $system['session_handle'] = array(
         'autostart' => true, //是否自动session_start()
         'cookie_path' => '/',
         'cookie_domain' => '.' . @$_SERVER['HTTP_HOST'],
-        'session_name' => 'PHPSESSID',
+        'session_name' => 'MICROPHP',
         'lifetime' => 3600, // session lifetime in seconds
     ),
     'mongodb' => array(
