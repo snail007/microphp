@@ -47,6 +47,8 @@ class WoniuModel extends WoniuLoaderPlus {
             $model_folders = array($model_folders);
         }
         $count = count($model_folders);
+        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+        //如此一来就能满足两种模式
         WoniuLoader::classAutoloadRegister();
         foreach ($model_folders as $key => $model_folder) {
             $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
@@ -55,9 +57,6 @@ class WoniuModel extends WoniuLoaderPlus {
                 return WoniuModelLoader::$model_files[$alias_name];
             }
             if (file_exists($filepath)) {
-                //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-                //如此一来就能满足两种模式
-                //WoniuLoader::classAutoloadRegister();
                 if (!class_exists($classname, FALSE)) {
                     WoniuLoader::includeOnce($filepath);
                 }
@@ -145,7 +144,7 @@ class WoniuTableModel extends WoniuModel {
         }
         $this->prefix = $this->db->dbprefix;
         $this->table = $table;
-        $this->full_table=$this->prefix.$table;
+        $this->full_table = $this->prefix . $table;
         $this->fields = $fields = $this->getTableFieldsInfo($table, $this->db);
         foreach ($fields as $col => $info) {
             if ($info['primary']) {
@@ -205,7 +204,7 @@ class WoniuTableModel extends WoniuModel {
                 }
             }
             $content = 'return ' . var_export($info, true) . ";\n";
-            $content = '<?'.'php'."\n" . $content;
+            $content = '<?' . 'php' . "\n" . $content;
             file_put_contents($cache_file, $content);
             $ret_info[$tableName] = $info;
         } else {
