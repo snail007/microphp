@@ -119,9 +119,9 @@ $system['cookie_key_prefix'] = '';
  * 1.自定义Loader必须继承WoniuLoader。
  * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
  * class MyLoader extends WoniuLoader {
- *	  public function __construct() {
- *		  parent::__construct();
- *	  }
+ *      public function __construct() {
+ *          parent::__construct();
+ *      }
  *  }
  * 3.如果无需自定义Loader，留空即可。
  * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
@@ -169,7 +169,7 @@ $system['error_manage'] = FALSE;
 /**
  * 是否开启错误日志记录
  * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
- *	   同时务必设置自己的错误日志记录处理方法
+ *       同时务必设置自己的错误日志记录处理方法
  * false：关闭
  * 提示：
  * 数据库错误信息是否显示是由：$system['debug']和db_debug（$system['db']['xxx']['db_debug']）控制的。
@@ -185,24 +185,24 @@ $system['log_error'] = FALSE;
  * 4.系统会传递给error、exception处理方法5个参数：（$errno, $errstr, $errfile, $errline,$strace）
  * 参数说明：
  * $errno：错误级别，就是PHP里面的E_NOTICE之类的静态变量，错误级别和具体含义对应关系如下，键是代码，值是代码含义。
- *		 array('0'=>'EXCEPTION',//异常信息
- *			   '1' => 'ERROR',//致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。
- *			   '2' => 'WARNING', //运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。
- *			   '4' => 'PARSE', //编译时语法解析错误。解析错误仅仅由分析器产生。
- *			   '8' => 'NOTICE', //运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。
- *			   '16' => 'CORE_ERROR', //在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。
- *			   '32' => 'CORE_WARNING',//PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。
- *			   '64' => 'COMPILE_ERROR', //致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。
- *			   '128' => 'COMPILE_WARNING', //编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。
- *			   '256' => 'USER_ERROR', //用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *			   '512' => 'USER_WARNING', //用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *			   '1024' => 'USER_NOTICE',//用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *			   '2048' => 'STRICT', //启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。
- *			   '4096' => 'RECOVERABLE_ERROR'//可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。
- *			   '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
- *			   '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
- *		 );
- *		 可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，8，2048，8192）.
+ *         array('0'=>'EXCEPTION',//异常信息
+ *               '1' => 'ERROR',//致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。
+ *               '2' => 'WARNING', //运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。
+ *               '4' => 'PARSE', //编译时语法解析错误。解析错误仅仅由分析器产生。
+ *               '8' => 'NOTICE', //运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。
+ *               '16' => 'CORE_ERROR', //在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。
+ *               '32' => 'CORE_WARNING',//PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。
+ *               '64' => 'COMPILE_ERROR', //致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。
+ *               '128' => 'COMPILE_WARNING', //编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。
+ *               '256' => 'USER_ERROR', //用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '512' => 'USER_WARNING', //用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '1024' => 'USER_NOTICE',//用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *               '2048' => 'STRICT', //启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。
+ *               '4096' => 'RECOVERABLE_ERROR'//可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。
+ *               '8192' => 'DEPRECATED', //（php5.3）运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。
+ *               '16384' => 'USER_DEPRECATED', //（php5.3）用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。
+ *         );
+ *         可以通过判断错误级别，然后有针对性的处理。一般我们需要处理的就是致命错误（0，1，4）和一般错误（2，8，2048，8192）.
  * $errstr：具体的错误信息
  * $errfile：出错的文件完整路径
  * $errline：出错的行号
@@ -233,7 +233,7 @@ $system['default_timezone'] = 'PRC';
  * 路由字符串是welcome.index(不包含最前面的?、/、模块名称)，路由规则都是针对“路由字符串”的。
  * 现在定义路由规则：
  *   $system['route']=array(
- *		"/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
+ *        "/^welcome\\/?(.*)$/u"=>'welcome.ajax/$1'
  *   );
  * 路由规则说明：
  *  1.路由规则是一个关联数组
