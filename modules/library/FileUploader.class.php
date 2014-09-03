@@ -69,7 +69,7 @@ class FileUploader {
      * @param type $size_str
      * @return type
      */
-    private function size2byte($size_str) {
+    private function size2byte($s) {
         $s = rtrim(strtoupper($s), 'B');
         $type = array('K' => 1024, 'M' => 1024 * 1024, 'G' => 1024 * 1024 * 1024, 'T' => 1024 * 1024 * 1024 * 1024);
         if (isset($type[$t = $s{strlen($s) - 1}])) {
