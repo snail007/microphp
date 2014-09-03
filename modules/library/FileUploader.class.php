@@ -38,7 +38,7 @@ class FileUploader {
 
     private $size, $ext, $file_formfield_name = 'file',
             $is_zoom = false, $zoom_percent = 0.5,
-            $is_compress = true, $compress_percent = 0.6;
+            $is_compress = true, $compress_percent = 0.6, $min_compress_size = 0;
     public $error = array('code' => '', 'info' => '');
 
     /**
@@ -238,6 +238,19 @@ class FileUploader {
         $this->is_compress = $is_compress;
     }
 
+    public function getMinCompressSize() {
+        return $this->min_compress_size;
+    }
+
+    /**
+     * 设置要压缩的图片的最小值，如果图片体积小于该大小，就不压缩图片<br/>
+     * 单位：byte字节，1KB=1024byte
+     * @param type $min_compress_size
+     */
+    public function setMinCompressSize($min_compress_size) {
+        $this->min_compress_size = $min_compress_size;
+    }
+
     /*
      * title ：resize_image 压缩图片
      * param ：$dst_image 压缩后的路径 绝对
@@ -281,7 +294,7 @@ class FileUploader {
             case "image/pjpeg":
             case "image/jpeg":
             case "image/jpg":
-                imagejpeg($newImage, $thumb, $this->is_compress ? $this->compress_percent * 100 : null);
+                imagejpeg($newImage, $thumb, ( $this->is_compress && filesize($src_image) >= $this->min_compress_size ) ? $this->compress_percent * 100 : null);
                 break;
             case "image/png":
             case "image/x-png":
