@@ -36,7 +36,9 @@
  */
 class FileUploader {
 
-    private $size, $ext, $file_formfield_name = 'file';
+    private $size, $ext, $file_formfield_name = 'file',
+            $is_zoom = false, $zoom_percent = 0.5,
+            $is_compress = true, $compress_percent = 0.6;
     public $error = array('code' => '', 'info' => '');
 
     /**
@@ -126,7 +128,9 @@ class FileUploader {
         }
         move_uploaded_file($src_file, $save_name);
         if (file_exists($save_name)) {
-            return realpath($save_name);
+            $filepath = realpath($save_name);
+            $this->resize_image($filepath, $filepath);
+            return $filepath;
         } else {
             $this->setError(501, '移动临时文件到目标文件失败,请检查目标目录是否有写权限.');
             return FALSE;
@@ -169,6 +173,14 @@ class FileUploader {
         return $this->error;
     }
 
+    public function getErrorMsg() {
+        return $this->error['error'];
+    }
+
+    public function getErrorCode() {
+        return $this->error['code'];
+    }
+
     private function setError($code, $info) {
         $this->error['code'] = $code;
         $this->error['error'] = $info;
@@ -184,6 +196,99 @@ class FileUploader {
 
     public function getTmpFilePath() {
         return $_FILES[$this->file_formfield_name]['tmp_name'];
+    }
+
+    public function getIsZoom() {
+        return $this->is_zoom;
+    }
+
+    public function getCompressPercent() {
+        return $this->zoom_percent;
+    }
+
+    public function getZoomPercent() {
+        return $this->zoom_percent;
+    }
+
+    public function getIsCompress() {
+        return $this->is_compress;
+    }
+
+    public function setZoom($is_zoom) {
+        $this->is_zoom = $is_zoom;
+    }
+
+    /**
+     * 缩放百分比，比如：0.5,缩放到50%
+     * @param type $zoom_percent
+     */
+    public function setZoomPercent($zoom_percent) {
+        $this->zoom_percent = $zoom_percent;
+    }
+
+    /**
+     * 压缩百分比：比如0.6是60%
+     * @param type $zoom_percent
+     */
+    public function setCompressPercent($zoom_percent) {
+        $this->zoom_percent = $zoom_percent;
+    }
+
+    public function setCompress($is_compress) {
+        $this->is_compress = $is_compress;
+    }
+
+    /*
+     * title ：resize_image 压缩图片
+     * param ：$dst_image 压缩后的路径 绝对
+     * param ：$src_image 压缩前的路径 绝对
+     * return：string 压缩后的路径
+     */
+
+    private function resize_image($src_image, $dst_image) {
+        $scale = $this->is_zoom ? $this->zoom_percent : 1;
+        $thumb = $dst_image;
+        $image = $src_image;
+        list($imagewidth, $imageheight, $imageType) = @getimagesize($image);
+        if (!$imageType) {
+            return;
+        }
+        $imageType = image_type_to_mime_type($imageType);
+        $newImageWidth = ceil($imagewidth * $scale);
+        $newImageHeight = ceil($imageheight * $scale);
+        switch ($imageType) {
+            case "image/gif":
+                $source = imagecreatefromgif($image);
+                break;
+            case "image/pjpeg":
+            case "image/jpeg":
+            case "image/jpg":
+                $source = imagecreatefromjpeg($image);
+                break;
+            case "image/png":
+            case "image/x-png":
+                $source = imagecreatefrompng($image);
+                break;
+            default :
+                return;
+        }
+        $newImage = imagecreatetruecolor($newImageWidth, $newImageHeight);
+        imagecopyresampled($newImage, $source, 0, 0, 0, 0, $newImageWidth, $newImageHeight, $imagewidth, $imageheight);
+        switch ($imageType) {
+            case "image/gif":
+                imagegif($newImage, $thumb);
+                break;
+            case "image/pjpeg":
+            case "image/jpeg":
+            case "image/jpg":
+                imagejpeg($newImage, $thumb, $this->is_compress ? $this->compress_percent * 100 : null);
+                break;
+            case "image/png":
+            case "image/x-png":
+                imagepng($newImage, $thumb, 4);
+                break;
+        }
+        return $thumb;
     }
 
 }
