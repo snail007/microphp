@@ -174,6 +174,7 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
     $index = str_replace("../application", 'application', $index);
     $index = str_replace(array("WoniuRouter::setConfig(\$system);", "WoniuRouter::loadClass();"), '', $index);
     common_replace($index);
+    $index=$header.$index;
     file_put_contents('index.php', $index . "\ninclude('MicroPHP.min.php');\nWoniuRouter::setConfig(\$system);\nWoniuRouter::loadClass();");
 
 #ver modify
