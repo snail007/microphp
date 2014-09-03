@@ -60,12 +60,22 @@ class FileUploader {
      * @param type $s
      */
     public function setMaxSize($s) {
+
+        $this->size = $this->size2byte($s);
+    }
+
+    /**
+     * 将体积字符串转换为字节大小
+     * @param type $size_str
+     * @return type
+     */
+    private function size2byte($size_str) {
         $s = rtrim(strtoupper($s), 'B');
         $type = array('K' => 1024, 'M' => 1024 * 1024, 'G' => 1024 * 1024 * 1024, 'T' => 1024 * 1024 * 1024 * 1024);
         if (isset($type[$t = $s{strlen($s) - 1}])) {
             $s = rtrim($s, $t) * $type[$t];
         }
-        $this->size = $s;
+        return $s;
     }
 
     /**
@@ -244,11 +254,11 @@ class FileUploader {
 
     /**
      * 设置要压缩的图片的最小值，如果图片体积小于该大小，就不压缩图片<br/>
-     * 单位：byte字节，1KB=1024byte
+     * 比如：1KB,1MB,1GB
      * @param type $min_compress_size
      */
     public function setMinCompressSize($min_compress_size) {
-        $this->min_compress_size = $min_compress_size;
+        $this->min_compress_size = $this->size2byte($min_compress_size);
     }
 
     /*
