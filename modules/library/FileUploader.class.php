@@ -304,7 +304,7 @@ class FileUploader {
             case "image/pjpeg":
             case "image/jpeg":
             case "image/jpg":
-                imagejpeg($newImage, $thumb, ( $this->is_compress && filesize($src_image) >= $this->min_compress_size ) ? $this->compress_percent * 100 : null);
+                imagejpeg($newImage, $thumb, (( $this->is_compress && filesize($src_image) >= $this->min_compress_size ) ? $this->compress_percent * 100 : 100));
                 break;
             case "image/png":
             case "image/x-png":
