@@ -37,8 +37,8 @@
 class FileUploader {
 
     private $size, $ext, $file_formfield_name = 'file',
-            $is_zoom = false, $zoom_percent = 0.5,
-            $is_compress = true, $compress_percent = 0.6, $min_compress_size = 0;
+            $is_zoom = false, $zoom_percent = 0.5, $max_zoom_width = 0, $max_zoom_height = 0,
+            $is_compress = false, $compress_percent = 0.6, $min_compress_size = 0;
     public $error = array('code' => '', 'info' => '');
 
     /**
@@ -261,6 +261,33 @@ class FileUploader {
         $this->min_compress_size = $this->size2byte($min_compress_size);
     }
 
+    public function getMaxZoomWidth() {
+        return $this->max_zoom_width;
+    }
+
+    public function getMaxZoomHeight() {
+        return $this->max_zoom_height;
+    }
+
+    /**
+     * 设置最大的图片像素宽度，只有当图片的宽度大于这个数值的时候才会被缩放<br/>
+     * 比如：500，为0的时候不限制宽度
+     * @param type $max_zoom_width
+     */
+    public function setMaxZoomWidth($max_zoom_width) {
+        $this->max_zoom_width = $max_zoom_width;
+    }
+
+    /**
+     * 设置最大的图片像素高度，只有当图片的高度大于这个数值的时候才会被缩放<br/>
+      比如：500，为0的时候不限制高度
+     * 
+     * @param type $max_zoom_height
+     */
+    public function setMaxZoomHeight($max_zoom_height) {
+        $this->max_zoom_height = $max_zoom_height;
+    }
+
     /*
      * title ：resize_image 压缩图片
      * param ：$dst_image 压缩后的路径 绝对
@@ -269,6 +296,9 @@ class FileUploader {
      */
 
     private function resize_image($src_image, $dst_image) {
+        if (!$this->is_compress && !$this->is_zoom) {
+            return;
+        }
         $scale = $this->is_zoom ? $this->zoom_percent : 1;
         $thumb = $dst_image;
         $image = $src_image;
@@ -277,8 +307,13 @@ class FileUploader {
             return;
         }
         $imageType = image_type_to_mime_type($imageType);
+        //图片不需要缩放判断，!(需要缩放)=不需要缩放
+        if (!(($this->max_zoom_height && $imageheight >= $this->max_zoom_height) || ($this->max_zoom_width && $imagewidth >= $this->max_zoom_width))) {
+            $scale = 1;
+        }
         $newImageWidth = ceil($imagewidth * $scale);
         $newImageHeight = ceil($imageheight * $scale);
+
         switch ($imageType) {
             case "image/gif":
                 $source = imagecreatefromgif($image);
@@ -297,18 +332,27 @@ class FileUploader {
         }
         $newImage = imagecreatetruecolor($newImageWidth, $newImageHeight);
         imagecopyresampled($newImage, $source, 0, 0, 0, 0, $newImageWidth, $newImageHeight, $imagewidth, $imageheight);
+        //$compress_quality:0-100
+        $compress_quality = (( $this->is_compress && filesize($src_image) >= $this->min_compress_size ) ? $this->compress_percent * 100 : 100);
         switch ($imageType) {
             case "image/gif":
-                imagegif($newImage, $thumb);
+                if ($compress_quality < 100) {
+                    //gif格式转换为jpg方便压缩
+                    imagejpeg($newImage, $thumb, $compress_quality);
+                } else {
+                    imagegif($newImage, $thumb);
+                }
                 break;
             case "image/pjpeg":
             case "image/jpeg":
             case "image/jpg":
-                imagejpeg($newImage, $thumb, (( $this->is_compress && filesize($src_image) >= $this->min_compress_size ) ? $this->compress_percent * 100 : 100));
+                imagejpeg($newImage, $thumb, $compress_quality);
                 break;
             case "image/png":
             case "image/x-png":
-                imagepng($newImage, $thumb, 4);
+                $pngQuality = ($compress_quality - 100) / 11.111111;
+                $pngQuality = round(abs($pngQuality));
+                imagepng($newImage, $thumb, $pngQuality);
                 break;
         }
         return $thumb;
