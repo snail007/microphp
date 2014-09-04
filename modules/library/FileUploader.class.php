@@ -70,7 +70,7 @@ class FileUploader {
     }
 
     public function getCompressPercent() {
-        return $this->zoom_percent;
+        return $this->compress_percent;
     }
 
     public function getZoomPercent() {
@@ -136,8 +136,15 @@ class FileUploader {
     }
 
     /**
-     * 缩放百分比，比如：0.5,缩放到50%
-     * @param type $zoom_percent  默认1,不缩放
+     * 缩放百分比：<br/>
+     * 1.可以是一个0-1的小数，比如0.6是60%，这个会把图片等比缩放，缩放后的图片尺寸大小是原来的60%<br/>
+     * 2.可以是一个数组，第一个元素是宽度，第二个是元素的高度<br/>
+     *   比如：<br/>
+     *   a.array(100)或者array(100,0)  这个会把图片等比缩放，宽度是100<br/>
+     *   b.array(0,200)               这个会把图片等比缩放，高度是100<br/>
+     *   c.array(100,200)             这个会把图片强制拉伸或者缩放到宽度是100,高度是200<br/>
+     *   d.array(0,0)                 宽度高度无效，那图片不会被缩放<br/>
+     * @param type $zoom_percent 默认1
      * @return FileUploader
      */
     public function setZoomPercent($zoom_percent) {
@@ -148,17 +155,11 @@ class FileUploader {
     /**
      * 压缩百分比：<br/>
      * 1.可以是一个0-1的小数，比如0.6是60%，那么压缩后的图片清晰度是原来的60%<br/>
-     * 2.可以是一个数组，第一个元素是宽度，第二个是元素的高度<br/>
-     *   比如：<br/>
-     *   a.array(100)或者array(100,0)  这个会把图片等比缩放，宽度是100<br/>
-     *   b.array(0,200)               这个会把图片等比缩放，高度是100<br/>
-     *   c.array(100,200)             这个会把图片强制拉伸或者缩放到宽度是100,高度是200<br/>
-     *   d.array(0,0)                 宽度高度无效，那图片不会被缩放<br/>
-     * @param type $zoom_percent 默认1
+     * @param type $compress_percent
      * @return FileUploader
      */
-    public function setCompressPercent($zoom_percent) {
-        $this->zoom_percent = $zoom_percent;
+    public function setCompressPercent($compress_percent) {
+        $this->compress_percent = $compress_percent;
         return $this;
     }
 
