@@ -229,11 +229,11 @@ class FileUploader {
     }
 
     /**
-     * 是否上传了文件，也就是判断$_FILES[$this->file_formfield_name]是否为空
+     * 是否上传了文件，也就是判断$_FILES[$this->file_formfield_name]['name']是否为空
      * @return type
      */
     public function isUpoadFile() {
-        return !empty($_FILES[$this->file_formfield_name]);
+        return !empty($_FILES[$this->file_formfield_name]['name']);
     }
 
     /**
