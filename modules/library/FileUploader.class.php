@@ -348,7 +348,7 @@ class FileUploader {
             return;
         }
         $imageType = image_type_to_mime_type($imageType);
-        $$newImageWidth = $newImageHeight = 0;
+        $newImageWidth = $newImageHeight = 0;
         //图片不需要缩放判断
         if ($this->max_zoom_height || $this->max_zoom_width) {
             $need_zoom = ($this->max_zoom_height && $imageheight >= $this->max_zoom_height) || ($this->max_zoom_width && $imagewidth >= $this->max_zoom_width);
