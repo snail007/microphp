@@ -229,6 +229,14 @@ class FileUploader {
     }
 
     /**
+     * 是否上传了文件，也就是判断$_FILES[$this->file_formfield_name]是否为空
+     * @return type
+     */
+    public function isUpoadFile() {
+        return !empty($_FILES[$this->file_formfield_name]);
+    }
+
+    /**
      * 保存文件<br/>
      * 提示：<br/>
      * 1.文件最终保存路径$file_path是：$file_path=$dir.$save_name<br/>
