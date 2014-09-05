@@ -26,7 +26,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-03 10:46:42
+ * @createdtime         2014-09-05 22:17:02
  */
  
 
@@ -381,6 +381,11 @@ $system['session_handle'] = array(
 		'database' => 'test',
 		'table' => 'session_handler_table',
 	),
+	/**
+	 * memcached采用的是session.save_handler管理机制
+	 * 需要php安装memcached拓展支持
+	 */
+	'memcached' => "127.0.0.1:11211",
 	/**
 	 * memcache采用的是session.save_handler管理机制
 	 * 需要php安装memcache拓展支持
