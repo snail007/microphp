@@ -375,6 +375,11 @@ $system['session_handle'] = array(
         'table' => 'session_handler_table',
     ),
     /**
+     * memcached采用的是session.save_handler管理机制
+     * 需要php安装memcached拓展支持
+     */
+    'memcached' => "127.0.0.1:11211",
+    /**
      * memcache采用的是session.save_handler管理机制
      * 需要php安装memcache拓展支持
      */
