@@ -257,7 +257,7 @@ class WoniuRule {
      * @param boolean $can_empty 是否允许为空。true:允许 false:不允许。默认：false<br/><br/><br/>
      */
     public static function url($can_empty = false) {
-        return self::can_empty_rule('qq', $can_empty);
+        return self::can_empty_rule('url', $can_empty);
     }
 
     /**

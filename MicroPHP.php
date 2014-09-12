@@ -26,7 +26,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-12 22:39:35
+ * @createdtime         2014-09-10 11:39:53
  */
  
 
@@ -3057,7 +3057,7 @@ class WoniuRule {
 	 * @param boolean $can_empty 是否允许为空。true:允许 false:不允许。默认：false<br/><br/><br/>
 	 */
 	public static function url($can_empty = false) {
-		return self::can_empty_rule('qq', $can_empty);
+		return self::can_empty_rule('url', $can_empty);
 	}
 	/**
 	 * 规则说明：<br/>
