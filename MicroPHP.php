@@ -26,7 +26,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-12 21:57:43
+ * @createdtime         2014-09-12 22:35:51
  */
  
 
@@ -1327,7 +1327,7 @@ class WoniuRouter {
 		ini_set('session.hash_bits_per_character', 5);
 		session_cache_limiter('nocache');
 		session_set_cookie_params(
-				$common_config['lifetime'], $common_config['cookie_path'], $common_config['cookie_domain']
+				$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', WoniuInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
 		);
 		session_name($common_config['session_name']);
 		register_shutdown_function('session_write_close');

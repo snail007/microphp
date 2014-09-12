@@ -186,8 +186,9 @@ class WoniuRouter {
         session_cache_limiter('nocache');
         // set the cookie parameters
         session_set_cookie_params(
-                $common_config['lifetime'], $common_config['cookie_path'], $common_config['cookie_domain']
+                $common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', WoniuInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
         );
+
         // name the session
         session_name($common_config['session_name']);
         register_shutdown_function('session_write_close');
