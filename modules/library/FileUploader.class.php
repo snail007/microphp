@@ -268,9 +268,11 @@ class FileUploader {
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
         }
         if (!empty($dir)) {
-            $dir = pathinfo(rtrim($dir, "/\\") . $save_name, PATHINFO_DIRNAME);
+            $path = rtrim($dir, "/\\") . '/' . ltrim($save_name, "/\\");
+            $dir = dirname($path);
+            $save_name = $path;
         } else {
-            $dir = pathinfo($save_name, PATHINFO_DIRNAME);
+            $dir = dirname($save_name);
         }
         if (!is_dir($dir)) {
             mkdir($dir, 0777, TRUE);
