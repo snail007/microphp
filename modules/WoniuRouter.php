@@ -203,7 +203,7 @@ class WoniuRouter {
         }
         // start it up
         if ($common_config['autostart']) {
-            sessionStart();
+            session_start();
         }
     }
 

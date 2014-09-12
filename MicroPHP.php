@@ -26,7 +26,7 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-05 22:17:02
+ * @createdtime         2014-09-12 21:57:43
  */
  
 
@@ -1341,7 +1341,7 @@ class WoniuRouter {
 			}
 		}
 		if ($common_config['autostart']) {
-			sessionStart();
+			session_start();
 		}
 	}
 	private static function checkRouter($pathinfo_query) {
