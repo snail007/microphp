@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MicroPHP
  *
@@ -221,7 +222,7 @@ class WoniuInput {
         $val = self::get_rule_type('int', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && $val >= $min);
         $max_okay = is_null($max) || (!is_null($max) && $val <= $max);
-        return $min_okay && $max_okay ? $val : $default;
+        return $min_okay && $max_okay && !is_null($val) ? $val : $default;
     }
 
     /**
@@ -276,7 +277,7 @@ class WoniuInput {
         $val = self::get_rule_type('date', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
-        return $min_okay && $max_okay ? $val : $default;
+        return $min_okay && $max_okay && !is_null($val) ? $val : $default;
     }
 
     /**
@@ -332,7 +333,7 @@ class WoniuInput {
         $pre_fix = '2014-01-01 ';
         $min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
-        return $min_okay && $max_okay ? $val : $default;
+        return $min_okay && $max_okay && !is_null($val) ? $val : $default;
     }
 
     /**
@@ -387,7 +388,7 @@ class WoniuInput {
         $val = self::get_rule_type('datetime', $method, $key);
         $min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
         $max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
-        return $min_okay && $max_okay ? $val : $default;
+        return $min_okay && $max_okay && !is_null($val) ? $val : $default;
     }
 
     /**
