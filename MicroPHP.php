@@ -26,10 +26,54 @@
  * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
  * @since		Version 2.2.13
- * @createdtime         2014-09-12 23:25:57
+ * @createdtime         2014-09-13 22:56:56
  */
  
 
+if (!function_exists('args')) {
+	function args($key = null) {
+		return WoniuInput::parameters($key);
+	}
+}
+if (!function_exists('xss_clean')) {
+	function xss_clean($val) {
+		return WoniuInput::xss_clean($val);
+	}
+}
+foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) {
+	if (!function_exists($func)) {
+		eval('function ' . $func . '($key, $value, $life = null, $path = "/", $domian = null, $http_only = false) {
+					 return WoniuLoader::' . $true . '($key, $value, $life, $path, $domian, $http_only);
+		 }');
+	}
+}
+foreach (array('server', 'session') as $func) {
+	if (!function_exists($func)) {
+		eval('function ' . $func . '($key = null, $default = null) {
+					 return WoniuInput::' . $func . '($key, $default);
+		 }');
+	}
+}
+foreach (array('get', 'post', 'cookie', 'cookie_raw', 'get_post', 'post_get') as $func) {
+	if (!function_exists($func)) {
+		if ($func == 'cookie_raw') {
+			$func = 'cookiRaw';
+		}
+		eval('function ' . $func . '($key = null, $default = null, $xss_clean = false) {
+					 return WoniuInput::' . $func . '($key, $default, $xss_clean);
+		 }');
+	}
+}
+foreach (array('get_int', 'post_int', 'get_post_int', 'post_get_int',
+ 'get_time', 'post_time', 'get_post_time', 'post_get_time',
+ 'get_date', 'post_date', 'get_post_date', 'post_get_date',
+ 'get_datetime', 'post_datetime', 'get_post_datetime', 'post_get_datetime') as $func) {
+	if (!function_exists($func)) {
+		eval('function ' . $func . '($key, $min = null, $max = null, $default = null) {
+					 return WoniuInput::' . $func . '($key, $min, $max, $default);
+		 }');
+	}
+}
 if (!function_exists('dump')) {
 	/**
 	 * 打印变量内容，参数和var_dump一样
@@ -874,7 +918,7 @@ class WoniuInput {
 		$val = self::get_rule_type('int', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && $val >= $min);
 		$max_okay = is_null($max) || (!is_null($max) && $val <= $max);
-		return $min_okay && $max_okay ? $val : $default;
+		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
 	/**
 	 * 获取一个整数
@@ -924,7 +968,7 @@ class WoniuInput {
 		$val = self::get_rule_type('date', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
-		return $min_okay && $max_okay ? $val : $default;
+		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
 	/**
 	 * 获取日期，格式:2012-12-12
@@ -975,7 +1019,7 @@ class WoniuInput {
 		$pre_fix = '2014-01-01 ';
 		$min_okay = is_null($min) || (!is_null($min) && strtotime($pre_fix . $val) >= strtotime($pre_fix . $min));
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
-		return $min_okay && $max_okay ? $val : $default;
+		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
 	/**
 	 * 获取时间，格式:15:01:55
@@ -1025,7 +1069,7 @@ class WoniuInput {
 		$val = self::get_rule_type('datetime', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
-		return $min_okay && $max_okay ? $val : $default;
+		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
 	/**
 	 * 获取日期时间，格式:2012-12-12 15:01:55
