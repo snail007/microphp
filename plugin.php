@@ -20,13 +20,13 @@
  *
  * An open source application development framework for PHP 5.2.0 or newer
  *
- * @package		MicroPHP
- * @author		狂奔的蜗牛
- * @email		672308444@163.com
- * @copyright           Copyright (c) 2013 - 2013, 狂奔的蜗牛, Inc.
- * @link		http://git.oschina.net/snail/microphp
- * @since		Version 2.2.13
- * @createdtime         2014-09-14 18:52:58
+ * @package       MicroPHP
+ * @author        狂奔的蜗牛
+ * @email         672308444@163.com
+ * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @link          http://git.oschina.net/snail/microphp
+ * @since         Version 2.2.13
+ * @createdtime   2014-09-15 20:53:08
  */
  
 

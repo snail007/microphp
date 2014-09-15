@@ -94,10 +94,6 @@ class CI_DB_driver {
     var $trans_strict = TRUE;
     var $_trans_depth = 0;
     var $_trans_status = TRUE; // Used with transactions to determine if a rollback should occur
-    var $cache_on = FALSE;
-    var $cachedir = '';
-    var $cache_autodel = FALSE;
-    var $CACHE; // The cache class object
 // Private variables
     var $_protect_identifiers = TRUE;
     var $_reserved_identifiers = array('*'); // Identifiers that should NOT be escaped
@@ -245,15 +241,6 @@ class CI_DB_driver {
         }
 // Is query caching enabled?  If the query is a "read type"
 // we will load the caching class and return the previously
-// cached query if it exists
-        if ($this->cache_on == TRUE AND stristr($sql, 'SELECT')) {
-            if ($this->_cache_init()) {
-                $this->load_rdriver();
-                if (FALSE !== ($cache = $this->CACHE->read($sql))) {
-                    return $cache;
-                }
-            }
-        }
 // Save the  query for debugging
         if ($this->save_queries == TRUE) {
             $this->queries[] = $sql;
@@ -302,9 +289,6 @@ class CI_DB_driver {
         if ($this->is_write_type($sql) === TRUE) {
 // If caching is enabled we'll auto-cleanup any
 // existing files related to this particular URI
-            if ($this->cache_on == TRUE AND $this->cache_autodel == TRUE AND $this->_cache_init()) {
-                $this->CACHE->delete();
-            }
             return TRUE;
         }
 // Return TRUE if we don't need to create a result object
@@ -328,22 +312,6 @@ class CI_DB_driver {
         $RES->num_rows = $RES->num_rows();
 // Is query caching enabled?  If so, we'll serialize the
 // result object and save it to a cache file.
-        if ($this->cache_on == TRUE AND $this->_cache_init()) {
-// We'll create a new instance of the result object
-// only without the platform specific driver since
-// we can't use it with cached data (the query result
-// resource ID won't be any good once we've cached the
-// result object, so we'll have to compile the data
-// and save it)
-            $CR = new CI_DB_result();
-            $CR->num_rows = $RES->num_rows();
-            $CR->result_object = $RES->result_object();
-            $CR->result_array = $RES->result_array();
-// Reset these since cached objects can not utilize resource IDs.
-            $CR->conn_id = NULL;
-            $CR->result_id = NULL;
-            $this->CACHE->write($sql, $CR);
-        }
         return $RES;
     }
     /**
@@ -773,78 +741,7 @@ class CI_DB_driver {
             }
         }
     }
-    /**
-     * Set Cache Directory Path
-     *
-     * @access        public
-     * @param        string        the path to the cache directory
-     * @return        void
-     */
-    function cache_set_path($path = '') {
-        $this->cachedir = $path;
-    }
-    /**
-     * Enable Query Caching
-     *
-     * @access        public
-     * @return        void
-     */
-    function cache_on() {
-        $this->cache_on = TRUE;
-        return TRUE;
-    }
-    /**
-     * Disable Query Caching
-     *
-     * @access        public
-     * @return        void
-     */
-    function cache_off() {
-        $this->cache_on = FALSE;
-        return FALSE;
-    }
-    /**
-     * Delete the cache files associated with a particular URI
-     *
-     * @access        public
-     * @return        void
-     */
-    function cache_delete($segment_one = '', $segment_two = '') {
-        if (!$this->_cache_init()) {
-            return FALSE;
-        }
-        return $this->CACHE->delete($segment_one, $segment_two);
-    }
-    /**
-     * Delete All cache files
-     *
-     * @access        public
-     * @return        void
-     */
-    function cache_delete_all() {
-        if (!$this->_cache_init()) {
-            return FALSE;
-        }
-        return $this->CACHE->delete_all();
-    }
-    /**
-     * Initialize the Cache Class
-     *
-     * @access        private
-     * @return        void
-     */
-    function _cache_init() {
-        if (is_object($this->CACHE) AND class_exists('CI_DB_Cache', FALSE)) {
-            return TRUE;
-        }
-        if (!class_exists('CI_DB_Cache', FALSE)) {
-            if (!@include(BASEPATH . 'database/DB_cache.php')) {
-                return $this->cache_off();
-            }
-        }
-        $this->CACHE = new CI_DB_Cache($this); // pass db object to support multiple db connections and returned db objects
-        return TRUE;
-    }
+    
     /**
      * Close DB Connection
      *
@@ -1349,20 +1246,7 @@ class CI_DB_active_record extends CI_DB_driver {
     var $ar_wherein = array();
     var $ar_aliased_tables = array();
     var $ar_store_array = array();
-// Active Record Caching variables
-    var $ar_caching = FALSE;
-    var $ar_cache_exists = array();
-    var $ar_cache_select = array();
-    var $ar_cache_from = array();
-    var $ar_cache_join = array();
-    var $ar_cache_where = array();
-    var $ar_cache_like = array();
-    var $ar_cache_groupby = array();
-    var $ar_cache_having = array();
-    var $ar_cache_orderby = array();
-    var $ar_cache_set = array();
     var $ar_no_escape = array();
-    var $ar_cache_no_escape = array();
     /**
      * Select
      *
@@ -1380,11 +1264,6 @@ class CI_DB_active_record extends CI_DB_driver {
             if ($val != '') {
                 $this->ar_select[] = $val;
                 $this->ar_no_escape[] = $escape;
-                if ($this->ar_caching === TRUE) {
-                    $this->ar_cache_select[] = $val;
-                    $this->ar_cache_exists[] = 'select';
-                    $this->ar_cache_no_escape[] = $escape;
-                }
             }
         }
         return $this;
@@ -1462,10 +1341,6 @@ class CI_DB_active_record extends CI_DB_driver {
         }
         $sql = $type . '(' . $this->_protect_identifiers(trim($select)) . ') AS ' . $alias;
         $this->ar_select[] = $sql;
-        if ($this->ar_caching === TRUE) {
-            $this->ar_cache_select[] = $sql;
-            $this->ar_cache_exists[] = 'select';
-        }
         return $this;
     }
     /**
@@ -1507,10 +1382,6 @@ class CI_DB_active_record extends CI_DB_driver {
                     $v = trim($v);
                     $this->_track_aliases($v);
                     $this->ar_from[] = $this->_protect_identifiers($v, TRUE, NULL, FALSE);
-                    if ($this->ar_caching === TRUE) {
-                        $this->ar_cache_from[] = $this->_protect_identifiers($v, TRUE, NULL, FALSE);
-                        $this->ar_cache_exists[] = 'from';
-                    }
                 }
             } else {
                 $val = trim($val);
@@ -1518,10 +1389,6 @@ class CI_DB_active_record extends CI_DB_driver {
 // in the _protect_identifiers to know whether to add a table prefix
                 $this->_track_aliases($val);
                 $this->ar_from[] = $this->_protect_identifiers($val, TRUE, NULL, FALSE);
-                if ($this->ar_caching === TRUE) {
-                    $this->ar_cache_from[] = $this->_protect_identifiers($val, TRUE, NULL, FALSE);
-                    $this->ar_cache_exists[] = 'from';
-                }
             }
         }
         return $this;
@@ -1557,10 +1424,6 @@ class CI_DB_active_record extends CI_DB_driver {
 // Assemble the JOIN statement
         $join = $type . 'JOIN ' . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . ' ON ' . $cond;
         $this->ar_join[] = $join;
-        if ($this->ar_caching === TRUE) {
-            $this->ar_cache_join[] = $join;
-            $this->ar_cache_exists[] = 'join';
-        }
         return $this;
     }
     /**
@@ -1608,7 +1471,7 @@ class CI_DB_active_record extends CI_DB_driver {
             $escape = $this->_protect_identifiers;
         }
         foreach ($key as $k => $v) {
-            $prefix = (count($this->ar_where) == 0 AND count($this->ar_cache_where) == 0) ? '' : $type;
+            $prefix = (count($this->ar_where) == 0) ? '' : $type;
             if (is_null($v) && !$this->_has_operator($k)) {
 // value appears not to have been set, assign the test to IS NULL
                 $k .= ' IS NULL';
@@ -1625,10 +1488,6 @@ class CI_DB_active_record extends CI_DB_driver {
                 $k = $this->_protect_identifiers($k, FALSE, $escape);
             }
             $this->ar_where[] = $prefix . $k . $v;
-            if ($this->ar_caching === TRUE) {
-                $this->ar_cache_where[] = $prefix . $k . $v;
-                $this->ar_cache_exists[] = 'where';
-            }
         }
         return $this;
     }
@@ -1711,10 +1570,6 @@ class CI_DB_active_record extends CI_DB_driver {
         $prefix = (count($this->ar_where) == 0) ? '' : $type;
         $where_in = $prefix . $this->_protect_identifiers($key) . $not . " IN (" . implode(", ", $this->ar_wherein) . ") ";
         $this->ar_where[] = $where_in;
-        if ($this->ar_caching === TRUE) {
-            $this->ar_cache_where[] = $where_in;
-            $this->ar_cache_exists[] = 'where';
-        }
 // reset the array for multiple calls
         $this->ar_wherein = array();
         return $this;
@@ -1803,10 +1658,6 @@ class CI_DB_active_record extends CI_DB_driver {
                 $like_statement = $like_statement . sprintf($this->_like_escape_str, $this->_like_escape_chr);
             }
             $this->ar_like[] = $like_statement;
-            if ($this->ar_caching === TRUE) {
-                $this->ar_cache_like[] = $like_statement;
-                $this->ar_cache_exists[] = 'like';
-            }
         }
         return $this;
     }
@@ -1824,10 +1675,6 @@ class CI_DB_active_record extends CI_DB_driver {
             $val = trim($val);
             if ($val != '') {
                 $this->ar_groupby[] = $this->_protect_identifiers($val);
-                if ($this->ar_caching === TRUE) {
-                    $this->ar_cache_groupby[] = $this->_protect_identifiers($val);
-                    $this->ar_cache_exists[] = 'groupby';
-                }
             }
         }
         return $this;
@@ -1881,10 +1728,6 @@ class CI_DB_active_record extends CI_DB_driver {
                 $v = ' ' . $this->escape($v);
             }
             $this->ar_having[] = $prefix . $k . $v;
-            if ($this->ar_caching === TRUE) {
-                $this->ar_cache_having[] = $prefix . $k . $v;
-                $this->ar_cache_exists[] = 'having';
-            }
         }
         return $this;
     }
@@ -1917,10 +1760,6 @@ class CI_DB_active_record extends CI_DB_driver {
         }
         $orderby_statement = $orderby . $direction;
         $this->ar_orderby[] = $orderby_statement;
-        if ($this->ar_caching === TRUE) {
-            $this->ar_cache_orderby[] = $orderby_statement;
-            $this->ar_cache_exists[] = 'orderby';
-        }
         return $this;
     }
     /**
@@ -2192,7 +2031,6 @@ class CI_DB_active_record extends CI_DB_driver {
      */
     public function update($table = '', $set = NULL, $where = NULL, $limit = NULL) {
 // Combine any cached components with the current statements
-        $this->_merge_cache();
         if (!is_null($set)) {
             $this->set($set);
         }
@@ -2232,8 +2070,6 @@ class CI_DB_active_record extends CI_DB_driver {
      * @return        object
      */
     public function update_batch($table = '', $set = NULL, $index = NULL) {
-// Combine any cached components with the current statements
-        $this->_merge_cache();
         if (is_null($index)) {
             if ($this->db_debug || WoniuLoader::$system['error_manage']) {
                 return $this->display_error('db_must_use_index');
@@ -2362,8 +2198,6 @@ class CI_DB_active_record extends CI_DB_driver {
      * @return        object
      */
     public function delete($table = '', $where = '', $limit = NULL, $reset_data = TRUE) {
-// Combine any cached components with the current statements
-        $this->_merge_cache();
         if ($table == '') {
             if (!isset($this->ar_from[0])) {
                 if ($this->db_debug || WoniuLoader::$system['error_manage']) {
@@ -2465,8 +2299,6 @@ class CI_DB_active_record extends CI_DB_driver {
      * @return        string
      */
     protected function _compile_select($select_override = FALSE) {
-// Combine any cached components with the current statements
-        $this->_merge_cache();
 // ----------------------------------------------------------------
 // Write the "select" portion of the query
         if ($select_override !== FALSE) {
@@ -2589,76 +2421,7 @@ class CI_DB_active_record extends CI_DB_driver {
         }
         return $array;
     }
-    /**
-     * Start Cache
-     *
-     * Starts AR caching
-     *
-     * @return        void
-     */
-    public function start_cache() {
-        $this->ar_caching = TRUE;
-    }
-    /**
-     * Stop Cache
-     *
-     * Stops AR caching
-     *
-     * @return        void
-     */
-    public function stop_cache() {
-        $this->ar_caching = FALSE;
-    }
-    /**
-     * Flush Cache
-     *
-     * Empties the AR cache
-     *
-     * @access        public
-     * @return        void
-     */
-    public function flush_cache() {
-        $this->_reset_run(array(
-            'ar_cache_select' => array(),
-            'ar_cache_from' => array(),
-            'ar_cache_join' => array(),
-            'ar_cache_where' => array(),
-            'ar_cache_like' => array(),
-            'ar_cache_groupby' => array(),
-            'ar_cache_having' => array(),
-            'ar_cache_orderby' => array(),
-            'ar_cache_set' => array(),
-            'ar_cache_exists' => array(),
-            'ar_cache_no_escape' => array()
-        ));
-    }
-    /**
-     * Merge Cache
-     *
-     * When called, this function merges any cached AR arrays with
-     * locally called ones.
-     *
-     * @return        void
-     */
-    protected function _merge_cache() {
-        if (count($this->ar_cache_exists) == 0) {
-            return;
-        }
-        foreach ($this->ar_cache_exists as $val) {
-            $ar_variable = 'ar_' . $val;
-            $ar_cache_var = 'ar_cache_' . $val;
-            if (count($this->$ar_cache_var) == 0) {
-                continue;
-            }
-            $this->$ar_variable = array_unique(array_merge($this->$ar_cache_var, $this->$ar_variable));
-        }
-// If we are "protecting identifiers" we need to examine the "from"
-// portion of the query to determine if there are any aliases
-        if ($this->_protect_identifiers === TRUE AND count($this->ar_cache_from) > 0) {
-            $this->_track_aliases($this->ar_from);
-        }
-        $this->ar_no_escape = $this->ar_cache_no_escape;
-    }
+
     /**
      * Resets the active record values.  Called by the get() function
      *
