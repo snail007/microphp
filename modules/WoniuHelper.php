@@ -41,6 +41,13 @@ foreach (array('server', 'session') as $func) {
          }');
     }
 }
+foreach (array('get_rule', 'post_rule', 'get_post_rule', 'post_get_rule') as $func) {
+    if (!function_exists($func)) {
+        eval('function ' . $func . '($rule, $key, $default = null) {
+                     return WoniuInput::' . $func . '($rule, $key, $default);
+         }');
+    }
+}
 foreach (array('get', 'post', 'cookie', 'cookie_raw', 'get_post', 'post_get') as $func) {
     if (!function_exists($func)) {
         if ($func == 'cookie_raw') {
