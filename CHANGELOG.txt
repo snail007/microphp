@@ -34,7 +34,6 @@
     post_rule()               对应：$this->input->post_rule()
     get_post_rule()           对应：$this->input->get_post_rule()
     post_get_rule()           对应：$this->input->post_get_rule()
-
 3.增加了下面快捷函数,参数一致，具体参数可以参考手册“输出”部分
     set_cookie()           对应：$this->input->setCookie()
     set_cookie_raw()       对应：$this->input->setCookieRaw()
