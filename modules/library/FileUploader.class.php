@@ -268,11 +268,9 @@ class FileUploader {
             $save_name = md5(sha1_file($_FILES[$this->file_formfield_name]['tmp_name'])) . '.' . $file_ext;
         }
         if (!empty($dir)) {
-            $path = rtrim($dir, "/\\") . '/' . ltrim($save_name, "/\\");
-            $dir = dirname($path);
-            $save_name = $path;
+            $dir = pathinfo(rtrim($dir, "/\\") . $save_name, PATHINFO_DIRNAME);
         } else {
-            $dir = dirname($save_name);
+            $dir = pathinfo($save_name, PATHINFO_DIRNAME);
         }
         if (!is_dir($dir)) {
             mkdir($dir, 0777, TRUE);
@@ -280,7 +278,7 @@ class FileUploader {
         move_uploaded_file($src_file, $save_name);
         if (file_exists($save_name)) {
             $filepath = realpath($save_name);
-            $this->resize_image($filepath, $filepath);
+            $this->zoomImage($filepath, $filepath);
             return $filepath;
         } else {
             $this->setError(501, '移动临时文件到目标文件失败,请检查目标目录是否有写权限.');
@@ -341,13 +339,13 @@ class FileUploader {
     }
 
     /*
-     * title ：resize_image 压缩图片
+     * title ：zoomImage  压缩图片
      * param ：$dst_image 压缩后的路径 绝对
      * param ：$src_image 压缩前的路径 绝对
-     * return：string 压缩后的路径
+     * return：string     压缩后的路径,失败是空
      */
 
-    private function resize_image($src_image, $dst_image) {
+    public function zoomImage($src_image, $dst_image) {
         if (!$this->is_compress && !$this->is_zoom) {
             return;
         }
