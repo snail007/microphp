@@ -1,5 +1,33 @@
 <?php
 
+/*
+ * Copyright 2014 pm.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * MicroPHP
+ * 
+ * An open source application development framework for PHP 5.2.26 or newer
+ *
+ * @package		MicroPHP
+ * @author		狂奔的蜗牛
+ * @email		672308444@163.com
+ * @copyright	        Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @link		http://git.oschina.net/snail/microphp
+ * @createdtime       2014-09-17 10:05:45
+ */
 /**
  * @version 1.0
  * @author   bolted snail
@@ -7,17 +35,17 @@
  * @email 672308444@163.com
  * @PHP验证码类
  * 使用方法：
- * $image=new Captcha();
+ * $image=new WoniuCaptcha();
  * $image->config('宽度','高度','字符个数','验证码session索引');
  * $code=$image->create();//这样就会向浏览器输出一张图片,并返回验证码图片上的内容
  * //所有参数都可以省略，
  * 默认是：宽80 高20 字符数4 验证码session索引captcha_code
  * 第四个参数即把验证码存到$_SESSION['captcha_code'],第四个参数如果为null，则不会在$_SESSION中设置验证码。
  * 最简单使用示例:
- * $image=new Captcha();
+ * $image=new WoniuCaptcha();
  * $image->create();//这样就会向浏览器输出一张图片
  */
-class Captcha {
+class WoniuCaptcha {
     private $width = 80, $height = 20, $codenum = 4;
     public $checkcode;     //产生的验证码
     private $checkimage;    //验证码图片 

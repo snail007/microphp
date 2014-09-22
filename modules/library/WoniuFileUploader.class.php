@@ -34,7 +34,7 @@
  *
  * @author pm
  */
-class FileUploader {
+class WoniuFileUploader {
 
     private $size, $ext, $file_formfield_name = 'file',
             $is_zoom = false, $zoom_percent = 1, $max_zoom_width = 0, $max_zoom_height = 0,
