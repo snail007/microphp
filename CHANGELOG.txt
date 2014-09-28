@@ -38,6 +38,9 @@
     set_cookie()           对应：$this->input->setCookie()
     set_cookie_raw()       对应：$this->input->setCookieRaw()
 
+修复了：
+1.$this->input->xxx()默认值有时不起作用的问题。
+
 #############################ver 2.2.12[2014-09-01]#############################
 增加了：
 1.$this->lib($file_name, $alias_name = null,$new=true),增加了第三个参数$new，默认true。
