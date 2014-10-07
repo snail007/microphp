@@ -334,8 +334,8 @@ $system['cache_config'] = array(
  * -----------------------SESSION管理配置---------------------------
  */
 $system['session_handle'] = array(
-    'handle' => '', //支持的管理类型：mongodb,mysql,memcache,redis。留空则不管理，使用默认
-    'common' => array(
+    'handle' => '', //支持的管理类型：mongodb,mysql,memcache,memcached,redis。留空则不管理，使用默认
+    'common' => array(//SESSION公共配置，无论是否使用handle托管session，common配置都会起作用。
         'autostart' => false, //是否自动session_start()
         'cookie_path' => '/',
         'cookie_domain' => empty($_SERVER['HTTP_HOST']) ? null : $_SERVER['HTTP_HOST'],
