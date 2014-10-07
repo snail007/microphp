@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.2.13
- * @createdtime   2014-09-15 20:53:08
+ * @createdtime   2014-10-07 22:14:44
  */
  
 
@@ -51,6 +51,13 @@ foreach (array('server', 'session') as $func) {
 	if (!function_exists($func)) {
 		eval('function ' . $func . '($key = null, $default = null) {
 					 return WoniuInput::' . $func . '($key, $default);
+		 }');
+	}
+}
+foreach (array('get_rule', 'post_rule', 'get_post_rule', 'post_get_rule') as $func) {
+	if (!function_exists($func)) {
+		eval('function ' . $func . '($rule, $key, $default = null) {
+					 return WoniuInput::' . $func . '($rule, $key, $default);
 		 }');
 	}
 }
