@@ -1,5 +1,47 @@
 
-#############################ver 2.2.12#############################
+#############################ver 2.2.13#############################
+优化了：
+1.精简了托管session的几个类
+2.优化了session管理机制，对于session通用配置$system['session_handle']['common']，无论系统是否托管session，都会起作用。
+3.精简了数据库驱动
+
+增加了：
+1.memcached存储session，对应的系统配置是$system['session_handle']['memcached']
+2.为$this->input->xxx增加了一批快捷xxx的函数,参数一致，具体参数可以参考手册“输入”部分，xxx具体如下：
+    args()                    对应：$this->input->parameters()
+    xss_clean()               对应：$this->input->xss_clean()
+    server()                  对应：$this->input->server()
+    session()                 对应：$this->input->session()
+    get()                     对应：$this->input->get()
+    post()                    对应：$this->input->post()
+    cookie()                  对应：$this->input->cookie()
+    cookie_raw()              对应：$this->input->cookieRaw()
+    get_post()                对应：$this->input->get_post()
+    post_get()                对应：$this->input->post_get()
+    get_int()                 对应：$this->input->get_int()
+    post_int()                对应：$this->input->post_int()
+    get_post_int()            对应：$this->input->get_post_int()
+    post_get_int()            对应：$this->input->post_get_int()
+    get_time()                对应：$this->input->get_time() 
+    post_time()               对应：$this->input->post_time() 
+    get_post_time()           对应：$this->input->get_post_time()
+    post_get_time()           对应：$this->input->post_get_time()
+    get_datetime()            对应：$this->input->get_datetime()
+    post_datetime()           对应：$this->input->post_datetime()
+    get_post_datetime()       对应：$this->input->get_post_datetime()
+    post_get_datetime()       对应：$this->input->post_get_datetime()
+    get_rule()                对应：$this->input->get_rule()
+    post_rule()               对应：$this->input->post_rule()
+    get_post_rule()           对应：$this->input->get_post_rule()
+    post_get_rule()           对应：$this->input->post_get_rule()
+3.增加了下面快捷函数,参数一致，具体参数可以参考手册“输出”部分
+    set_cookie()           对应：$this->input->setCookie()
+    set_cookie_raw()       对应：$this->input->setCookieRaw()
+
+修复了：
+1.$this->input->xxx()默认值有时不起作用的问题。
+
+#############################ver 2.2.12[2014-09-01]#############################
 增加了：
 1.$this->lib($file_name, $alias_name = null,$new=true),增加了第三个参数$new，默认true。
   默认情况下，$this->lib()加载类库的时候，会new一个类的对象。
