@@ -18,7 +18,6 @@ define('WDS', DIRECTORY_SEPARATOR);
 /**
  * --------------------系统配置-------------------------
  */
-
 /**
  * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
  * 该配置会影响url()函数生成的链接
@@ -65,17 +64,17 @@ $system['hmvc_modules'] = array('demo' => 'hmvc_demo');
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_404'] = 'application/error/error_404.php';
+$system['error_page_404'] = $system['application_folder'] . '/error/error_404.php';
 /**
  * 系统错误文件的路径,该文件会在发生Fatal错误和Exeption时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_50x'] = 'application/error/error_50x.php';
+$system['error_page_50x'] = $system['application_folder'] . '/error/error_50x.php';
 /**
  * 数据库错误文件的路径,该文件会在发生数据库错误时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_db'] = 'application/error/error_db.php';
+$system['error_page_db'] = $system['application_folder'] . '/error/error_db.php';
 /**
  * $this->message()方法默认使用的视图，该视图会在第4个参数为null时使用。
  * 视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
