@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.2.13
- * @createdtime   2014-10-07 22:14:44
+ * @createdtime   2014-10-09 16:56:00
  */
  
 
@@ -81,17 +81,17 @@ $system['hmvc_modules'] = array('demo' => 'hmvc_demo');
  * 404错误文件的路径,该文件会在系统找不到相关内容时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_404'] = 'application/error/error_404.php';
+$system['error_page_404'] = $system['application_folder'] . '/error/error_404.php';
 /**
  * 系统错误文件的路径,该文件会在发生Fatal错误和Exeption时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_50x'] = 'application/error/error_50x.php';
+$system['error_page_50x'] = $system['application_folder'] . '/error/error_50x.php';
 /**
  * 数据库错误文件的路径,该文件会在发生数据库错误时显示,
  * 文件里面可以使用$msg变量获取出错提示内容
  */
-$system['error_page_db'] = 'application/error/error_db.php';
+$system['error_page_db'] = $system['application_folder'] . '/error/error_db.php';
 /**
  * $this->message()方法默认使用的视图，该视图会在第4个参数为null时使用。
  * 视图里面可以使用的有三个变量：$msg提示内容，$url跳转的url，$time停留时间。
