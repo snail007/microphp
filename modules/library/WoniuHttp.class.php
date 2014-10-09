@@ -100,6 +100,7 @@ class WoniuHttp {
             curl_setopt($this->ch, CURLOPT_HTTPHEADER, $header);
         }
         if ($type == 'post') {
+            curl_setopt($this->ch, CURLOPT_HTTPHEADER, array('Expect:'));
             curl_setopt($this->ch, CURLOPT_POST, 1);
             if (!empty($data)) {
                 curl_setopt($this->ch, CURLOPT_POSTFIELDS, $data);
@@ -122,7 +123,6 @@ class WoniuHttp {
         }
         curl_setopt($this->ch, CURLOPT_HEADER, 1);
         curl_setopt($this->ch, CURLOPT_URL, $url);
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, array('Expect:'));
         $this->last_url = $url;
         $data = $this->curl_exec_follow($max_redirect);
         if (!$this->errorCode()) {
