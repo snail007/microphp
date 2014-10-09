@@ -26,7 +26,7 @@
  * @email		672308444@163.com
  * @copyright	        Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link		http://git.oschina.net/snail/microphp
- * @createdtime       2014-09-17 10:05:45
+ * @createdtime       2014-10-09 10:05:45
  */
 class WoniuHttp {
 
@@ -122,6 +122,7 @@ class WoniuHttp {
         }
         curl_setopt($this->ch, CURLOPT_HEADER, 1);
         curl_setopt($this->ch, CURLOPT_URL, $url);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, array('Expect:'));
         $this->last_url = $url;
         $data = $this->curl_exec_follow($max_redirect);
         if (!$this->errorCode()) {
