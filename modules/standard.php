@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * Copyright 2014 pm.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * Description of Http
- *
- * @author pm
+ * MicroPHP标准化适配文件，控制器类、模型、输入类、规则类使用标准名称<br/>
+ * MpController、MpModel、MpInput、MpRule
  */
-class Http extends MpController {
-    public function doSina(){
-        $http =new WoniuHttp();
-    }
-}
+class MpController extends WoniuController{}
+class MpModel extends WoniuModel{}
+class MpInput extends WoniuInput{}
+class MpRule extends WoniuRule{}
+

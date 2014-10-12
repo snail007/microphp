@@ -39,7 +39,7 @@ if (!function_exists('lcfirst')) {
  * @since                  Version 1.0
  * @createdtime            2013-12-6 19:43:33
  */
-class Woniu_debuger extends WoniuController {
+class Woniu_debuger extends MpController {
 
     private $view_path = 'woniu_debuger';
 

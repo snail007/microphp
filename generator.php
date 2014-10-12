@@ -68,6 +68,7 @@ $files = array(
     'modules/WoniuLoader.php',
     'modules/WoniuController.php',
     'modules/WoniuModel.php',
+    'modules/standard.php',
     //optional_core
     'rule' => 'modules/WoniuRule.class.php',
     //db

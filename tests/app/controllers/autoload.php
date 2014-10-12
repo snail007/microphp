@@ -34,7 +34,7 @@
  *
  * @author pm
  */
-class autoload extends WoniuController{
+class autoload extends MpController{
     public function doHelper(){
         echo $this->config('sub_helper');
     }

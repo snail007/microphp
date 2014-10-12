@@ -34,7 +34,7 @@
  *
  * @author pm
  */
-class Model extends WoniuController {
+class Model extends MpController {
     public function doMixLoader(){ 
         $this->model('test/SubUserModel','user');
         $this->model->user->test();

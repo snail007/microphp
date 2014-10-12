@@ -34,7 +34,7 @@
  *
  * @author pm
  */
-class table_model extends WoniuController {
+class table_model extends MpController {
 
     public function doTest() {
         $cfg = dbInfo();

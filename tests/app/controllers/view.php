@@ -34,7 +34,7 @@
  *
  * @author pm
  */
-class View extends WoniuController{
+class View extends MpController{
     public function doReturn(){
         $data['msg']='lude';
         echo 'test_'.$this->view('view',$data,TRUE);

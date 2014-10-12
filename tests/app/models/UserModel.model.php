@@ -10,7 +10,7 @@
  *
  * @author Administrator
  */
-class UserModel extends WoniuModel {
+class UserModel extends MpModel {
 
     public function test() {
         $this->model('UserModel');

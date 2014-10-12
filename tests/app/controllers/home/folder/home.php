@@ -5,7 +5,7 @@
  *
  * @author Administrator
  */
-class Home extends WoniuController {
+class Home extends MpController {
 
     public function __construct() {
         parent::__construct();

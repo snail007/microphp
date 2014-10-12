@@ -29,7 +29,7 @@
  * @since                  Version 1.0
  * @createdtime            2013-12-12 21:42:39
  */
-class Validator extends WoniuController {
+class Validator extends MpController {
 
     public function doIndex() {
         $rules = eval($this->input->post('rule'));

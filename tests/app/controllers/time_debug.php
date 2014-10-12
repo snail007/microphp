@@ -29,9 +29,10 @@
  * @since                  Version 1.0
  * @createdtime            2013-12-8 11:23:15
  */
-class Time_debug extends WoniuController {
-    public function doDebug($is_html=false){
-        $debug=new WoniuDebuger();
+class Time_debug extends MpController {
+
+    public function doDebug($is_html = false) {
+        $debug = new WoniuDebuger();
         $debug->mark('t1');
         sleep(1);
         $this->database();
@@ -39,4 +40,5 @@ class Time_debug extends WoniuController {
         $debug->show($is_html);
         $debug->showToFile($is_html);
     }
+
 }

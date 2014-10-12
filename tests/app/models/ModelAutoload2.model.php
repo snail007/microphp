@@ -10,7 +10,7 @@
  *
  * @author Administrator
  */
-class ModelAutoload2 extends WoniuModel {
+class ModelAutoload2 extends MpModel {
 
 
 }

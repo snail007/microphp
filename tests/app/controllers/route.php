@@ -29,7 +29,7 @@
  * @since                  Version 1.0
  * @createdtime            2013-11-18 20:54:07
  */
-class Route extends WoniuController{
+class Route extends MpController{
     //传参数测试
     public function doIndex($flag=null,$flag2=null){
         echo "hello:".$flag.$flag2.$this->input->get('flag','');
