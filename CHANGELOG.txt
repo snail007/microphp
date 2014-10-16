@@ -1,7 +1,7 @@
 
 #############################ver 2.2.14#############################
 优化了：
-1.控制器类、模型类、输入类、规则类使用标准名称:MpController、MpModel、MpLoader、MpInput、MpRule
+1.控制器类、模型类、Loader、输入类、规则类使用标准名称:MpController、MpModel、MpLoader、MpInput、MpRule
   以前的WoniuController、WoniuModel、WoniuInput、WoniuRule可以继续使用，兼容以前版本。
 
 升级提示：
