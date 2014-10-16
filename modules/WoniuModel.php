@@ -16,7 +16,7 @@
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
  */
-class WoniuModel extends WoniuLoaderPlus {
+class WoniuModel extends MpLoaderPlus {
 
     private static $instance;
 
@@ -34,10 +34,10 @@ class WoniuModel extends WoniuLoaderPlus {
         WoniuController::instance();
         if (empty($classname_path)) {
             $renew = is_bool($classname_path) && $classname_path === true;
-            WoniuLoader::classAutoloadRegister();
+            MpLoader::classAutoloadRegister();
             return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
         }
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
 
@@ -49,7 +49,7 @@ class WoniuModel extends WoniuLoaderPlus {
         $count = count($model_folders);
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
-        WoniuLoader::classAutoloadRegister();
+        MpLoader::classAutoloadRegister();
         foreach ($model_folders as $key => $model_folder) {
             $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
             $alias_name = $classname;
@@ -58,7 +58,7 @@ class WoniuModel extends WoniuLoaderPlus {
             }
             if (file_exists($filepath)) {
                 if (!class_exists($classname, FALSE)) {
-                    WoniuLoader::includeOnce($filepath);
+                    MpLoader::includeOnce($filepath);
                 }
                 if (class_exists($classname, FALSE)) {
                     return WoniuModelLoader::$model_files[$alias_name] = new $classname();

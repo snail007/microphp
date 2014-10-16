@@ -16,7 +16,7 @@
  * @property phpFastCache        $cache
  * @property WoniuInput          $input
  */
-class WoniuController extends WoniuLoaderPlus {
+class WoniuController extends MpLoaderPlus {
 
     private static $instance;
 
@@ -27,7 +27,7 @@ class WoniuController extends WoniuLoaderPlus {
     }
 
     private function autoload() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $autoload_helper = $system['helper_file_autoload'];
         $autoload_library = $system['library_file_autoload'];
         $autoload_models = $system['models_file_autoload'];
@@ -70,7 +70,7 @@ class WoniuController extends WoniuLoaderPlus {
             //只include选择的缓存驱动文件
             if ($namex == $system['cache_config']['storage']) {
                 if (!isset($included[truepath($filepath)])) {
-                    WoniuLoader::includeOnce($filepath);
+                    MpLoader::includeOnce($filepath);
                 } else {
                     $included[truepath($filepath)] = 1;
                 }
@@ -94,10 +94,10 @@ class WoniuController extends WoniuLoaderPlus {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);
         }
         if (empty($classname_path)) {
-            WoniuLoader::classAutoloadRegister();
+            MpLoader::classAutoloadRegister();
             return new self();
         }
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
         $classname = basename($classname_path);
         $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $classname_path . $system['controller_file_subfix'];
@@ -109,8 +109,8 @@ class WoniuController extends WoniuLoaderPlus {
         if (file_exists($filepath)) {
             //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
             //如此一来就能满足两种模式
-            WoniuLoader::classAutoloadRegister();
-            WoniuLoader::includeOnce($filepath);
+            MpLoader::classAutoloadRegister();
+            MpLoader::includeOnce($filepath);
             if (class_exists($classname, FALSE)) {
                 return $loadedClasses[$alias_name] = new $classname();
             } else {

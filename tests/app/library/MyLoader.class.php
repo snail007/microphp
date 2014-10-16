@@ -29,7 +29,7 @@
  * @since                  Version 1.0
  * @createdtime            2013-12-9 21:45:08
  */
-class MyLoader extends WoniuLoader {
+class MyLoader extends MpLoader {
     public function __construct() {
         parent::__construct();
     }

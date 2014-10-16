@@ -30,32 +30,32 @@ class Test_db extends UnitTestCase {
         $system['log_error'] = FALSE;
         $system['db_debug'] = FALSE;
         WoniuRouter::setConfig($system);
-         //重置WoniuLoader::instance()为初始状态
-        WoniuLoader::instance(true);
+         //重置MpLoader::instance()为初始状态
+        MpLoader::instance(true);
     }
 
     public function tearDown() {
         global $default;
         WoniuRouter::setConfig($default);
-         //重置WoniuLoader::instance()为初始状态
-        WoniuLoader::instance(true);
+         //重置MpLoader::instance()为初始状态
+        MpLoader::instance(true);
     }
 
     public function testDatabaseLoader() {
-        $this->assertTrue(is_object(WoniuLoader::instance()->database(null, TRUE)));
-        $this->assertSame(WoniuLoader::instance()->database(null, TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql'], TRUE));
-        $this->assertTrue(is_object(WoniuLoader::instance()->database(null, TRUE)));
-        $this->assertNotEqual(WoniuLoader::instance()->database(null, TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysqli'], TRUE));
-        $this->assertTrue(is_object(WoniuLoader::instance()->database(WoniuLoader::$system['db']['sqlite3'], TRUE)));
-        $this->assertNotEqual(WoniuLoader::instance()->database(WoniuLoader::$system['db']['sqlite3'], TRUE), WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql'], TRUE));
-        $db=WoniuLoader::instance()->database();
+        $this->assertTrue(is_object(MpLoader::instance()->database(null, TRUE)));
+        $this->assertSame(MpLoader::instance()->database(null, TRUE), MpLoader::instance()->database(MpLoader::$system['db']['mysql'], TRUE));
+        $this->assertTrue(is_object(MpLoader::instance()->database(null, TRUE)));
+        $this->assertNotEqual(MpLoader::instance()->database(null, TRUE), MpLoader::instance()->database(MpLoader::$system['db']['mysqli'], TRUE));
+        $this->assertTrue(is_object(MpLoader::instance()->database(MpLoader::$system['db']['sqlite3'], TRUE)));
+        $this->assertNotEqual(MpLoader::instance()->database(MpLoader::$system['db']['sqlite3'], TRUE), MpLoader::instance()->database(MpLoader::$system['db']['mysql'], TRUE));
+        $db=MpLoader::instance()->database();
         $this->assertIsA($db, 'CI_DB_mysql_driver');
-        $db1=WoniuLoader::instance()->database(NULL, TRUE);
-        $db2=WoniuLoader::instance()->database(NULL, TRUE,TRUE);
-        $this->assertClone(WoniuLoader::instance()->database(NULL, TRUE), $db1);
+        $db1=MpLoader::instance()->database(NULL, TRUE);
+        $db2=MpLoader::instance()->database(NULL, TRUE,TRUE);
+        $this->assertClone(MpLoader::instance()->database(NULL, TRUE), $db1);
         $this->assertClone($db2, $db1);
-        $this->assertReference(WoniuLoader::instance()->database(), $db);
-        $this->assertClone($db, WoniuLoader::instance()->database(WoniuLoader::$system['db']['mysql']));
+        $this->assertReference(MpLoader::instance()->database(), $db);
+        $this->assertClone($db, MpLoader::instance()->database(MpLoader::$system['db']['mysql']));
         
     }
 
@@ -93,8 +93,8 @@ class Test_db extends UnitTestCase {
     }
 
     public function createTable() {
-        $instance = WoniuLoader::instance();
-        $type = WoniuLoader::$system['db']['active_group'];
+        $instance = MpLoader::instance();
+        $type = MpLoader::$system['db']['active_group'];
         $instance->database(null, false, true);
         $this->db = $instance->db;
         if ($type == 'pdo_mysql') {

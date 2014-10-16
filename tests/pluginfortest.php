@@ -137,9 +137,9 @@ $system['helper_file_subfix'] = '.php';
  * 文件名称：类名.class.php
  * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
  * 注意：
- * 1.自定义Loader必须继承WoniuLoader。
+ * 1.自定义Loader必须继承MpLoader。
  * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
- * class MyLoader extends WoniuLoader {
+ * class MyLoader extends MpLoader {
  *      public function __construct() {
  *          parent::__construct();
  *      }

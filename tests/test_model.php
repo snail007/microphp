@@ -54,7 +54,7 @@ class Test_model extends UnitTestCase {
     }
 
     public function testModelLoader() {
-        $loader=  WoniuLoader::instance();
+        $loader=  MpLoader::instance();
         $this->assertIsA(WoniuModel::instance('UserModel'), 'UserModel');
         $this->assertIsA(WoniuModel::instance('UserModel'), 'UserModel');
         $this->assertIsA(WoniuModel::instance('UserModel')->test(), 'SubUserModel');
@@ -63,15 +63,15 @@ class Test_model extends UnitTestCase {
         $this->assertIsA(WoniuModel::instance('test/SubUserModel')->test(), 'UserModel');
         $this->assertIsA($loader->model->SubUserModel, 'SubUserModel');
         $this->assertIsA($loader->model->UserModel, 'UserModel');
-        WoniuLoader::instance()->model('UserModel', 'user');
-        $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->UserModel);
+        MpLoader::instance()->model('UserModel', 'user');
+        $this->assertReference(MpLoader::instance()->model->user, MpLoader::instance()->model->UserModel);
         $xx=WoniuModel::instance('UserModel');
-        $this->assertReference(WoniuLoader::instance()->model->user,$xx );
-        WoniuLoader::instance()->model('test/SubUserModel', 'subuser');
-        $this->assertReference(WoniuLoader::instance()->model->subuser, WoniuLoader::instance()->model->SubUserModel);
+        $this->assertReference(MpLoader::instance()->model->user,$xx );
+        MpLoader::instance()->model('test/SubUserModel', 'subuser');
+        $this->assertReference(MpLoader::instance()->model->subuser, MpLoader::instance()->model->SubUserModel);
         $xx=WoniuModel::instance('SubUserModel');
-        $this->assertReference(WoniuLoader::instance()->model->subuser, $xx);
-        $this->assertReference(WoniuLoader::instance()->model->user, WoniuLoader::instance()->model->user2);
+        $this->assertReference(MpLoader::instance()->model->subuser, $xx);
+        $this->assertReference(MpLoader::instance()->model->user, MpLoader::instance()->model->user2);
         $browser = new SimpleBrowser();
         $browser->get(getReqURL('?model.mixLoader'));
         $this->assertEqual($browser->getContent(), 'okay');

@@ -40,7 +40,7 @@ class Test_library extends UnitTestCase {
 
     public function testLibLoader() {
         $this->assertFalse(class_exists('TestLibrary', FALSE));
-        $woniu = WoniuLoader::instance();
+        $woniu = MpLoader::instance();
         $this->assertIsA(new TestLibrary(), 'TestLibrary');
         $this->assertIsA(new SubLib2(), 'SubLib2');
         $this->assertFalse(class_exists('SubLibNew', FALSE));

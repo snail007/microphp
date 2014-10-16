@@ -39,7 +39,7 @@ require_once('simpletest/autorun.php');
 class Test_instance extends UnitTestCase {
 
     public function testInstance() {
-        $this->assertEqual(WoniuLoader::instance(), WoniuLoader::instance());
+        $this->assertEqual(MpLoader::instance(), MpLoader::instance());
         $this->assertEqual(WoniuController::instance(), WoniuController::instance());
         $this->assertEqual(WoniuModel::instance(), WoniuModel::instance());
         $x1 = WoniuController::instance('route');

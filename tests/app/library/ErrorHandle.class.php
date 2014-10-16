@@ -26,7 +26,7 @@ class ErrorHandle {
     }
 
     public static function getPath() {
-        return WoniuLoader::$system['application_folder'] . '/cache/error.log';
+        return MpLoader::$system['application_folder'] . '/cache/error.log';
     }
 
     public static function getUrl() {

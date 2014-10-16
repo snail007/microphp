@@ -38,7 +38,7 @@ require_once('simpletest/web_tester.php');
  */
 class Test_view extends WebTestCase{
     public function testView(){
-        $loader=WoniuLoader::instance();
+        $loader=MpLoader::instance();
         echo $loader->page(100,$loader->input->get('p',1),5,'?p={page}',null,10);
         $this->get(getReqURL('view.view'));
         $this->assertEqual($this->getBrowser()->getContent(), 'inc');

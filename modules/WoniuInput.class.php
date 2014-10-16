@@ -153,7 +153,7 @@ class WoniuInput {
                 $val = self::post_get($key);
                 break;
         }
-        if (is_null(WoniuLoader::checkData($rule, array('check' => $val)))) {
+        if (is_null(MpLoader::checkData($rule, array('check' => $val)))) {
             return $val;
         } else {
             return null;

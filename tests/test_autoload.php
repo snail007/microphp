@@ -53,7 +53,7 @@ class Test_autoload extends UnitTestCase {
         $this->assertFalse(class_exists('SubLibAutoNew', FALSE));
         $this->assertFalse(class_exists('ModelAutoload', FALSE));
 
-        $woniu = WoniuLoader::instance();
+        $woniu = MpLoader::instance();
 
         $this->assertTrue(function_exists('test_auto_config'));
         $this->assertFalse($woniu->config('test_auto_config'));
@@ -77,7 +77,7 @@ class Test_autoload extends UnitTestCase {
 
         $this->assertFalse(function_exists('test_auto_config2'));
 
-        $woniu = WoniuLoader::instance();
+        $woniu = MpLoader::instance();
 
         $this->assertTrue(function_exists('test_auto_config2'));
         $this->assertEqual($woniu->config('test_auto_config2'), 'okay');

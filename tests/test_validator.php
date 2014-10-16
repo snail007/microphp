@@ -65,9 +65,9 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
     public function tearDown() {
         global $default;
         WoniuRouter::setConfig($default);
-        WoniuLoader::instance()->db->simple_query('DROP TABLE IF EXISTS for_validate_users');
-        //重置WoniuLoader::instance()为初始状态
-        WoniuLoader::instance(true);
+        MpLoader::instance()->db->simple_query('DROP TABLE IF EXISTS for_validate_users');
+        //重置MpLoader::instance()为初始状态
+        MpLoader::instance(true);
     }
 
     public function setUp() {
@@ -75,8 +75,8 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
         $system = $default;
         $system['db']['mysql']['dbprefix'] = 'for_validate_';
         WoniuRouter::setConfig($system);
-        $w = WoniuLoader::instance();
-        //这里会污染WoniuLoader::instance()对象的db属性
+        $w = MpLoader::instance();
+        //这里会污染MpLoader::instance()对象的db属性
         $w->database($system['db']['mysql'], FALSE, true);
         foreach (explode(";\n", $this->sql) as $sql) {
             $w->db->simple_query($sql);
@@ -84,7 +84,7 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
     }
 
     public function testForm() {
-        $WN = WoniuLoader::instance();
+        $WN = MpLoader::instance();
         /**
          * set_post用于设置在验证数据后对数据进行处理的函数或者方法
          * 如果设置了set_post，可以通过第三个参数$data接收数据：$WN->checkData($rule, $_POST, $data)
@@ -238,7 +238,7 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
     }
 
     public function testValidator() {
-        $WN = WoniuLoader::instance();
+        $WN = MpLoader::instance();
         $WN->database();
         $this->assertNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => 'x')));
         $this->assertNotNull($WN->checkData(array('check' => array('required' => 'check不能为空')), array('check' => '')));

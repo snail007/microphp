@@ -169,9 +169,9 @@ class Woniu_debuger extends MpController {
 
     public function getControllerMethods($clazz) {
         if (!class_exists(basename($clazz))) {
-            $system = WoniuLoader::$system;
+            $system = MpLoader::$system;
             $filepath = $system['controller_folder'] . DIRECTORY_SEPARATOR . $clazz . $system['controller_file_subfix'];
-            WoniuLoader::includeOnce($filepath);
+            MpLoader::includeOnce($filepath);
         }
         $clazz = basename($clazz);
         $class = new ReflectionClass($clazz);
@@ -197,9 +197,9 @@ class Woniu_debuger extends MpController {
 
     public function getModelMethods($clazz) {
         if (!class_exists(basename($clazz))) {
-            $system = WoniuLoader::$system;
+            $system = MpLoader::$system;
             $filepath = $system['model_folder'] . DIRECTORY_SEPARATOR . $clazz . $system['model_file_subfix'];
-            WoniuLoader::includeOnce($filepath);
+            MpLoader::includeOnce($filepath);
         }
         $clazz = basename($clazz);
         $class = new ReflectionClass($clazz);

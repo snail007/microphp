@@ -25,7 +25,7 @@ class WoniuLoader {
     public static $system;
 
     public function __construct() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
         $this->router = WoniuInput::$router;
@@ -45,7 +45,7 @@ class WoniuLoader {
     }
 
     public function registerErrorHandle() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         /**
          * 提醒：
          * error_reporting   控制报告错误类型
@@ -108,7 +108,7 @@ class WoniuLoader {
     }
 
     public static function helper($file_name, $is_config = true) {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $helper_folders = $system['helper_folder'];
         if (!is_array($helper_folders)) {
             $helper_folders = array($helper_folders);
@@ -147,7 +147,7 @@ class WoniuLoader {
     }
 
     public static function lib($file_name, $alias_name = null, $new = true) {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -193,7 +193,7 @@ class WoniuLoader {
     }
 
     public static function model($file_name, $alias_name = null) {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $classname = $file_name;
         if (strstr($file_name, '/') !== false || strstr($file_name, "\\") !== false) {
             $classname = basename($file_name);
@@ -242,7 +242,7 @@ class WoniuLoader {
         } elseif (is_array($this->view_vars) && !empty($this->view_vars)) {
             extract($this->view_vars);
         }
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $view_folders = $system['view_folder'];
         if (!is_array($view_folders)) {
             $view_folders = array($view_folders);
@@ -303,7 +303,7 @@ class WoniuLoader {
         $auto_functions = spl_autoload_functions();
         if (is_array($auto_functions)) {
             foreach ($auto_functions as $func) {
-                if (is_array($func) && $func[0] == 'WoniuLoader' && $func[1] == 'classAutoloader') {
+                if (is_array($func) && $func[0] == 'MpLoader' && $func[1] == 'classAutoloader') {
                     $found = TRUE;
                     break;
                 }
@@ -321,12 +321,12 @@ class WoniuLoader {
         }
         if (!$found) {
             //最后注册我们的自动加载器
-            spl_autoload_register(array('WoniuLoader', 'classAutoloader'));
+            spl_autoload_register(array('MpLoader', 'classAutoloader'));
         }
     }
 
     public static function classAutoloader($clazzName) {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $library_folders = $system['library_folder'];
         if (!is_array($library_folders)) {
             $library_folders = array($library_folders);
@@ -366,9 +366,9 @@ class WoniuLoader {
      * 文件名称：类名.class.php
      * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
      * 注意：
-     * 1.自定义Loader必须继承WoniuLoader。
+     * 1.自定义Loader必须继承MpLoader。
      * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
-     * class MyLoader extends WoniuLoader {
+     * class MyLoader extends MpLoader {
      *      public function __construct() {
      *          parent::__construct();
      *      }
@@ -377,17 +377,17 @@ class WoniuLoader {
      */
     public static function checkUserLoader() {
         global $system;
-        if (!class_exists('WoniuLoaderPlus', FALSE)) {
+        if (!class_exists('MpLoaderPlus', FALSE)) {
             if (!empty($system['my_loader'])) {
                 self::includeOnce($system['my_loader']);
                 $clazz = basename($system['my_loader'], '.class.php');
                 if (class_exists($clazz, FALSE)) {
-                    eval('class WoniuLoaderPlus extends ' . $clazz . '{}');
+                    eval('class MpLoaderPlus extends ' . $clazz . '{}');
                 } else {
-                    eval('class WoniuLoaderPlus extends WoniuLoader{}');
+                    eval('class MpLoaderPlus extends MpLoader{}');
                 }
             } else {
-                eval('class WoniuLoaderPlus extends WoniuLoader{}');
+                eval('class MpLoaderPlus extends MpLoader{}');
             }
         }
     }
@@ -396,10 +396,10 @@ class WoniuLoader {
      * 实例化一个loader
      * @param type $renew               是否强制重新new一个loader，默认只会new一次
      * @param type $hmvc_module_floder  hmvc模块文件夹名称
-     * @return type WoniuLoader
+     * @return type MpLoader
      */
     public static function instance($renew = null, $hmvc_module_floder = null) {
-        $default = WoniuLoader::$system;
+        $default = systemInfo();
         if (!empty($hmvc_module_floder)) {
             WoniuRouter::switchHmvcConfig($hmvc_module_floder);
         }
@@ -410,7 +410,7 @@ class WoniuLoader {
         WoniuController::instance();
         $renew = is_bool($renew) && $renew === true;
         $ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        WoniuLoader::$system = $default;
+        WoniuRouter::setConfig($default);
         return $ret;
     }
 
@@ -429,7 +429,7 @@ class WoniuLoader {
             $path_key = current($info);
             $view_name = next($info);
         }
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         if (!is_array($system['view_folder'])) {
             $system['view_folder'] = array($system['view_folder']);
         }
@@ -531,7 +531,7 @@ class WoniuLoader {
      * @param array $order 分页条的组成，是一个数组，可以按着1-6的序号，选择分页条组成部分和每个部分的顺序
      * @param int $a_count   分页条中a页码链接的总数量,不包含当前页的a标签，默认10个。
      * @return type  String
-     * echo WoniuLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
+     * echo MpLoader::instance()->page(100,3,10,'?article/list/{page}',array(3,4,5,1,2,6));
      */
     public static function page($total, $page, $pagesize, $url, $order = array(1, 2, 3, 4, 5, 6), $a_count = 10) {
         $a_num = $a_count;
@@ -782,7 +782,7 @@ class WoniuLoader {
 
     private static function checkRule($_rule, $val, $data, $db = null) {
         if (!$db) {
-            $db = WoniuLoader::instance()->database();
+            $db = MpLoader::instance()->database();
         }
         $matches = self::getCheckRuleInfo($_rule);
         $_rule = $matches[1];
@@ -975,7 +975,8 @@ class WoniuLoader {
 
 }
 
-WoniuLoader::checkUserLoader();
+class MpLoader extends WoniuLoader{} 
+MpLoader::checkUserLoader();
 
 class WoniuModelLoader {
 
@@ -985,7 +986,7 @@ class WoniuModelLoader {
         if (isset(self::$model_files[$classname])) {
             return self::$model_files[$classname];
         } else {
-            return WoniuLoader::model($classname);
+            return MpLoader::model($classname);
         }
     }
 
@@ -999,7 +1000,7 @@ class WoniuLibLoader {
         if (isset(self::$lib_files[$classname])) {
             return self::$lib_files[$classname];
         } else {
-            return WoniuLoader::lib($classname);
+            return MpLoader::lib($classname);
         }
     }
 

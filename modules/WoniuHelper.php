@@ -30,7 +30,7 @@ if (!function_exists('xss_clean')) {
 foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) {
     if (!function_exists($func)) {
         eval('function ' . $func . '($key, $value, $life = null, $path = "/", $domian = null, $http_only = false) {
-                     return WoniuLoader::' . $true . '($key, $value, $life, $path, $domian, $http_only);
+                     return MpLoader::' . $true . '($key, $value, $life, $path, $domian, $http_only);
          }');
     }
 }
@@ -144,7 +144,7 @@ if (!function_exists('url')) {
             }
         }
 
-        if (empty(WoniuLoader::$system['url_rewrite'])) {
+        if (!systemInfo('url_rewrite')) {
             //url是否包含入口文件名称检查
             $self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(WoniuInput::server('php_self'), PATHINFO_BASENAME) : '';
             $app_start = '?';
@@ -207,17 +207,17 @@ if (!function_exists('path')) {
 
 }
 /**
- * 获取系统配置信息,也就是WoniuLoader::$system里面的信息
- * @param type $key  WoniuLoader::$system的键
+ * 获取系统配置信息,也就是MpLoader::$system里面的信息
+ * @param type $key  MpLoader::$system的键
  * @return null
  */
 if (!function_exists('systemInfo')) {
 
     function systemInfo($key = NULL) {
         if (is_null($key)) {
-            return WoniuLoader::$system;
-        } elseif (isset(WoniuLoader::$system[$key])) {
-            return WoniuLoader::$system[$key];
+            return MpLoader::$system;
+        } elseif (isset(MpLoader::$system[$key])) {
+            return MpLoader::$system[$key];
         } else {
             return null;
         }
@@ -226,8 +226,8 @@ if (!function_exists('systemInfo')) {
 }
 /**
  * 获取系统数据库配置信息
- * @param type $group  数据库组名称，即WoniuLoader::$system['db']的键.
- *                     为null时返回默认的配置组,即WoniuLoader::$system['db']['active_group']指定的组。
+ * @param type $group  数据库组名称，即MpLoader::$system['db']的键.
+ *                     为null时返回默认的配置组,即MpLoader::$system['db']['active_group']指定的组。
  * @param type $key    配置组的键,指定了key可以获取指定组的键对应的值
  * @return null
  */
@@ -235,14 +235,15 @@ if (!function_exists('dbInfo')) {
 
     function dbInfo($group = NULL, $key = NULL) {
         if (is_null($group)) {
-            $cfg = WoniuLoader::$system['db'][WoniuLoader::$system['db']['active_group']];
+            $system=  systemInfo();
+            $cfg = $system['db'][$system['db']['active_group']];
             if (is_null($key)) {
                 return $cfg;
             } else {
                 return isset($cfg[$key]) ? $cfg[$key] : null;
             }
-        } elseif (isset(WoniuLoader::$system['db'][$group])) {
-            $cfg = WoniuLoader::$system['db'][$group];
+        } elseif (isset($system['db'][$group])) {
+            $cfg = $system['db'][$group];
             if (is_null($key)) {
                 return $cfg;
             } else {
@@ -276,7 +277,7 @@ if (!function_exists('getInstance')) {
 if (!function_exists('trigger404')) {
 
     function trigger404($msg = '<h1>Not Found</h1>') {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         if (!headers_sent()) {
             header('HTTP/1.1 404 NotFound');
         }
@@ -338,7 +339,7 @@ if (!function_exists('convertPath')) {
 if (!function_exists('trigger500')) {
 
     function trigger500($msg = '<h1>Server Error</h1>') {
-        $system = WoniuLoader::$system;
+        $system =  systemInfo();
         if (!headers_sent()) {
             header('HTTP/1.1 500 Server Error');
         }
@@ -358,7 +359,7 @@ if (!function_exists('woniu_exception_handler')) {
         $errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
         $errline = $exception->getLine();
         $errstr = $exception->getMessage();
-        $system = WoniuLoader::$system;
+        $system =systemInfo();
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['exception'];
             if (!empty($handle)) {
@@ -404,7 +405,7 @@ if (!function_exists('woniu_error_handler')) {
         if (in_array($errno, $fatal_err)) {
             return true;
         }
-        $system = WoniuLoader::$system;
+        $system =systemInfo();
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['error'];
             if (!empty($handle)) {
@@ -442,7 +443,7 @@ if (!function_exists('woniu_fatal_handler')) {
      * @return type
      */
     function woniu_fatal_handler() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $errfile = "unknown file";
         $errstr = "shutdown";
         $errno = E_CORE_ERROR;
@@ -494,8 +495,8 @@ if (!function_exists('woniu_db_error_handler')) {
         } else {
             $msg = $error;
         }
-        $system = WoniuLoader::$system;
-        $woniu_db = WoniuLoader::$system['db'];
+        $system = systemInfo();
+        $woniu_db = systemInfo('db');
         if ($system['log_error']) {
             $handle = $system['log_error_handle']['db_error'];
             if (!empty($handle)) {
@@ -529,7 +530,7 @@ if (!function_exists('woniu_db_error_handler')) {
 if (!function_exists('format_error')) {
 
     function format_error($errno, $errstr, $errfile, $errline) {
-        $path = truepath(WoniuLoader::$system['application_folder']);
+        $path = truepath(systemInfo('application_folder'));
         $path.=empty($path) ? '' : '/';
         $array_map = array('0' => 'EXCEPTION', '1' => 'ERROR', '2' => 'WARNING', '4' => 'PARSE', '8' => 'NOTICE', '16' => 'CORE_ERROR', '32' => 'CORE_WARNING', '64' => 'COMPILE_ERROR', '128' => 'COMPILE_WARNING', '256' => 'USER_ERROR', '512' => 'USER_WARNING', '1024' => 'USER_NOTICE', '2048' => 'STRICT', '4096' => 'RECOVERABLE_ERROR', '8192' => 'DEPRECATED', '16384' => 'USER_DEPRECATED');
         $trace = get_strace();
@@ -565,7 +566,7 @@ if (!function_exists('get_strace')) {
         array_pop($trace);
         array_pop($trace);
         $str = '';
-        $path = truepath(WoniuLoader::$system['application_folder']);
+        $path = truepath(systemInfo('application_folder'));
         $path.=empty($path) ? '' : '/';
         foreach ($trace as $k => $e) {
             $file = !empty($e['file']) ? "File:" . str_replace($path, '', $e['file']) . "\n" : '';

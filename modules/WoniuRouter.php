@@ -16,12 +16,12 @@
 class WoniuRouter {
 
     public static function loadClass() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $methodInfo = self::parseURI();
         //在解析路由之后，就注册自动加载，这样控制器可以继承类库文件夹里面的自定义父控制器,实现hook功能，达到拓展控制器的功能
         //但是plugin模式下，路由器不再使用，那么这里就不会被执行，自动加载功能会失效，所以在每个instance方法里面再尝试加载一次即可，
         //如此一来就能满足两种模式
-        WoniuLoader::classAutoloadRegister();
+        MpLoader::classAutoloadRegister();
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
@@ -67,7 +67,7 @@ class WoniuRouter {
         //标记系统最终使用的路由字符串
         $router['query'] = $pathinfo_query;
 
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
         //看看是否要处理查询字符串
         if (!empty($pathinfo_query)) {
@@ -131,7 +131,7 @@ class WoniuRouter {
     }
 
     private static function getQueryStr() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         //命令行运行检查
         if (WoniuInput::isCli()) {
             global $argv;
@@ -167,7 +167,7 @@ class WoniuRouter {
     }
 
     private static function checkSession() {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         $common_config = $system['session_handle']['common'];
         // set some important session vars
         ini_set('session.auto_start', 0);
@@ -209,7 +209,7 @@ class WoniuRouter {
     }
 
     private static function checkRouter($pathinfo_query) {
-        $system = WoniuLoader::$system;
+        $system = systemInfo();
         if (is_array($system['route'])) {
             foreach ($system['route'] as $reg => $replace) {
                 if (preg_match($reg, $pathinfo_query)) {
@@ -223,7 +223,7 @@ class WoniuRouter {
 
     private static function checkHmvc($pathinfo_query) {
         if ($_module = self::getHmvcModuleName($pathinfo_query)) {
-            $_system = WoniuLoader::$system;
+            $_system = systemInfo();
             self::switchHmvcConfig($_system['hmvc_modules'][$_module]);
             return preg_replace('|^' . $_module . '[\./&]?|', '', $pathinfo_query);
         }
@@ -233,7 +233,7 @@ class WoniuRouter {
     private static function getHmvcModuleName($pathinfo_query) {
         $_module = current(explode('&', $pathinfo_query));
         $_module = current(explode('/', $_module));
-        $_system = WoniuLoader::$system;
+        $_system = systemInfo();
         if (isset($_system['hmvc_modules'][$_module])) {
             return $_module;
         } else {
@@ -242,7 +242,7 @@ class WoniuRouter {
     }
 
     public static function switchHmvcConfig($hmvc_folder) {
-        $_system = $system = WoniuLoader::$system;
+        $_system = $system = systemInfo();
         $module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
         //$system被hmvc模块配置重写
         include($module);
@@ -257,11 +257,11 @@ class WoniuRouter {
             $system[$folder] = array_merge($system[$folder], $_system[$folder]);
         }
         //切换核心配置
-        WoniuLoader::$system = $system;
+        self::setConfig($system);
     }
 
     public static function setConfig($system) {
-        WoniuLoader::$system = $system;
+        MpLoader::$system = $system;
     }
 
 }

@@ -37,7 +37,7 @@ require_once('simpletest/autorun.php');
  */
 class Test_helper extends UnitTestCase {
     public function testHelper(){
-        $woniu=  WoniuLoader::instance();
+        $woniu=  MpLoader::instance();
        
         //$woniu->helper('configxxx');
         $woniu->helper('config');
