@@ -401,7 +401,7 @@ class WoniuLoader {
     public static function instance($renew = null, $hmvc_module_floder = null) {
         $default = systemInfo();
         if (!empty($hmvc_module_floder)) {
-            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+            MpRouter::switchHmvcConfig($hmvc_module_floder);
         }
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
@@ -410,7 +410,7 @@ class WoniuLoader {
         WoniuController::instance();
         $renew = is_bool($renew) && $renew === true;
         $ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
         return $ret;
     }
 

@@ -264,5 +264,5 @@ class WoniuRouter {
     }
 
 }
-
+class MpRouter extends WoniuRouter{}
 /* End of file Router.php */

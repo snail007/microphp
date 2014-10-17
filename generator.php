@@ -172,16 +172,16 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
         $index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
     }
     $index = str_replace("../application", 'application', $index);
-    $index = str_replace(array("WoniuRouter::setConfig(\$system);", "WoniuRouter::loadClass();"), '', $index);
+    $index = str_replace(array("MpRouter::setConfig(\$system);", "MpRouter::loadClass();"), '', $index);
     common_replace($index);
     $index=$header.$index;
-    file_put_contents('index.php', $index . "\ninclude('MicroPHP.min.php');\nWoniuRouter::setConfig(\$system);\nWoniuRouter::loadClass();");
+    file_put_contents('index.php', $index . "\ninclude('MicroPHP.min.php');\nMpRouter::setConfig(\$system);\nMpRouter::loadClass();");
 
 #ver modify
     file_put_contents('application/helper/config.php', "<?php\n\$myconfig['app']='" . $ver . "';");
 
 
-    $content = $index . "\ninclude('MicroPHP.min.php');\nWoniuRouter::setConfig(\$system);";
+    $content = $index . "\ninclude('MicroPHP.min.php');\nMpRouter::setConfig(\$system);";
     file_put_contents('plugin.php', $content);
 }
 

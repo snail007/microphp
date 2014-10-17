@@ -6,7 +6,15 @@
 
 升级提示：
 1.如果自定义了loader，ver2.2.14以前是自定义了loader必须继承WoniuLoader,现在修改为继承MpLoader即可。
-
+2.修改入口文件里面最后两行
+  WoniuRouter::setConfig($system);
+  WoniuRouter::loadClass();
+  修改为：
+  MpRouter::setConfig($system);
+  MpRouter::loadClass();
+  即可。
+3.如果自己使用了WoniuRouter::setConfig($system);WoniuRouter::loadClass();
+  修改为MpRouter::setConfig($system);MpRouter::loadClass();即可
 
 #############################ver 2.2.13[2014-10-07]#############################
 优化了：

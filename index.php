@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.2.13
- * @createdtime   2014-10-17 10:17:04
+ * @createdtime   2014-10-17 16:22:40
  */
  
 
@@ -462,5 +462,5 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  */
 /* End of file index.php */
 include('MicroPHP.min.php');
-WoniuRouter::setConfig($system);
-WoniuRouter::loadClass();
+MpRouter::setConfig($system);
+MpRouter::loadClass();

@@ -64,7 +64,7 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
 
     public function tearDown() {
         global $default;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
         MpLoader::instance()->db->simple_query('DROP TABLE IF EXISTS for_validate_users');
         //重置MpLoader::instance()为初始状态
         MpLoader::instance(true);
@@ -74,7 +74,7 @@ INSERT INTO `for_validate_users` (`user_id`, `uname`, `upass`) VALUES
         global $default;
         $system = $default;
         $system['db']['mysql']['dbprefix'] = 'for_validate_';
-        WoniuRouter::setConfig($system);
+        MpRouter::setConfig($system);
         $w = MpLoader::instance();
         //这里会污染MpLoader::instance()对象的db属性
         $w->database($system['db']['mysql'], FALSE, true);

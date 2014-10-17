@@ -28,7 +28,7 @@ class WoniuModel extends MpLoaderPlus {
      */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
         if (!empty($hmvc_module_floder)) {
-            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+            MpRouter::switchHmvcConfig($hmvc_module_floder);
         }
         //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
         WoniuController::instance();

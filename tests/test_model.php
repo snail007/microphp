@@ -45,12 +45,12 @@ class Test_model extends UnitTestCase {
     public function setUp() {
         global $system;
         $system['models_file_autoload'] = array('test/SubUserModel', 'UserModel', array('UserModel' => 'user2'));
-        WoniuRouter::setConfig($system);
+        MpRouter::setConfig($system);
     }
 
     public function tearDown() {
         global $default;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
     }
 
     public function testModelLoader() {

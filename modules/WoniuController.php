@@ -91,7 +91,7 @@ class WoniuController extends MpLoaderPlus {
      */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
         if (!empty($hmvc_module_floder)) {
-            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+            MpRouter::switchHmvcConfig($hmvc_module_floder);
         }
         if (empty($classname_path)) {
             MpLoader::classAutoloadRegister();

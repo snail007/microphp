@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.2.13
- * @createdtime   2014-10-17 10:17:04
+ * @createdtime   2014-10-17 16:22:40
  */
  
 
@@ -1449,6 +1449,7 @@ class WoniuRouter {
 		MpLoader::$system = $system;
 	}
 }
+class MpRouter extends WoniuRouter{}
 /* End of file Router.php */
 
 class WoniuLoader {
@@ -1821,7 +1822,7 @@ class WoniuLoader {
 	public static function instance($renew = null, $hmvc_module_floder = null) {
 		$default = systemInfo();
 		if (!empty($hmvc_module_floder)) {
-			WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+			MpRouter::switchHmvcConfig($hmvc_module_floder);
 		}
 		//在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
 		//如此一来就能满足两种模式
@@ -1830,7 +1831,7 @@ class WoniuLoader {
 		WoniuController::instance();
 		$renew = is_bool($renew) && $renew === true;
 		$ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-		WoniuRouter::setConfig($default);
+		MpRouter::setConfig($default);
 		return $ret;
 	}
 	/**
@@ -2468,7 +2469,7 @@ class WoniuController extends MpLoaderPlus {
 	 */
 	public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
 		if (!empty($hmvc_module_floder)) {
-			WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+			MpRouter::switchHmvcConfig($hmvc_module_floder);
 		}
 		if (empty($classname_path)) {
 			MpLoader::classAutoloadRegister();
@@ -2511,7 +2512,7 @@ class WoniuModel extends MpLoaderPlus {
 	 */
 	public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
 		if (!empty($hmvc_module_floder)) {
-			WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+			MpRouter::switchHmvcConfig($hmvc_module_floder);
 		}
 		//这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
 		WoniuController::instance();

@@ -483,6 +483,6 @@ include('WoniuRouter.php');
 include('WoniuLoader.php');
 include('WoniuController.php');
 include('WoniuModel.php');
-WoniuRouter::setConfig($system);
+MpRouter::setConfig($system);
 
 /* End of file index.php */

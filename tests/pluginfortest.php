@@ -480,7 +480,7 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  */
 $default = $system;
 
-WoniuRouter::setConfig($system);
+MpRouter::setConfig($system);
 
 function getReqURL($route, $index = 'indexfortest.php?') {
     return 'http://' . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['REQUEST_URI'])) . '/tests/' . $index . $route;
