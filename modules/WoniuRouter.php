@@ -101,8 +101,7 @@ class WoniuRouter {
         $file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
         $class = $class_method[count($class_method) - 1];
         $parameters = explode("/", $pathinfo_query_parameters_str);
-
-        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
+        if (count($parameters) === 1 && empty($parameters[0])) {
             $parameters = array();
         }
         //对参数进行urldecode解码一下
