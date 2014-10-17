@@ -422,3 +422,4 @@ class WoniuRule {
     }
 
 }
+class MpRule extends WoniuRule{}

@@ -14,7 +14,7 @@
  * @createdtime       {createdtime}
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
- * @property WoniuInput          $input
+ * @property MpInput          $input
  */
 class WoniuController extends MpLoaderPlus {
 
@@ -122,5 +122,5 @@ class WoniuController extends MpLoaderPlus {
     }
 
 }
-
+class MpController extends WoniuController{}
 /* End of file Controller.php */

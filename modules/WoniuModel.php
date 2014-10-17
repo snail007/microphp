@@ -14,7 +14,7 @@
  * @createdtime       {createdtime}
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
- * @property WoniuInput          $input
+ * @property MpInput          $input
  */
 class WoniuModel extends MpLoaderPlus {
 
@@ -435,5 +435,5 @@ class WoniuTableModel extends WoniuModel {
     }
 
 }
-
+class MpModel extends WoniuModel{}
 /* End of file Model.php */

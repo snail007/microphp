@@ -26,18 +26,18 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.2.13
- * @createdtime   2014-10-16 19:18:54
+ * @createdtime   2014-10-17 09:52:07
  */
  
 
 if (!function_exists('args')) {
 	function args($key = null) {
-		return WoniuInput::parameters($key);
+		return MpInput::parameters($key);
 	}
 }
 if (!function_exists('xss_clean')) {
 	function xss_clean($val) {
-		return WoniuInput::xss_clean($val);
+		return MpInput::xss_clean($val);
 	}
 }
 foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) {
@@ -50,14 +50,14 @@ foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $
 foreach (array('server', 'session') as $func) {
 	if (!function_exists($func)) {
 		eval('function ' . $func . '($key = null, $default = null) {
-					 return WoniuInput::' . $func . '($key, $default);
+					 return MpInput::' . $func . '($key, $default);
 		 }');
 	}
 }
 foreach (array('get_rule', 'post_rule', 'get_post_rule', 'post_get_rule') as $func) {
 	if (!function_exists($func)) {
 		eval('function ' . $func . '($rule, $key, $default = null) {
-					 return WoniuInput::' . $func . '($rule, $key, $default);
+					 return MpInput::' . $func . '($rule, $key, $default);
 		 }');
 	}
 }
@@ -67,7 +67,7 @@ foreach (array('get', 'post', 'cookie', 'cookie_raw', 'get_post', 'post_get') as
 			$func = 'cookiRaw';
 		}
 		eval('function ' . $func . '($key = null, $default = null, $xss_clean = false) {
-					 return WoniuInput::' . $func . '($key, $default, $xss_clean);
+					 return MpInput::' . $func . '($key, $default, $xss_clean);
 		 }');
 	}
 }
@@ -77,7 +77,7 @@ foreach (array('get_int', 'post_int', 'get_post_int', 'post_get_int',
  'get_datetime', 'post_datetime', 'get_post_datetime', 'post_get_datetime') as $func) {
 	if (!function_exists($func)) {
 		eval('function ' . $func . '($key, $min = null, $max = null, $default = null) {
-					 return WoniuInput::' . $func . '($key, $min, $max, $default);
+					 return MpInput::' . $func . '($key, $min, $max, $default);
 		 }');
 	}
 }
@@ -89,7 +89,7 @@ if (!function_exists('dump')) {
 	 */
 	function dump($arg, $_ = null) {
 		$args = func_get_args();
-		if (WoniuInput::isCli()) {
+		if (MpInput::isCli()) {
 			call_user_func_array('var_dump', $args);
 		} else {
 			echo '<pre>';
@@ -152,7 +152,7 @@ if (!function_exists('url')) {
 			}
 		}
 		if (!systemInfo('url_rewrite')) {
-			$self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(WoniuInput::server('php_self'), PATHINFO_BASENAME) : '';
+			$self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(MpInput::server('php_self'), PATHINFO_BASENAME) : '';
 			$app_start = '?';
 			$get_start = '&';
 		} else {
@@ -179,11 +179,11 @@ if (!function_exists('urlPath')) {
 	 * @throws Exception
 	 */
 	function urlPath($subpath = null) {
-		if (WoniuInput::isCli()) {
+		if (MpInput::isCli()) {
 			throw new Exception('function urlPath() can not be used in cli mode');
 		} else {
 			$old_path = getcwd();
-			$root = str_replace(array("/", "\\"), '/', WoniuInput::server('DOCUMENT_ROOT'));
+			$root = str_replace(array("/", "\\"), '/', MpInput::server('DOCUMENT_ROOT'));
 			chdir($root);
 			$root = getcwd();
 			$root = str_replace(array("/", "\\"), '/', $root);
@@ -1225,6 +1225,7 @@ class WoniuInput {
 		return $data;
 	}
 }
+class MpInput extends WoniuInput{}
 /* End of file WoniuInput.php */
 
 class WoniuRouter {
@@ -1237,8 +1238,8 @@ class WoniuRouter {
 		MpLoader::classAutoloadRegister();
 		if (file_exists($methodInfo['file'])) {
 			include $methodInfo['file'];
-			WoniuInput::$router = $methodInfo;
-			if (!WoniuInput::isCli()) {
+			MpInput::$router = $methodInfo;
+			if (!MpInput::isCli()) {
 				self::checkSession();
 			}
 			$class = new $methodInfo['class']();
@@ -1332,7 +1333,7 @@ class WoniuRouter {
 	private static function getQueryStr() {
 		$system = systemInfo();
 		//命令行运行检查
-		if (WoniuInput::isCli()) {
+		if (MpInput::isCli()) {
 			global $argv;
 			$pathinfo_query = isset($argv[1]) ? $argv[1] : '';
 		} else {
@@ -1379,7 +1380,7 @@ class WoniuRouter {
 		ini_set('session.hash_bits_per_character', 5);
 		session_cache_limiter('nocache');
 		session_set_cookie_params(
-				$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', WoniuInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
+				$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
 		);
 		session_name($common_config['session_name']);
 		register_shutdown_function('session_write_close');
@@ -1459,12 +1460,12 @@ class WoniuLoader {
 		$system = systemInfo();
 		date_default_timezone_set($system['default_timezone']);
 		$this->registerErrorHandle();
-		$this->router = WoniuInput::$router;
-		$this->input = new WoniuInput();
+		$this->router = MpInput::$router;
+		$this->input = new MpInput();
 		$this->model = new WoniuModelLoader();
 		$this->lib = new WoniuLibLoader();
-		if (class_exists('WoniuRule', FALSE)) {
-			$this->rule = new WoniuRule();
+		if (class_exists('MpRule', FALSE)) {
+			$this->rule = new MpRule();
 		}
 		if (class_exists('phpFastCache', false)) {
 			$this->cache = phpFastCache::getInstance($system['cache_config']['storage'], $system['cache_config']);
@@ -1910,7 +1911,7 @@ class WoniuLoader {
 		if (!is_null($domian)) {
 			$auto_domain = $domian;
 		} else {
-			$host = WoniuInput::server('HTTP_HOST');
+			$host = MpInput::server('HTTP_HOST');
 			// $_host = current(explode(":", $host));
 			$is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
 			$not_regular_domain = preg_match('/^[^\\.]+$/', $host);
@@ -1922,7 +1923,7 @@ class WoniuLoader {
 				$auto_domain = '.' . $host;
 			}
 		}
-		setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (WoniuInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
+		setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (MpInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
 		$_COOKIE[$key] = $value;
 	}
 	/**
@@ -2010,7 +2011,7 @@ class WoniuLoader {
 	 */
 	public static function readData(Array $map, $source_data = null) {
 		$data = array();
-		$formdata = is_null($source_data) ? WoniuInput::post() : $source_data;
+		$formdata = is_null($source_data) ? MpInput::post() : $source_data;
 		foreach ($formdata as $form_key => $val) {
 			if (isset($map[$form_key])) {
 				$data[$map[$form_key]] = $val;
@@ -2020,7 +2021,7 @@ class WoniuLoader {
 	}
 	public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null) {
 		if (is_null($data)) {
-			$data = WoniuInput::post();
+			$data = MpInput::post();
 		}
 		$return_data = $data;
 		/**
@@ -2216,7 +2217,7 @@ class WoniuLoader {
 					}
 					$id_col = $_id_info[0];
 					$id = $_id_info[1];
-					$id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
+					$id = stripos($id, '#') === 0 ? MpInput::get_post(substr($id, 1)) : $id;
 					$where = array($col => $val, "$id_col <>" => $id);
 				} else {
 					$where = array($col => $val);
@@ -2241,7 +2242,7 @@ class WoniuLoader {
 						}
 						$id_col = $_id_info[0];
 						$id = $_id_info[1];
-						$id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
+						$id = stripos($id, '#') === 0 ? MpInput::get_post(substr($id, 1)) : $id;
 						$where[$id_col] = $id;
 					}
 				}
@@ -2497,6 +2498,7 @@ class WoniuController extends MpLoaderPlus {
 		}
 	}
 }
+class MpController extends WoniuController{}
 /* End of file Controller.php */
 
 class WoniuModel extends MpLoaderPlus {
@@ -2888,13 +2890,8 @@ class WoniuTableModel extends WoniuModel {
 		return $data;
 	}
 }
-/* End of file Model.php */
-
-
-class MpController extends WoniuController{}
 class MpModel extends WoniuModel{}
-class MpInput extends WoniuInput{}
-class MpRule extends WoniuRule{}
+/* End of file Model.php */
 
 
 /**
@@ -3265,6 +3262,7 @@ class WoniuRule {
 		return $rule_name . ($can_empty ? '[true]' : '');
 	}
 }
+class MpRule extends WoniuRule{}
 
 class WoniuDB {
 	private static $conns = array();

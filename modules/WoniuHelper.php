@@ -16,14 +16,14 @@
 if (!function_exists('args')) {
 
     function args($key = null) {
-        return WoniuInput::parameters($key);
+        return MpInput::parameters($key);
     }
 
 }
 if (!function_exists('xss_clean')) {
 
     function xss_clean($val) {
-        return WoniuInput::xss_clean($val);
+        return MpInput::xss_clean($val);
     }
 
 }
@@ -37,14 +37,14 @@ foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $
 foreach (array('server', 'session') as $func) {
     if (!function_exists($func)) {
         eval('function ' . $func . '($key = null, $default = null) {
-                     return WoniuInput::' . $func . '($key, $default);
+                     return MpInput::' . $func . '($key, $default);
          }');
     }
 }
 foreach (array('get_rule', 'post_rule', 'get_post_rule', 'post_get_rule') as $func) {
     if (!function_exists($func)) {
         eval('function ' . $func . '($rule, $key, $default = null) {
-                     return WoniuInput::' . $func . '($rule, $key, $default);
+                     return MpInput::' . $func . '($rule, $key, $default);
          }');
     }
 }
@@ -54,7 +54,7 @@ foreach (array('get', 'post', 'cookie', 'cookie_raw', 'get_post', 'post_get') as
             $func = 'cookiRaw';
         }
         eval('function ' . $func . '($key = null, $default = null, $xss_clean = false) {
-                     return WoniuInput::' . $func . '($key, $default, $xss_clean);
+                     return MpInput::' . $func . '($key, $default, $xss_clean);
          }');
     }
 }
@@ -64,7 +64,7 @@ foreach (array('get_int', 'post_int', 'get_post_int', 'post_get_int',
  'get_datetime', 'post_datetime', 'get_post_datetime', 'post_get_datetime') as $func) {
     if (!function_exists($func)) {
         eval('function ' . $func . '($key, $min = null, $max = null, $default = null) {
-                     return WoniuInput::' . $func . '($key, $min, $max, $default);
+                     return MpInput::' . $func . '($key, $min, $max, $default);
          }');
     }
 }
@@ -77,7 +77,7 @@ if (!function_exists('dump')) {
      */
     function dump($arg, $_ = null) {
         $args = func_get_args();
-        if (WoniuInput::isCli()) {
+        if (MpInput::isCli()) {
             call_user_func_array('var_dump', $args);
         } else {
             echo '<pre>';
@@ -146,7 +146,7 @@ if (!function_exists('url')) {
 
         if (!systemInfo('url_rewrite')) {
             //url是否包含入口文件名称检查
-            $self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(WoniuInput::server('php_self'), PATHINFO_BASENAME) : '';
+            $self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(MpInput::server('php_self'), PATHINFO_BASENAME) : '';
             $app_start = '?';
             $get_start = '&';
         } else {
@@ -177,11 +177,11 @@ if (!function_exists('urlPath')) {
      * @throws Exception     
      */
     function urlPath($subpath = null) {
-        if (WoniuInput::isCli()) {
+        if (MpInput::isCli()) {
             throw new Exception('function urlPath() can not be used in cli mode');
         } else {
             $old_path = getcwd();
-            $root = str_replace(array("/", "\\"), '/', WoniuInput::server('DOCUMENT_ROOT'));
+            $root = str_replace(array("/", "\\"), '/', MpInput::server('DOCUMENT_ROOT'));
             chdir($root);
             $root = getcwd();
             $root = str_replace(array("/", "\\"), '/', $root);

@@ -567,5 +567,5 @@ class WoniuInput {
     }
 
 }
-
+class MpInput extends WoniuInput{}
 /* End of file WoniuInput.php */
