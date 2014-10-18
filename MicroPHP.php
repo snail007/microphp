@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.0
- * @createdtime   2014-10-18 15:48:13
+ * @createdtime   2014-10-18 16:03:29
  */
  
 
@@ -103,10 +103,10 @@ if (!function_exists('table')) {
 	 * 实例化一个表模型
 	 * @param string $table_name    不带表前缀的表名称
 	 * @param CI_DB_active_record $db 使用的数据库连接对象，默认留空是当前数据库连接
-	 * @return WoniuTableModel
+	 * @return MpTableModel
 	 */
 	function table($table_name, $db = null) {
-		return WoniuTableModel::M($table_name, $db);
+		return MpTableModel::M($table_name, $db);
 	}
 }
 if (!function_exists('url')) {
@@ -2562,7 +2562,7 @@ class WoniuModel extends MpLoaderPlus {
  *
  * @author pm
  */
-class WoniuTableModel extends WoniuModel {
+class MpTableModel extends MpModel {
 	/**
 	 * 表主键名称
 	 * @var string
@@ -2607,7 +2607,7 @@ class WoniuTableModel extends WoniuModel {
 	 * 初始化一个表模型，返回模型实例
 	 * @param type $table         名称
 	 * @param CI_DB_active_record $db 数据库连接对象
-	 * @return WoniuTableModel
+	 * @return MpTableModel
 	 */
 	public function init($table, $db = null) {
 		if (!is_null($db)) {
@@ -2629,11 +2629,11 @@ class WoniuTableModel extends WoniuModel {
 	/**
 	 * 实例化一个默认表模型
 	 * @param type $table
-	 * @return WoniuTableModel
+	 * @return MpTableModel
 	 */
 	public static function M($table, $db = null) {
 		if (!isset(self::$models[$table])) {
-			self::$models[$table] = new WoniuTableModel();
+			self::$models[$table] = new MpTableModel();
 			self::$models[$table]->init($table, $db);
 		}
 		return self::$models[$table];
