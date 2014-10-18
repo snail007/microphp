@@ -76,7 +76,7 @@ class WoniuModel extends MpLoaderPlus {
     }
 
 }
-
+class MpModel extends WoniuModel{}
 /**
  * Description of WoniuTableModel
  *
@@ -435,5 +435,5 @@ class MpTableModel extends MpModel {
     }
 
 }
-class MpModel extends WoniuModel{}
+
 /* End of file Model.php */

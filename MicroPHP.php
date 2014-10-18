@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.0
- * @createdtime   2014-10-18 16:03:29
+ * @createdtime   2014-10-18 16:32:34
  */
  
 
@@ -2557,6 +2557,7 @@ class WoniuModel extends MpLoaderPlus {
 		}
 	}
 }
+class MpModel extends WoniuModel{}
 /**
  * Description of WoniuTableModel
  *
@@ -2891,7 +2892,6 @@ class MpTableModel extends MpModel {
 		return $data;
 	}
 }
-class MpModel extends WoniuModel{}
 /* End of file Model.php */
 
 
