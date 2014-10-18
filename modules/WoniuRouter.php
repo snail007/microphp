@@ -25,8 +25,8 @@ class WoniuRouter {
 //        var_dump($methodInfo);
         if (file_exists($methodInfo['file'])) {
             include $methodInfo['file'];
-            WoniuInput::$router = $methodInfo;
-            if (!WoniuInput::isCli()) {
+            MpInput::$router = $methodInfo;
+            if (!MpInput::isCli()) {
                 //session自定义配置检查,只在非命令行模式下启用
                 self::checkSession();
             }
@@ -101,8 +101,7 @@ class WoniuRouter {
         $file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
         $class = $class_method[count($class_method) - 1];
         $parameters = explode("/", $pathinfo_query_parameters_str);
-
-        if (count($parameters) === 1 && (empty($parameters[0]) || strpos($parameters[0], '=') !== false)) {
+        if (count($parameters) === 1 && empty($parameters[0])) {
             $parameters = array();
         }
         //对参数进行urldecode解码一下
@@ -133,7 +132,7 @@ class WoniuRouter {
     private static function getQueryStr() {
         $system = systemInfo();
         //命令行运行检查
-        if (WoniuInput::isCli()) {
+        if (MpInput::isCli()) {
             global $argv;
             $pathinfo_query = isset($argv[1]) ? $argv[1] : '';
         } else {
@@ -186,7 +185,7 @@ class WoniuRouter {
         session_cache_limiter('nocache');
         // set the cookie parameters
         session_set_cookie_params(
-                $common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', WoniuInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
+                $common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
         );
 
         // name the session
@@ -265,5 +264,5 @@ class WoniuRouter {
     }
 
 }
-
+class MpRouter extends WoniuRouter{}
 /* End of file Router.php */

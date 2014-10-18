@@ -1,3 +1,3 @@
 <?php
 include 'plugin.php';
-WoniuRouter::loadClass();
+MpRouter::loadClass();

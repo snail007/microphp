@@ -47,7 +47,7 @@ class Test_cache extends UnitTestCase {
                 continue;
             }
             $system['cache_config']['storage'] = $driver;
-            WoniuRouter::setConfig($system);
+            MpRouter::setConfig($system);
             $woniu = WoniuController::instance();
             $this->assertIsA($woniu->cache, 'phpFastCache');
             if ($driver != 'auto') {
@@ -75,7 +75,7 @@ class Test_cache extends UnitTestCase {
 
     public function tearDown() {
         global $default;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
     }
 
 }

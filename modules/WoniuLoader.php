@@ -14,8 +14,8 @@
  * @createdtime            {createdtime}
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
- * @property WoniuInput          $input
- * @property WoniuRule           $rule
+ * @property MpInput          $input
+ * @property MpRule           $rule
  */
 class WoniuLoader {
 
@@ -28,12 +28,12 @@ class WoniuLoader {
         $system = systemInfo();
         date_default_timezone_set($system['default_timezone']);
         $this->registerErrorHandle();
-        $this->router = WoniuInput::$router;
-        $this->input = new WoniuInput();
+        $this->router = MpInput::$router;
+        $this->input = new MpInput();
         $this->model = new WoniuModelLoader();
         $this->lib = new WoniuLibLoader();
-        if (class_exists('WoniuRule', FALSE)) {
-            $this->rule = new WoniuRule();
+        if (class_exists('MpRule', FALSE)) {
+            $this->rule = new MpRule();
         }
         if (class_exists('phpFastCache', false)) {
             $this->cache = phpFastCache::getInstance($system['cache_config']['storage'], $system['cache_config']);
@@ -401,7 +401,7 @@ class WoniuLoader {
     public static function instance($renew = null, $hmvc_module_floder = null) {
         $default = systemInfo();
         if (!empty($hmvc_module_floder)) {
-            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+            MpRouter::switchHmvcConfig($hmvc_module_floder);
         }
         //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
         //如此一来就能满足两种模式
@@ -410,7 +410,7 @@ class WoniuLoader {
         WoniuController::instance();
         $renew = is_bool($renew) && $renew === true;
         $ret = empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
         return $ret;
     }
 
@@ -497,7 +497,7 @@ class WoniuLoader {
         if (!is_null($domian)) {
             $auto_domain = $domian;
         } else {
-            $host = WoniuInput::server('HTTP_HOST');
+            $host = MpInput::server('HTTP_HOST');
             // $_host = current(explode(":", $host));
             $is_ip = preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', $host);
             $not_regular_domain = preg_match('/^[^\\.]+$/', $host);
@@ -509,7 +509,7 @@ class WoniuLoader {
                 $auto_domain = '.' . $host;
             }
         }
-        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (WoniuInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
+        setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (MpInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
         $_COOKIE[$key] = $value;
     }
 
@@ -600,7 +600,7 @@ class WoniuLoader {
      */
     public static function readData(Array $map, $source_data = null) {
         $data = array();
-        $formdata = is_null($source_data) ? WoniuInput::post() : $source_data;
+        $formdata = is_null($source_data) ? MpInput::post() : $source_data;
         foreach ($formdata as $form_key => $val) {
             if (isset($map[$form_key])) {
                 $data[$map[$form_key]] = $val;
@@ -611,7 +611,7 @@ class WoniuLoader {
 
     public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null) {
         if (is_null($data)) {
-            $data = WoniuInput::post();
+            $data = MpInput::post();
         }
         $return_data = $data;
         /**
@@ -813,7 +813,7 @@ class WoniuLoader {
                     }
                     $id_col = $_id_info[0];
                     $id = $_id_info[1];
-                    $id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
+                    $id = stripos($id, '#') === 0 ? MpInput::get_post(substr($id, 1)) : $id;
                     $where = array($col => $val, "$id_col <>" => $id);
                 } else {
                     $where = array($col => $val);
@@ -838,7 +838,7 @@ class WoniuLoader {
                         }
                         $id_col = $_id_info[0];
                         $id = $_id_info[1];
-                        $id = stripos($id, '#') === 0 ? WoniuInput::get_post(substr($id, 1)) : $id;
+                        $id = stripos($id, '#') === 0 ? MpInput::get_post(substr($id, 1)) : $id;
                         $where[$id_col] = $id;
                     }
                 }

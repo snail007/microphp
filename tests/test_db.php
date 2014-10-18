@@ -29,14 +29,14 @@ class Test_db extends UnitTestCase {
         $system['error_manage'] = FALSE;
         $system['log_error'] = FALSE;
         $system['db_debug'] = FALSE;
-        WoniuRouter::setConfig($system);
+        MpRouter::setConfig($system);
          //重置MpLoader::instance()为初始状态
         MpLoader::instance(true);
     }
 
     public function tearDown() {
         global $default;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
          //重置MpLoader::instance()为初始状态
         MpLoader::instance(true);
     }
@@ -63,7 +63,7 @@ class Test_db extends UnitTestCase {
         global $system;
         foreach (array('mysql', 'mysqli', 'pdo_mysql', 'sqlite3') as $db_cfg_group) {
             $system['db']['active_group'] = $db_cfg_group;
-            WoniuRouter::setConfig($system);
+            MpRouter::setConfig($system);
             $this->createTable();
             $this->curd($db_cfg_group);
             $this->db->simple_query('drop table ' . $this->db_table);

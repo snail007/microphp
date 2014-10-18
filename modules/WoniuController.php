@@ -14,7 +14,7 @@
  * @createdtime       {createdtime}
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
- * @property WoniuInput          $input
+ * @property MpInput          $input
  */
 class WoniuController extends MpLoaderPlus {
 
@@ -91,7 +91,7 @@ class WoniuController extends MpLoaderPlus {
      */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
         if (!empty($hmvc_module_floder)) {
-            WoniuRouter::switchHmvcConfig($hmvc_module_floder);
+            MpRouter::switchHmvcConfig($hmvc_module_floder);
         }
         if (empty($classname_path)) {
             MpLoader::classAutoloadRegister();
@@ -122,5 +122,5 @@ class WoniuController extends MpLoaderPlus {
     }
 
 }
-
+class MpController extends WoniuController{}
 /* End of file Controller.php */

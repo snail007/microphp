@@ -44,7 +44,7 @@ class Test_autoload extends UnitTestCase {
         $system['helper_file_autoload'] = array('function', array('test/config_auto' => false));
         $system['library_file_autoload'] = array('LibAutoload', array('LibAutoload' => 'la'), array('sub/SubLibAutoNew' => '', 'new' => false));
         $system['models_file_autoload'] = array('ModelAutoload', array('ModelAutoload' => 'ma'));
-        WoniuRouter::setConfig($system);
+        MpRouter::setConfig($system);
 
         $this->assertTrue(!function_exists('test_auto_config'));
 
@@ -70,7 +70,7 @@ class Test_autoload extends UnitTestCase {
         $system['helper_file_autoload'] = array('function_again', array('test/config_auto2' => true));
         $system['library_file_autoload'] = array('LibAutoload_again', array('LibAutoload_again' => 'laa'));
         $system['models_file_autoload'] = array('ModelAutoload_again', array('ModelAutoload_again' => 'maa'));
-        WoniuRouter::setConfig($system);
+        MpRouter::setConfig($system);
         $this->assertFalse(function_exists('testFunctionAgain'));
         $this->assertFalse(class_exists('LibAutoload_again', FALSE));
         $this->assertFalse(class_exists('ModelAutoload_again', FALSE));
@@ -100,7 +100,7 @@ class Test_autoload extends UnitTestCase {
 
     public function tearDown() {
         global $default;
-        WoniuRouter::setConfig($default);
+        MpRouter::setConfig($default);
     }
 
 }
