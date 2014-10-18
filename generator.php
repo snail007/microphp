@@ -27,7 +27,7 @@
                    佛祖保佑         永无BUG
  */
 date_default_timezone_set('PRC');
-$ver = "Version 2.2.13";
+$ver = "Version 2.3.0";
 $header = '<?php
 /*
  * Copyright 2014 pm.
