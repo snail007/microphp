@@ -3,7 +3,7 @@
 /**
  * 如果要在NetBeans里面实现，$this->代码提示，就把该文件放到项目目录任意文件夹即可。
  */
-class WoniuLoaderPlus extends WoniuLoader {
+class MpLoaderPlus extends MpLoader {
     
 }
 
@@ -28,14 +28,14 @@ class CI_DB_active_record {
 /**
  * @property CI_DB_active_record $db
  * @property phpFastCache        $cache
- * @property WoniuInput          $input
- * @property WoniuModelTip       $model
- * @property WoniuRule           $rule
+ * @property MpInput          $input
+ * @property MpModelTip       $model
+ * @property MpRule           $rule
  */
-class WoniuLoader {
+class MpLoader {
 
     /**
-     * @return WoniuModelTip
+     * @return MpModelTip
      */
     public function model() {
         return null;
@@ -48,6 +48,6 @@ class WoniuLoader {
  * 然后就可以通过$this->model-> 就能自动提示新加的模型
  * @property DemoModel             DemoModel
  */
-class WoniuModelTip {
+class MpModelTip {
     
 }
