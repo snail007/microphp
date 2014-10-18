@@ -82,7 +82,7 @@ class WoniuModel extends MpLoaderPlus {
  *
  * @author pm
  */
-class WoniuTableModel extends WoniuModel {
+class MpTableModel extends MpModel {
 
     /**
      * 表主键名称
@@ -136,7 +136,7 @@ class WoniuTableModel extends WoniuModel {
      * 初始化一个表模型，返回模型实例
      * @param type $table         名称
      * @param CI_DB_active_record $db 数据库连接对象
-     * @return WoniuTableModel
+     * @return MpTableModel
      */
     public function init($table, $db = null) {
         if (!is_null($db)) {
@@ -159,11 +159,11 @@ class WoniuTableModel extends WoniuModel {
     /**
      * 实例化一个默认表模型
      * @param type $table
-     * @return WoniuTableModel
+     * @return MpTableModel
      */
     public static function M($table, $db = null) {
         if (!isset(self::$models[$table])) {
-            self::$models[$table] = new WoniuTableModel();
+            self::$models[$table] = new MpTableModel();
             self::$models[$table]->init($table, $db);
         }
         return self::$models[$table];
