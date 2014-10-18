@@ -5,7 +5,7 @@
  *
  * @author Administrator
  */
-class Home extends WoniuController {
+class Home extends MpController {
 
     public function doIndex($name = '') {
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));

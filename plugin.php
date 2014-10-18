@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.2.13
- * @createdtime   2014-10-07 22:14:44
+ * @since         Version 2.3.0
+ * @createdtime   2014-10-18 15:48:13
  */
  
 
@@ -146,9 +146,9 @@ $system['cookie_key_prefix'] = '';
  * 文件名称：类名.class.php
  * 比如：MyLoader.class.php，文件里面的类名就是:MyLoader
  * 注意：
- * 1.自定义Loader必须继承WoniuLoader。
+ * 1.自定义Loader必须继承MpLoader。
  * 2.一个最简单的Loader示意：(假设文件名称是：MyLoader.class.php)
- * class MyLoader extends WoniuLoader {
+ * class MyLoader extends MpLoader {
  *      public function __construct() {
  *          parent::__construct();
  *      }
@@ -462,4 +462,4 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
  */
 /* End of file index.php */
 include('MicroPHP.min.php');
-WoniuRouter::setConfig($system);
+MpRouter::setConfig($system);
