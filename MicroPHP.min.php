@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.2.13
- * @createdtime   2014-10-17 16:22:40
+ * @since         Version 2.3.0
+ * @createdtime   2014-10-18 15:48:13
  */
  
  if (!function_exists('args')) { function args($key = null) { return MpInput::parameters($key); } } if (!function_exists('xss_clean')) { function xss_clean($val) { return MpInput::xss_clean($val); } } foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) { if (!function_exists($func)) { eval('function ' . $func . '($key, $value, $life = null, $path = "/", $domian = null, $http_only = false) {
