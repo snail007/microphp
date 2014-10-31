@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.0
- * @createdtime   2014-10-18 16:32:34
+ * @since         Version 2.3.1
+ * @createdtime   2014-10-31 17:10:51
  */
  
 
@@ -272,7 +272,8 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-		//"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+	//'|^([^/]+)/(.+)$|u' => '$1.$2',//index.php/home/index路由支持
+	//'|^([^/]+)/([^/]+)/(.+)$|u' => '$1.$2.$3',//index.php/user/home/index路由支持
 );
 /**
  * ---------------------缓存配置-----------------------

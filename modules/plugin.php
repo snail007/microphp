@@ -18,7 +18,6 @@ define('WDS', DIRECTORY_SEPARATOR);
 /**
  * --------------------系统配置-------------------------
  */
-
 /**
  * 如果开启了URL Rewrite 功能，请在这里设置为TRUE，没有开启请设置为FALSE
  * 该配置会影响url()函数生成的链接
@@ -262,7 +261,8 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-        //"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+    //'|^([^/]+)/(.+)$|u' => '$1.$2',//index.php/home/index路由支持
+    //'|^([^/]+)/([^/]+)/(.+)$|u' => '$1.$2.$3',//index.php/user/home/index路由支持
 );
 /**
  * ---------------------缓存配置-----------------------
