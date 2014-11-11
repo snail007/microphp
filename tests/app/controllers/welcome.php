@@ -13,7 +13,7 @@ class Welcome extends MpController {
 //        $this->helper('html.helper');
     }
 
-    public function doForm() { 
+    public function doForm() {
         $validator = new FormValidator();
         $data = array('user' => '111', 'pass' => 'bbbb');
         $rules = array('user' => array('rule' => "range(1,1000)"));
@@ -26,7 +26,11 @@ class Welcome extends MpController {
     }
 
     public function doIndex($name = '') {
+        $d = new MpDebuger();
+        $d->mark('first');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
+        $d->mark('second');
+        $d->show();
     }
 
     public function a__output($html) {
@@ -37,5 +41,5 @@ class Welcome extends MpController {
 
         $this->ajax_echo(200, 'tip', $arg);
     }
-    
+
 }
