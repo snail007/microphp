@@ -102,7 +102,7 @@ class WoniuDebuger {
      */
     public function showToFile($filename = null) {
         $content = $this->getOutput();
-        $content = $content = "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
+        $content = $content . "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
                 . "\nIP:" . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')
                 . "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE) . "\n" : '') . "TimeInfo:\n" . $content;
         $content = date('Y-m-d H:i:s') . $content . "\n\n";
