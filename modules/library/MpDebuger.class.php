@@ -29,7 +29,7 @@
  * @since                  Version 1.0
  * @createdtime            2013-12-8 10:28:53
  */
-class WoniuDebuger {
+class MpDebuger {
 
     private $logFile = './logs/time_debug.log';
     private $times = array();
