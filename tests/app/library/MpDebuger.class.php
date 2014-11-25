@@ -41,7 +41,7 @@ class MpDebuger {
      */
 
     public function setMaxLogFileSize($maxLogFileSize) {
-        $this->maxLogFileSize = $maxLogFileSize;
+	$this->maxLogFileSize = $maxLogFileSize;
     }
 
     /**
@@ -49,14 +49,14 @@ class MpDebuger {
      * @param type $logFile
      */
     public function setLogFile($logFile) {
-        $this->logFile = $logFile;
+	$this->logFile = $logFile;
     }
 
     /**
      * 清空所有mark的时间点，用于重新开始测试
      */
     public function reset() {
-        $this->times = array();
+	$this->times = array();
     }
 
     /**
@@ -64,7 +64,7 @@ class MpDebuger {
      * @param type $flag
      */
     public function mark($flag) {
-        $this->times[] = array('flag' => $flag, 'time' => $this->getMillisecond());
+	$this->times[] = array('flag' => $flag, 'time' => $this->getMillisecond());
     }
 
     /**
@@ -73,15 +73,23 @@ class MpDebuger {
      * @return string
      */
     public function getOutput($is_br = false) {
-        if (count($this->times) >= 2) {
-            $str_arr = array();
-            for ($i = 1; $i < count($this->times); $i++) {
-                $str_arr[] = "{$i}. {$this->times[$i - 1]['flag']}->{$this->times[$i]['flag']} : "
-                        . $this->formatTime($this->times[$i]['time'] - $this->times[$i - 1]['time']);
-            }
-            return implode(($is_br ? '<br/>' : "\n"), $str_arr);
-        }
-        return '';
+
+	if (count($this->times) >= 2) {
+	    $max = 0;
+	    for ($i = 1; $i < count($this->times); $i++) {
+		$cost=$this->times[$i]['time'] - $this->times[$i - 1]['time'];
+		$max < $cost ? $max = $cost : null;
+	    }
+	    for ($i = 1; $i < count($this->times); $i++) {
+		$cost = $this->times[$i]['time'] - $this->times[$i - 1]['time'];
+		$str_arr[] = ($is_br && $cost >= $max ? '<font color="red">' : "") . "{$i}. {$this->times[$i - 1]['flag']} -> {$this->times[$i]['flag']} : "
+			. $this->formatTime($cost) . ($is_br && $cost >= $max ? '</font>' : "");
+	    }
+	    $total = isset($this->times[0]['time']) ? $this->times[count($this->times) - 1]['time'] - $this->times[0]['time'] : 0;
+	    $str_arr[] = 'Total : ' . $total . ' ms';
+	    return implode(($is_br ? '<br/>' : "\n"), $str_arr);
+	}
+	return '';
     }
 
     /**
@@ -89,11 +97,11 @@ class MpDebuger {
      * @param type $is_html 是否使用html格式输出，true:html false:纯文本
      */
     public function show($is_html = false) {
-        if ($is_html) {
-            echo "<pre>" . $this->getOutput(true) . "</pre>";
-        } else {
-            echo $this->getOutput();
-        }
+	if ($is_html) {
+	    echo "<pre>" . $this->getOutput(true) . "</pre>";
+	} else {
+	    echo $this->getOutput();
+	}
     }
 
     /**
@@ -101,45 +109,45 @@ class MpDebuger {
      * @param type $filename 文件路径
      */
     public function showToFile($filename = null) {
-        $content = $this->getOutput();
-        $content = $content . "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
-                . "\nIP:" . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')
-                . "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE) . "\n" : '') . "TimeInfo:\n" . $content;
-        $content = date('Y-m-d H:i:s') . $content . "\n\n";
-        $this->writeLog($content, $filename);
+	$content = $this->getOutput();
+	$content = $content . "\n" . $this->getUrl() . "\nIsAjax:" . (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? 'true' : 'false') . ""
+		. "\nIP:" . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '')
+		. "\n" . (!empty($_POST) ? 'Post Data:' . var_export($_POST, TRUE) . "\n" : '') . "TimeInfo:\n" . $content;
+	$content = date('Y-m-d H:i:s') . $content . "\n\n";
+	$this->writeLog($content, $filename);
     }
 
     private function writeLog($content, $filename = null) {
-        $filename = $filename ? $filename : $this->logFile;
-        $dir = dirname($filename);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        $filesize = @intval(filesize($filename));
-        $filesize = $filesize / 1024;
-        if ($filesize > $this->maxLogFileSize) {
-            @unlink($filename);
-        }
-        @file_put_contents($filename, $content, FILE_APPEND | LOCK_EX);
+	$filename = $filename ? $filename : $this->logFile;
+	$dir = dirname($filename);
+	if (!is_dir($dir)) {
+	    mkdir($dir, 0755, true);
+	}
+	$filesize = @intval(filesize($filename));
+	$filesize = $filesize / 1024;
+	if ($filesize > $this->maxLogFileSize) {
+	    @unlink($filename);
+	}
+	@file_put_contents($filename, $content, FILE_APPEND | LOCK_EX);
     }
 
     private function formatTime($milliseconds) {
-        $useTime = $milliseconds;
-        $seconds = floor($useTime / 1000);
-        $ms = ($useTime - $seconds * 1000);
-        $timeInfo = ($seconds ? $seconds . 's' : '') . ($ms ? ($seconds ? ',' : '') . $ms . 'ms' : ($seconds ? '' : '0ms'));
+	$useTime = $milliseconds;
+	$seconds = floor($useTime / 1000);
+	$ms = ($useTime - $seconds * 1000);
+	$timeInfo = ($seconds ? $seconds . ' s' : '') . ($ms ? ($seconds ? ',' : '') . $ms . ' ms' : ($seconds ? '' : '0 ms'));
 
-        return $timeInfo;
+	return $timeInfo;
     }
 
     //取得当前时间的毫秒
     private function getMillisecond() {
-        list($s1, $s2) = explode(' ', microtime());
-        return (float) sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
+	list($s1, $s2) = explode(' ', microtime());
+	return (float) sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
     }
 
     private function getUrl() {
-        return (empty($_SERVER['REQUEST_METHOD']) ? 'URL' : strtoupper($_SERVER['REQUEST_METHOD'])) . ':http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
+	return (empty($_SERVER['REQUEST_METHOD']) ? 'URL' : strtoupper($_SERVER['REQUEST_METHOD'])) . ':http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
     }
 
 }

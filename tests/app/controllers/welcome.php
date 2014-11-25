@@ -30,7 +30,7 @@ class Welcome extends MpController {
         $d->mark('first');
         $this->view("welcome", array('msg' => $name, 'ver' => $this->config('myconfig', 'app')));
         $d->mark('second');
-        $d->show();
+        $d->show(true);
     }
 
     public function a__output($html) {

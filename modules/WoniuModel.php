@@ -129,7 +129,6 @@ class MpTableModel extends MpModel {
 
     public function __construct() {
         parent::__construct();
-        $this->database();
     }
 
     /**
@@ -142,6 +141,9 @@ class MpTableModel extends MpModel {
         if (!is_null($db)) {
             $this->db = $db;
         }
+	if(is_null($this->db)){
+	    $this->database();
+	}
         $this->prefix = $this->db->dbprefix;
         $this->table = $table;
         $this->full_table = $this->prefix . $table;
