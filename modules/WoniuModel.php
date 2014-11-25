@@ -27,56 +27,60 @@ class WoniuModel extends MpLoaderPlus {
      * @return type WoniuModel
      */
     public static function instance($classname_path = null, $hmvc_module_floder = NULL) {
-        if (!empty($hmvc_module_floder)) {
-            MpRouter::switchHmvcConfig($hmvc_module_floder);
-        }
-        //这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
-        WoniuController::instance();
-        if (empty($classname_path)) {
-            $renew = is_bool($classname_path) && $classname_path === true;
-            MpLoader::classAutoloadRegister();
-            return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
-        }
-        $system = systemInfo();
-        $classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
-        $classname = basename($classname_path);
+	if (!empty($hmvc_module_floder)) {
+	    MpRouter::switchHmvcConfig($hmvc_module_floder);
+	}
+	//这里调用控制器instance是为了触发自动加载，从而避免了插件模式下，直接instance模型，自动加载失效的问题
+	WoniuController::instance();
+	if (empty($classname_path)) {
+	    $renew = is_bool($classname_path) && $classname_path === true;
+	    MpLoader::classAutoloadRegister();
+	    return empty(self::$instance) || $renew ? self::$instance = new self() : self::$instance;
+	}
+	$system = systemInfo();
+	$classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
+	$classname = basename($classname_path);
 
-        $model_folders = $system['model_folder'];
+	$model_folders = $system['model_folder'];
 
-        if (!is_array($model_folders)) {
-            $model_folders = array($model_folders);
-        }
-        $count = count($model_folders);
-        //在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
-        //如此一来就能满足两种模式
-        MpLoader::classAutoloadRegister();
-        foreach ($model_folders as $key => $model_folder) {
-            $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
-            $alias_name = $classname;
-            if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
-                return WoniuModelLoader::$model_files[$alias_name];
-            }
-            if (file_exists($filepath)) {
-                if (!class_exists($classname, FALSE)) {
-                    MpLoader::includeOnce($filepath);
-                }
-                if (class_exists($classname, FALSE)) {
-                    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
-                } else {
-                    if ($key == $count - 1) {
-                        trigger404('Model Class:' . $classname . ' not found.');
-                    }
-                }
-            } else {
-                if ($key == $count - 1) {
-                    trigger404($filepath . ' not  found.');
-                }
-            }
-        }
+	if (!is_array($model_folders)) {
+	    $model_folders = array($model_folders);
+	}
+	$count = count($model_folders);
+	//在plugin模式下，路由器不再使用，那么自动注册不会被执行，自动加载功能会失效，所以在这里再尝试加载一次，
+	//如此一来就能满足两种模式
+	MpLoader::classAutoloadRegister();
+	foreach ($model_folders as $key => $model_folder) {
+	    $filepath = $model_folder . DIRECTORY_SEPARATOR . $classname_path . $system['model_file_subfix'];
+	    $alias_name = $classname;
+	    if (in_array($alias_name, array_keys(WoniuModelLoader::$model_files))) {
+		return WoniuModelLoader::$model_files[$alias_name];
+	    }
+	    if (file_exists($filepath)) {
+		if (!class_exists($classname, FALSE)) {
+		    MpLoader::includeOnce($filepath);
+		}
+		if (class_exists($classname, FALSE)) {
+		    return WoniuModelLoader::$model_files[$alias_name] = new $classname();
+		} else {
+		    if ($key == $count - 1) {
+			trigger404('Model Class:' . $classname . ' not found.');
+		    }
+		}
+	    } else {
+		if ($key == $count - 1) {
+		    trigger404($filepath . ' not  found.');
+		}
+	    }
+	}
     }
 
 }
-class MpModel extends WoniuModel{}
+
+class MpModel extends WoniuModel {
+    
+}
+
 /**
  * Description of WoniuTableModel
  *
@@ -127,10 +131,6 @@ class MpTableModel extends MpModel {
     public $fields = array();
     private static $models = array(), $table_cache = array();
 
-    public function __construct() {
-        parent::__construct();
-    }
-
     /**
      * 初始化一个表模型，返回模型实例
      * @param type $table         名称
@@ -138,24 +138,24 @@ class MpTableModel extends MpModel {
      * @return MpTableModel
      */
     public function init($table, $db = null) {
-        if (!is_null($db)) {
-            $this->db = $db;
-        }
-	if(is_null($this->db)){
+	if (is_null($this->db)) {
 	    $this->database();
 	}
-        $this->prefix = $this->db->dbprefix;
-        $this->table = $table;
-        $this->full_table = $this->prefix . $table;
-        $this->fields = $fields = $this->getTableFieldsInfo($table, $this->db);
-        foreach ($fields as $col => $info) {
-            if ($info['primary']) {
-                $this->pk = $col;
-            }
-            $this->keys[] = $col;
-            $this->map[$col] = $col;
-        }
-        return $this;
+	if (!is_null($db)) {
+	    $this->db = $db;
+	}
+	$this->prefix = $this->db->dbprefix;
+	$this->table = $table;
+	$this->full_table = $this->prefix . $table;
+	$this->fields = $fields = $this->getTableFieldsInfo($table, $this->db);
+	foreach ($fields as $col => $info) {
+	    if ($info['primary']) {
+		$this->pk = $col;
+	    }
+	    $this->keys[] = $col;
+	    $this->map[$col] = $col;
+	}
+	return $this;
     }
 
     /**
@@ -164,11 +164,11 @@ class MpTableModel extends MpModel {
      * @return MpTableModel
      */
     public static function M($table, $db = null) {
-        if (!isset(self::$models[$table])) {
-            self::$models[$table] = new MpTableModel();
-            self::$models[$table]->init($table, $db);
-        }
-        return self::$models[$table];
+	if (!isset(self::$models[$table])) {
+	    self::$models[$table] = new MpTableModel();
+	    self::$models[$table]->init($table, $db);
+	}
+	return self::$models[$table];
     }
 
     /**
@@ -176,7 +176,7 @@ class MpTableModel extends MpModel {
      * @return array
      */
     public function columns() {
-        return $this->keys;
+	return $this->keys;
     }
 
     /**
@@ -186,33 +186,33 @@ class MpTableModel extends MpModel {
      * @return array
      */
     public static function getTableFieldsInfo($tableName, $db) {
-        if (!empty(self::$table_cache[$tableName])) {
-            return self::$table_cache[$tableName];
-        }
-        if (!file_exists($cache_file = systemInfo('table_cache_folder') . DIRECTORY_SEPARATOR . $tableName . '.php')) {
-            $info = array();
-            $result = $db->query('SHOW FULL COLUMNS FROM ' . $db->dbprefix . $tableName)->result_array();
-            if ($result) {
-                foreach ($result as $val) {
-                    $info[$val['Field']] = array(
-                        'name' => $val['Field'],
-                        'type' => $val['Type'],
-                        'comment' => $val['Comment'] ? $val['Comment'] : $val['Field'],
-                        'notnull' => $val['Null'] == 'NO' ? 1 : 0,
-                        'default' => $val['Default'],
-                        'primary' => (strtolower($val['Key']) == 'pri'),
-                        'autoinc' => (strtolower($val['Extra']) == 'auto_increment'),
-                    );
-                }
-            }
-            $content = 'return ' . var_export($info, true) . ";\n";
-            $content = '<?' . 'php' . "\n" . $content;
-            file_put_contents($cache_file, $content);
-            $ret_info[$tableName] = $info;
-        } else {
-            $ret_info[$tableName] = include ($cache_file);
-        }
-        return $ret_info[$tableName];
+	if (!empty(self::$table_cache[$tableName])) {
+	    return self::$table_cache[$tableName];
+	}
+	if (!file_exists($cache_file = systemInfo('table_cache_folder') . DIRECTORY_SEPARATOR . $tableName . '.php')) {
+	    $info = array();
+	    $result = $db->query('SHOW FULL COLUMNS FROM ' . $db->dbprefix . $tableName)->result_array();
+	    if ($result) {
+		foreach ($result as $val) {
+		    $info[$val['Field']] = array(
+			'name' => $val['Field'],
+			'type' => $val['Type'],
+			'comment' => $val['Comment'] ? $val['Comment'] : $val['Field'],
+			'notnull' => $val['Null'] == 'NO' ? 1 : 0,
+			'default' => $val['Default'],
+			'primary' => (strtolower($val['Key']) == 'pri'),
+			'autoinc' => (strtolower($val['Extra']) == 'auto_increment'),
+		    );
+		}
+	    }
+	    $content = 'return ' . var_export($info, true) . ";\n";
+	    $content = '<?' . 'php' . "\n" . $content;
+	    file_put_contents($cache_file, $content);
+	    $ret_info[$tableName] = $info;
+	} else {
+	    $ret_info[$tableName] = include ($cache_file);
+	}
+	return $ret_info[$tableName];
     }
 
     /**
@@ -231,10 +231,10 @@ class MpTableModel extends MpModel {
      * @return string 返回null:验证通过。非空字符串:验证失败提示信息。 
      */
     public function check($source_data, &$ret_data, $rule = null, $map = null) {
-        $rule = !is_array($rule) ? array() : $rule;
-        $map = is_null($map) ? $this->map : $map;
-        $data = $this->readData($map, $source_data);
-        return $this->checkData($rule, $data, $ret_data);
+	$rule = !is_array($rule) ? array() : $rule;
+	$map = is_null($map) ? $this->map : $map;
+	$data = $this->readData($map, $source_data);
+	return $this->checkData($rule, $data, $ret_data);
     }
 
     /**
@@ -243,7 +243,7 @@ class MpTableModel extends MpModel {
      * @return boolean
      */
     public function insert($ret_data) {
-        return $this->db->insert($this->table, $ret_data);
+	return $this->db->insert($this->table, $ret_data);
     }
 
     /**
@@ -253,8 +253,8 @@ class MpTableModel extends MpModel {
      * @return boolean
      */
     public function update($ret_data, $where) {
-        $where = is_array($where) ? $where : array($this->pk => $where);
-        return $this->db->where($where)->update($this->table, $ret_data);
+	$where = is_array($where) ? $where : array($this->pk => $where);
+	return $this->db->where($where)->update($this->table, $ret_data);
     }
 
     /**
@@ -265,32 +265,32 @@ class MpTableModel extends MpModel {
      * @return int
      */
     public function find($values, $is_rows = false, $order_by = null) {
-        if (empty($values)) {
-            return 0;
-        }
-        if (is_array($values)) {
-            $is_asso = array_diff_assoc(array_keys($values), range(0, sizeof($values))) ? TRUE : FALSE;
-            if ($is_asso) {
-                $this->db->where($values);
-            } else {
-                $is_rows = true;
-                $this->db->where_in($this->pk, array_values($values));
-            }
-        } else {
-            $this->db->where(array($this->pk => $values));
-        }
-        if ($order_by) {
-            $this->db->order_by($order_by);
-        }
-        if (!$is_rows) {
-            $this->db->limit(1);
-        }
-        $rs = $this->db->get($this->table);
-        if ($is_rows) {
-            return $rs->result_array();
-        } else {
-            return $rs->row_array();
-        }
+	if (empty($values)) {
+	    return 0;
+	}
+	if (is_array($values)) {
+	    $is_asso = array_diff_assoc(array_keys($values), range(0, sizeof($values))) ? TRUE : FALSE;
+	    if ($is_asso) {
+		$this->db->where($values);
+	    } else {
+		$is_rows = true;
+		$this->db->where_in($this->pk, array_values($values));
+	    }
+	} else {
+	    $this->db->where(array($this->pk => $values));
+	}
+	if ($order_by) {
+	    $this->db->order_by($order_by);
+	}
+	if (!$is_rows) {
+	    $this->db->limit(1);
+	}
+	$rs = $this->db->get($this->table);
+	if ($is_rows) {
+	    return $rs->result_array();
+	} else {
+	    return $rs->row_array();
+	}
     }
 
     /**
@@ -302,19 +302,19 @@ class MpTableModel extends MpModel {
      * @return type
      */
     public function findAll($where = null, $orderby = NULL, $limit = null, $fileds = null) {
-        if (!is_null($fileds)) {
-            $this->db->select($fileds);
-        }
-        if (!is_null($where)) {
-            $this->db->where($where);
-        }
-        if (!is_null($orderby)) {
-            $this->db->order_by($orderby);
-        }
-        if (!is_null($limit)) {
-            $this->db->limit($limit);
-        }
-        return $this->db->get($this->table)->result_array();
+	if (!is_null($fileds)) {
+	    $this->db->select($fileds);
+	}
+	if (!is_null($where)) {
+	    $this->db->where($where);
+	}
+	if (!is_null($orderby)) {
+	    $this->db->order_by($orderby);
+	}
+	if (!is_null($limit)) {
+	    $this->db->limit($limit);
+	}
+	return $this->db->get($this->table)->result_array();
     }
 
     /**
@@ -326,16 +326,16 @@ class MpTableModel extends MpModel {
      * @return type
      */
     public function findCol($col, $where, $is_rows = false, $order_by = null) {
-        $row = $this->find($where, $is_rows, $order_by);
-        if (!$is_rows) {
-            return isset($row[$col]) ? $row[$col] : null;
-        } else {
-            $vals = array();
-            foreach ($row as $v) {
-                $vals[] = $v[$col];
-            }
-            return $vals;
-        }
+	$row = $this->find($where, $is_rows, $order_by);
+	if (!$is_rows) {
+	    return isset($row[$col]) ? $row[$col] : null;
+	} else {
+	    $vals = array();
+	    foreach ($row as $v) {
+		$vals[] = $v[$col];
+	    }
+	    return $vals;
+	}
     }
 
     /**
@@ -346,7 +346,7 @@ class MpTableModel extends MpModel {
      * 成功则返回影响的行数，失败返回false
      */
     public function delete($values, Array $cond = NULL) {
-        return $this->deleteIn($this->pk, $values, $cond);
+	return $this->deleteIn($this->pk, $values, $cond);
     }
 
     /**
@@ -359,22 +359,22 @@ class MpTableModel extends MpModel {
      * @return int|boolean
      */
     public function deleteIn($key, $values, Array $cond = NULL) {
-        if (empty($values)) {
-            return 0;
-        }
-        if (is_array($values)) {
-            $this->db->where_in($key, array_values($values));
-        } else {
-            $this->db->where(array($key => $values));
-        }
-        if (!empty($cond)) {
-            $this->db->where($cond);
-        }
-        if ($this->db->delete($this->table)) {
-            return $this->db->affected_rows();
-        } else {
-            return false;
-        }
+	if (empty($values)) {
+	    return 0;
+	}
+	if (is_array($values)) {
+	    $this->db->where_in($key, array_values($values));
+	} else {
+	    $this->db->where(array($key => $values));
+	}
+	if (!empty($cond)) {
+	    $this->db->where($cond);
+	}
+	if ($this->db->delete($this->table)) {
+	    return $this->db->affected_rows();
+	} else {
+	    return false;
+	}
     }
 
     /**
@@ -391,28 +391,28 @@ class MpTableModel extends MpModel {
      * @return type
      */
     public function getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
-        $data = array();
+	$data = array();
 
-        if (is_array($where)) {
-            $this->db->where($where);
-        }
-        if (is_array($like)) {
-            $this->db->like($like);
-        }
-        $total = $this->db->from($this->table)->count_all_results();
-        //这里必须重新附加条件，上面的count会重置条件
-        if (is_array($where)) {
-            $this->db->where($where);
-        }
-        if (is_array($like)) {
-            $this->db->like($like);
-        }
-        if (!is_null($orderby)) {
-            $this->db->order_by($orderby);
-        }
-        $data['items'] = $this->db->select($fields)->limit($pagesize, ($page - 1) * $pagesize)->get($this->table)->result_array();
-        $data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
-        return $data;
+	if (is_array($where)) {
+	    $this->db->where($where);
+	}
+	if (is_array($like)) {
+	    $this->db->like($like);
+	}
+	$total = $this->db->from($this->table)->count_all_results();
+	//这里必须重新附加条件，上面的count会重置条件
+	if (is_array($where)) {
+	    $this->db->where($where);
+	}
+	if (is_array($like)) {
+	    $this->db->like($like);
+	}
+	if (!is_null($orderby)) {
+	    $this->db->order_by($orderby);
+	}
+	$data['items'] = $this->db->select($fields)->limit($pagesize, ($page - 1) * $pagesize)->get($this->table)->result_array();
+	$data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
+	return $data;
     }
 
     /**
@@ -427,13 +427,13 @@ class MpTableModel extends MpModel {
      * @return type
      */
     public function search($page, $pagesize, $url, $fields, $cond, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
-        $data = array();
-        $table = $this->full_table;
-        $query = $this->db->query('select count(*) as total from ' . $table . (strpos(trim($cond), 'order') === 0 ? '' : ' where') . $cond)->row_array();
-        $total = $query['total'];
-        $data['items'] = $this->db->query('select ' . $fields . ' from ' . $table . (strpos(trim($cond), 'order') === 0 ? '' : ' where') . $cond . ' limit ' . (($page - 1) * $pagesize) . ',' . $pagesize)->result_array();
-        $data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
-        return $data;
+	$data = array();
+	$table = $this->full_table;
+	$query = $this->db->query('select count(*) as total from ' . $table . (strpos(trim($cond), 'order') === 0 ? '' : ' where') . $cond)->row_array();
+	$total = $query['total'];
+	$data['items'] = $this->db->query('select ' . $fields . ' from ' . $table . (strpos(trim($cond), 'order') === 0 ? '' : ' where') . $cond . ' limit ' . (($page - 1) * $pagesize) . ',' . $pagesize)->result_array();
+	$data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
+	return $data;
     }
 
 }
