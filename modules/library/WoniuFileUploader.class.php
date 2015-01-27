@@ -37,7 +37,7 @@
 class WoniuFileUploader {
 
     private $size, $ext, $file_formfield_name = 'file',
-            $is_zoom = false, $zoom_percent = 1, $max_zoom_width = 0, $max_zoom_height = 0,
+            $is_zoom = false, $is_force_zoom = false, $zoom_percent = 1, $max_zoom_width = 0, $max_zoom_height = 0,
             $is_compress = false, $compress_percent = 0.6, $min_compress_size = 0;
     public $error = array('code' => '', 'info' => '');
 
@@ -63,51 +63,6 @@ class WoniuFileUploader {
 
     public function getTmpFilePath() {
         return $_FILES[$this->file_formfield_name]['tmp_name'];
-    }
-
-    public function getIsZoom() {
-        return $this->is_zoom;
-    }
-
-    public function getCompressPercent() {
-        return $this->compress_percent;
-    }
-
-    public function getZoomPercent() {
-        return $this->zoom_percent;
-    }
-
-    public function getIsCompress() {
-        return $this->is_compress;
-    }
-
-    public function getMinCompressSize() {
-        return $this->min_compress_size;
-    }
-
-    public function getMaxZoomWidth() {
-        return $this->max_zoom_width;
-    }
-
-    public function getMaxZoomHeight() {
-        return $this->max_zoom_height;
-    }
-
-    /**
-     * 获取允许的最大文件大小，单位byte字节
-     * @return type
-     */
-    public function getMaxSize() {
-        return $this->size;
-    }
-
-    /**
-     * 获取格式化过的允许的最大文件大小
-     * 比如：1MB
-     * @return type
-     */
-    public function getFormatedMaxSize() {
-        return $this->size_format($this->size);
     }
 
     /**
@@ -149,6 +104,11 @@ class WoniuFileUploader {
      */
     public function setZoomPercent($zoom_percent) {
         $this->zoom_percent = $zoom_percent;
+        //指定了宽高进行缩放 
+        if (is_array($this->zoom_percent) && !empty($this->zoom_percent)) {
+            $this->max_zoom_width = $this->zoom_percent[0] ? $this->zoom_percent[0] : 0;
+            $$this->max_zoom_height = isset($this->zoom_percent[1]) ? $this->zoom_percent[1] : 0;
+        }
         return $this;
     }
 
@@ -174,12 +134,15 @@ class WoniuFileUploader {
     }
 
     /**
+     * 
      * 设置是否缩放图片
-     * @param type $is_zoom   true：否缩，false：不否缩，默认false
-     * @return FileUploader
+     * @param type $is_zoom  true：缩放，false：不缩放，默认false
+     * @param type $is_force true：强制拉伸，false：不强制拉伸，默认false
+     * @return \WoniuFileUploader
      */
-    public function setZoom($is_zoom) {
+    public function setZoom($is_zoom, $is_force = false) {
         $this->is_zoom = $is_zoom;
+        $this->is_force_zoom = $is_force;
         return $this;
     }
 
@@ -191,29 +154,6 @@ class WoniuFileUploader {
      */
     public function setMinCompressSize($min_compress_size) {
         $this->min_compress_size = $this->size2byte($min_compress_size);
-        return $this;
-    }
-
-    /**
-     * 设置最大的图片像素宽度，只有当图片的宽度大于这个数值的时候才会被缩放<br/>
-     * 比如：500，为0的时候不限制宽度
-     * @param type $max_zoom_width
-     * @return FileUploader
-     */
-    public function setMaxZoomWidth($max_zoom_width) {
-        $this->max_zoom_width = $max_zoom_width;
-        return $this;
-    }
-
-    /**
-     * 设置最大的图片像素高度，只有当图片的高度大于这个数值的时候才会被缩放<br/>
-      比如：500，为0的时候不限制高度
-     * 
-     * @param type $max_zoom_height
-     * @return FileUploader
-     */
-    public function setMaxZoomHeight($max_zoom_height) {
-        $this->max_zoom_height = $max_zoom_height;
         return $this;
     }
 
@@ -367,29 +307,61 @@ class WoniuFileUploader {
         if ($need_zoom && $this->is_zoom) {
             //指定了宽高进行缩放
             if (is_array($this->zoom_percent)) {
-                if (empty($this->zoom_percent)) {
+                $w = $this->zoom_percent[0] ? $this->zoom_percent[0] : 0;
+                $h = isset($this->zoom_percent[1]) ? $this->zoom_percent[1] : 0;
+                if (empty($this->zoom_percent) || (！$w&&！$h)) {
                     //非法宽高，那么就不缩放
                     $newImageWidth = $imagewidth;
                     $newImageHeight = $imageheight;
                 } else {
-                    $w = $this->zoom_percent[0] ? $this->zoom_percent[0] : 0;
-                    $h = isset($this->zoom_percent[1]) ? $this->zoom_percent[1] : 0;
-                    if ($w == 0 && $h > 0) {
-                        //按着高度等比缩放
-                        $newImageHeight = $h;
-                        $newImageWidth = ceil(($newImageHeight * $imagewidth) / $imageheight);
-                    } elseif ($w > 0 && $h == 0) {
-                        //按着宽度等比缩放
-                        $newImageWidth = $w;
-                        $newImageHeight = ceil(($newImageWidth * $imageheight) / $imagewidth);
-                    } elseif ($w > 0 && $h > 0) {
-                        //按着宽高强制拉伸缩放
-                        $newImageWidth = $w;
-                        $newImageHeight = $h;
+                    $toHeight = $w > 0 ? ceil(($w * $imageheight) / $imagewidth) : 0;
+                    $toWidth = $h > 0 ? ceil(($h * $imagewidth) / $imageheight) : 0;
+                    if (!$this->is_force_zoom) {
+                        //智能缩放
+                        if ($w == 0 && $h > 0) {
+                            //按着高度等比缩放
+                            $newImageHeight = $h;
+                            $newImageWidth = $toWidth;
+                        } elseif ($w > 0 && $h == 0) {
+                            //按着宽度等比缩放
+                            $newImageWidth = $w;
+                            $newImageHeight = $toHeight;
+                        } else {
+                            //按着宽高强制拉伸缩放
+                            if ($imagewidth > $w && $imageheight > $h) {
+                                //图片和缩放区域同向
+                                if (($imagewidth >= $imageheight && $w >= $h) || ($imagewidth <= $imageheight && $w <= $h)) {
+                                    if ($w >= $h) {
+                                        $newImageWidth = $w;
+                                        $newImageHeight = $toHeight;
+                                    } else {
+                                        $newImageHeight = $h;
+                                        $newImageWidth = $toWidth;
+                                    }
+                                } else {
+                                    //图片和缩放区域不同向
+                                    if ($w <= $h) {
+                                        $newImageWidth = $w;
+                                        $newImageHeight = $toHeight;
+                                    } else {
+                                        $newImageHeight = $h;
+                                        $newImageWidth = $toWidth;
+                                    }
+                                }
+                            } elseif ($imagewidth > $w && $imageheight <= $h) {
+                                $newImageWidth = $w;
+                                $newImageHeight = $toHeight;
+                            } elseif ($imagewidth <= $w && $imageheight > $h) {
+                                $newImageHeight = $h;
+                                $newImageWidth = $toWidth;
+                            } else {
+                                $newImageWidth = $w;
+                                $newImageHeight = $h;
+                            }
+                        }
                     } else {
-                        //非法宽高都是0，那么就不缩放
-                        $newImageWidth = $imagewidth;
-                        $newImageHeight = $imageheight;
+                        $newImageWidth = $w;
+                        $newImageHeight = $h;
                     }
                 }
             } else {
