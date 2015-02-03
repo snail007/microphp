@@ -46,6 +46,8 @@ class test_input extends UnitTestCase {
 	$this->assertEqual(33, WoniuInput::post_get('get'));
 	$this->assertEqual(44, WoniuInput::post_get('none', 44));
 	$this->assertEqual(55, WoniuInput::get_post('none', 55));
+	$this->assertEqual('', WoniuInput::get_post('none', ''));
+	$this->assertEqual('', WoniuInput::post_get('none', ''));
 	//int
 	$_POST['int_okay'] = 11;
 	$_POST['int_err'] = 15;
