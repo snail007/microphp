@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 pm.
+ * Copyright 2015 狂奔的蜗牛.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
  * @package       MicroPHP
  * @author        狂奔的蜗牛
  * @email         672308444@163.com
- * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.1
- * @createdtime   2014-10-31 17:10:51
+ * @createdtime   2015-02-03 22:30:39
  */
  
 
