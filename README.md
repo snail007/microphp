@@ -20,6 +20,9 @@
       composer create-project snail/microphp  ./ dev-master  
       dev-master是最新版，也可以用版本号，比如：v2.3.1  
 
+    3.在index.php里面的MpRouter::setConfig($system)的下面  
+      执行包含：require dirname(__FILE__) . '/vendor/autoload.php';  
+
 # 说一下MicroPHP的特性：  
 
     1. 整个框架核心就一个文件MicroPHP.php（压缩后的文件MicroPHP.min.php，140KB左右）。   
