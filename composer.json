@@ -18,6 +18,5 @@
 	"require": {
 		"php":        ">=5.2.0"
 	},
-	"type":"project",
-	"target-dir":"./"
+	"type":"project"
 }
