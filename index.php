@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 pm.
+ * Copyright 2015 狂奔的蜗牛.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@
  * @package       MicroPHP
  * @author        狂奔的蜗牛
  * @email         672308444@163.com
- * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.0
- * @createdtime   2014-10-18 16:32:34
+ * @since         Version 2.3.1
+ * @createdtime   2015-03-12 16:06:36
  */
  
+
 
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -131,6 +132,7 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
+
 /**
  * $this->input->setCookie()和$this->input->cookie()
  * 设置和获取cookie的时候key使用的前缀
@@ -152,25 +154,25 @@ $system['cookie_key_prefix'] = '';
  *      public function __construct() {
  *          parent::__construct();
  *      }
- *  }
+ *  } 
  * 3.如果无需自定义Loader，留空即可。
  * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
  */
 $system['my_loader'] = '';
 /**
- * 自动加载的helper文件,比如:array($item);
+ * 自动加载的helper文件,比如:array($item); 
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
 $system['helper_file_autoload'] = array();
 /**
- * 自动加载的library文件,比如array($item);
+ * 自动加载的library文件,比如array($item); 
  * $item是library文件名或者"配置数组",不包含后缀,
  * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();
 /**
- * 自动加载的model,比如array($item);
+ * 自动加载的model,比如array($item); 
  * $item是model文件名或者"配置数组",不包含后缀,
  * 比如: UserModel 或者配置数组 array('UserModel'=>'user')
  * 配置数组的作用是为长的model名用别名代替.
@@ -190,12 +192,14 @@ $system['autoload_db'] = FALSE;
  * false：所有错误将不显示
  */
 $system['debug'] = TRUE;
+
 /**
  * 是否接管错误信息显示
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
 $system['error_manage'] = FALSE;
+
 /**
  * 是否开启错误日志记录
  * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
@@ -249,10 +253,13 @@ $system['log_error_handle'] = array(
 	'exception' => '', //array('ErrorHandle' => 'exception_handle'),
 	'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
 );
+
+
 /**
  * 默认时区,PRC是中国
  */
 $system['default_timezone'] = 'PRC';
+
 /**
  * ---------------------------自定义URL路由规则------------------------
  * 比如：
@@ -272,7 +279,8 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-		//"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+	//'|^([^/]+)/(.+)$|u' => '$1.$2',//index.php/home/index路由支持
+	//'|^([^/]+)/([^/]+)/(.+)$|u' => '$1.$2.$3',//index.php/user/home/index路由支持
 );
 /**
  * ---------------------缓存配置-----------------------
@@ -405,6 +413,7 @@ $system['session_handle'] = array(
  * 可以自定义多个数据库组，然后根据不同的环境选择不同的组作为默认数据库连接信息
  */
 $system['db']['active_group'] = 'default';
+
 /**
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
  */
@@ -425,6 +434,8 @@ $system['db']['default']['dbcollat'] = 'utf8_general_ci';
 $system['db']['default']['swap_pre'] = '';
 $system['db']['default']['autoinit'] = TRUE;
 $system['db']['default']['stricton'] = FALSE;
+
+
 /*
  * PDO database config demo
  * 1.pdo sqlite3
@@ -460,6 +471,35 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
+include('WoniuInput.class.php');
+include('WoniuRule.class.php');
+include('WoniuHelper.php');
+include('db-drivers/db.drivers.php');
+include('db-drivers/mysql.driver.php');
+include('db-drivers/mysqli.driver.php');
+include('db-drivers/pdo.driver.php');
+include('db-drivers/sqlite3.driver.php');
+include('cache-drivers/phpfastcache.php');
+include('cache-drivers/driver.php');
+include('cache-drivers/drivers/apc.php');
+include('cache-drivers/drivers/files.php');
+include('cache-drivers/drivers/memcache.php');
+include('cache-drivers/drivers/memcached.php');
+include('cache-drivers/drivers/sqlite.php');
+include('cache-drivers/drivers/wincache.php');
+include('cache-drivers/drivers/xcache.php');
+include('cache-drivers/drivers/redis.php');
+include('session_drivers/WoniuSessionHandle.php');
+include('session_drivers/MysqlSessionHandle.php');
+include('session_drivers/MongodbSessionHandle.php');
+include('session_drivers/MemcacheSessionHandle.php');
+include('session_drivers/RedisSessionHandle.php');
+include('WoniuRouter.php');
+include('WoniuLoader.php');
+include('WoniuController.php');
+include('WoniuModel.php');
+
+
 /* End of file index.php */
 include('MicroPHP.min.php');
 MpRouter::setConfig($system);
