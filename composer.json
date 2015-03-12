@@ -1,23 +1,28 @@
 {
-	"name":        "snail/microphp",
+	"name": "snail/microphp",
 	"description": "a smart micro php framework , 官方QQ群：42807575",
-	"homepage":    "http://microphp.us",
-	"license":     "Apache-2.0",
-	"keywords":    ["snail", "framework","microphp","php"],
+	"homepage": "http://microphp.us",
+	"license": "Apache-2.0",
+	"keywords": ["snail", "framework", "microphp", "php"],
 	"authors": [
 		{
-			"name":     "MicroPHP Team",
-			"email":    "672308444@163.com",
+			"name": "MicroPHP Team",
+			"email": "672308444@163.com",
 			"homepage": "http://www.host900.com/",
-			"role":     "developer"
+			"role": "developer"
 		}
 	],
 	"support": {
-		"source":   "http://github.com/snail007/microphp"
+		"source": "http://github.com/snail007/microphp"
 	},
 	"require": {
-		"php":        ">=5.2.0",
+		"php": ">=5.2.0",
 		"composer/installers": "~1.0"
 	},
-	"type":"project"
+	"type": "microphp",
+	"extra": {
+		"installer-paths": {
+			"./": ["type:microphp"]
+		}
+	}
 }
