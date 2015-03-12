@@ -16,7 +16,8 @@
 		"source":   "http://github.com/snail007/microphp"
 	},
 	"require": {
-		"php":        ">=5.2.0"
+		"php":        ">=5.2.0",
+		"composer/installers": "~1.0"
 	},
 	"type":"project"
 }
