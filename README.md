@@ -13,6 +13,12 @@
     5.application是一个简单的项目结构   
 
 官方首页：http://microphp.us/    
+# composer方式安装最新版microphp:    
+    1.新建一个空文件夹，比如 microphp  
+    
+    2.在microphp文件夹里面执行命令：  
+      composer create-project snail/microphp  ./ dev-master  
+      dev-master是最新版，也可以用版本号，比如：v2.3.1  
 
 # 说一下MicroPHP的特性：  
 
