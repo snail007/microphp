@@ -1,6 +1,3 @@
 {
-	"name": "snail/microphp",
-	"require": {
-		"monolog/monolog": "1.2.*"
-	}
+	"name": "snail/microphp"
 }
