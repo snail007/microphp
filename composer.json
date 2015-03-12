@@ -3,7 +3,7 @@
 	"description": "micro php framework",
 	"homepage":    "http://microphp.us",
 	"license":     "Apache License 2.0",
-	"keywords":    ["snail", "framework","microphp"],
+	"keywords":    ["snail", "framework","microphp","php"],
 	"authors": [
 		{
 			"name":     "MicroPHP Team",
