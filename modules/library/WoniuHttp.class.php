@@ -95,6 +95,7 @@ class WoniuHttp {
 	 */
 	private function request($type, $url, $data, $header = null, $max_redirect = 0) {
 		$type = strtolower($type);
+		$url = ltrim($url);
 		$this->curl_max_loops = $max_redirect;
 		if (!empty($header)) {
 			curl_setopt($this->ch, CURLOPT_HTTPHEADER, $header);
@@ -147,7 +148,13 @@ class WoniuHttp {
 		$max_redirect = $max_redirect < 0 ? 0 : $max_redirect;
 		if ($max_redirect == 0) {
 			$this->_autoReferer();
-			return curl_exec($this->ch);
+			$content = curl_exec($this->ch);
+			if (curl_errno($this->ch)) {
+				$this->setError(curl_errno($this->ch), curl_error($this->ch));
+				return FALSE;
+			} else {
+				return $content;
+			}
 		}
 		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, false);
 		$loops = 0;
@@ -168,7 +175,7 @@ class WoniuHttp {
 				}
 			} else {
 				$this->setError(curl_errno($this->ch), curl_error($this->ch));
-				return 0;
+				return FALSE;
 			}
 		} while (++$loops <= $max_redirect);
 		$this->setError(1000, 'MAXREDIRS reached');
