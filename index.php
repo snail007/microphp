@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 pm.
+ * Copyright 2015 狂奔的蜗牛.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
  * @package       MicroPHP
  * @author        狂奔的蜗牛
  * @email         672308444@163.com
- * @copyright     Copyright (c) 2013 - 2014, 狂奔的蜗牛, Inc.
+ * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.0
- * @createdtime   2014-10-18 16:32:34
+ * @since         Version 2.3.1
+ * @createdtime   2015-04-07 22:10:47
  */
  
 
@@ -272,7 +272,8 @@ $system['default_timezone'] = 'PRC';
  *  4.系统使用的url路由就是最后替换后的路由字符串
  */
 $system['route'] = array(
-		//"/^welcome\\/?(.*)$/u" => 'welcome.ajax/$1',
+	//'|^([^/]+)/(.+)$|u' => '$1.$2',//index.php/home/index路由支持
+	//'|^([^/]+)/([^/]+)/(.+)$|u' => '$1.$2.$3',//index.php/user/home/index路由支持
 );
 /**
  * ---------------------缓存配置-----------------------
