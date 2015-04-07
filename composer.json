@@ -1,0 +1,21 @@
+{
+	"name":        "snail/microphp",
+	"description": "micro php framework",
+	"homepage":    "http://microphp.us",
+	"license":     "Apache License 2.0",
+	"keywords":    ["snail", "framework","microphp","php"],
+	"authors": [
+		{
+			"name":     "MicroPHP Team",
+			"email":    "672308444@163.com",
+			"homepage": "http://www.host900.com/",
+			"role":     "developer"
+		}
+	],
+	"support": {
+		"source":   "http://github.com/snail007/microphp"
+	},
+	"require": {
+		"php":        ">=5.2.0"
+	}
+}
