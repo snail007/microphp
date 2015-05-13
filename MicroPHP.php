@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.1
- * @createdtime   2015-03-12 16:06:36
+ * @since         Version 2.3.2
+ * @createdtime   2015-05-13 12:03:05
  */
  
 
@@ -1372,6 +1372,7 @@ class WoniuRouter {
 			include $methodInfo['file'];
 			MpInput::$router = $methodInfo;
 			if (!MpInput::isCli()) {
+				//session自定义配置检查,只在非命令行模式下启用
 				self::checkSession();
 			}
 			$class = new $methodInfo['class']();
@@ -1488,12 +1489,15 @@ class WoniuRouter {
 					trigger404();
 				}
 			}
+			//pathinfo模式下有?,那么$pathinfo['query']也是非空的，这个时候查询字符串是PATH_INFO和query
 			$query_str = empty($pathinfo['query']) ? '' : $pathinfo['query'];
-			$pathinfo_query = empty($_SERVER['PATH_INFO']) ? $query_str : $_SERVER['PATH_INFO'] . '&' . $query_str;
+			$path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['REDIRECT_PATH_INFO']) ? $_SERVER['REDIRECT_PATH_INFO'] : '');
+			$pathinfo_query = empty($path_info) ? $query_str : $path_info . '&' . $query_str;
 		}
 		if ($pathinfo_query) {
 			$pathinfo_query = trim($pathinfo_query, '/&');
 		}
+		//urldecode 解码所有的参数名，解决get表单会编码参数名称的问题
 		$pq = $_pq = array();
 		$_pq = explode('&', $pathinfo_query);
 		foreach ($_pq as $value) {
@@ -1510,6 +1514,7 @@ class WoniuRouter {
 	private static function checkSession() {
 		$system = systemInfo();
 		$common_config = $system['session_handle']['common'];
+		// set some important session vars
 		ini_set('session.auto_start', 0);
 		ini_set('session.gc_probability', 1);
 		ini_set('session.gc_divisor', 100);
@@ -1522,13 +1527,17 @@ class WoniuRouter {
 		ini_set('session.use_trans_sid', 0);
 		ini_set('session.hash_function', 1);
 		ini_set('session.hash_bits_per_character', 5);
+		// disable client/proxy caching
 		session_cache_limiter('nocache');
+		// set the cookie parameters
 		session_set_cookie_params(
-				$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
+			$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
 		);
 
+		// name the session
 		session_name($common_config['session_name']);
 		register_shutdown_function('session_write_close');
+		//session自定义配置检测
 		if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
 			$driver = $system['session_handle']['handle'];
 			$config = $system['session_handle'];
@@ -1538,6 +1547,7 @@ class WoniuRouter {
 				$session->start($config);
 			}
 		}
+		// start it up
 		if ($common_config['autostart']) {
 			sessionStart();
 		}
@@ -1600,7 +1610,11 @@ class WoniuRouter {
 	}
 
 }
-class MpRouter extends WoniuRouter{}
+
+class MpRouter extends WoniuRouter {
+	
+}
+
 /* End of file Router.php */
 
 

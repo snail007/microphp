@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.1
- * @createdtime   2015-03-12 16:06:36
+ * @since         Version 2.3.2
+ * @createdtime   2015-05-13 12:03:05
  */
  
 
