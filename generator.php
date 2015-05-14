@@ -169,7 +169,9 @@ if (php_sapi_name() == 'cli' || !empty($_POST)) {
 
 	$index = file_get_contents('modules/plugin.php');
 	foreach ($files as $file) {
-		$index = str_replace("include('" . str_replace('modules/', '', $file) . "');\n", '', $index);
+		$index = str_replace("include('" . str_replace('modules/', '', $file) . "');", '', $index);
+		$index=  preg_replace('/^\r\n/m', '', $index);
+		$index=  preg_replace('/^\n/m', '', $index);
 	}
 	$index = str_replace("../application", 'application', $index);
 	$index = str_replace(array("MpRouter::setConfig(\$system);", "MpRouter::loadClass();"), '', $index);

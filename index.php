@@ -26,10 +26,9 @@
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.2
- * @createdtime   2015-05-13 12:09:50
+ * @createdtime   2015-05-14 15:40:00
  */
  
-
 
 define('IN_WONIU_APP', TRUE);
 define('WDS', DIRECTORY_SEPARATOR);
@@ -132,7 +131,6 @@ $system['library_file_subfix'] = '.class.php';
  * 函数文件名称后缀,比如.php
  */
 $system['helper_file_subfix'] = '.php';
-
 /**
  * $this->input->setCookie()和$this->input->cookie()
  * 设置和获取cookie的时候key使用的前缀
@@ -192,14 +190,12 @@ $system['autoload_db'] = FALSE;
  * false：所有错误将不显示
  */
 $system['debug'] = TRUE;
-
 /**
  * 是否接管错误信息显示
  * true：所有错误信息将由系统格式化输出
  * false：所有错误信息将原样输出
  */
 $system['error_manage'] = FALSE;
-
 /**
  * 是否开启错误日志记录
  * true：开启，如果开启了，系统将接管错误信息输出，忽略system['error_manage']和$system['db']['xxx']['db_debug']，
@@ -253,13 +249,10 @@ $system['log_error_handle'] = array(
 	'exception' => '', //array('ErrorHandle' => 'exception_handle'),
 	'db_error' => '', //array('ErrorHandle' => 'db_error_handle')
 );
-
-
 /**
  * 默认时区,PRC是中国
  */
 $system['default_timezone'] = 'PRC';
-
 /**
  * ---------------------------自定义URL路由规则------------------------
  * 比如：
@@ -413,7 +406,6 @@ $system['session_handle'] = array(
  * 可以自定义多个数据库组，然后根据不同的环境选择不同的组作为默认数据库连接信息
  */
 $system['db']['active_group'] = 'default';
-
 /**
  * dbdriver：可用的有mysql,mysqli,pdo,sqlite3,配置见下面
  */
@@ -434,8 +426,6 @@ $system['db']['default']['dbcollat'] = 'utf8_general_ci';
 $system['db']['default']['swap_pre'] = '';
 $system['db']['default']['autoinit'] = TRUE;
 $system['db']['default']['stricton'] = FALSE;
-
-
 /*
  * PDO database config demo
  * 1.pdo sqlite3
@@ -471,34 +461,6 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-include('WoniuInput.class.php');
-include('WoniuRule.class.php');
-include('WoniuHelper.php');
-include('db-drivers/db.drivers.php');
-include('db-drivers/mysql.driver.php');
-include('db-drivers/mysqli.driver.php');
-include('db-drivers/pdo.driver.php');
-include('db-drivers/sqlite3.driver.php');
-include('cache-drivers/phpfastcache.php');
-include('cache-drivers/driver.php');
-include('cache-drivers/drivers/apc.php');
-include('cache-drivers/drivers/files.php');
-include('cache-drivers/drivers/memcache.php');
-include('cache-drivers/drivers/memcached.php');
-include('cache-drivers/drivers/sqlite.php');
-include('cache-drivers/drivers/wincache.php');
-include('cache-drivers/drivers/xcache.php');
-include('cache-drivers/drivers/redis.php');
-include('session_drivers/WoniuSessionHandle.php');
-include('session_drivers/MysqlSessionHandle.php');
-include('session_drivers/MongodbSessionHandle.php');
-include('session_drivers/MemcacheSessionHandle.php');
-include('session_drivers/RedisSessionHandle.php');
-include('WoniuRouter.php');
-include('WoniuLoader.php');
-include('WoniuController.php');
-include('WoniuModel.php');
-
 
 /* End of file index.php */
 include('MicroPHP.min.php');

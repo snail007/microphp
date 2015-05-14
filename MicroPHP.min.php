@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.2
- * @createdtime   2015-05-13 12:09:50
+ * @createdtime   2015-05-14 15:40:00
  */
  
  if (!function_exists('args')) { function args($key = null) { return MpInput::parameters($key); } } if (!function_exists('xss_clean')) { function xss_clean($val) { return MpInput::xss_clean($val); } } foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) { if (!function_exists($func)) { eval('function ' . $func . '($key, $value, $life = null, $path = "/", $domian = null, $http_only = false) {
