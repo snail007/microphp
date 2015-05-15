@@ -25,8 +25,8 @@
  * @email         672308444@163.com
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
- * @since         Version 2.3.1
- * @createdtime   2015-04-07 22:25:13
+ * @since         Version 2.3.2
+ * @createdtime   2015-05-15 15:49:19
  */
  
 
@@ -1232,6 +1232,7 @@ class WoniuRouter {
 			include $methodInfo['file'];
 			MpInput::$router = $methodInfo;
 			if (!MpInput::isCli()) {
+				//session自定义配置检查,只在非命令行模式下启用
 				self::checkSession();
 			}
 			$class = new $methodInfo['class']();
@@ -1337,12 +1338,15 @@ class WoniuRouter {
 					trigger404();
 				}
 			}
+			//pathinfo模式下有?,那么$pathinfo['query']也是非空的，这个时候查询字符串是PATH_INFO和query
 			$query_str = empty($pathinfo['query']) ? '' : $pathinfo['query'];
-			$pathinfo_query = empty($_SERVER['PATH_INFO']) ? $query_str : $_SERVER['PATH_INFO'] . '&' . $query_str;
+			$path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['REDIRECT_PATH_INFO']) ? $_SERVER['REDIRECT_PATH_INFO'] : '');
+			$pathinfo_query = empty($path_info) ? $query_str : $path_info . '&' . $query_str;
 		}
 		if ($pathinfo_query) {
 			$pathinfo_query = trim($pathinfo_query, '/&');
 		}
+		//urldecode 解码所有的参数名，解决get表单会编码参数名称的问题
 		$pq = $_pq = array();
 		$_pq = explode('&', $pathinfo_query);
 		foreach ($_pq as $value) {
@@ -1358,6 +1362,7 @@ class WoniuRouter {
 	private static function checkSession() {
 		$system = systemInfo();
 		$common_config = $system['session_handle']['common'];
+		// set some important session vars
 		ini_set('session.auto_start', 0);
 		ini_set('session.gc_probability', 1);
 		ini_set('session.gc_divisor', 100);
@@ -1370,12 +1375,16 @@ class WoniuRouter {
 		ini_set('session.use_trans_sid', 0);
 		ini_set('session.hash_function', 1);
 		ini_set('session.hash_bits_per_character', 5);
+		// disable client/proxy caching
 		session_cache_limiter('nocache');
+		// set the cookie parameters
 		session_set_cookie_params(
-				$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
+			$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
 		);
+		// name the session
 		session_name($common_config['session_name']);
 		register_shutdown_function('session_write_close');
+		//session自定义配置检测
 		if (!empty($system['session_handle']['handle']) && isset($system['session_handle'][$system['session_handle']['handle']])) {
 			$driver = $system['session_handle']['handle'];
 			$config = $system['session_handle'];
@@ -1385,6 +1394,7 @@ class WoniuRouter {
 				$session->start($config);
 			}
 		}
+		// start it up
 		if ($common_config['autostart']) {
 			sessionStart();
 		}
@@ -1441,7 +1451,9 @@ class WoniuRouter {
 		MpLoader::$system = $system;
 	}
 }
-class MpRouter extends WoniuRouter{}
+class MpRouter extends WoniuRouter {
+	
+}
 /* End of file Router.php */
 
 class WoniuLoader {
@@ -3296,6 +3308,7 @@ class WoniuDB {
  * CI_DB_mysql_result -> Woniu_DB_result -> CI_DB_result
  */
 class CI_DB extends CI_DB_active_record {
+	
 }
 /**
  * Database Driver Class
@@ -3934,6 +3947,7 @@ class CI_DB_driver {
 			}
 		}
 	}
+	
 	/**
 	 * Close DB Connection
 	 *
@@ -4078,8 +4092,10 @@ class CI_DB_driver {
 	 * @return        void
 	 */
 	protected function _reset_select() {
+		
 	}
 }
+
 /**
  * Database Result Class
  *
@@ -4365,7 +4381,7 @@ class CI_DB_result {
 	protected function _fetch_object() {
 		return array();
 	}
-}
+} 
 /**
  * Active Record Class
  *
@@ -5534,6 +5550,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		}
 		return $array;
 	}
+
 	/**
 	 * Resets the active record values.  Called by the get() function
 	 *
@@ -6268,6 +6285,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	var $delete_hack = TRUE;
 	var $use_set_names;
+	
 	/**
 	 * Non-persistent database connection
 	 *
@@ -6281,6 +6299,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			return @mysqli_connect($this->hostname, $this->username, $this->password, $this->database);
 		}
 	}
+	
 	/**
 	 * Persistent database connection
 	 *
@@ -6290,6 +6309,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function db_pconnect() {
 		return $this->db_connect();
 	}
+	
 	/**
 	 * Reconnect
 	 *
@@ -6304,6 +6324,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			$this->conn_id = FALSE;
 		}
 	}
+	
 	/**
 	 * Select the database
 	 *
@@ -6313,6 +6334,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function db_select() {
 		return @mysqli_select_db($this->conn_id, $this->database);
 	}
+	
 	/**
 	 * Set client character set
 	 *
@@ -6331,6 +6353,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			return @mysqli_set_charset($this->conn_id, $charset);
 		}
 	}
+	
 	/**
 	 * Version number query string
 	 *
@@ -6340,6 +6363,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _version() {
 		return "SELECT version() AS ver";
 	}
+	
 	/**
 	 * Execute the query
 	 *
@@ -6352,6 +6376,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$result = @mysqli_query($this->conn_id, $sql);
 		return $result;
 	}
+	
 	/**
 	 * Prep the query
 	 *
@@ -6370,6 +6395,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return $sql;
 	}
+	
 	/**
 	 * Begin Transaction
 	 *
@@ -6388,6 +6414,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$this->simple_query('START TRANSACTION'); // can also be BEGIN or BEGIN WORK
 		return TRUE;
 	}
+	
 	/**
 	 * Commit Transaction
 	 *
@@ -6405,6 +6432,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$this->simple_query('SET AUTOCOMMIT=1');
 		return TRUE;
 	}
+	
 	/**
 	 * Rollback Transaction
 	 *
@@ -6422,6 +6450,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$this->simple_query('SET AUTOCOMMIT=1');
 		return TRUE;
 	}
+	
 	/**
 	 * Escape String
 	 *
@@ -6449,6 +6478,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return $str;
 	}
+	
 	/**
 	 * Affected Rows
 	 *
@@ -6458,6 +6488,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function affected_rows() {
 		return @mysqli_affected_rows($this->conn_id);
 	}
+	
 	/**
 	 * Insert ID
 	 *
@@ -6467,6 +6498,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function insert_id() {
 		return @mysqli_insert_id($this->conn_id);
 	}
+	
 	/**
 	 * "Count All" query
 	 *
@@ -6489,6 +6521,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$this->_reset_select();
 		return (int) $row->numrows;
 	}
+	
 	/**
 	 * List table query
 	 *
@@ -6505,6 +6538,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return $sql;
 	}
+	
 	/**
 	 * Show column query
 	 *
@@ -6517,6 +6551,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _list_columns($table = '') {
 		return "SHOW COLUMNS FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE);
 	}
+	
 	/**
 	 * Field data query
 	 *
@@ -6529,6 +6564,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _field_data($table) {
 		return "DESCRIBE " . $table;
 	}
+	
 	/**
 	 * The error message string
 	 *
@@ -6538,6 +6574,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _error_message() {
 		return mysqli_error($this->conn_id);
 	}
+	
 	/**
 	 * The error message number
 	 *
@@ -6547,6 +6584,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _error_number() {
 		return mysqli_errno($this->conn_id);
 	}
+	
 	/**
 	 * Escape the SQL Identifiers
 	 *
@@ -6573,6 +6611,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return preg_replace('/[' . $this->_escape_char . ']+/', $this->_escape_char, $str);
 	}
+	
 	/**
 	 * From Tables
 	 *
@@ -6589,6 +6628,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return '(' . implode(', ', $tables) . ')';
 	}
+	
 	/**
 	 * Insert statement
 	 *
@@ -6603,6 +6643,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _insert($table, $keys, $values) {
 		return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
 	}
+	
 	/**
 	 * Insert_batch statement
 	 *
@@ -6617,6 +6658,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _insert_batch($table, $keys, $values) {
 		return "INSERT INTO " . $table . " (" . implode(', ', $keys) . ") VALUES " . implode(', ', $values);
 	}
+	
 	/**
 	 * Replace statement
 	 *
@@ -6631,6 +6673,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _replace($table, $keys, $values) {
 		return "REPLACE INTO " . $table . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
 	}
+	
 	/**
 	 * Update statement
 	 *
@@ -6655,6 +6698,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$sql .= $orderby . $limit;
 		return $sql;
 	}
+	
 	/**
 	 * Update_Batch statement
 	 *
@@ -6690,6 +6734,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$sql .= ' WHERE ' . $where . $index . ' IN (' . implode(',', $ids) . ')';
 		return $sql;
 	}
+	
 	/**
 	 * Truncate statement
 	 *
@@ -6704,6 +6749,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	function _truncate($table) {
 		return "TRUNCATE " . $table;
 	}
+	
 	/**
 	 * Delete statement
 	 *
@@ -6728,6 +6774,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$limit = (!$limit) ? '' : ' LIMIT ' . $limit;
 		return "DELETE FROM " . $table . $conditions . $limit;
 	}
+	
 	/**
 	 * Limit string
 	 *
@@ -6746,6 +6793,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		return $sql;
 	}
+	
 	/**
 	 * Close DB Connection
 	 *
@@ -6757,6 +6805,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		@mysqli_close($conn_id);
 	}
 }
+
 /**
  * MySQLi Result Class
  *
@@ -6776,6 +6825,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	function num_rows() {
 		return @mysqli_num_rows($this->result_id);
 	}
+	
 	/**
 	 * Number of fields in the result set
 	 *
@@ -6785,6 +6835,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	function num_fields() {
 		return @mysqli_num_fields($this->result_id);
 	}
+	
 	/**
 	 * Fetch Field Names
 	 *
@@ -6800,6 +6851,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 		}
 		return $field_names;
 	}
+	
 	/**
 	 * Field data
 	 *
@@ -6824,6 +6876,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 		}
 		return $retval;
 	}
+	
 	/**
 	 * Free the result
 	 *
@@ -6835,6 +6888,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 			$this->result_id = FALSE;
 		}
 	}
+	
 	/**
 	 * Data Seek
 	 *
@@ -6848,6 +6902,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	function _data_seek($n = 0) {
 		return mysqli_data_seek($this->result_id, $n);
 	}
+	
 	/**
 	 * Result - associative array
 	 *
@@ -6859,6 +6914,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	function _fetch_assoc() {
 		return mysqli_fetch_assoc($this->result_id);
 	}
+	
 	/**
 	 * Result - object
 	 *
@@ -7176,7 +7232,7 @@ class CI_DB_pdo_driver extends CI_DB{
 	
 	/**
 	 * Insert ID
-	 *
+	 * 
 	 * @access	public
 	 * @return	integer
 	 */
@@ -7766,6 +7822,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _list_columns($table = '') {
 		return "PRAGMA table_info('" . $this->_protect_identifiers($table, TRUE, NULL, FALSE) . "') ";
 	}
+	
 	/**
 	 * Persistent database connection
 	 *
@@ -7775,6 +7832,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function db_pconnect() {
 		return $this->db_connect();
 	}
+	
 	/**
 	 * Select the database
 	 *
@@ -7784,6 +7842,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function db_select() {
 		return TRUE;
 	}
+	
 	/**
 	 * Execute the query
 	 *
@@ -7796,6 +7855,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		log_message('debug', 'SQL : ' . $sql);
 		return @$this->conn_id->query($sql);
 	}
+	
 	/**
 	 * Prep the query
 	 *
@@ -7829,12 +7889,13 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		}
 		return $str;
 	}
+	
 	/**
-	 * Escape String
-	 *
-	 * @access      public
-	 * @param       string
-	 * @return      string
+	 * Escape String         
+	 *         
+	 * @access      public         
+	 * @param       string         
+	 * @return      string         
 	 */
 	function escape_str($str) {
 		if (function_exists('sqlite_escape_string')) {
@@ -7843,10 +7904,10 @@ class CI_DB_sqlite3_driver extends CI_DB {
 			return SQLite3::escapeString($str);
 		}
 	}
-	/**     * Escape the SQL Identifiers *
-	 * This function escapes column and table names *
-	 * @accessprivate
-	 * @paramstring
+	/**     * Escape the SQL Identifiers * 
+	 * This function escapes column and table names * 
+	 * @accessprivate 
+	 * @paramstring 
 	 * @returnstring */
 	function _escape_identifiers($item) {
 		if ($this->_escape_char == '') {
@@ -7882,6 +7943,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$this->simple_query('BEGIN TRANSACTION');
 		return TRUE;
 	}
+	
 	/**
 	 * Commit Transaction
 	 *
@@ -7898,6 +7960,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$this->simple_query('COMMIT');
 		return TRUE;
 	}
+	
 	/**
 	 * Rollback Transaction
 	 *
@@ -7914,6 +7977,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$this->simple_query('ROLLBACK');
 		return TRUE;
 	}
+	
 	/**
 	 * Close DB Connection
 	 *
@@ -7924,6 +7988,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function destroy($conn_id) {
 		$conn_id = null;
 	}
+	
 	/**
 	 * Insert ID
 	 *
@@ -7933,6 +7998,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function insert_id() {
 		return @$this->conn_id->lastInsertId();
 	}
+	
 	/**
 	 * "Count All" query
 	 *
@@ -7952,6 +8018,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$row = $query->row();
 		return $row->numrows;
 	}
+	
 	/**
 	 * The error message string
 	 *
@@ -7962,6 +8029,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$infos = $this->conn_id->errorInfo();
 		return $infos[2];
 	}
+	
 	/**
 	 * The error message number
 	 *
@@ -7972,6 +8040,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$infos = $this->conn_id->errorInfo();
 		return $infos[1];
 	}
+	
 	/**
 	 * Version number query string
 	 *
@@ -7981,6 +8050,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function version() {
 		return $this->conn_id->getAttribute(constant("PDO::ATTR_SERVER_VERSION"));
 	}
+	
 	/**
 	 * Escape Table Name
 	 *
@@ -7997,6 +8067,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		}
 		return $table;
 	}
+	
 	/**
 	 * Field data query
 	 *
@@ -8011,6 +8082,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		$query = $this->query($sql);
 		return $query->field_data();
 	}
+	
 	/**
 	 * Insert statement
 	 *
@@ -8025,6 +8097,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _insert($table, $keys, $values) {
 		return "INSERT INTO " . $this->escape_table($table) . " (" . implode(', ', $keys) . ") VALUES (" . implode(', ', $values) . ")";
 	}
+	
 	/**
 	 * Update statement
 	 *
@@ -8042,6 +8115,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 		}
 		return "UPDATE " . $this->escape_table($table) . " SET " . implode(', ', $valstr) . " WHERE " . implode(" ", $where);
 	}
+	
 	/**
 	 * Delete statement
 	 *
@@ -8055,6 +8129,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _delete($table, $where) {
 		return "DELETE FROM " . $this->escape_table($table) . " WHERE " . implode(" ", $where);
 	}
+	
 	/**
 	 * Show table query
 	 *
@@ -8066,6 +8141,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _show_tables() {
 		return "SELECT name from sqlite_master WHERE type='table'";
 	}
+	
 	/**
 	 * Show columnn query
 	 *
@@ -8078,6 +8154,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _show_columns($table = '') {
 		return FALSE;
 	}
+	
 	/**
 	 * Limit string
 	 *
@@ -8125,6 +8202,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function db_set_charset($charset, $collation) {
 		return TRUE;
 	}
+	
 	/**
 	 * Close DB Connection
 	 *
@@ -8135,13 +8213,13 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	function _close($conn_id) {
 	}
 	/**
-	 * List table query
-	 *
-	 * Generates a platform-specific query string so that the table names can be fetched
-	 *
-	 * @access      private
-	 * @param       boolean
-	 * @return      string
+	 * List table query    
+	 *    
+	 * Generates a platform-specific query string so that the table names can be fetched    
+	 *    
+	 * @access      private    
+	 * @param       boolean    
+	 * @return      string    
 	 */
 	function _list_tables($prefix_limit = FALSE) {
 		$sql = "SELECT name from sqlite_master WHERE type='table'";
@@ -8175,6 +8253,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
 		}
 		return sizeof($this->pdo_results);
 	}
+	
 	/**
 	 * Number of fields in the result set
 	 *
@@ -8188,6 +8267,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
 			return $this->result_id->columnCount();
 		}
 	}
+	
 	/**
 	 * Result - associative array
 	 *
@@ -8206,6 +8286,7 @@ class CI_DB_sqlite3_result extends CI_DB_result {
 		}
 		return $this->result_id->fetch(PDO::FETCH_ASSOC);
 	}
+	
 	/**
 	 * Result - object
 	 *
@@ -8232,34 +8313,42 @@ class CI_DB_sqlite3_result extends CI_DB_result {
 }
 /* End of file sqlite3.php */
 
+
 interface phpfastcache_driver {
 	/*
 	 * Check if this Cache driver is available for server or not
 	 */
 	 function __construct($option = array());
+
 	 function checkdriver();
+
 	/*
 	 * SET
 	 * set a obj to cache
 	 */
 	 function driver_set($keyword, $value = "", $time = 300, $option = array() );
+
 	/*
 	 * GET
 	 * return null or value of cache
 	 */
 	 function driver_get($keyword, $option = array());
+
 	/*
 	 * Delete
 	 * Delete a cache
 	 */
 	 function driver_delete($keyword, $option = array());
+
 	/*
 	 * clean
 	 * Clean up whole cache
 	 */
 	 function driver_clean($option = array());
 }
+
 class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
+
 	function checkdriver() {
 		if (extension_loaded('apc') && ini_get('apc.enabled')) {
 			return true;
@@ -8267,12 +8356,14 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 			return false;
 		}
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if (!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 		if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
 			return apc_add($keyword, $value, $time);
@@ -8280,6 +8371,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 			return apc_store($keyword, $value, $time);
 		}
 	}
+
 	function driver_get($keyword, $option = array()) {
 		$data = apc_fetch($keyword, $bo);
 		if ($bo === false) {
@@ -8287,6 +8379,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 		}
 		return $data;
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		return apc_delete($keyword);
 	}
@@ -8294,6 +8387,7 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 		@apc_clear_cache();
 		@apc_clear_cache("user");
 	}
+
 	function driver_isExisting($keyword) {
 		if (apc_exists($keyword)) {
 			return true;
@@ -8301,29 +8395,38 @@ class phpfastcache_apc extends phpFastCache implements phpfastcache_driver {
 			return false;
 		}
 	}
+
 }
 
 class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
+
 	function checkdriver() {
 		if (is_writable($this->getPath())) {
 			return true;
 		} else {
+			
 		}
 		return false;
 	}
+
 	/*
 	 * Init Cache Path
 	 */
+
 	function __construct($option = array()) {
+
 		$this->setOption($option);
 		$this->getPath();
+
 		if (!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
 	}
+
 	/*
 	 * Return $FILE FULL PATH
 	 */
+
 	private function getFilePath($keyword, $skip = false) {
 		$path = $this->getPath();
 		$code = md5($keyword);
@@ -8341,12 +8444,15 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 				@chmod($path, 0777);
 			}
 		}
+
 		$file_path = $path . "/" . $code . ".txt";
 		return $file_path;
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 		$file_path = $this->getFilePath($keyword);
 		$data = $this->encode($value);
+
 		$toWrite = true;
 		/*
 		 * Skip if Existing Caching in Options
@@ -8359,26 +8465,33 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 				$toWrite = true;
 			}
 		}
+
 		if ($toWrite == true) {
 			$f = fopen($file_path, "w+");
 			fwrite($f, $data);
 			fclose($f);
 		}
 	}
+
 	function driver_get($keyword, $option = array()) {
+
 		$file_path = $this->getFilePath($keyword);
 		if (!file_exists($file_path)) {
 			return null;
 		}
+
 		$content = $this->readfile($file_path);
 		$object = $this->decode($content);
+
 		if ($this->isExpired($object)) {
 			@unlink($file_path);
 			$this->auto_clean_expired();
 			return null;
 		}
+
 		return $object;
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		$file_path = $this->getFilePath($keyword, true);
 		if (@unlink($file_path)) {
@@ -8387,24 +8500,29 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 			return false;
 		}
 	}
+
 	function auto_clean_expired() {
 		$autoclean = $this->get("keyword_clean_up_driver_files");
 		if ($autoclean == null) {
 			$this->set("keyword_clean_up_driver_files", 3600 * 24);
 		}
 	}
+
 	function driver_clean($option = array()) {
+
 		$path = $this->getPath();
 		$dir = @opendir($path);
 		if (!$dir) {
 			throw new Exception("Can't read PATH:" . $path, 94);
 		}
+
 		while ($file = readdir($dir)) {
 			if ($file != "." && $file != ".." && is_dir($path . "/" . $file)) {
 				$subdir = @opendir($path . "/" . $file);
 				if (!$subdir) {
 					throw new Exception("Can't read path:" . $path . "/" . $file, 93);
 				}
+
 				while ($f = readdir($subdir)) {
 					if ($f != "." && $f != "..") {
 						$file_path = $path . "/" . $file . "/" . $f;
@@ -8414,6 +8532,7 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 			} // end if
 		} // end while
 	}
+
 	function driver_isExisting($keyword) {
 		$file_path = $this->getFilePath($keyword, true);
 		if (!file_exists($file_path)) {
@@ -8427,23 +8546,29 @@ class phpfastcache_files extends phpFastCache implements phpfastcache_driver {
 			}
 		}
 	}
+
 	function isExpired($object) {
+
 		if (!empty($object['expired_in']) && isset($object['expired_time']) && @date("U") >= $object['expired_time']) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+
 }
 
 class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver {
+
 	var $instant;
+
 	function checkdriver() {
 		if(function_exists("memcache_connect")) {
 			return true;
 		}
 		return false;
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if(!$this->checkdriver() && !isset($option['skipError'])) {
@@ -8453,6 +8578,7 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 			$this->instant = new Memcache();
 		}
 	}
+
 	function connectServer() {
 		$server = $this->option['server'];
 		if(count($server) < 1) {
@@ -8460,22 +8586,28 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 				array("127.0.0.1",11211),
 			);
 		}
+
 		foreach($server as $s) {
 			$name = $s[0]."_".$s[1];
 			if(!isset($this->checked[$name])) {
 				$this->instant->addserver($s[0],$s[1]);
 				$this->checked[$name] = 1;
 			}
+
 		}
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
 		$this->connectServer();
 		if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
 			return $this->instant->add($keyword, $value, false, $time );
+
 		} else {
 			return $this->instant->set($keyword, $value, false, $time );
 		}
+
 	}
+
 	function driver_get($keyword, $option = array()) {
 		$this->connectServer();
 		$x = $this->instant->get($keyword);
@@ -8485,14 +8617,17 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 			return $x;
 		}
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		$this->connectServer();
 		 $this->instant->delete($keyword);
 	}
+
 	function driver_clean($option = array()) {
 		$this->connectServer();
 		$this->instant->flush();
 	}
+
 	function driver_isExisting($keyword) {
 		$this->connectServer();
 		$x = $this->get($keyword);
@@ -8502,24 +8637,32 @@ class phpfastcache_memcache extends phpFastCache implements phpfastcache_driver 
 			return true;
 		}
 	}
+
+
+
 }
 class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver {
+
 	var $instant;
+
 	function checkdriver() {
 		if (class_exists("Memcached",FALSE)) {
 			return true;
 		}
 		return false;
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if (!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
+
 		if ($this->checkdriver() && !is_object($this->instant)) {
 			$this->instant = new Memcached();
 		}
 	}
+
 	function connectServer() {
 		$s = $this->option['server'];
 		if (count($s) < 1) {
@@ -8527,6 +8670,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 				array("127.0.0.1", 11211, 100),
 			);
 		}
+
 		foreach ($s as $server) {
 			$name = isset($server[0]) ? $server[0] : "127.0.0.1";
 			$port = isset($server[1]) ? $server[1] : 11211;
@@ -8542,6 +8686,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 			}
 		}
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 		$this->connectServer();
 		if (isset($option['isExisting']) && $option['isExisting'] == true) {
@@ -8550,6 +8695,7 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 			return $this->instant->set($keyword, $value, time() + $time);
 		}
 	}
+
 	function driver_get($keyword, $option = array()) {
 		$this->connectServer();
 		$x = $this->instant->get($keyword);
@@ -8559,14 +8705,17 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 			return $x;
 		}
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		$this->connectServer();
 		$this->instant->delete($keyword);
 	}
+
 	function driver_clean($option = array()) {
 		$this->connectServer();
 		$this->instant->flush();
 	}
+
 	function driver_isExisting($keyword) {
 		$this->connectServer();
 		$x = $this->get($keyword);
@@ -8576,16 +8725,20 @@ class phpfastcache_memcached extends phpFastCache implements phpfastcache_driver
 			return true;
 		}
 	}
+
 }
 class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
+
 	var $max_size = 10; // 10 mb
 	var $instant = array();
 	var $indexing = NULL;
 	var $path = "";
 	var $currentDB = 1;
+
 	/*
 	 * INIT NEW DB
 	 */
+
 	function initDB(PDO $db) {
 		$db->exec('drop table if exists "caching"');
 		$db->exec('CREATE TABLE "caching" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "keyword" VARCHAR UNIQUE, "object" BLOB, "exp" INTEGER)');
@@ -8593,38 +8746,47 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 		$db->exec('CREATE INDEX "exp" ON "caching" ("exp")');
 		$db->exec('CREATE UNIQUE INDEX "keyword" ON "caching" ("keyword")');
 	}
+
 	/*
 	 * INIT Indexing DB
 	 */
+
 	function initIndexing(PDO $db) {
+
 		$dir = opendir($this->path);
 		while ($file = readdir($dir)) {
 			if ($file != "." && $file != ".." && $file != "indexing" && $file != "dbfastcache") {
 				unlink($this->path . "/" . $file);
 			}
 		}
+
 		$db->exec('drop table if exists "balancing"');
 		$db->exec('CREATE TABLE "balancing" ("keyword" VARCHAR PRIMARY KEY NOT NULL UNIQUE, "db" INTEGER)');
 		$db->exec('CREATE INDEX "db" ON "balancing" ("db")');
 		$db->exec('CREATE UNIQUE INDEX "lookup" ON "balacing" ("keyword")');
 	}
+
 	/*
 	 * INIT Instant DB
 	 * Return Database of Keyword
 	 */
+
 	function indexing($keyword) {
 		if ($this->indexing == NULL) {
 			$createTable = false;
 			if (!file_exists($this->path . "/indexing")) {
 				$createTable = true;
 			}
+
 			$PDO = new PDO("sqlite:" . $this->path . "/indexing");
 			$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 			if ($createTable == true) {
 				$this->initIndexing($PDO);
 			}
 			$this->indexing = $PDO;
 			unset($PDO);
+
 			$stm = $this->indexing->prepare("SELECT MAX(`db`) as `db` FROM `balancing`");
 			$stm->execute();
 			$row = $stm->fetch(PDO::FETCH_ASSOC);
@@ -8635,13 +8797,18 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			} else {
 				$db = $row['db'];
 			}
+
+
 			$size = file_exists($this->path . "/db" . $db) ? filesize($this->path . "/db" . $db) : 1;
 			$size = round($size / 1024 / 1024, 1);
+
+
 			if ($size > $this->max_size) {
 				$db = $db + 1;
 			}
 			$this->currentDB = $db;
 		}
+
 		$stm = $this->indexing->prepare("SELECT * FROM `balancing` WHERE `keyword`=:keyword LIMIT 1");
 		$stm->execute(array(
 			":keyword" => $keyword
@@ -8660,13 +8827,16 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 				":db" => $db,
 			));
 		}
+
 		return $db;
 	}
+
 	function db($keyword, $reset = false) {
 		/*
 		 * Default is fastcache
 		 */
 		$instant = $this->indexing($keyword);
+
 		/*
 		 * init instant
 		 */
@@ -8677,23 +8847,30 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			}
 			$PDO = new PDO("sqlite:" . $this->path . "/db" . $instant);
 			$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 			if ($createTable == true) {
 				$this->initDB($PDO);
 			}
+
 			$this->instant[$instant] = $PDO;
 			unset($PDO);
 		}
+
+
 		return $this->instant[$instant];
 	}
+
 	function checkdriver() {
 		if (extension_loaded('pdo_sqlite') && is_writeable($this->getPath())) {
 			return true;
 		}
 		return false;
 	}
+
 	/*
 	 * Init Main Database & Sub Database
 	 */
+
 	function __construct($option = array()) {
 		/*
 		 * init the path
@@ -8702,6 +8879,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 		if (!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
+
 		if ($option['storage'] == 'sqlite' && !file_exists($this->getPath() . "/sqlite")) {
 			if (!@mkdir($this->getPath() . "/sqlite", 0777)) {
 				die("Sorry, Please CHMOD 0777 for this path: " . $this->getPath());
@@ -8709,10 +8887,13 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 		}
 		$this->path = $this->getPath() . "/sqlite";
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 		$skipExisting = isset($option['skipExisting']) ? $option['skipExisting'] : false;
 		$toWrite = true;
+
 		$in_cache = $this->get($keyword, $option);
+
 		if ($skipExisting == true) {
 			if ($in_cache == null) {
 				$toWrite = true;
@@ -8720,6 +8901,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 				$toWrite = false;
 			}
 		}
+
 		if ($toWrite == true) {
 			try {
 				$stm = $this->db($keyword)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
@@ -8728,6 +8910,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 					":object" => $this->encode($value),
 					":exp" => @date("U") + (Int) $time,
 				));
+
 				return true;
 			} catch (PDOException $e) {
 				$stm = $this->db($keyword, true)->prepare("INSERT OR REPLACE INTO `caching` (`keyword`,`object`,`exp`) values(:keyword,:object,:exp)");
@@ -8738,8 +8921,10 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 				));
 			}
 		}
+
 		return false;
 	}
+
 	function driver_get($keyword, $option = array()) {
 		try {
 			$stm = $this->db($keyword)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
@@ -8748,29 +8933,40 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			));
 			$row = $stm->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
+
 			$stm = $this->db($keyword, true)->prepare("SELECT * FROM `caching` WHERE `keyword`=:keyword LIMIT 1");
 			$stm->execute(array(
 				":keyword" => $keyword
 			));
 			$row = $stm->fetch(PDO::FETCH_ASSOC);
 		}
+
+
 		if ($this->isExpired($row)) {
 			$this->deleteRow($row);
 			return null;
 		}
+
+
+
 		if (isset($row['id'])) {
 			$data = $this->decode($row['object']);
 			return $data;
 		}
+
+
 		return null;
 	}
+
 	function isExpired($row) {
 		$object=  $this->decode($row['object']);
 		if (!empty($object['expired_in'])&&isset($row['exp']) && @date("U") >= $row['exp']) {
 			return true;
 		}
+
 		return false;
 	}
+
 	function deleteRow($row) {
 		$stm = $this->db($row['keyword'])->prepare("DELETE FROM `caching` WHERE (`id`=:id) OR (`exp` <= :U) ");
 		$stm->execute(array(
@@ -8778,6 +8974,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			":U" => @date("U"),
 		));
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		$stm = $this->db($keyword)->prepare("DELETE FROM `caching` WHERE (`keyword`=:keyword) OR (`exp` <= :U)");
 		$stm->execute(array(
@@ -8785,6 +8982,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			":U" => @date("U"),
 		));
 	}
+
 	function driver_clean($option = array()) {
 		$dir = opendir($this->path);
 		while ($file = readdir($dir)) {
@@ -8793,6 +8991,7 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			}
 		}
 	}
+
 	function driver_isExisting($keyword) {
 		$stm = $this->db($keyword)->prepare("SELECT COUNT(`id`) as `total` FROM `caching` WHERE `keyword`=:keyword");
 		$stm->execute(array(
@@ -8805,9 +9004,11 @@ class phpfastcache_sqlite extends phpFastCache implements phpfastcache_driver {
 			return false;
 		}
 	}
+
 }
 
 class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver  {
+
 	function checkdriver() {
 		if(extension_loaded('wincache') && function_exists("wincache_ucache_set"))
 		{
@@ -8815,12 +9016,15 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 		}
 		return false;
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if(!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
+
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
 		if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
 			return wincache_ucache_add($keyword, $value, $time);
@@ -8828,21 +9032,27 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 			return wincache_ucache_set($keyword, $value, $time);
 		}
 	}
+
 	function driver_get($keyword, $option = array()) {
+
 		$x = wincache_ucache_get($keyword,$suc);
+
 		if($suc == false) {
 			return null;
 		} else {
 			return $x;
 		}
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		return wincache_ucache_delete($keyword);
 	}
+
 	function driver_clean($option = array()) {
 		wincache_ucache_clear();
 		return true;
 	}
+
 	function driver_isExisting($keyword) {
 		if(wincache_ucache_exists($keyword)) {
 			return true;
@@ -8850,22 +9060,32 @@ class phpfastcache_wincache extends phpFastCache implements phpfastcache_driver 
 			return false;
 		}
 	}
+
+
+
 }
+
 class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
+
 	function checkdriver() {
 		if(extension_loaded('xcache') && function_exists("xcache_get"))
 		{
 		   return true;
 		}
 		return false;
+
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if(!$this->checkdriver() && !isset($option['skipError'])) {
 			throw new Exception("Can't use this driver for your website!");
 		}
+
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array() ) {
+
 		if(isset($option['skipExisting']) && $option['skipExisting'] == true) {
 			if(!$this->isExisting($keyword)) {
 				return xcache_set($keyword,$value,$time);
@@ -8875,6 +9095,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 		}
 		return false;
 	}
+
 	function driver_get($keyword, $option = array()) {
 		$data = xcache_get($keyword);
 		if($data === false || $data == "") {
@@ -8882,6 +9103,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 		}
 		return $data;
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		return xcache_unset($keyword);
 	}
@@ -8892,6 +9114,7 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 		}
 		return true;
 	}
+
 	function driver_isExisting($keyword) {
 		if(xcache_isset($keyword)) {
 			return true;
@@ -8899,15 +9122,21 @@ class phpfastcache_xcache extends phpFastCache implements phpfastcache_driver  {
 			return false;
 		}
 	}
+
+
+
 }
 class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
+
 	var $instant;
+
 	function checkdriver() {
 		if (class_exists("redis",FALSE)) {
 			return true;
 		}
 		return false;
 	}
+
 	function __construct($option = array()) {
 		$this->setOption($option);
 		if (!$this->checkdriver() && !isset($option['skipError'])) {
@@ -8917,6 +9146,7 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 			$this->instant = new Redis();
 		}
 	}
+
 	function connectServer() {
 		$config = $this->option['redis'];
 		$this->instant = new Redis();
@@ -8935,11 +9165,13 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 			$this->instant->setOption(Redis::OPT_PREFIX, $config['prefix']);
 		}
 	}
+
 	function driver_set($keyword, $value = "", $time = 300, $option = array()) {
 		$this->connectServer();
 		$value = serialize($value);
 		return ($time) ? $this->instant->setex($keyword, $time, $value) : $this->instant->set($keyword, $value);
 	}
+
 	function driver_get($keyword, $option = array()) {
 		$this->connectServer();
 		if (($data = $this->instant->get($keyword))) {
@@ -8948,21 +9180,27 @@ class phpfastcache_redis extends phpFastCache implements phpfastcache_driver {
 			return null;
 		}
 	}
+
 	function driver_delete($keyword, $option = array()) {
 		$this->connectServer();
 		$this->instant->delete($keyword);
 	}
+
 	function driver_clean($option = array()) {
 		$this->connectServer();
 		$this->instant->flushDB();
 	}
+
 	function driver_isExisting($keyword) {
 		$this->connectServer();
 		return $this->instant->exists($keyword);
 	}
+
 }
 
+
 class phpFastCache {
+
 	var $drivers = array('apc', 'files', 'sqlite', 'memcached', 'redis', 'wincache', 'xcache', 'memcache');
 	private static $intances = array();
 	public static $storage = "auto";
@@ -8994,18 +9232,22 @@ class phpFastCache {
 		"storage" => "",
 		"cachePath" => "",
 	);
+
 	function __construct($storage = "", $option = array()) {
 		self::setup($option);
 		if (!$this->isExistingDriver($storage) && isset(self::$config['fallback'][$storage])) {
 			$storage = self::$config['fallback'][$storage];
 		}
+
 		if ($storage == "") {
 			$storage = self::$storage;
 			self::option("storage", $storage);
 		} else {
 			self::$storage = $storage;
 		}
+
 		$this->tmp['storage'] = $storage;
+
 		if ($storage != "auto" && $storage != "" && $this->isExistingDriver($storage)) {
 			$driver = "phpfastcache_" . $storage;
 		} else {
@@ -9013,21 +9255,26 @@ class phpFastCache {
 			self::$storage = $storage;
 			$driver = "phpfastcache_" . $storage;
 		}
+
 		$this->option("storage", $storage);
+
 		if (class_exists($driver, false)) {
 			$this->driver = new $driver($this->option);
 			$this->driver->is_driver = true;
 		}
 	}
+
 	public static function getInstance($type, $config) {
 		if (!isset(self::$intances[$type])) {
 			self::$intances[$type] = new phpFastCache($type, $config);
 		}
 		return self::$intances[$type];
 	}
+
 	/*
 	 * Basic Method
 	 */
+
 	function set($keyword, $value = "", $time = 300, $option = array()) {
 		$object = array(
 			"value" => $value,
@@ -9041,17 +9288,20 @@ class phpFastCache {
 			return $this->driver->driver_set($keyword, $object, $time, $option);
 		}
 	}
+
 	function get($keyword, $option = array()) {
 		if ($this->is_driver == true) {
 			$object = $this->driver_get($keyword, $option);
 		} else {
 			$object = $this->driver->driver_get($keyword, $option);
 		}
+
 		if ($object == null) {
 			return null;
 		}
 		return $object['value'];
 	}
+
 	function delete($keyword, $option = array()) {
 		if ($this->is_driver == true) {
 			return $this->driver_delete($keyword, $option);
@@ -9059,6 +9309,7 @@ class phpFastCache {
 			return $this->driver->driver_delete($keyword, $option);
 		}
 	}
+
 	function clean($option = array()) {
 		if ($this->is_driver == true) {
 			return $this->driver_clean($option);
@@ -9066,14 +9317,17 @@ class phpFastCache {
 			return $this->driver->driver_clean($option);
 		}
 	}
+
 	/*
 	 * Begin Parent Classes;
 	 */
+
 	public static function setup($name, $value = "") {
 		if (!is_array($name)) {
 			if ($name == "storage") {
 				self::$storage = $value;
 			}
+
 			self::$config[$name] = $value;
 		} else {
 			foreach ($name as $n => $value) {
@@ -9081,10 +9335,12 @@ class phpFastCache {
 			}
 		}
 	}
+
 	/*
 	 * For Auto Driver
 	 *
 	 */
+
 	function autoDriver() {
 		foreach ($this->drivers as $namex) {
 			$class = "phpfastcache_" . $namex;
@@ -9111,6 +9367,7 @@ class phpFastCache {
 		}
 		return "";
 	}
+
 	function option($name, $value = null) {
 		if ($value == null) {
 			if (isset($this->option[$name])) {
@@ -9119,6 +9376,7 @@ class phpFastCache {
 				return null;
 			}
 		} else {
+
 			if ($name == "path") {
 				$this->checked['path'] = false;
 				$this->driver->checked['path'] = false;
@@ -9126,17 +9384,21 @@ class phpFastCache {
 			self::$config[$name] = $value;
 			$this->option[$name] = $value;
 			$this->driver->option[$name] = $this->option[$name];
+
 			return $this;
 		}
 	}
+
 	public function setOption($option = array()) {
 		$this->option = array_merge($this->option, self::$config, $option);
 		$this->checked['path'] = false;
 	}
+
 	function __get($name) {
 		$this->driver->option = $this->option;
 		return $this->driver->get($name);
 	}
+
 	function __set($name, $v) {
 		$this->driver->option = $this->option;
 		if (isset($v[1]) && is_numeric($v[1])) {
@@ -9200,13 +9462,17 @@ class phpFastCache {
 		}
 		return false;
 	}
+
 	/*
 	 * return PATH for Files & PDO only
 	 */
 	public function getPath($create_path = false) {
+
 		if ($this->option['path'] == "" && self::$config['path'] != "") {
 			$this->option("path", self::$config['path']);
 		}
+
+
 		if ($this->option['path'] == '') {
 			if ($this->isPHPModule()) {
 				$tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
@@ -9214,12 +9480,15 @@ class phpFastCache {
 			} else {
 				$this->option("path", dirname(__FILE__));
 			}
+
 			if (self::$config['path'] == "") {
 				self::$config['path'] = $this->option("path");
 			}
 		}
 		$full_path = $this->option("path") . "/"; //. $this->option("securityKey") . "/";
+
 		if ($create_path == false && $this->checked['path'] == false) {
+
 			if (!file_exists($full_path) || !is_writable($full_path)) {
 				if (!file_exists($full_path)) {
 					@mkdir($full_path, 0777);
@@ -9230,6 +9499,7 @@ class phpFastCache {
 			}
 			$this->checked['path'] = true;
 		}
+
 		$this->option['cachePath'] = $full_path;
 		return $this->option['cachePath'];
 	}
@@ -9242,6 +9512,7 @@ class phpFastCache {
 			return file_get_contents($file);
 		} else {
 			$string = "";
+
 			$file_handle = @fopen($file, "r");
 			if (!$file_handle) {
 				throw new Exception("Can't Read File", 96);
@@ -9251,11 +9522,13 @@ class phpFastCache {
 				$string .= $line;
 			}
 			fclose($file_handle);
+
 			return $string;
 		}
 	}
 }
 interface WoniuSessionHandle {
+	
 	public function start($config=array());
 	/**
 	 * Open the session
@@ -9445,7 +9718,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		session_set_save_handler(array(&$this, 'open'), array(&$this, 'close'), array(&$this, 'read'), array(&$this, 'write'), array(&$this, 'destroy'), array(&$this, 'gc'));
 	}
 	/**
-	 *
+	 * 
 	 * check for collection object
 	 * @access public
 	 * @param string $session_path
@@ -9463,7 +9736,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		return $result;
 	}
 	/**
-	 *
+	 * 
 	 * doing noting
 	 * @access public
 	 * @return boolean
@@ -9473,11 +9746,11 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		return true;
 	}
 	/**
-	 *
+	 * 
 	 * Reading session data based on id
 	 * @access public
 	 * @param string $session_id
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function read($session_id) {
 		$result = NULL;
@@ -9495,7 +9768,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		return $ret;
 	}
 	/**
-	 *
+	 * 
 	 * Writing session data
 	 * @access public
 	 * @param string $session_id
@@ -9528,7 +9801,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		return true;
 	}
 	/**
-	 *
+	 * 
 	 * remove session data
 	 * @access public
 	 * @param string $session_id
@@ -9541,7 +9814,7 @@ class MongodbSessionHandle implements WoniuSessionHandle {
 		return true;
 	}
 	/**
-	 *
+	 * 
 	 * Garbage collection
 	 * @access public
 	 * @return boolean
