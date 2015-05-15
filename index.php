@@ -26,7 +26,7 @@
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.2
- * @createdtime   2015-05-14 15:40:00
+ * @createdtime   2015-05-15 15:49:19
  */
  
 
@@ -152,25 +152,25 @@ $system['cookie_key_prefix'] = '';
  *      public function __construct() {
  *          parent::__construct();
  *      }
- *  } 
+ *  }
  * 3.如果无需自定义Loader，留空即可。
  * 4.自定义Loader在框架核心文件被包含时生效，此后修改$system['my_loader']无效。
  */
 $system['my_loader'] = '';
 /**
- * 自动加载的helper文件,比如:array($item); 
+ * 自动加载的helper文件,比如:array($item);
  * $item是helper文件名,不包含后缀,比如: html 等.
  */
 $system['helper_file_autoload'] = array();
 /**
- * 自动加载的library文件,比如array($item); 
+ * 自动加载的library文件,比如array($item);
  * $item是library文件名或者"配置数组",不包含后缀,
  * 比如: ImageTool 或者配置数组array('ImageTool'=>'image'),或者配置数组array('ImageTool'=>'image','new'=>fasle)
  * 配置数组的作用是为长的类库名用别名代替.
  */
 $system['library_file_autoload'] = array();
 /**
- * 自动加载的model,比如array($item); 
+ * 自动加载的model,比如array($item);
  * $item是model文件名或者"配置数组",不包含后缀,
  * 比如: UserModel 或者配置数组 array('UserModel'=>'user')
  * 配置数组的作用是为长的model名用别名代替.
@@ -461,7 +461,6 @@ $system['db']['pdo_mysql']['stricton'] = FALSE;
 /**
  * -------------------------数据库配置结束--------------------------
  */
-
 /* End of file index.php */
 include('MicroPHP.min.php');
 MpRouter::setConfig($system);

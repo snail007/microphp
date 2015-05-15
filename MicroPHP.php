@@ -26,24 +26,19 @@
  * @copyright     Copyright (c) 2013 - 2015, 狂奔的蜗牛, Inc.
  * @link          http://git.oschina.net/snail/microphp
  * @since         Version 2.3.2
- * @createdtime   2015-05-14 15:40:00
+ * @createdtime   2015-05-15 15:49:19
  */
  
 
-
 if (!function_exists('args')) {
-
 	function args($key = null) {
 		return MpInput::parameters($key);
 	}
-
 }
 if (!function_exists('xss_clean')) {
-
 	function xss_clean($val) {
 		return MpInput::xss_clean($val);
 	}
-
 }
 foreach (array('set_cookie'=>'setCookie', 'set_cookie_raw'=>'setCookieRaw') as $func=>$true) {
 	if (!function_exists($func)) {
@@ -87,7 +82,6 @@ foreach (array('get_int', 'post_int', 'get_post_int', 'post_get_int',
 	}
 }
 if (!function_exists('dump')) {
-
 	/**
 	 * 打印变量内容，参数和var_dump一样
 	 * @param type $arg
@@ -103,10 +97,8 @@ if (!function_exists('dump')) {
 			echo '</pre>';
 		}
 	}
-
 }
 if (!function_exists('table')) {
-
 	/**
 	 * 实例化一个表模型
 	 * @param string $table_name    不带表前缀的表名称
@@ -116,10 +108,8 @@ if (!function_exists('table')) {
 	function table($table_name, $db = null) {
 		return MpTableModel::M($table_name, $db);
 	}
-
 }
 if (!function_exists('url')) {
-
 	/**
 	 * 生成url链接<br>
 	 * 使用示例：<br>
@@ -161,7 +151,6 @@ if (!function_exists('url')) {
 				}
 			}
 		}
-
 		if (!systemInfo('url_rewrite')) {
 			$self_name = stripos($action, '#') === 0 || stripos($action, '#') === 1 ? pathinfo(MpInput::server('php_self'), PATHINFO_BASENAME) : '';
 			$app_start = '?';
@@ -173,7 +162,6 @@ if (!function_exists('url')) {
 		}
 		//是否使用相对路经检查
 		$path = (stripos($action, '?') === 0 || stripos($action, '?') === 1 ? '' : urlPath() . '/' );
-
 		$action = ltrim($action, '#?');
 		$url_app = $path . $self_name .
 				(empty($args) && empty($get_str_arr) && empty($action) ? '' : $app_start) .
@@ -181,17 +169,14 @@ if (!function_exists('url')) {
 				(empty($get_str_arr) ? '' : $get_start . implode('&', $get_str_arr));
 		return str_replace('?&', '?', $url_app);
 	}
-
 }
-
 if (!function_exists('urlPath')) {
-
 	/**
 	 * 获取入口文件所在目录url路径。
 	 * 只能在web访问时使用，在命令行下面会抛出异常。
 	 * @param type $subpath  子路径或者文件路径，如果非空就会被附加在入口文件所在目录的后面
-	 * @return type           
-	 * @throws Exception     
+	 * @return type
+	 * @throws Exception
 	 */
 	function urlPath($subpath = null) {
 		if (MpInput::isCli()) {
@@ -207,11 +192,8 @@ if (!function_exists('urlPath')) {
 			return str_replace($root, '', $path);
 		}
 	}
-
 }
-
 if (!function_exists('path')) {
-
 	/**
 	 * 获取入口文件所在目录绝对路径。
 	 * @param type $subpath 子路径或者文件路径，如果非空就会被附加在入口文件所在目录的绝对路径后面
@@ -221,7 +203,6 @@ if (!function_exists('path')) {
 		$path = str_replace(array("/", "\\"), '/', realpath('.') . ($subpath ? '/' . trim($subpath, '/\\') : ''));
 		return truepath($path);
 	}
-
 }
 /**
  * 获取系统配置信息,也就是MpLoader::$system里面的信息
@@ -229,7 +210,6 @@ if (!function_exists('path')) {
  * @return null
  */
 if (!function_exists('systemInfo')) {
-
 	function systemInfo($key = NULL) {
 		if (is_null($key)) {
 			return MpLoader::$system;
@@ -239,7 +219,6 @@ if (!function_exists('systemInfo')) {
 			return null;
 		}
 	}
-
 }
 /**
  * 获取系统数据库配置信息
@@ -249,7 +228,6 @@ if (!function_exists('systemInfo')) {
  * @return null
  */
 if (!function_exists('dbInfo')) {
-
 	function dbInfo($group = NULL, $key = NULL) {
 		if (is_null($group)) {
 			$system=  systemInfo();
@@ -270,29 +248,20 @@ if (!function_exists('dbInfo')) {
 			return null;
 		}
 	}
-
 }
-
 if (!function_exists('sessionStart')) {
-
 	function sessionStart() {
 		if (!isset($_SESSION)) {
 			session_start();
 		}
 	}
-
 }
-
 if (!function_exists('getInstance')) {
-
 	function &getInstance() {
 		return WoniuController::getInstance();
 	}
-
 }
-
 if (!function_exists('trigger404')) {
-
 	function trigger404($msg = '<h1>Not Found</h1>') {
 		$system = systemInfo();
 		if (!headers_sent()) {
@@ -305,11 +274,8 @@ if (!function_exists('trigger404')) {
 		}
 		exit();
 	}
-
 }
-
 if (!function_exists('truepath')) {
-
 	/**
 	 * This function is to replace PHP's extremely buggy realpath().
 	 * @param string The original path, can be relative etc.
@@ -343,17 +309,13 @@ if (!function_exists('truepath')) {
 		$path = str_replace(array('/', '\\'), '/', $path);
 		return $path;
 	}
-
 }
 if (!function_exists('convertPath')) {
-
 	function convertPath($path) {
 		return str_replace(array("\\", "/"), '/', $path);
 	}
-
 }
 if (!function_exists('trigger500')) {
-
 	function trigger500($msg = '<h1>Server Error</h1>') {
 		$system =  systemInfo();
 		if (!headers_sent()) {
@@ -366,10 +328,8 @@ if (!function_exists('trigger500')) {
 		}
 		exit();
 	}
-
 }
 if (!function_exists('woniu_exception_handler')) {
-
 	function woniu_exception_handler($exception) {
 		$errno = $exception->getCode();
 		$errfile = pathinfo($exception->getFile(), PATHINFO_FILENAME);
@@ -400,10 +360,8 @@ if (!function_exists('woniu_exception_handler')) {
 		}
 		exit;
 	}
-
 }
 if (!function_exists('woniu_error_handler')) {
-
 	/**
 	 * 非致命错误处理函数。
 	 * 该函数会接受所有类型的错误，应该过滤掉致命错误
@@ -445,10 +403,8 @@ if (!function_exists('woniu_error_handler')) {
 			echo '<pre>' . format_error($errno, $errstr, $errfile, $errline) . '</pre>';
 		}
 	}
-
 }
 if (!function_exists('woniu_fatal_handler')) {
-
 	/**
 	 * 致命错误处理函数。
 	 * 该函数会接受所有类型的错误，应该只处理致命错误
@@ -496,12 +452,8 @@ if (!function_exists('woniu_fatal_handler')) {
 			exit;
 		}
 	}
-
 }
-
-
 if (!function_exists('woniu_db_error_handler')) {
-
 	function woniu_db_error_handler($error) {
 		$msg = '';
 		if (is_array($error)) {
@@ -540,11 +492,8 @@ if (!function_exists('woniu_db_error_handler')) {
 			exit;
 		}
 	}
-
 }
-
 if (!function_exists('format_error')) {
-
 	function format_error($errno, $errstr, $errfile, $errline) {
 		$path = truepath(systemInfo('application_folder'));
 		$path.=empty($path) ? '' : '/';
@@ -561,11 +510,8 @@ if (!function_exists('format_error')) {
 		}
 		return $content;
 	}
-
 }
-
 if (!function_exists('get_strace')) {
-
 	function get_strace($is_db = false) {
 		$trace = debug_backtrace(false);
 		foreach ($trace as $t) {
@@ -593,10 +539,8 @@ if (!function_exists('get_strace')) {
 		}
 		return $str;
 	}
-
 }
 if (!function_exists('stripslashes_all')) {
-
 	function stripslashes_all() {
 		if (!get_magic_quotes_gpc()) {
 			return;
@@ -607,11 +551,9 @@ if (!function_exists('stripslashes_all')) {
 			$$val = stripslashes2($$val);
 		}
 	}
-
 }
 if (!function_exists('stripslashes2')) {
 #过滤魔法转义，参数可以是字符串或者数组，支持嵌套数组
-
 	function stripslashes2($var) {
 		if (!get_magic_quotes_gpc()) {
 			return $var;
@@ -629,24 +571,18 @@ if (!function_exists('stripslashes2')) {
 		}
 		return $var;
 	}
-
 }
 if (!function_exists('is_php')) {
-
 	function is_php($version = '5.0.0') {
 		static $_is_php;
 		$version = (string) $version;
-
 		if (!isset($_is_php[$version])) {
 			$_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
 		}
-
 		return $_is_php[$version];
 	}
-
 }
 if (!function_exists('forceDownload')) {
-
 	/**
 	 * 强制下载
 	 * 经过修改，支持中文名称
@@ -694,10 +630,8 @@ if (!function_exists('forceDownload')) {
 		header("Content-Length: " . strlen($data));
 		exit($data);
 	}
-
 }
 if (!function_exists('getRsCol')) {
-
 	/**
 	 * 获取结果集中的一个字段的数组
 	 * @param type $rows
@@ -711,10 +645,8 @@ if (!function_exists('getRsCol')) {
 		}
 		return $ret;
 	}
-
 }
 if (!function_exists('chRsKey')) {
-
 	/**
 	 * 改变结果集数组key
 	 * @param type $rs  结果集
@@ -728,10 +660,8 @@ if (!function_exists('chRsKey')) {
 		}
 		return $_rs;
 	}
-
 }
 if (!function_exists('sortRs')) {
-
 	/**
 	 * 按字段对结果集进行排序
 	 * @param type $rows
@@ -751,11 +681,8 @@ if (!function_exists('sortRs')) {
 		}
 		return $ret;
 	}
-
 }
-
 if (!function_exists('mergeRs')) {
-
 	/**
 	 * 合并多个结果集，参数是多个：array($rs,$column_name)，$column_name是该结果集和其它结果集关联的字段
 	 * 比如：$rs1=array(array('a'=>'1111','b'=>'fasdfas'),array('a'=>'222','b'=>'fasdfas'),array('a'=>'333','b'=>'fasdfas'));
@@ -796,22 +723,14 @@ if (!function_exists('mergeRs')) {
 		}
 		return $ret;
 	}
-
 }
 class MP{
-	
 }
-
-
 /* End of file Helper.php */
- 
-
 
 
 class WoniuInput {
-
 	public static $router;
-
 	/**
 	 * 系统最终使用的路由字符串
 	 * @return type
@@ -819,7 +738,6 @@ class WoniuInput {
 	public static function route_query() {
 		return self::$router['query'];
 	}
-
 	/**
 	 * hmvc模块名称，没有模块就为空
 	 * @return type
@@ -827,7 +745,6 @@ class WoniuInput {
 	public static function module_name() {
 		return self::$router['module'];
 	}
-
 	/**
 	 * url中方法的路径<br/>
 	 * 比如：<br>
@@ -838,7 +755,6 @@ class WoniuInput {
 	public static function method_path() {
 		return self::$router['mpath'];
 	}
-
 	/**
 	 * url中方法名称<br/>
 	 * 比如：<br>
@@ -848,7 +764,6 @@ class WoniuInput {
 	public static function method_name() {
 		return self::$router['m'];
 	}
-
 	/**
 	 * $system配置中方法前缀,比如：do
 	 * @return type
@@ -856,7 +771,6 @@ class WoniuInput {
 	public static function method_prefix() {
 		return self::$router['prefix'];
 	}
-
 	/**
 	 * url中控制器的路径<br/>
 	 * 比如：<br>
@@ -867,7 +781,6 @@ class WoniuInput {
 	public static function controller_path() {
 		return self::$router['cpath'];
 	}
-
 	/**
 	 * url中控制器名称<br/>
 	 * 比如：<br>
@@ -877,7 +790,6 @@ class WoniuInput {
 	public static function controller_name() {
 		return self::$router['c'];
 	}
-
 	/**
 	 * url中文件夹名称，没有文件夹返回空<br/>
 	 * 比如：<br/>
@@ -886,16 +798,14 @@ class WoniuInput {
 	public static function folder_name() {
 		return self::$router['folder'];
 	}
-
 	/**
 	 * 请求的控制器文件绝对路径<br/>
 	 * 比如：/home/www/app/controllers/home.php<br/>
-	 * 
+	 *
 	 */
 	public static function controller_file() {
 		return self::$router['file'];
 	}
-
 	/**
 	 * 请求的控制器类名称<br/>
 	 * 比如：Home
@@ -903,7 +813,6 @@ class WoniuInput {
 	public static function class_name() {
 		return self::$router['class'];
 	}
-
 	/**
 	 * 请求的控制器方法名称<br/>
 	 * 比如：doIndex
@@ -911,7 +820,6 @@ class WoniuInput {
 	public static function class_method_name() {
 		return self::$router['method'];
 	}
-
 	/**
 	 * 传递给控制器方法的所有参数的数组，参数为空时返回参数数组<br/>
 	 * 比如：<br/>
@@ -931,7 +839,6 @@ class WoniuInput {
 			return self::$router['parameters'];
 		}
 	}
-
 	private static function get_x_type($rule, $method, $key) {
 		$val = null;
 		switch ($method) {
@@ -954,7 +861,6 @@ class WoniuInput {
 			return null;
 		}
 	}
-
 	private static function get_rule_type($rule, $method, $key, $default = null) {
 		if (!is_array($rule)) {
 			$_rule = array($rule => 'err');
@@ -968,7 +874,6 @@ class WoniuInput {
 		$val = self::get_x_type($rule, $method, $key);
 		return is_null($val) ? $default : $val;
 	}
-
 	/**
 	 * 根据验证规则和键获取一个值
 	 * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
@@ -979,7 +884,6 @@ class WoniuInput {
 	public static function get_rule($rule, $key, $default = null) {
 		return self::get_rule_type($rule, 'get', $key, $default);
 	}
-
 	/**
 	 * 根据验证规则和键获取一个值
 	 * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
@@ -990,7 +894,6 @@ class WoniuInput {
 	public static function post_rule($rule, $key, $default = null) {
 		return self::get_rule_type($rule, 'post', $key, $default);
 	}
-
 	/**
 	 * 根据验证规则和键获取一个值
 	 * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
@@ -1001,7 +904,6 @@ class WoniuInput {
 	public static function get_post_rule($rule, $key, $default = null) {
 		return self::get_rule_type($rule, 'get_post', $key, $default);
 	}
-
 	/**
 	 * 根据验证规则和键获取一个值
 	 * @param type $rule    表单验证规则.示例：1.int 2. array('int','range[1,10]')
@@ -1012,14 +914,12 @@ class WoniuInput {
 	public static function post_get_rule($rule, $key, $default = null) {
 		return self::get_rule_type($rule, 'post_get', $key, $default);
 	}
-
 	private static function get_int_type($method, $key, $min = null, $max = null, $default = null) {
 		$val = self::get_rule_type('int', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && $val >= $min);
 		$max_okay = is_null($max) || (!is_null($max) && $val <= $max);
 		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
-
 	/**
 	 * 获取一个整数
 	 * @param type $key     键
@@ -1031,7 +931,6 @@ class WoniuInput {
 	public static function get_int($key, $min = null, $max = null, $default = null) {
 		return self::get_int_type('get', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取一个整数
 	 * @param type $key     键
@@ -1043,7 +942,6 @@ class WoniuInput {
 	public static function post_int($key, $min = null, $max = null, $default = null) {
 		return self::get_int_type('post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取一个整数
 	 * @param type $key     键
@@ -1055,7 +953,6 @@ class WoniuInput {
 	public static function get_post_int($key, $min = null, $max = null, $default = null) {
 		return self::get_int_type('get_post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取一个整数
 	 * @param type $key     键
@@ -1067,14 +964,12 @@ class WoniuInput {
 	public static function post_get_int($key, $min = null, $max = null, $default = null) {
 		return self::get_int_type('post_get', $key, $min, $max, $default);
 	}
-
 	private static function get_date_type($method, $key, $min = null, $max = null, $default = null) {
 		$val = self::get_rule_type('date', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
 		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
-
 	/**
 	 * 获取日期，格式:2012-12-12
 	 * @param type $key  键
@@ -1086,7 +981,6 @@ class WoniuInput {
 	public static function get_date($key, $min = null, $max = null, $default = null) {
 		return self::get_date_type('get', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期，格式:2012-12-12
 	 * @param type $key  键
@@ -1098,7 +992,6 @@ class WoniuInput {
 	public static function post_date($key, $min = null, $max = null, $default = null) {
 		return self::get_date_type('post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期，格式:2012-12-12
 	 * @param type $key  键
@@ -1110,7 +1003,6 @@ class WoniuInput {
 	public static function get_post_date($key, $min = null, $max = null, $default = null) {
 		return self::get_date_type('get_post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期，格式:2012-12-12
 	 * @param type $key  键
@@ -1122,7 +1014,6 @@ class WoniuInput {
 	public static function post_get_date($key, $min = null, $max = null, $default = null) {
 		return self::get_date_type('post_get', $key, $min, $max, $default);
 	}
-
 	private static function get_time_type($method, $key, $min = null, $max = null, $default = null) {
 		$val = self::get_rule_type('time', $method, $key);
 		$pre_fix = '2014-01-01 ';
@@ -1130,7 +1021,6 @@ class WoniuInput {
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($pre_fix . $val) <= strtotime($pre_fix . $max));
 		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
-
 	/**
 	 * 获取时间，格式:15:01:55
 	 * @param type $key  键
@@ -1142,7 +1032,6 @@ class WoniuInput {
 	public static function get_time($key, $min = null, $max = null, $default = null) {
 		return self::get_time_type('get', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取时间，格式:15:01:55
 	 * @param type $key  键
@@ -1154,7 +1043,6 @@ class WoniuInput {
 	public static function post_time($key, $min = null, $max = null, $default = null) {
 		return self::get_time_type('post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取时间，格式:15:01:55
 	 * @param type $key  键
@@ -1166,7 +1054,6 @@ class WoniuInput {
 	public static function get_post_time($key, $min = null, $max = null, $default = null) {
 		return self::get_time_type('get_post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取时间，格式:15:01:55
 	 * @param type $key  键
@@ -1178,14 +1065,12 @@ class WoniuInput {
 	public static function post_get_time($key, $min = null, $max = null, $default = null) {
 		return self::get_time_type('post_get', $key, $min, $max, $default);
 	}
-
 	private static function get_datetime_type($method, $key, $min = null, $max = null, $default = null) {
 		$val = self::get_rule_type('datetime', $method, $key);
 		$min_okay = is_null($min) || (!is_null($min) && strtotime($val) >= strtotime($min));
 		$max_okay = is_null($max) || (!is_null($max) && strtotime($val) <= strtotime($max));
 		return $min_okay && $max_okay && !is_null($val) ? $val : $default;
 	}
-
 	/**
 	 * 获取日期时间，格式:2012-12-12 15:01:55
 	 * @param type $key  键
@@ -1197,7 +1082,6 @@ class WoniuInput {
 	public static function get_datetime($key, $min = null, $max = null, $default = null) {
 		return self::get_datetime_type('get', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期时间，格式:2012-12-12 15:01:55
 	 * @param type $key  键
@@ -1209,7 +1093,6 @@ class WoniuInput {
 	public static function post_datetime($key, $min = null, $max = null, $default = null) {
 		return self::get_datetime_type('post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期时间，格式:2012-12-12 15:01:55
 	 * @param type $key  键
@@ -1221,7 +1104,6 @@ class WoniuInput {
 	public static function get_post_datetime($key, $min = null, $max = null, $default = null) {
 		return self::get_datetime_type('get_post', $key, $min, $max, $default);
 	}
-
 	/**
 	 * 获取日期时间，格式:2012-12-12 15:01:55
 	 * @param type $key  键
@@ -1233,29 +1115,24 @@ class WoniuInput {
 	public static function post_get_datetime($key, $min = null, $max = null, $default = null) {
 		return self::get_datetime_type('post_get', $key, $min, $max, $default);
 	}
-
 	public static function get_post($key = null, $default = null, $xss_clean = false) {
 		$get = self::gpcs('_GET', $key,NULL);
 		$val = $get === null ? self::gpcs('_POST', $key, $default) : $get;
 		return $xss_clean ? self::xss_clean($val) : $val;
 	}
-
 	public static function post_get($key = null, $default = null, $xss_clean = false) {
 		$get = self::gpcs('_POST', $key,NULL);
 		$val = $get === null ? self::gpcs('_GET', $key, $default) : $get;
 		return $xss_clean ? self::xss_clean($val) : $val;
 	}
-
 	public static function get($key = null, $default = null, $xss_clean = false) {
 		$val = self::gpcs('_GET', $key, $default);
 		return $xss_clean ? self::xss_clean($val) : $val;
 	}
-
 	public static function post($key = null, $default = null, $xss_clean = false) {
 		$val = self::gpcs('_POST', $key, $default);
 		return $xss_clean ? self::xss_clean($val) : $val;
 	}
-
 	/**
 	 * 获取一个cookie
 	 * 提醒:
@@ -1270,7 +1147,6 @@ class WoniuInput {
 		$key = systemInfo('cookie_key_prefix') . $key;
 		return self::cookieRaw($key, $default, $xss_clean);
 	}
-
 	/**
 	 * 获取一个cookie
 	 * @param string $key      cookie键
@@ -1282,16 +1158,13 @@ class WoniuInput {
 		$val = self::gpcs('_COOKIE', $key, $default);
 		return $xss_clean ? self::xss_clean($val) : $val;
 	}
-
 	public static function session($key = null, $default = null) {
 		return self::gpcs('_SESSION', $key, $default);
 	}
-
 	public static function server($key = null, $default = null) {
 		$key = !is_null($key) ? strtoupper($key) : null;
 		return self::gpcs('_SERVER', $key, $default);
 	}
-
 	private static function gpcs($range, $key, $default) {
 		global $$range;
 		if ($key === null) {
@@ -1301,19 +1174,15 @@ class WoniuInput {
 			return isset($range[$key]) ? $range[$key] : ( $default !== null ? $default : null);
 		}
 	}
-
 	public static function isCli() {
 		return php_sapi_name() == 'cli';
 	}
-
 	public static function is_cli() {
 		return self::isCli();
 	}
-
 	public static function is_ajax() {
 		return (self::server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest');
 	}
-
 	public static function xss_clean($var) {
 		if (is_array($var)) {
 			foreach ($var as $key => $val) {
@@ -1328,39 +1197,30 @@ class WoniuInput {
 		}
 		return $var;
 	}
-
 	private static function xss_clean0($data) {
 		$data = str_replace(array('&amp;', '&lt;', '&gt;'), array('&amp;amp;', '&amp;lt;', '&amp;gt;'), $data);
 		$data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
 		$data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
 		$data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
-
 		$data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
-
 		$data = preg_replace('#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2nojavascript...', $data);
 		$data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2novbscript...', $data);
 		$data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u', '$1=$2nomozbinding...', $data);
-
 		$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
 		$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?behaviour[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
 		$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu', '$1>', $data);
-
 		$data = preg_replace('#</*\w+:\w[^>]*+>#i', '', $data);
 		do {
 			$old_data = $data;
 			$data = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|iframe|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data);
 		} while ($old_data !== $data);
-
 		return $data;
 	}
-
 }
 class MpInput extends WoniuInput{}
 /* End of file WoniuInput.php */
 
-
 class WoniuRouter {
-
 	public static function loadClass() {
 		$system = systemInfo();
 		$methodInfo = self::parseURI();
@@ -1398,20 +1258,14 @@ class WoniuRouter {
 			}
 		}
 	}
-
 	private static function parseURI() {
-
 		$pathinfo_query = self::getQueryStr();
-
 		//路由hmvc模块名称信息检查
 		$router['module'] = self::getHmvcModuleName($pathinfo_query);
-
 		$pathinfo_query = self::checkHmvc($pathinfo_query);
 		$pathinfo_query = self::checkRouter($pathinfo_query);
-
 		//标记系统最终使用的路由字符串
 		$router['query'] = $pathinfo_query;
-
 		$system = systemInfo();
 		$class_method = $system['default_controller'] . '.' . $system['default_controller_method'];
 		//看看是否要处理查询字符串
@@ -1434,15 +1288,12 @@ class WoniuRouter {
 		$pathinfo_query_parameters_str = !empty($pathinfo_query_parameters[0]) ? $pathinfo_query_parameters[0] : '';
 		//去掉参数开头的/，只留下参数
 		$pathinfo_query_parameters_str && $pathinfo_query_parameters_str{0} === '/' ? $pathinfo_query_parameters_str = substr($pathinfo_query_parameters_str, 1) : '';
-
 		//现在已经解析出了，$class_method类方法名称字符串(main.index），$pathinfo_query_parameters_str参数字符串(1/2)，进一步解析为真实路径
 		$origin_class_method = $class_method;
 		$class_method = explode(".", $class_method);
 		$method = end($class_method);
 		$method = $system['controller_method_prefix'] . ($system['controller_method_ucfirst'] ? ucfirst($method) : $method);
-
 		unset($class_method[count($class_method) - 1]);
-
 		$file = $system['controller_folder'] . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $class_method) . $system['controller_file_subfix'];
 		$class = $class_method[count($class_method) - 1];
 		$parameters = explode("/", $pathinfo_query_parameters_str);
@@ -1470,10 +1321,8 @@ class WoniuRouter {
 			unset($path[count($path) - 1]);
 			$router['folder'] = implode('.', $path);
 		}
-
 		return $router + $info;
 	}
-
 	private static function getQueryStr() {
 		$system = systemInfo();
 		//命令行运行检查
@@ -1510,7 +1359,6 @@ class WoniuRouter {
 		$pathinfo_query = implode('&', $pq);
 		return $pathinfo_query;
 	}
-
 	private static function checkSession() {
 		$system = systemInfo();
 		$common_config = $system['session_handle']['common'];
@@ -1533,7 +1381,6 @@ class WoniuRouter {
 		session_set_cookie_params(
 			$common_config['lifetime'], $common_config['cookie_path'], preg_match('/^[^\\.]+$/', MpInput::server('HTTP_HOST')) ? null : $common_config['cookie_domain']
 		);
-
 		// name the session
 		session_name($common_config['session_name']);
 		register_shutdown_function('session_write_close');
@@ -1552,7 +1399,6 @@ class WoniuRouter {
 			sessionStart();
 		}
 	}
-
 	private static function checkRouter($pathinfo_query) {
 		$system = systemInfo();
 		if (is_array($system['route'])) {
@@ -1565,7 +1411,6 @@ class WoniuRouter {
 		}
 		return $pathinfo_query;
 	}
-
 	private static function checkHmvc($pathinfo_query) {
 		if ($_module = self::getHmvcModuleName($pathinfo_query)) {
 			$_system = systemInfo();
@@ -1574,7 +1419,6 @@ class WoniuRouter {
 		}
 		return $pathinfo_query;
 	}
-
 	private static function getHmvcModuleName($pathinfo_query) {
 		$_module = current(explode('&', $pathinfo_query));
 		$_module = current(explode('/', $_module));
@@ -1585,7 +1429,6 @@ class WoniuRouter {
 			return '';
 		}
 	}
-
 	public static function switchHmvcConfig($hmvc_folder) {
 		$_system = $system = systemInfo();
 		$module = $_system['hmvc_folder'] . '/' . $hmvc_folder . '/hmvc.php';
@@ -1604,27 +1447,20 @@ class WoniuRouter {
 		//切换核心配置
 		self::setConfig($system);
 	}
-
 	public static function setConfig($system) {
 		MpLoader::$system = $system;
 	}
-
 }
-
 class MpRouter extends WoniuRouter {
 	
 }
-
 /* End of file Router.php */
 
-
 class WoniuLoader {
-
 	public $model, $lib, $router, $db, $input, $view_vars = array(), $cache, $rule;
 	private static $helper_files = array(), $files = array();
 	private static $instance, $config = array();
 	public static $system;
-
 	public function __construct() {
 		$system = systemInfo();
 		date_default_timezone_set($system['default_timezone']);
@@ -1644,7 +1480,6 @@ class WoniuLoader {
 		}
 		stripslashes_all();
 	}
-
 	public function registerErrorHandle() {
 		$system = systemInfo();
 		/**
@@ -1672,7 +1507,6 @@ class WoniuLoader {
 			register_shutdown_function('woniu_fatal_handler');
 		}
 	}
-
 	public static function config($config_group, $key = null) {
 		if (!is_null($key)) {
 			return isset(self::$config[$config_group][$key]) ? self::$config[$config_group][$key] : null;
@@ -1680,7 +1514,6 @@ class WoniuLoader {
 			return isset(self::$config[$config_group]) ? self::$config[$config_group] : null;
 		}
 	}
-
 	public function &database($config = NULL, $is_return = false, $force_new_conn = false) {
 		$woniu_db = self::$system['db'];
 		$db_cfg_key = $woniu_db['active_group'];
@@ -1703,11 +1536,9 @@ class WoniuLoader {
 			return $this->db;
 		}
 	}
-
 	public function setConfig($key, $val) {
 		self::$config[$key] = $val;
 	}
-
 	public static function helper($file_name, $is_config = true) {
 		$system = systemInfo();
 		$helper_folders = $system['helper_folder'];
@@ -1746,7 +1577,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	public static function lib($file_name, $alias_name = null, $new = true) {
 		$system = systemInfo();
 		$classname = $file_name;
@@ -1792,7 +1622,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	public static function model($file_name, $alias_name = null) {
 		$system = systemInfo();
 		$classname = $file_name;
@@ -1835,7 +1664,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	public function view($view_name, $data = null, $return = false) {
 		if (is_array($data)) {
 			$this->view_vars = array_merge($this->view_vars, $data);
@@ -1897,7 +1725,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	public static function classAutoloadRegister() {
 		$found = false;
 		$__autoload_found = false;
@@ -1925,7 +1752,6 @@ class WoniuLoader {
 			spl_autoload_register(array('MpLoader', 'classAutoloader'));
 		}
 	}
-
 	public static function classAutoloader($clazzName) {
 		$system = systemInfo();
 		$library_folders = $system['library_folder'];
@@ -1958,7 +1784,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	/**
 	 * 自定义Loader，用于拓展框架核心功能,
 	 * Loader是控制器和模型都继承的一个类，大部分核心功能都在loader中完成。
@@ -1973,7 +1798,7 @@ class WoniuLoader {
 	 *      public function __construct() {
 	 *          parent::__construct();
 	 *      }
-	 *  } 
+	 *  }
 	 * 3.如果无需自定义Loader，留空即可。
 	 */
 	public static function checkUserLoader() {
@@ -1992,7 +1817,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	/**
 	 * 实例化一个loader
 	 * @param type $renew               是否强制重新new一个loader，默认只会new一次
@@ -2014,7 +1838,6 @@ class WoniuLoader {
 		MpRouter::setConfig($default);
 		return $ret;
 	}
-
 	/**
 	 * 获取视图绝对路径，在视图中include其它视图的时候用到。
 	 * 提示：
@@ -2041,7 +1864,6 @@ class WoniuLoader {
 		$view_path = $dir . DIRECTORY_SEPARATOR . $view_name . $system['view_file_subfix'];
 		return truepath($view_path);
 	}
-
 	public function ajax_echo($code, $tip = null, $data = null, $jsonp_callback = null, $is_exit = true) {
 		$str = json_encode(array('code' => $code, 'tip' => is_null($tip) ? '' : $tip, 'data' => is_null($data) ? '' : $data));
 		if (!empty($jsonp_callback)) {
@@ -2053,7 +1875,6 @@ class WoniuLoader {
 			exit();
 		}
 	}
-
 	public static function xml_echo($xml, $is_exit = true) {
 		header('Content-type:text/xml;charset=utf-8');
 		echo $xml;
@@ -2061,7 +1882,6 @@ class WoniuLoader {
 			exit();
 		}
 	}
-
 	public function redirect($url, $msg = null, $time = 3, $view = null) {
 		$time = intval($time) ? intval($time) : 3;
 		if (empty($msg)) {
@@ -2077,7 +1897,6 @@ class WoniuLoader {
 		}
 		exit();
 	}
-
 	public function message($msg, $url = null, $time = 3, $view = null) {
 		$time = intval($time) ? intval($time) : 3;
 		if (!empty($url)) {
@@ -2092,7 +1911,6 @@ class WoniuLoader {
 		}
 		exit();
 	}
-
 	public static function setCookieRaw($key, $value, $life = null, $path = '/', $domian = null, $http_only = false) {
 		header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 		if (!is_null($domian)) {
@@ -2113,7 +1931,6 @@ class WoniuLoader {
 		setcookie($key, $value, ($life ? $life + time() : null), $path, $auto_domain, (MpInput::server('SERVER_PORT') == 443 ? 1 : 0), $http_only);
 		$_COOKIE[$key] = $value;
 	}
-
 	/**
 	 * 设置一个cookie，该方法会在key前面加上系统配置里面的$system['cookie_key_prefix']前缀
 	 * 如果不想加前缀，可以使用方法：$this->setCookieRaw()
@@ -2122,7 +1939,6 @@ class WoniuLoader {
 		$key = systemInfo('cookie_key_prefix') . $key;
 		return self::setCookieRaw($key, $value, $life, $path, $domian, $http_only);
 	}
-
 	/**
 	 * 分页函数
 	 * @param type $total 一共多少记录
@@ -2192,11 +2008,10 @@ class WoniuLoader {
 		}
 		return $pages>1?implode("", $output):'';
 	}
-
 	/**
 	 * $source_data和$map的key一致，$map的value是返回数据的key
 	 * 根据$map的key读取$source_data中的数据，结果是以map的value为key的数数组
-	 * 
+	 *
 	 * @param Array $map 字段映射数组,格式：array('表单name名称'=>'表字段名称',...)
 	 */
 	public static function readData(Array $map, $source_data = null) {
@@ -2209,7 +2024,6 @@ class WoniuLoader {
 		}
 		return $data;
 	}
-
 	public static function checkData(Array $rule, Array $data = NULL, &$return_data = NULL, $db = null) {
 		if (is_null($data)) {
 			$data = MpInput::post();
@@ -2282,7 +2096,6 @@ class WoniuLoader {
 		 * 验证后set_post处理
 		 */
 		self::checkSetData('set_post', $rule, $return_data);
-
 		/**
 		 * 清理没有传递的key
 		 */
@@ -2291,7 +2104,6 @@ class WoniuLoader {
 		}
 		return NULL;
 	}
-
 	private static function checkSetData($type, Array $rule, &$return_data = NULL) {
 		foreach ($rule as $col => $val) {
 			foreach (array_keys($val) as $_rule) {
@@ -2326,7 +2138,6 @@ class WoniuLoader {
 			}
 		}
 	}
-
 	private static function getCheckRuleInfo($_rule) {
 		$matches = array();
 		preg_match('|([^\[]+)(?:\[(.*)\](.?))?|', $_rule, $matches);
@@ -2339,7 +2150,6 @@ class WoniuLoader {
 		}
 		return $matches;
 	}
-
 	/**
 	 * 调用一个方法或者函数(无论方法是静态还是动态，是私有还是保护还是公有的都可以调用)
 	 * 所有示例：
@@ -2366,7 +2176,6 @@ class WoniuLoader {
 		}
 		return null;
 	}
-
 	private static function callMethod($_func, $args) {
 		$class = $_func[0];
 		$method = $_func[1];
@@ -2380,7 +2189,6 @@ class WoniuLoader {
 		$method->setAccessible(true);
 		return $method->invokeArgs($obj, $args);
 	}
-
 	private static function checkRule($_rule, $val, $data, $db = null) {
 		if (!$db) {
 			$db = MpLoader::instance()->database();
@@ -2443,7 +2251,6 @@ class WoniuLoader {
 						$where[$id_col] = $id;
 					}
 				}
-
 				return $db->where($where)->from($table)->count_all_results();
 			case 'min_len':
 				return isset($args[0]) ? (mb_strlen($val, 'UTF-8') >= intval($args[0])) : false;
@@ -2517,7 +2324,6 @@ class WoniuLoader {
 			case 'datetime':
 				$args[0] = isset($args[0]) && $args[0] == 'true' ? TRUE : false;
 				return !empty($val) ? preg_match('/^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30))) (([0-1][0-9])|([2][0-3])):([0-5][0-9])(:([0-5][0-9]))$/', $val) : $args[0];
-
 			case 'reg':#正则表达式验证,reg[/^[\]]$/i]
 				/**
 				 * 模式修正符说明:
@@ -2533,7 +2339,7 @@ class WoniuLoader {
 				return !empty($args[0]) ? preg_match($args[0], $val) : false;
 			/**
 			 * set set_post不参与验证，返回true跳过
-			 * 
+			 *
 			 * 说明：
 			 * set用于设置在验证数据前对数据进行处理的函数或者方法
 			 * set_post用于设置在验证数据后对数据进行处理的函数或者方法
@@ -2565,7 +2371,6 @@ class WoniuLoader {
 		}
 		return false;
 	}
-
 	public static function includeOnce($file_path) {
 		$key = md5(truepath(convertPath($file_path)));
 		if (!isset(self::$files[$key])) {
@@ -2573,16 +2378,11 @@ class WoniuLoader {
 			self::$files[$key] = 1;
 		}
 	}
-
 }
-
-class MpLoader extends WoniuLoader{} 
+class MpLoader extends WoniuLoader{}
 MpLoader::checkUserLoader();
-
 class WoniuModelLoader {
-
 	public static $model_files = array();
-
 	function __get($classname) {
 		if (isset(self::$model_files[$classname])) {
 			return self::$model_files[$classname];
@@ -2590,13 +2390,9 @@ class WoniuModelLoader {
 			return MpLoader::model($classname);
 		}
 	}
-
 }
-
 class WoniuLibLoader {
-
 	public static $lib_files = array();
-
 	function __get($classname) {
 		if (isset(self::$lib_files[$classname])) {
 			return self::$lib_files[$classname];
@@ -2604,23 +2400,17 @@ class WoniuLibLoader {
 			return MpLoader::lib($classname);
 		}
 	}
-
 }
-
 /* End of file Loader.php */
 
 
-
 class WoniuController extends MpLoaderPlus {
-
 	private static $instance;
-
 	public function __construct() {
 		self::$instance = &$this;
 		$this->autoload();
 		parent::__construct();
 	}
-
 	private function autoload() {
 		$system = systemInfo();
 		$autoload_helper = $system['helper_file_autoload'];
@@ -2640,7 +2430,6 @@ class WoniuController extends MpLoaderPlus {
 				$new = isset($val['new']) ? $val['new'] : true;
 				$key = key($val);
 				$val = $val[$key];
-
 				$this->lib($key, $val, $new);
 			} else {
 				$this->lib($val);
@@ -2672,11 +2461,9 @@ class WoniuController extends MpLoaderPlus {
 			}
 		}
 	}
-
 	public static function &getInstance() {
 		return self::$instance;
 	}
-
 	/**
 	 * 实例化一个控制器
 	 * @staticvar array $loadedClasses
@@ -2715,16 +2502,12 @@ class WoniuController extends MpLoaderPlus {
 			trigger404($filepath . ' not found.');
 		}
 	}
-
 }
 class MpController extends WoniuController{}
 /* End of file Controller.php */
 
-
 class WoniuModel extends MpLoaderPlus {
-
 	private static $instance;
-
 	/**
 	 * 实例化一个模型
 	 * @param type $classname_path
@@ -2745,9 +2528,7 @@ class WoniuModel extends MpLoaderPlus {
 	$system = systemInfo();
 	$classname_path = str_replace('.', DIRECTORY_SEPARATOR, $classname_path);
 	$classname = basename($classname_path);
-
 	$model_folders = $system['model_folder'];
-
 	if (!is_array($model_folders)) {
 	    $model_folders = array($model_folders);
 	}
@@ -2779,63 +2560,51 @@ class WoniuModel extends MpLoaderPlus {
 	    }
 	}
 	}
-
 }
-
 class MpModel extends WoniuModel {
-	
 }
-
 /**
  * Description of WoniuTableModel
  *
  * @author pm
  */
 class MpTableModel extends MpModel {
-
 	/**
 	 * 表主键名称
-	 * @var string 
+	 * @var string
 	 */
 	public $pk;
-
 	/**
 	 * 表的字段名称数组
-	 * @var array 
+	 * @var array
 	 */
 	public $keys = array();
-
 	/**
 	 * 不含表前缀的表名称
-	 * @var string 
+	 * @var string
 	 */
 	public $table;
-
 	/**
 	 * 含表前缀的表名称
-	 * @var string 
+	 * @var string
 	 */
 	public $full_table;
-
 	/**
 	 * 字段映射，$key是表单name名称，$val是字段名
-	 * @var array 
+	 * @var array
 	 */
 	public $map = array();
-
 	/**
 	 * 当前$this->db使用的表前缀
-	 * @var string 
+	 * @var string
 	 */
 	public $prefix;
-
 	/**
 	 * 完整的表字段信息
-	 * @var array 
+	 * @var array
 	 */
 	public $fields = array();
 	private static $models = array(), $table_cache = array();
-
 	/**
 	 * 初始化一个表模型，返回模型实例
 	 * @param type $table         名称
@@ -2862,7 +2631,6 @@ class MpTableModel extends MpModel {
 	}
 	return $this;
 	}
-
 	/**
 	 * 实例化一个默认表模型
 	 * @param type $table
@@ -2875,7 +2643,6 @@ class MpTableModel extends MpModel {
 	}
 	return self::$models[$table];
 	}
-
 	/**
 	 * 表所有字段数组
 	 * @return array
@@ -2883,7 +2650,6 @@ class MpTableModel extends MpModel {
 	public function columns() {
 	return $this->keys;
 	}
-
 	/**
 	 * 缓存表字段信息，并返回
 	 * @staticvar array $info  字段信息数组
@@ -2919,7 +2685,6 @@ class MpTableModel extends MpModel {
 	}
 	return $ret_info[$tableName];
 	}
-
 	/**
 	 * 数据验证
 	 * @param type $source_data 数据源，要检查的数据
@@ -2933,7 +2698,7 @@ class MpTableModel extends MpModel {
 	 *                               ,...<br/>
 	 *                             )<br/>
 	 * @param type $map  字段映射信息数组。格式：array('表单name名称'=>'表字段名称',...)
-	 * @return string 返回null:验证通过。非空字符串:验证失败提示信息。 
+	 * @return string 返回null:验证通过。非空字符串:验证失败提示信息。
 	 */
 	public function check($source_data, &$ret_data, $rule = null, $map = null) {
 	$rule = !is_array($rule) ? array() : $rule;
@@ -2941,7 +2706,6 @@ class MpTableModel extends MpModel {
 	$data = $this->readData($map, $source_data);
 	return $this->checkData($rule, $data, $ret_data);
 	}
-
 	/**
 	 * 添加数据
 	 * @param array $ret_data  需要添加的数据
@@ -2950,7 +2714,6 @@ class MpTableModel extends MpModel {
 	public function insert($ret_data) {
 	return $this->db->insert($this->table, $ret_data);
 	}
-
 	/**
 	 * 更新数据
 	 * @param type $ret_data  需要更新的数据
@@ -2961,7 +2724,6 @@ class MpTableModel extends MpModel {
 	$where = is_array($where) ? $where : array($this->pk => $where);
 	return $this->db->where($where)->update($this->table, $ret_data);
 	}
-
 	/**
 	 * 获取一条或者多条数据
 	 * @param type $values      可以是一个主键的值或者主键的值数组，还可以是where条件
@@ -2997,7 +2759,6 @@ class MpTableModel extends MpModel {
 	    return $rs->row_array();
 	}
 	}
-
 	/**
 	 * 获取所有数据
 	 * @param type $where   where条件数组
@@ -3021,7 +2782,6 @@ class MpTableModel extends MpModel {
 	}
 	return $this->db->get($this->table)->result_array();
 	}
-
 	/**
 	 * 根据条件获取一个字段的值或者数组
 	 * @param type $col         字段名称
@@ -3042,9 +2802,8 @@ class MpTableModel extends MpModel {
 	    return $vals;
 	}
 	}
-
 	/**
-	 * 
+	 *
 	 * 根据条件删除记录
 	 * @param type $values 可以是一个主键的值或者主键主键的值数组
 	 * @param type $cond   附加的where条件，关联数组
@@ -3053,9 +2812,8 @@ class MpTableModel extends MpModel {
 	public function delete($values, Array $cond = NULL) {
 	return $this->deleteIn($this->pk, $values, $cond);
 	}
-
 	/**
-	 * 
+	 *
 	 * 根据条件删除记录
 	 * @param type $key    where in的字段名称
 	 * @param type $values 可以是一个主键的值或者主键主键的值数组
@@ -3081,7 +2839,6 @@ class MpTableModel extends MpModel {
 	    return false;
 	}
 	}
-
 	/**
 	 * 分页方法
 	 * @param int $page       第几页
@@ -3097,7 +2854,6 @@ class MpTableModel extends MpModel {
 	 */
 	public function getPage($page, $pagesize, $url, $fields = '*', Array $where = null, Array $like = null, $orderby = null, $page_bar_order = array(1, 2, 3, 4, 5, 6), $page_bar_a_count = 10) {
 	$data = array();
-
 	if (is_array($where)) {
 	    $this->db->where($where);
 	}
@@ -3119,7 +2875,6 @@ class MpTableModel extends MpModel {
 	$data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
 	return $data;
 	}
-
 	/**
 	 * SQL搜索
 	 * @param type $page      第几页
@@ -3140,18 +2895,14 @@ class MpTableModel extends MpModel {
 	$data['page'] = $this->page($total, $page, $pagesize, $url, $page_bar_order, $page_bar_a_count);
 	return $data;
 	}
-
 }
-
 /* End of file Model.php */
-
 
 
 /**
  * 表单规则助手类，再不用记忆规则名称
  */
 class WoniuRule {
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果元素为空，则返回FALSE<br/><br/><br/>
@@ -3159,7 +2910,6 @@ class WoniuRule {
 	public static function required() {
 		return 'required';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 当没有post对应字段的值或者值为空的时候那么就会使用默认规则的值作为该字段的值。<br/>
@@ -3169,10 +2919,9 @@ class WoniuRule {
 	public static function defaultVal($val = '') {
 		return 'default[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
-	 * 可以为空规则。例如user字段规则中有optional,当没有传递字段user的值或者值是空的时候，<br/> 
+	 * 可以为空规则。例如user字段规则中有optional,当没有传递字段user的值或者值是空的时候，<br/>
 	 * user验证会通过(忽略其它规则即使有required规则)， <br/>
 	 * 提示： <br/>
 	 * $this->checkData($rule, $_POST, $ret_data)返回的数据$ret_data， <br/>
@@ -3182,7 +2931,6 @@ class WoniuRule {
 	public static function optional() {
 		return 'optional';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素的值与参数中对应的表单字段的值不相等，则返回FALSE<br/>
@@ -3191,7 +2939,6 @@ class WoniuRule {
 	public static function match($field_name) {
 		return 'match[' . $field_name . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素的值不与指定的值相等，则返回FALSE<br/>
@@ -3200,7 +2947,6 @@ class WoniuRule {
 	public static function equal($val) {
 		return 'equal[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不在指定的几个值中，则返回FALSE<br/>
@@ -3210,7 +2956,6 @@ class WoniuRule {
 	public static function enum($val, $delimiter = '') {
 		return 'enum[' . $val . ']' . $delimiter;
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素的值与指定数据表栏位有重复，则返回False<br/>
@@ -3224,7 +2969,6 @@ class WoniuRule {
 	public static function unique($val, $delimiter = '') {
 		return 'unique[' . $val . ']' . $delimiter;
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素的值在指定数据表的字段中不存在则返回false，如果存在返回true<br/>
@@ -3238,7 +2982,6 @@ class WoniuRule {
 	public static function exists($val, $delimiter = '') {
 		return 'exists[' . $val . ']' . $delimiter;
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值的字符长度小于参数定义的值，则返回FALSE<br/>
@@ -3247,7 +2990,6 @@ class WoniuRule {
 	public static function min_len($val) {
 		return 'min_len[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值的字符长度小于参数定义的值，则返回FALSE<br/>
@@ -3256,7 +2998,6 @@ class WoniuRule {
 	public static function max_len($val) {
 		return 'min_len[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值的字符长度不在指定的范围，则返回FALSE<br/>
@@ -3266,7 +3007,6 @@ class WoniuRule {
 	public static function range_len($min_len, $max_len) {
 		return 'range_len[' . $min_len . ',' . $max_len . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值的字符长度不是指定的长度，则返回FALSE<br/>
@@ -3275,7 +3015,6 @@ class WoniuRule {
 	public static function len($val) {
 		return 'len[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是数字或者小于指定的值，则返回FALSE<br/>
@@ -3284,7 +3023,6 @@ class WoniuRule {
 	public static function min($val) {
 		return 'min[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是数字或者大于指定的值，则返回FALSE<br/>
@@ -3293,7 +3031,6 @@ class WoniuRule {
 	public static function max($val) {
 		return 'max[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是数字或者大小不在指定的范围内，则返回 FALSE<br/>
@@ -3303,7 +3040,6 @@ class WoniuRule {
 	public static function range($min, $max) {
 		return 'range[' . $min . ',' . $max . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中包含除字母以外的字符，则返回FALSE<br/><br/><br/>
@@ -3311,7 +3047,6 @@ class WoniuRule {
 	public static function alpha() {
 		return 'alpha';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中包含除字母和数字以外的字符，则返回FALSE<br/><br/><br/>
@@ -3319,7 +3054,6 @@ class WoniuRule {
 	public static function alpha_num() {
 		return 'alpha_num';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值中包含除字母/数字/下划线/破折号以外的其他字符，则返回FALSE<br/><br/><br/>
@@ -3327,7 +3061,6 @@ class WoniuRule {
 	public static function alpha_dash() {
 		return 'alpha_dash';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中不是字母开头，则返回FALSE<br/><br/><br/>
@@ -3335,7 +3068,6 @@ class WoniuRule {
 	public static function alpha_start() {
 		return 'alpha_start';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中不是纯数字，则返回FALSE<br/><br/><br/>
@@ -3343,7 +3075,6 @@ class WoniuRule {
 	public static function num() {
 		return 'num';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中不是整数，则返回FALSE<br/><br/><br/>
@@ -3351,7 +3082,6 @@ class WoniuRule {
 	public static function int() {
 		return 'int';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中不是小数，则返回FALSE<br/><br/><br/>
@@ -3359,7 +3089,6 @@ class WoniuRule {
 	public static function float() {
 		return 'float';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素中不是一个数，则返回FALSE<br/><br/><br/>
@@ -3367,7 +3096,6 @@ class WoniuRule {
 	public static function numeric() {
 		return 'numeric';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值中包含了非自然数的其他数值 （其他数值不包括零），则返回FALSE。<br/><br/><br/>
@@ -3376,7 +3104,6 @@ class WoniuRule {
 	public static function natural() {
 		return 'natural';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值包含了非自然数的其他数值 （其他数值包括零），则返回FALSE。<br/><br/><br/>
@@ -3385,7 +3112,6 @@ class WoniuRule {
 	public static function natural_no_zero() {
 		return 'natural_no_zero';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个网址，则返回FALSE<br/>
@@ -3394,7 +3120,6 @@ class WoniuRule {
 	public static function url($can_empty = false) {
 		return self::can_empty_rule('url', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值包含不合法的email地址，则返回FALSE<br/>
@@ -3403,7 +3128,6 @@ class WoniuRule {
 	public static function email($can_empty = false) {
 		return self::can_empty_rule('email', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个QQ号，则返回FALSE<br/>
@@ -3412,7 +3136,6 @@ class WoniuRule {
 	public static function qq($can_empty = false) {
 		return self::can_empty_rule('qq', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个电话号码，则返回FALSE<br/>
@@ -3421,7 +3144,6 @@ class WoniuRule {
 	public static function phone($can_empty = false) {
 		return self::can_empty_rule('phone', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个手机号，则返回FALSE<br/>
@@ -3430,7 +3152,6 @@ class WoniuRule {
 	public static function mobile($can_empty = false) {
 		return self::can_empty_rule('mobile', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个邮政编码，则返回FALSE<br/>
@@ -3439,7 +3160,6 @@ class WoniuRule {
 	public static function zipcode($can_empty = false) {
 		return self::can_empty_rule('zipcode', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个身份证号，则返回FALSE<br/>
@@ -3448,7 +3168,6 @@ class WoniuRule {
 	public static function idcard($can_empty = false) {
 		return self::can_empty_rule('idcard', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是一个合法的IPv4地址，则返回FALSE。<br/>
@@ -3457,7 +3176,6 @@ class WoniuRule {
 	public static function ip($can_empty = false) {
 		return self::can_empty_rule('ip', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是汉字，或者不是指定的长度，则返回FALSE<br/>
@@ -3474,7 +3192,6 @@ class WoniuRule {
 	public static function chs($val = '', $delimiter = '') {
 		return 'chs' . ($val ? '[' . $val . ']' . $delimiter : '');
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是正确的日期格式YYYY-MM-DD，则返回FALSE<br/>
@@ -3483,7 +3200,6 @@ class WoniuRule {
 	public static function date($can_empty = false) {
 		return self::can_empty_rule('date', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是正确的日期时间格式YYYY-MM-DD HH:MM:SS，则返回FALSE<br/>
@@ -3492,7 +3208,6 @@ class WoniuRule {
 	public static function datetime($can_empty = false) {
 		return self::can_empty_rule('datetime', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不是正确的时间格式HH:MM:SS，则返回FALSE<br/>
@@ -3501,7 +3216,6 @@ class WoniuRule {
 	public static function time($can_empty = false) {
 		return self::can_empty_rule('time', $can_empty);
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 如果表单元素值不匹配指定的正则表达式，则返回FALSE<br/>
@@ -3519,7 +3233,6 @@ class WoniuRule {
 	public static function reg($val) {
 		return 'reg[' . $val . ']';
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 数据在验证之前处理数据的规则，数据在验证的时候验证的是处理过的数据<br/>
@@ -3535,7 +3248,6 @@ class WoniuRule {
 	public static function set($val, $delimiter = '') {
 		return 'set[' . $val . ']' . $delimiter;
 	}
-
 	/**
 	 * 规则说明：<br/>
 	 * 数据在验证通过之后处理数据的规则，$this->checkData()第三个变量接收的就是set和set_post处理过的数据<br/>
@@ -3551,11 +3263,9 @@ class WoniuRule {
 	public static function set_post($val, $delimiter = '') {
 		return 'set_post[' . $val . ']' . $delimiter;
 	}
-
 	private static function can_empty_rule($rule_name, $can_empty) {
 		return $rule_name . ($can_empty ? '[true]' : '');
 	}
-
 }
 class MpRule extends WoniuRule{}
 
